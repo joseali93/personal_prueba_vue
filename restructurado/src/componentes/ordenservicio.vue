@@ -38,7 +38,7 @@
             <b-container fluid>
                 <b-row>
                     <label >Seleccione el Producto:</label>
-                    <b-form-select v-model="selectproduct" class="mb-3"  id="produ" :options="productosurl" text-field="nombre" value-field="_id" @change.native="service">
+                    <b-form-select v-model="selectproduct" class="mb-3"  id="produ" :options="productosurl" text-field="nombre" value-field="productosurl" @change.native="service">
                        <!-- <option  disabled selected >Productos</option>
                         <option v-for="(data,indice) in productosurl" :value="data">{{data.nombre}}</option> 
                         -->
@@ -517,6 +517,7 @@ export default {
     },
     service(value) {
       console.log("entro a seleccion");
+      console.log(value)
       console.log(value.target.value);
       this.selectproduct = value.target.value
       /*
