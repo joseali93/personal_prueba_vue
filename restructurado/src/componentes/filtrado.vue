@@ -1,6 +1,7 @@
 <template>
   <b-container fluid>
       <preload v-show="load"></preload>
+      <b-card>
         <b-row>
             <b-col>
                 <b-form-select v-model="selectedCL" class="mb-3" :options="clientes"  
@@ -47,14 +48,15 @@
                 </b-form-group>
             </b-col>
         </b-row>
+      
         <b-row>
             <b-btn to="/inicio/consultar/resultado"  class="mt-3 float-right" variant="primary" v-on:click="consultar()">Consultar</b-btn>
         </b-row>
+        </b-card>
         <b-row>
             <router-view :consulta="consulta">
 
             </router-view>
-            
         </b-row>
     </b-container>
 </template>

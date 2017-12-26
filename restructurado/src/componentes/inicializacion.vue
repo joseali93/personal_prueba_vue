@@ -1,10 +1,12 @@
 <template>
+
   <div class="content-wrapper ">
+    <div class="content-heading text-capitalize">
+      Bienvenido {{nombreusu}}
+    </div>
       <div class="panel panel-default  text-capitalize" >
         <h3>
-            Bienvenido {{nombreusu}}
-            <hr>
-            <small>Aplicativo para manejo de operaciones logisticas</small>
+            Este es un aplicativo para manejo de operaciones logisticas
         </h3>
       </div>
     </div>
@@ -17,5 +19,7 @@ export default {
 </script>
 
 <style>
-
+.panel.panel-default{
+  padding: 5%
+}
 </style>

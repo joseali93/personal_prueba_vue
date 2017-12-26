@@ -1,47 +1,47 @@
 <template>
     <b-container fluid>
-        
         <b-row>
           <router-link  to="/inicio/consultar/resultado" tag="button" class-active="active" 
           class="btn btn-secondary btn-lg fa fa-arrow-left ">
           Volver
           </router-link>
         </b-row>
-        <b-row>
-            <h4>Cliente:</h4>
-        </b-row>
-        <b-row>
-            <p>{{this.currentUser.remitente}}</p> 
-        </b-row>
-        <b-row>
-            <h5>Direccion:</h5>
-        </b-row>
-        <b-row>
-            <p>{{this.currentUser.remitente}}</p> 
-        </b-row>
-         <b-row>
-            <h4>Centro de Costo:</h4>
-        </b-row>
-        <b-row>
-            <p>{{this.currentUser.centro}}</p> 
-        </b-row>
-        <b-row>
-            <h4>Direccion Centro de Costo:</h4>
-        </b-row>
-        <b-row>
-            <p>{{this.currentUser.centro}}</p> 
-        </b-row>
-         <b-row>
-            <h4>Fecha Creación:</h4>
-        </b-row>
-        <b-row>
-            <p>{{this.currentUser.fecha_creacion}}</p> 
-        </b-row>           <b-row>
-            <h4>Estado:</h4>
-        </b-row>
-        <b-row>
-            <p>{{this.currentUser.estado}}</p> 
-        </b-row>       
+            <b-row>
+                <h4>Cliente:</h4>
+            </b-row>
+            <b-row>
+                <p>{{info.remitente.nombre}}</p> 
+            </b-row>
+            <b-row>
+                <h5>Direccion:</h5>
+            </b-row>
+            <b-row>
+                <p>{{info.remitente.direccion}}</p> 
+            </b-row>
+            <b-row>
+                <h4>Centro de Costo:</h4>
+            </b-row>
+            <b-row>
+                <p>{{info.centro.nombre}}</p> 
+            </b-row>
+            <b-row>
+                <h4>Direccion Centro de Costo:</h4>
+            </b-row>
+            <b-row>
+                <p>{{info.centro.direccion}}</p> 
+            </b-row>
+            <b-row>
+                <h4>Fecha Creación:</h4>
+            </b-row>
+            <b-row>
+                <p>{{info.fecha_creacion}}</p> 
+            </b-row>    
+            <b-row>
+                <h4>Estado:</h4>
+            </b-row>
+            <b-row>
+                <p>{{info.estado}}</p> 
+            </b-row>     
         <b-row>
             <b-table :fields="fields" :per-page="3" :current-page="currentPage" :items="this.currentUser.detalle">
                 <template slot="productoslocal" scope="data">
@@ -56,14 +56,14 @@
             </b-table>
             <b-pagination size="md" :total-rows="this.currentUser.detalle.length" v-model="currentPage" :per-page="3">
             </b-pagination>
-        </b-row>
-        <b-row>
-            <b-form-select v-model="selected_curier"class="mb-3" >
-                <option disabled selected value> Curiers </option>
-                <option v-for="(data,indice) in curiers" :value="data">
-                    {{data.nombre}}
-                </option>
-            </b-form-select>
+            </b-row>
+            <b-row>
+                <b-form-select v-model="selected_curier"class="mb-3" >
+                    <option disabled selected value> Curiers </option>
+                    <option v-for="(data,indice) in curiers" :value="data">
+                        {{data.nombre}}
+                    </option>
+                </b-form-select>
         </b-row>
         <b-row>
             <b-btn size="lg" variant="success" @click="asignar(selected_curier)">Aceptar</b-btn>
@@ -72,15 +72,16 @@
         <b-modal id="modalactualizar" ref="ModalAct" title="Editar Registro" size="lg">
             <b-container fluid>
                 <b-row v-for="(data,indice) in inputs.campos"> 
-                    <b-row v-if="data.type!='select'">
-                        <b-col>
+                    <template v-if="data.type!='select'">
+                        <b-col cols="5">
                             <label  class="col-sm-2 col-form-label col-form-label-sm" :style="data.style" >{{data.placeholder}}: </label>
                         </b-col>
-                        <b-col>
+                        <b-col cols="6">
                             <input :type="data.type" :id="data.id" :style="data.style" :max="data.max" @keyup="Presiono(indice,data)" :placeholder="data.placeholder" :disabled="data.diseable" :value="values(data.id)"  required>
                         </b-col>
-                    </b-row>
+                    </template>
                     <b-row v-else>
+                        <h4>Seleccione el Trayecto</h4>
                         <b-form-select :id="data.id"  v-model="selection" >
                             <option v-for="tray in trayectos" :value="tray" >{{tray.nombre}}</option>
                         </b-form-select>
@@ -120,7 +121,8 @@ export default {
             trayectos: {},
             indices:'',
             inputs: '',
-            campos: {}
+            campos: {},
+            info:{}
         }
     },
     
@@ -266,6 +268,7 @@ export default {
         bus.$on('thisEvent', function (userObject) {
         //console.log('event received!', userObject)
         this.currentUser = userObject.inde.item
+        this.info=this.currentUser
         //console.log('The user: ', this.currentUser) // Shows correct new user data
       }.bind(this))
     }

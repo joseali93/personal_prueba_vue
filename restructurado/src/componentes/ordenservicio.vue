@@ -1,11 +1,13 @@
 <template>
     <b-container>
-        <b-row>
+    <header class="content-heading text-capitalize">
             <h2>Detalle de Orden de Servicio</h2>
-        </b-row>
+            <small>Permite de la creacion y edicion de los envios que tendra asociado la orden de servicio</small>
+    </header>
+    <b-card>
         <b-row>
             <b-col md="3" offset-md="11">
-                <b-btn class="pull-rigth"  v-b-modal.modalcrear><i class="fa fa-plus"></i></b-btn>
+                <b-btn class="rounded-circle" variant="danger"  v-b-modal.modalcrear><i class="fa fa-plus"></i></b-btn>
             </b-col>
         </b-row>
         <b-row>
@@ -33,9 +35,11 @@
                 <router-link  to="/inicio" tag="button" class-active="active" class="btn btn-primary">Fin</router-link>
             </a>
         </b-row>
+    </b-card>
         <!-- Modal Adicionar -->
         <b-modal id="modalcrear" ref="Modal" title="Adicionar Registro" size="lg">
             <b-container fluid>
+              
                 <b-row>
                     <label >Seleccione el Producto:</label>
                     <b-form-select v-model="selectproduct" class="mb-3"  id="produ" 
@@ -61,6 +65,7 @@
                     <h2> Informacion: </h2>
                     <br>
                     <h4 v-show="!selectservice">
+                      <br>
                         Seleccione un producto y un servicio
                     </h4>
                     <br>
@@ -79,7 +84,7 @@
                         <label  class="col-sm-2 col-form-label col-form-label-sm">Referencia: </label>
                     </b-col>
                     <b-col>
-                        <input type="text" class="form-control form-control-sm" id="referencia"   placeholder="Referencia" v-model="detalles.referencia">
+                         <input type="text"  id="referencia"   placeholder="Referencia" v-model="detalles.referencia">
                     </b-col>
                 </b-form-row>
                 <b-row>
@@ -130,18 +135,11 @@
                 <b-row>
                     <label >Seleccione el Producto:</label>
                     <b-form-select v-model="selectproduct" class="mb-3" :options="productosurl" text-field="nombre" value-field="_id"  @change.native="service">
-                        <!--<option  disabled selected >Productos</option>
-                        <option v-for="(data,indice) in productosurl" :value="data">{{data.nombre}}</option> 
-                        -->
                      </b-form-select>
                 </b-row>
                 <b-row>
                     <label >Seleccione el Servicio:</label>
                     <b-form-select v-model="selectservice" class="mb-3"  :options="serviciosurl" @change.native="campos" text-field="nombre" value-field="_id">
-                      <!--
-                        <option  disabled selected >Servicios</option>
-                        <option v-for="(data,indice) in serviciosurl" :value="data">{{data.nombre}}</option>   
-                        -->
                     </b-form-select>
                 </b-row>
                 <b-row>
@@ -149,11 +147,10 @@
                 </b-row>
                 <b-row v-for="(data,indice) in inputsED.campos"> 
                     <b-col>
-                        <label  class="col-sm-2 col-form-label col-form-label-sm">{{data.placeholder}}: </label>
+                        <label  class="col-sm-2 col-form-label col-form-label-sm" :style="data.style">{{data.placeholder}}: </label>
                     </b-col>
                     <b-col>
-                      {{detalleseditar.infor}}
-                        <input :type="data.type" :id="data.id" :max="data.max" :placeholder="data.placeholder"@keyup="PresionoED(indice)"  :value="valores(data.id)" required>
+                        <input :type="data.type" :id="data.id" :max="data.max" :style="data.style" :placeholder="data.placeholder"@keyup="PresionoED(indice)"  :value="valores(data.id)" required>
                     </b-col>
                 </b-row>
                  <b-form-row>
@@ -361,8 +358,6 @@ export default {
       //console.log(this.detalleseditar)
     },
     valores(dato) {
-      console.log("valores");
-
       //console.log(this.detalleseditar)
       //console.log(dato)
       //console.log(eval("this.detalleseditar.infor." + dato));
@@ -370,7 +365,7 @@ export default {
     },
     actualizar() {
       console.log("actualizar");
-      console.log(this.detalleseditar)
+
       if (
         this.detalleseditar.destinatario.nombre == "" ||
         this.detalleseditar.destinatario.direccion == "" 
@@ -378,19 +373,19 @@ export default {
         swal("Oops...", "Falto algun campo por completar!", "error");
       } else {
         var detalleslocal = this.detalleseditar;
-        var productoslocal = this.selectproduct;
-        var servicioslocal = this.selectservice;
+        var productoslocal = this.selectproducto;
+        var servicioslocal = this.selectservicio;
         var detalles = {
           servicioslocal: servicioslocal,
           productoslocal: productoslocal,
           detalleslocal: detalleslocal
         };
-        //console.log(detalles);
+        console.log(detalles);
         this.DetalleServicio.splice(this.indices, 1);
         this.DetalleServicio.splice(this.indices, 0, detalles);
         (this.objeto = ""),
-          (this.inputs = ""),
-          toastr.success("Se edito exitosamente");
+        (this.inputs = ""),
+        toastr.success("Se edito exitosamente");
         this.selectservice = "";
         this.selectproduct = "";
         (this.objeto = ""),
@@ -426,12 +421,9 @@ export default {
             "/" +
             this.selectservice._id
         )
-        //this.axios.get("http://192.168.1.69:3000/logistica/estructuraf/5a1d95e48ce0150ae2e951b4/5a1d969c8ce0150ae2e951b8")
         .then(response => {
           this.inputsED = response.data;
-          //console.log((this.inputsED));
         });
-      //console.log(this.DetalleServicio[index].detalleslocal)
     },
     hideModal() {
       (this.objeto = ""),
@@ -480,6 +472,7 @@ export default {
 
         console.log( this.DetalleServicio);
         //blanquear datos
+        this.habilitar=true,
         (this.objeto = ""),
           (this.inputs = ""),
           toastr.success("Se agrego exitosamente");
@@ -512,7 +505,7 @@ export default {
                 "this.objeto." +
                   this.inputs.campos[index].vmodel +
                   "=" +
-                  this.inputs.campos[index].max
+                  this.inputs.campos[index].min
               );
               document.getElementById(
                 this.inputs.campos[index].id
@@ -520,7 +513,7 @@ export default {
                 "this.objeto." +
                   this.inputs.campos[index].vmodel +
                   "=" +
-                  this.inputs.campos[index].max
+                  this.inputs.campos[index].min
               );
             } else {
               eval(
@@ -580,6 +573,7 @@ export default {
             console.log(this.objeto)
             this.load=false
 
+
             }).catch(function(error){
               //console.log("error estruc -> "+JSON.stringify(error));
             })
@@ -638,5 +632,8 @@ export default {
 </script>
 
 <style>
+.card{
+    margin-top: 2%;
 
+}
 </style>
