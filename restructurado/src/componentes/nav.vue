@@ -160,8 +160,8 @@
       <footer>
          <span>&copy; 2017 - WaySolutions Tecnology</span>
       </footer>
-   </div>
-   -->
+</div>
+-->
    <div>
      <nav class="side-navbar mCustomScrollbar _mCS_1 mCS_no_scrollbar">
             <div id="mCSB_1" class="mCustomScrollBox mCS-light mCSB_vertical mCSB_inside" style="max-height: none;" tabindex="0">
@@ -184,6 +184,11 @@
                 <li> 
                     <b-link to="/inicio/consultar">
                         <i class="fa fa-search"></i><span>Consultar Orden</span>
+                    </b-link>
+                </li>
+                <li> 
+                    <b-link to="/inicio/consultar">
+                        <i class="fa fa-search"></i><span>Consulta Trazabilidad</span>
                     </b-link>
                 </li>
             </ul>

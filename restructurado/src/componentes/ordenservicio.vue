@@ -453,7 +453,8 @@ export default {
         this.selectservice == "" ||
         this.detalles.destinatario.nombre == "" ||
         this.detalles.destinatario.telefono == "" ||
-        this.detalles.destinatario.direccion == ""
+        this.detalles.destinatario.direccion == "" ||
+        this.objeto ==""
       ) {
         swal("Oops...", "Falto algun campo por completar!", "error");
       } else {
@@ -498,6 +499,11 @@ export default {
           if (document.getElementById(this.inputs.campos[index].id).value == "")
            {
             eval("this.objeto." + this.inputs.campos[index].vmodel + "= null");
+            eval(
+                "this.objeto." +
+                  this.inputs.campos[index].vmodel +
+                  "=" +
+                  this.inputs.campos[index].min)
           } else {
             if (document.getElementById(this.inputs.campos[index].id).value >this.inputs.campos[index].max)
              {
@@ -545,7 +551,7 @@ export default {
             this.habilitar= false
             //console.log(this.serviciosurl);
         });
-      }.bind(this),2000)
+      }.bind(this),1000)
 
             
     },
@@ -553,7 +559,6 @@ export default {
       console.log("inputs");
             this.load = true;
       for(var i=0; i<this.serviciosurl.length;i++){
-        console.log(i);
         if(this.serviciosurl[i]._id==value.target.value)
         {
           this.selectservicio =this.serviciosurl[i]
