@@ -38,17 +38,24 @@
             <b-container fluid>
                 <b-row>
                     <label >Seleccione el Producto:</label>
-                    <b-form-select v-model="selectproduct" class="mb-3"  id="produ" :options="productosurl" text-field="nombre" value-field="productosurl" @change.native="service">
+                    <b-form-select v-model="selectproduct" class="mb-3"  id="produ" 
+                    :options="productosurl" text-field="nombre" value-field="_id"  @change.native="service">
                        <!-- <option  disabled selected >Productos</option>
                         <option v-for="(data,indice) in productosurl" :value="data">{{data.nombre}}</option> 
                         -->
-                        </b-form-select>
+                    </b-form-select>
+                        
                 </b-row>
-                <b-row>
+                <preload v-show="load"></preload>
+                <b-row >
                     <label >Seleccione el Servicio:</label>
-                    <b-form-select v-model="selectservice" class="mb-3" @click.native="campos(selectproduct,selectservice)">
-                        <option  disabled selected >Servicios</option>
-                        <option v-for="(data,indice) in serviciosurl" :value="data">{{data.nombre}}</option>                    </b-form-select>
+                    <b-form-select v-model="selectservice" class="mb-3" :options="serviciosurl"
+                     @change.native="campos"
+                     text-field="nombre" value-field="_id"  :disabled="habilitar" >
+                        <!--<option  disabled selected >Servicios</option>
+                        <option v-for="(data,indice) in serviciosurl" :value="data">{{data.nombre}}</option> 
+                        -->
+                    </b-form-select>
                 </b-row>
                 <b-row>
                     <h2> Informacion: </h2>
@@ -122,15 +129,20 @@
             <b-container fluid>
                 <b-row>
                     <label >Seleccione el Producto:</label>
-                    <b-form-select v-model="selectproduct" class="mb-3" @change="service(selectproduct)">
-                        <option  disabled selected >Productos</option>
-                        <option v-for="(data,indice) in productosurl" :value="data">{{data.nombre}}</option>                    </b-form-select>
+                    <b-form-select v-model="selectproduct" class="mb-3" :options="productosurl" text-field="nombre" value-field="_id"  @change.native="service">
+                        <!--<option  disabled selected >Productos</option>
+                        <option v-for="(data,indice) in productosurl" :value="data">{{data.nombre}}</option> 
+                        -->
+                     </b-form-select>
                 </b-row>
                 <b-row>
                     <label >Seleccione el Servicio:</label>
-                    <b-form-select v-model="selectservice" class="mb-3"  @click.native="campos(selectproduct,selectservice)">
+                    <b-form-select v-model="selectservice" class="mb-3"  :options="serviciosurl" @change.native="campos" text-field="nombre" value-field="_id">
+                      <!--
                         <option  disabled selected >Servicios</option>
-                        <option v-for="(data,indice) in serviciosurl" :value="data">{{data.nombre}}</option>                    </b-form-select>
+                        <option v-for="(data,indice) in serviciosurl" :value="data">{{data.nombre}}</option>   
+                        -->
+                    </b-form-select>
                 </b-row>
                 <b-row>
                     <h2> Informacion: </h2>
@@ -200,10 +212,16 @@
 <script>
 import { bus } from "../main";
 import {urlservicios} from '../main'
+import Preload from '../componentes/preload.vue'
 
 export default {
+  components :{
+    Preload
+  },
   data() {
     return {
+      habilitar: true,
+      load: false,
       selection: '',
       pruebas: '',
       currentPage: 1,
@@ -215,10 +233,12 @@ export default {
       ],
       DetalleServicio: [],
       remitentes: [],
-      productosurl: "",
-      serviciosurl: "",
+      productosurl: {},
+      selectproducto:{},
+      serviciosurl: {},
       selectservice: "",
       selectproduct: "",
+      selectservicio:{},
       inputs: "",
       objeto: "",
       detallesc: "",
@@ -317,8 +337,7 @@ export default {
     },
     PresionoED(index) {
       console.log("entro al presionar editar");
-      console.log(this.inputsED)
-      console.log(document.getElementById(this.inputsED.campos[index].id).value)
+
       setTimeout(
         function() {
           if (
@@ -343,7 +362,7 @@ export default {
     },
     valores(dato) {
       console.log("valores");
-      console.log(dato);
+
       //console.log(this.detalleseditar)
       //console.log(dato)
       //console.log(eval("this.detalleseditar.infor." + dato));
@@ -398,7 +417,8 @@ export default {
       this.detalleseditar = this.DetalleServicio[index].detalleslocal;
       this.selectproduct = this.DetalleServicio[index].productoslocal;
       this.selectservice = this.DetalleServicio[index].servicioslocal;
-      setInterval;
+      console.log(this.selectservice);
+
       this.axios
         .get(
         urlservicios+"estructuraf/" +
@@ -417,8 +437,8 @@ export default {
       (this.objeto = ""),
         (this.inputs = ""),
         //toastr.success("Se agrego exitosamente");
-        //this.selectservice = "";
-        //this.selectproduct = "";
+        this.selectservice = "";
+        this.selectproduct = "";
         (this.objeto = ""),
         (this.detalles = {
           destinatario: {
@@ -445,10 +465,10 @@ export default {
       ) {
         swal("Oops...", "Falto algun campo por completar!", "error");
       } else {
-        var servicioslocal = this.selectservice;
+        var servicioslocal = this.selectservicio;
         this.detallesc = this.detalles;
         this.detallesc.infor = this.objeto;
-        var productoslocal = this.selectproduct;
+        var productoslocal = this.selectproducto;
         var detalleslocal = this.detalles;
 
         var detalles = {
@@ -517,39 +537,54 @@ export default {
     },
     service(value) {
       console.log("entro a seleccion");
-      console.log(value)
-      console.log(value.target.value);
-      this.selectproduct = value.target.value
-      /*
-            if (seleccion == undefined||seleccion==''||seleccion==null) {
-                console.log("esperando")
-            }else
-            {//200.116.*/
-                this.axios.get(urlservicios+"servicios/" + value.target.value)
-                .then(response => {
-                    this.serviciosurl = response.data;
-                    //console.log(this.serviciosurl);
-                });
-            
+      this.load = true;
+      for(var i=0; i<this.productosurl.length;i++){
+        if(this.productosurl[i]._id==value.target.value)
+        {
+          this.selectproducto =this.productosurl[i]
+        }
+      }
+      setTimeout(function(){
+        this.axios.get(urlservicios+"servicios/"+this.selectproducto._id)
+        .then(response => {
+            this.serviciosurl = response.data;
+            this.load=false
+            this.habilitar= false
+            //console.log(this.serviciosurl);
+        });
+      }.bind(this),2000)
+
             
     },
-    campos(selectproduct, selectservice) {
+    campos(value) {
       console.log("inputs");
-            
+            this.load = true;
+      for(var i=0; i<this.serviciosurl.length;i++){
+        console.log(i);
+        if(this.serviciosurl[i]._id==value.target.value)
+        {
+          this.selectservicio =this.serviciosurl[i]
+        }
+      }
+        setTimeout(function(){
          this.axios.get(
           urlservicios+"estructuraf/" +
-            selectproduct._id +
+            this.selectproducto._id +
             "/" +
-            selectservice._id)   
+            this.selectservicio._id)   
             .then(response => {
             this.inputs = response.data;
             
             console.log(this.inputs);
             this.objeto = this.inputs.objeto;
-                  console.log(this.objeto)
+            console.log(this.objeto)
+            this.load=false
+
             }).catch(function(error){
-              console.log("error estruc -> "+JSON.stringify(error));
+              //console.log("error estruc -> "+JSON.stringify(error));
             })
+        }.bind(this),2000)
+
     },
     envioServicio() {
       console.log("se envia");

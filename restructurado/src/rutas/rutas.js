@@ -6,6 +6,7 @@ import OrdenServiceComponent from '../componentes/ordenservicio.vue'
 import ConsultComponent from '../componentes/filtrado.vue'
 import DetailComponent from '../componentes/detalles.vue'
 import ResultComponent from '../componentes/resultado.vue'
+import preloadComponent from '../componentes/preload.vue'
 
 
 export const rutas = [    
@@ -49,5 +50,9 @@ export const rutas = [
             },
             
         ]
-    },     
+    },   
+    {
+        path: '/load',
+        component: preloadComponent
+    }  
     ]    

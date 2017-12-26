@@ -173,14 +173,8 @@ export default {
             this.axios
                 .post(urlservicios+"ActualizarTrayecto/"+this.currentUser._id+"/"+this.currentUser.detalle[this.indices].id, objeto)
                 .then(response => {
-                
-                    //console.log(response);
-                swal(
-                    "Excelente!",
-                    "trayecto asignado ",
-                    "success"
-                    );
-                    });
+                });
+                    this.$refs.ModalAct.hide();
         },
         asignar(seleccionado){
 

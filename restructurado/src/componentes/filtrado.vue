@@ -1,18 +1,18 @@
 <template>
   <b-container fluid>
+      <preload v-show="load"></preload>
         <b-row>
             <b-col>
-                <b-form-select v-model="selectedCL" class="mb-3" :options="clientes.nombre" >
+                <b-form-select v-model="selectedCL" class="mb-3" :options="clientes"  
+                text-field="nombre" value-field="_id" @change.native="SelectCC">
                         <!-- this slot appears above the options from 'options' prop -->
-                        <option disabled selected value>-- Por favor seleccione un Cliente --</option>
-                        <option v-for="(data,indice) in clientes" :value="data">{{data.nombre}}</option>
+                        
                 </b-form-select>
             </b-col>
             <b-col>
-                <b-form-select v-model="selectedCC" class="mb-3" @click.native="SelectCC(selectedCL)">
+                <b-form-select v-model="selectedCC" class="mb-3" :options="centros" 
+                text-field="nombre" value-field="_id">
                         <!-- this slot appears above the options from 'options' prop -->
-                        <option disabled selected value>-- Por favor seleccione un Centro de Costo --</option>
-                        <option v-for="(data,indice) in centros" :value="data" >{{data.nombre}}</option>
                 </b-form-select>
             </b-col>
         </b-row>
@@ -30,7 +30,7 @@
             <b-col md="6" class="my-1">
                 <b-form-group horizontal label="Filter" class="mb-0">
                     <b-input-group>
-                        <b-form-input v-model="filter" placeholder="Type to Search" />
+                        <b-form-input v-model="filter" type="number" @keyup="numeros(this)" placeholder="Type to Search" />
                     </b-input-group>
                 </b-form-group>
             </b-col>
@@ -48,7 +48,7 @@
             </b-col>
         </b-row>
         <b-row>
-            <b-btn  to="/inicio/consultar/resultado"class="mt-3 float-right" variant="primary" v-on:click="consultar()">Consultar</b-btn>
+            <b-btn to="/inicio/consultar/resultado"  class="mt-3 float-right" variant="primary" v-on:click="consultar()">Consultar</b-btn>
         </b-row>
         <b-row>
             <router-view :consulta="consulta">
@@ -63,11 +63,17 @@
 import DatePicker from "vue2-datepicker";
 import {bus} from "../main"
 import {urlservicios} from '../main'
+import Preload from '../componentes/preload.vue'
 
 export default {
     components: { DatePicker },
+      components :{
+    Preload
+  },
     data() {
         return {
+            habilitar: true,
+            load: false,
             consulta: [],
             estados:[
                 {nombre: 'Activo'},
@@ -76,13 +82,29 @@ export default {
             selected_state: '',
             time1: "",
             selectedCL: '',
-            clientes: '',
+            clientes: {},
             selectedCC: '',
-            centros: '',
+            centros: {},
             filter: ''
         };
     },
     methods:{
+        numeros(valor) {
+        //console.log("entro a numeros");
+        //console.log(document.getElementById("telefono").value)
+        var a = document.getElementById("telefono").value;
+        //var x=check.which;
+        //var x = a.charCode;
+        var x = a.keyCode;
+        if (!(a >= 48 || a <= 57)) {
+            swal("Oops...", "Solo deben ser numeros :)!", "error");
+            return (document.getElementById("telefono").value = "");
+        } else if (a.length >= 9) {
+            // if no is more then the value
+            swal("Oops...", "Maximo 10 digitos!", "error");
+            return (document.getElementById("telefono").value = "");
+        }
+        },
         detalles(indice){
             console.log("entro a detalles")
             console.log(this.consulta[indice]);
@@ -102,18 +124,18 @@ export default {
                 cliente="null"
                 }
                 else{
-                cliente=this.selectedCL._id
+                cliente=this.selectedCL
                 }   
             if(this.selectedCC===''){
                 centrocosto="null"
                 }   
                 else{
-                centrocosto=this.selectedCC._id
+                centrocosto=this.selectedCC
                 }     
             this.axios.get(urlservicios+"/ObtenerOrdenesFiltrado/"+this.filter+"/"+this.selected_state+"/"+cliente+"/"+centrocosto+"")
             .then((response) => {
                 this.consulta=response.data
-                console.log("consilta"+this.consulta)
+                //console.log(JSON.stringify(this.consulta))
                 if(this.consulta==''){
                     swal(
                         'Oops...',
@@ -123,15 +145,25 @@ export default {
                 }
             })
         },
-        SelectCC: function(selectedCL){
+        SelectCC(value){
+            console.log(value.target.value);
+            this.selectedCL=value.target.value
+                  this.load = true;
+      setTimeout(function(){
             console.log("entramos a seleccionar cc")
-            this.axios.get(urlservicios+"/centros/")
+            //this.axios.get(urlservicios+"centros/"+value.target.value)            
+            this.axios.get(urlservicios+"centros/")
             .then((response) => {
                 this.centros=response.data
                 //console.log(this.centros)
-
+            this.load=false
+            this.habilitar= false
             })
+      }.bind(this),2000)
+
+
             }
+        
     },
 
     mounted: function () {
@@ -140,10 +172,10 @@ export default {
         var infologin =JSON.parse(login);
         //console.log(infologin.id_OperadorLogistico)
     
-        this.axios.get(urlservicios+"/clientes/")
+        this.axios.get(urlservicios+"clientes/")
         .then((response) => {
             this.clientes=response.data
-            //console.log(this.clientes)
+            console.log(this.clientes)
         })
                 
     },

@@ -1,18 +1,17 @@
 <template>
     <b-container>
+        
         <b-row>
         <h3>INFORMACION RECOGIDA</h3>
-        <b-form-select v-model="selected_client"class="mb-3" @click.native="ClientesSelect(selected_client)" >
-            <option disabled selected value> Clientes </option>
-            <option v-for="(data,indice) in clientes" :value="data">
-                {{data.nombre}}
-            </option>
+        
+        <b-form-select v-model="selected_client" class="mb-3" 
+        :options="clientes" text-field="nombre" value-field="_id" @change.native="ClientesSelect" >
+            
         </b-form-select>
-        <b-form-select v-model="selected_center"class="mb-3">
-            <option disabled selected value> Centro de Costos </option>
-            <option v-for="(data,indice) in centros" :value="data">
-                {{data.nombre}}
-            </option>
+        <preload v-if="load"></preload>
+        <b-form-select v-model="selected_center" class="mb-3"
+         :options="centros" text-field="nombre" value-field="_id" :disabled="habilitar" v-else >
+
         </b-form-select>
         </b-row>
         <b-row>
@@ -21,7 +20,7 @@
                     <b-form-input id="direccion"
                     size="lg"
                         type="text"
-                        v-model="selected_client.direccion"
+                        v-model="selected_cliente.direccion"
                         required
                         placeholder="Direccion">
                     </b-form-input>
@@ -33,9 +32,9 @@
                     <b-form-input id="direccion"
                     size="lg"
                         type="text"
-                        v-model="selected_client.nombre"
+                        v-model="selected_cliente.nombre"
                         required
-                        placeholder="Direccion">
+                        placeholder="Nombre">
                     </b-form-input>
             </b-form-group>
         </b-row>
@@ -45,9 +44,9 @@
                     <b-form-input id="direccion"
                     size="lg"
                         type="text"
-                        v-model="selected_client.telefono"
+                        v-model="selected_cliente.telefono"
                         required
-                        placeholder="Direccion">
+                        placeholder="Telefono">
                     </b-form-input>
             </b-form-group>
         </b-row>
@@ -61,30 +60,54 @@
 
 <script>
 import Orden from '../componentes/orden.vue'
+import Preload from '../componentes/preload.vue'
+
 import {bus} from '../main'
 import {urlservicios} from '../main'
 
 export default {
+      components :{
+          Preload
+      },
     data () {
+
     return {
         selected_client: '',
         selected_center: '',
+        selected_cliente: {},
+        selected_centro:{},
         clientes: {},
         centros:{},
-
+        load: false,
+        habilitar: true
         }    
     },
+   
     methods: {
         ClientesSelect(seleccion){
-                        //console.log("antro a selecion de clientes")
-                    if(seleccion!==undefined){
-                    this.axios.get(urlservicios+"centros/")
-                        // this.axios.get("http://192.168.1.69:3000/logistica/centros/"+seleccion._id)
-                        .then((response) => {
-                            this.centros=response.data
-                            //console.log(this.centros)
-                        })
-                    }
+            console.log(seleccion.target.value);
+            //this.selected_client=seleccion.target.value
+            console.log("antro a selecion de clientes")
+            for(var i=0;i<this.clientes.length;i++){
+                if(this.clientes[i]._id==seleccion.target.value){
+                    this.selected_cliente=this.clientes[i]
+                }
+            }
+            this.load = true;
+            setTimeout(function(){
+                if(seleccion!==undefined){
+                this.axios.get(urlservicios+"centros/")
+                    // this.axios.get("http://192.168.1.69:3000/logistica/centros/"+seleccion._id)
+                    .then((response) => {
+                        this.centros=response.data
+                        this.habilitar= false
+                        this.load=false
+                        //console.log(this.centros)
+                    })
+                }
+            }.bind(this),2000)
+
+
         },
         actualizar: function(){
             if(this.selected_client==''||this.selected_center==''){
@@ -94,8 +117,8 @@ export default {
                     'error'
                 )
             }else{
-            var selected_client= this.selected_client._id
-            var selected_center= this.selected_center._id
+            var selected_client= this.selected_client
+            var selected_center= this.selected_center
             var seleccionados = {
                 selected_client:selected_client,
                 selected_center:selected_center
@@ -117,7 +140,7 @@ export default {
         this.axios.get(urlservicios+"clientes/")
         .then((response) => {
             this.clientes=response.data
-            //console.log(this.clientes)
+            console.log(this.clientes)
         })
         this.nombreusu;
         bus.$emit('remitente')
