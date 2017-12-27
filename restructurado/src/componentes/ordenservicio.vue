@@ -465,6 +465,7 @@ export default {
         var detalleslocal = this.detalles;
 
         var detalles = {
+
           servicioslocal: servicioslocal,
           productoslocal: productoslocal,
           detalleslocal: detalleslocal
@@ -595,6 +596,7 @@ export default {
       //console.log(selecc)
       //console.log(infologin._id);
       var objeto = {
+        id_OperadorLogistico: infologin.id_OperadorLogistico,
         id_usuario: infologin._id,
         id_centro: selecc.selected_center,
         id_remitente: selecc.selected_client,

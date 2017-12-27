@@ -187,7 +187,7 @@
                     </b-link>
                 </li>
                 <li> 
-                    <b-link to="/inicio/consultar">
+                    <b-link to="/inicio/trazabilidad">
                         <i class="fa fa-search"></i><span>Consulta Trazabilidad</span>
                     </b-link>
                 </li>

@@ -1,42 +1,46 @@
 <template>
-  <b-container fluid>
+  <b-container>
       <preload v-show="load"></preload>
       <b-card>
         <b-row>
             <b-col>
+                <b-form-group 
+                    label="Clientes">
                 <b-form-select v-model="selectedCL" class="mb-3" :options="clientes"  
-                text-field="nombre" value-field="_id" @change.native="SelectCC">
-                        <!-- this slot appears above the options from 'options' prop -->
-                        
+                text-field="nombre" value-field="_id" @change.native="SelectCC">                        
                 </b-form-select>
+                </b-form-group>
             </b-col>
             <b-col>
-                <b-form-select v-model="selectedCC" class="mb-3" :options="centros" 
-                text-field="nombre" value-field="_id">
-                        <!-- this slot appears above the options from 'options' prop -->
-                </b-form-select>
+                <b-form-group 
+                    label="Centros de Costo">
+                    <b-form-select v-model="selectedCC" class="mb-3" :options="centros" 
+                    text-field="nombre" value-field="_id">
+                    </b-form-select>
+                </b-form-group>
             </b-col>
         </b-row>
         <b-row>
             <b-col>
-                 <date-picker width=450  v-model="time1" range lang="en"></date-picker>
+                <b-form-group label="Rango de Fechas" class="mb-3">
+                <date-picker width=450  v-model="time1" range lang="en"></date-picker>
+                </b-form-group>
             </b-col>
-            <b-col>
-               
+            <b-col>  
             </b-col>
             <b-col>
             </b-col>
         </b-row>
         <b-row>
             <b-col md="6" class="my-1">
-                <b-form-group horizontal label="Filter" class="mb-0">
+                <b-form-group horizontal label="Orden de servicios" class="mb-0">
                     <b-input-group>
                         <b-form-input v-model="filter" type="number" @keyup="numeros(this)" placeholder="Type to Search" />
                     </b-input-group>
                 </b-form-group>
             </b-col>
             <b-col md="6" class="my-1">
-                <b-form-group horizontal label="Sort" class="mb-0">
+                <b-form-group horizontal label="Estados" class="mb-0">
                     <b-input-group>
                         <b-form-select  v-model="selected_state">
                         <option disabled selected value>--  --</option>
@@ -68,9 +72,10 @@ import {urlservicios} from '../main'
 import Preload from '../componentes/preload.vue'
 
 export default {
-    components: { DatePicker },
+
       components :{
-    Preload
+    Preload,
+    DatePicker
   },
     data() {
         return {
@@ -82,7 +87,7 @@ export default {
                 {nombre: 'Inactivo'}
             ],
             selected_state: '',
-            time1: "",
+            time1: '',
             selectedCL: '',
             clientes: {},
             selectedCC: '',
@@ -92,20 +97,16 @@ export default {
     },
     methods:{
         numeros(valor) {
-        //console.log("entro a numeros");
-        //console.log(document.getElementById("telefono").value)
-        var a = document.getElementById("telefono").value;
-        //var x=check.which;
-        //var x = a.charCode;
-        var x = a.keyCode;
-        if (!(a >= 48 || a <= 57)) {
-            swal("Oops...", "Solo deben ser numeros :)!", "error");
-            return (document.getElementById("telefono").value = "");
-        } else if (a.length >= 9) {
-            // if no is more then the value
-            swal("Oops...", "Maximo 10 digitos!", "error");
-            return (document.getElementById("telefono").value = "");
-        }
+            var a = document.getElementById("telefono").value;
+            var x = a.keyCode;
+            if (!(a >= 48 || a <= 57)) {
+                swal("Oops...", "Solo deben ser numeros :)!", "error");
+                return (document.getElementById("telefono").value = "");
+            } else if (a.length >= 9) {
+                // if no is more then the value
+                swal("Oops...", "Maximo 10 digitos!", "error");
+                return (document.getElementById("telefono").value = "");
+            }
         },
         detalles(indice){
             console.log("entro a detalles")
@@ -113,9 +114,21 @@ export default {
             bus.$emit('actualizar',indice)
         },
         consultar: function(){
-            ///ObtenerOrdenesFiltrado/:consecutivo/:estado/:id_remitente/:id_centro
+            ///ObtenerOrdenesFiltrado/:consecutivo/:estado/:id_remitente/:id_centro/:fecha_inicio/:fecha_final
             var cliente
             var centrocosto
+            var inicio
+            var fin
+            if(this.time1[0]===''||this.time1[0]===undefined){
+                inicio="null"
+                }else{
+                    inicio=this.time1[0]
+                }
+            if(this.time1[1]===''||this.time1[1]===undefined){
+                fin="null"
+                }else{
+                    fin=this.time1[1]
+                }
             if(this.filter===''){
                 this.filter="null"
                 }
@@ -133,11 +146,14 @@ export default {
                 }   
                 else{
                 centrocosto=this.selectedCC
-                }     
-            this.axios.get(urlservicios+"/ObtenerOrdenesFiltrado/"+this.filter+"/"+this.selected_state+"/"+cliente+"/"+centrocosto+"")
+                }   
+            var login = localStorage.getItem("storedData");
+            var infologin =JSON.parse(login);  
+            this.axios.get(urlservicios+"/ObtenerOrdenesFiltrado/"+infologin.id_OperadorLogistico+"/"+this.filter+"/"+this.selected_state+
+            "/"+cliente+"/"+centrocosto+"/"+inicio+"/"+fin)
             .then((response) => {
                 this.consulta=response.data
-                //console.log(JSON.stringify(this.consulta))
+                console.log(this.consulta)
                 if(this.consulta==''){
                     swal(
                         'Oops...',
@@ -151,17 +167,17 @@ export default {
             console.log(value.target.value);
             this.selectedCL=value.target.value
                   this.load = true;
-      setTimeout(function(){
+            setTimeout(function(){
             console.log("entramos a seleccionar cc")
-            //this.axios.get(urlservicios+"centros/"+value.target.value)            
-            this.axios.get(urlservicios+"centros/")
+            this.axios.get(urlservicios+"CentrosPorCliente/"+value.target.value)            
+            //this.axios.get(urlservicios+"centros/")
             .then((response) => {
                 this.centros=response.data
                 //console.log(this.centros)
             this.load=false
             this.habilitar= false
             })
-      }.bind(this),2000)
+             }.bind(this),2000)
 
 
             }
@@ -174,10 +190,10 @@ export default {
         var infologin =JSON.parse(login);
         //console.log(infologin.id_OperadorLogistico)
     
-        this.axios.get(urlservicios+"clientes/")
+        this.axios.get(urlservicios+"clientesOperador/"+infologin.id_OperadorLogistico)
         .then((response) => {
             this.clientes=response.data
-            console.log(this.clientes)
+            //console.log(this.clientes)
         })
                 
     },

@@ -109,7 +109,7 @@ export default {
             this.load = true;
             setTimeout(function(){
                 if(seleccion!==undefined){
-                this.axios.get(urlservicios+"centros/")
+                this.axios.get(urlservicios+"CentrosPorCliente/"+seleccion.target.value)
                     // this.axios.get("http://192.168.1.69:3000/logistica/centros/"+seleccion._id)
                     .then((response) => {
                         this.centros=response.data
@@ -150,8 +150,8 @@ export default {
         var test2 = localStorage.getItem("storedData");
         var test =JSON.parse(test2);
         //console.log(test.id_OperadorLogistico)
-        //this.axios.get("http://200.116.52.29:3000/logistica/clientes/"+test.id_OperadorLogistico)
-        this.axios.get(urlservicios+"clientes/")
+        this.axios.get(urlservicios+"clientesOperador/"+test.id_OperadorLogistico)
+        //this.axios.get(urlservicios+"clientes/")
         .then((response) => {
             this.clientes=response.data
             console.log(this.clientes)

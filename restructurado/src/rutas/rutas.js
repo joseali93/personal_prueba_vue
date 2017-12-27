@@ -7,6 +7,8 @@ import ConsultComponent from '../componentes/filtrado.vue'
 import DetailComponent from '../componentes/detalles.vue'
 import ResultComponent from '../componentes/resultado.vue'
 import preloadComponent from '../componentes/preload.vue'
+import ConsultTraceComponent from '../componentes/filtradoTraza.vue'
+import ListadoComponent from '../componentes/listadoTraza.vue'
 
 
 export const rutas = [    
@@ -48,9 +50,24 @@ export const rutas = [
    
                 ]                    
             },
+            {
+                path: 'trazabilidad',
+                component: ConsultTraceComponent, props: true,
+                children:[
+                    {
+                        path: '',  component: InicializaComponent,  props: true,  
+                        
+                    },
+                    {
+                        path: 'listado',  component: ListadoComponent,  props: true,  
+                        
+                    },
+                ]
+            },
             
         ]
-    },   
+    },
+   
     {
         path: '/load',
         component: preloadComponent
