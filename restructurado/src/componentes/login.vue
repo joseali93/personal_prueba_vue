@@ -1,4 +1,5 @@
 <template>
+<!--
 <b-container>
     <b-row>
       <b-col md="2">         
@@ -29,7 +30,7 @@
             </b-form-input>
           </b-form-group>
           <b-form  class="form-group">
-              <!--<a v-on:click="autenticar"> ingresar</a>-->
+
               <a  v-on:click="autenticar" class="btn btn-lg btn-success btn-block"> <span class="boton">Ingresar</span> </a>
       
           </b-form >
@@ -41,6 +42,30 @@
       </b-col>
     </b-row>
 </b-container>  
+-->
+<b-container>
+  <div class="form-outer text-center d-flex align-items-center">
+    <div class="form-inner">
+      <div class="logo text-uppercase">
+        <span>ADMIN</span>
+      </div>
+      <P>LOGIN PARA EL APLICATIVO</P>
+      <b-form>
+        <b-form-group id="email"
+                      label="Email address:"
+                      label-for="exampleInput1"
+                      description="We'll never share your email with anyone else.">
+        <b-form-input id="exampleInput1"
+                        type="email"
+                        v-model="correo"
+                        required
+                        placeholder="Enter email">
+        </b-form-input>
+        </b-form-group>
+      </b-form>
+    </div>
+  </div>
+</b-container>
 </template>
 
 <script>
