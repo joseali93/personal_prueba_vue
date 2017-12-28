@@ -9,6 +9,7 @@ import ResultComponent from '../componentes/resultado.vue'
 import preloadComponent from '../componentes/preload.vue'
 import ConsultTraceComponent from '../componentes/filtradoTraza.vue'
 import ListadoComponent from '../componentes/listadoTraza.vue'
+import NotFoundComponent from '../componentes/NotFound.vue'
 
 
 export const rutas = [    
@@ -46,7 +47,11 @@ export const rutas = [
                     {
                         path: 'detalles',  component: DetailComponent,  props: true,  
                         
-                    },             
+                    },      
+                    {
+                        path:'*',
+                        redirect: '/404'
+                    }        
    
                 ]                    
             },
@@ -62,14 +67,18 @@ export const rutas = [
                         path: 'listado',  component: ListadoComponent,  props: true,  
                         
                     },
+                    {
+                        path:'*',
+                        redirect: '/404'
+                    } 
                 ]
             },
             
         ]
-    },
-   
+    }, 
     {
-        path: '/load',
-        component: preloadComponent
-    }  
+        path: '/404',
+        component: NotFoundComponent
+    },
+ 
     ]    

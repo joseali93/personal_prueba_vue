@@ -216,7 +216,13 @@
               <div class="navbar-header"><a id="toggle-btn" href="#" class="menu-btn"><i class="icon-bars"> </i></a><a href="index.html" class="navbar-brand">
                   <div class="brand-text d-none d-md-inline-block"><span> </span><strong class="text-primary"></strong></div></a></div>
               <ul class="nav-menu list-unstyled d-flex flex-md-row align-items-md-center">
-                <li class="nav-item"><a href="login.html" class="nav-link logout">Logout<i class="fa fa-sign-out"></i></a></li>
+                <li class="nav-item">
+                  <b-button variant="link" class="nav-link logout" @click="Salir()">
+                    Logout
+                    <i class="fa fa-sign-out"></i>
+                  </b-button>
+
+                </li>
                </ul>
             </div>
           </div>
@@ -241,7 +247,7 @@
               <p>WaySolutions Tecnology © 2017</p>
             </div>
             <div class="col-sm-6 text-right">
-              <p>Design by <a href="#" class="external">Bootstrapious</a></p>
+              <p>Design by <a href="http://www.waysolutions.co/" class="external">WaySolutions Tecnology</a></p>
               <!-- Please do not remove the backlink to us unless you support further theme's development at https://bootstrapious.com/donate. It is part of the license conditions. Thank you for understanding :)-->
             </div>
           </div>
@@ -259,6 +265,14 @@ export default {
     return {
       nombreusu: ""
     };
+  },
+  methods:{
+    Salir(val){
+      console.log("entro a salir");
+      localStorage.clear();
+      this.$router.replace('/')
+
+    }
   },
   components: {
     Preload

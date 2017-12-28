@@ -1,22 +1,30 @@
 <template>
     <b-container>
-        
-        <b-table striped hover :items="items" :fields="fields">
-            <template slot="imagenes" scope="data">
-                <b-btn v-b-toggle.collapseA.collapseB>
-                <i class="btn btn-success fa fa-picture-o" >
+        {{consulta}}
+        <b-table striped hover :items="consulta" :fields="fields">
+            
+            <template slot="nmovilizado" slot-scope="data">
+                {{data.item.detalle[0].id}}
+            </template> 
+             <template slot="productoslocal" slot-scope="data" >
+                {{data.item.detalle[0].productoslocal.nombre}}
+            </template> 
+            <template slot="servicioslocal" slot-scope="data">
+                {{data.item.detalle[0].servicioslocal.nombre}}
+            </template> 
+            <template slot="imagenes" slot-scope="data" >
+                <i class="btn btn-success fa fa-picture-o" v-show="imagen===true">
                     
                 </i>
-                </b-btn>
             </template> 
-            <template slot="detalles" scope="data">
+            <template slot="detalles" slot-scope="data">
                 <i class="btn btn-warning fa fa-info"  v-b-modal.myModal></i>
             </template> 
         </b-table>
         <!-- the modal -->
-        <b-modal id="myModal">
+        <b-modal id="myModal" size="lg">
             <b-container>
-                <p v-if="existe">no tiene imagenes</p>
+                <b-row>
                 <b-card title="Card Title"
                         img-src="https://lorempixel.com/600/300/food/5/"
                         img-alt="Image"
@@ -24,50 +32,49 @@
                         tag="article"
                         style="max-width: 20rem;"
                         class="mb-2" 
-                        v-else>
+                        >
                     <p class="card-text">
                     Some quick example text to build on the card title and make up the bulk of the card's content.
                     </p>
                     <b-button href="#" variant="primary">Go somewhere</b-button>
                 </b-card>
+                                <b-card title="Card Title"
+                        img-src="https://lorempixel.com/600/300/food/5/"
+                        img-alt="Image"
+                        img-top
+                        tag="article"
+                        style="max-width: 20rem;"
+                        class="mb-2" 
+                        >
+                    <p class="card-text">
+                    Some quick example text to build on the card title and make up the bulk of the card's content.
+                    </p>
+                    <b-button href="#" variant="primary">Go somewhere</b-button>
+                </b-card>
+                </b-row>
             </b-container>
         </b-modal>
-        <!-- elements to collapse -->
-        <b-collapse id="collapseA" class="mt-2" style="text-align: center">
-           <b-card title="Card Title"
-          img-src="https://lorempixel.com/600/300/food/5/"
-          img-alt="Image"
-          img-top
-          tag="article"
-          style="max-width: 20rem;"
-          class="mb-2">
-    <p class="card-text">
-      Some quick example text to build on the card title and make up the bulk of the card's content.
-    </p>
-    <b-button href="#" variant="primary">Go somewhere</b-button>
-  </b-card>
-        </b-collapse>
-        <b-collapse id="collapseB" class="mt-2">
-            <b-card>
-            I am collapsable content B!
-            </b-card>
-        </b-collapse>
     </b-container>
 </template>
 
 <script>
+import {bus} from '../main'
 export default {
+    props:['consulta'],
     data () {
         return {
+        imagen: false,
         existe: true,
-        // Note 'isActive' is left out and will not appear in the rendered table
-        fields: [ 'first_name', 'last_name', 'age', 'imagenes', 'detalles' ],
-        items: [
-            { isActive: true, age: 40, first_name: 'Dickerson', last_name: 'Macdonald' },
-            { isActive: false, age: 21, first_name: 'Larsen', last_name: 'Shaw' },
-            { isActive: false, age: 89, first_name: 'Geneva', last_name: 'Wilson' },
-            { isActive: true, age: 38, first_name: 'Jami', last_name: 'Carney' }
-        ]
+        fields: [ 
+            { key: 'id', sortable: true , label: 'N° Orden de Servicio'},
+            {key:'nmovilizado', label: 'N° Movilizado'},
+            {key:'estado', label: 'Estado'},
+            {key:'fecha_creacion', label: 'Fecha Ultima Actualizacion'},
+            {key:'productoslocal', label: 'Producto'},
+            {key:'servicioslocal', label: 'Servicio'},
+            'imagenes',
+            'detalles'
+               ],
         }
     }
 }

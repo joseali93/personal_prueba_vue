@@ -588,6 +588,7 @@ export default {
     },
     envioServicio() {
       console.log("se envia");
+      console.log(this.DetalleServicio);
       var login = localStorage.getItem("storedData");
       var infologin = JSON.parse(login);
 
@@ -599,6 +600,12 @@ export default {
         id_OperadorLogistico: infologin.id_OperadorLogistico,
         id_usuario: infologin._id,
         id_centro: selecc.selected_center,
+        estados: [
+          {
+            id_usuario:infologin._id
+          }
+          
+            ],
         id_remitente: selecc.selected_client,
         detalle: this.DetalleServicio
       };

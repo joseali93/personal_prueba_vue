@@ -2,65 +2,78 @@
     <b-container>
         <preload v-show="load"></preload>
         <b-card>
-        <b-row>
+            <b-row>
+                    <b-col>
+                        <b-form-group 
+                        label="Clientes">
+                            <b-form-select v-model="selectedCL" id="clienteselect" v-bind:style="validatecampo" :options="clientes"  
+                            text-field="nombre" value-field="_id" @change.native="SelectCC" required>
+                                    <!-- this slot appears above the options from 'options' prop -->          
+                            </b-form-select>
+                        </b-form-group>
+                    </b-col>
+                    <b-col>
+                        <b-form-group 
+                        label="Centro de Costo">
+                            <b-form-select v-model="selectedCC" id="costoselect"  v-bind:style="validatecampo" class="mb-3" :options="centros" 
+                            text-field="nombre" value-field="_id" required :disabled="disable">
+                            </b-form-select>
+                        </b-form-group>
+                    </b-col>
+            </b-row>
+        </b-card>
+        <b-card class="car">
+            <b-row>
                 <b-col>
                     <b-form-group 
-                    label="Clientes">
-                        <b-form-select v-model="selectedCL" id="clienteselect" v-bind:style="validatecampo" :options="clientes"  
-                        text-field="nombre" value-field="_id" @change.native="SelectCC" required>
-                                <!-- this slot appears above the options from 'options' prop -->          
-                        </b-form-select>
-                     </b-form-group>
-                </b-col>
-                <b-col>
-                    <b-form-group 
-                    label="Centro de Costo">
-                        <b-form-select v-model="selectedCC" id="costoselect"  v-bind:style="validatecampo" class="mb-3" :options="centros" 
-                        text-field="nombre" value-field="_id" required>
-                        </b-form-select>
+                        label="Por Favor seleccione como desea filtrar:"
+                        label-size="lg">
+                        <b-form-radio-group v-model="prueba"
+                                        :options="options"
+                                        name="radiosSm">
+                        </b-form-radio-group>
                     </b-form-group>
                 </b-col>
-        </b-row>
-        <b-row>
-                <b-col>
-                    <b-form-group label="Rango de Fechas" class="mb-3">
-                    <date-picker disabled="true" id="fecha" width="430" v-model="time1" placeholder="Rango de Fechas" range lang="en"></date-picker>
-                    </b-form-group>
-                    {{time1}}
-                </b-col>
-        </b-row>
-        <b-row>
-                <b-col>
-                    <b-form-group label="Orden de Servicio" class="mb-3">
-                    <b-input-group>
-                    <b-form-input v-model="orden" class="mb-3" type="number" id="orden" @input.native="ordenes"  placeholder="Orden de Servicio" />
-                    </b-input-group>
-                    </b-form-group>
-                </b-col>
-                <b-col>
-                    <b-form-group label="Referencia" class="mb-3">
-                    <b-input-group>
-                    <b-form-input v-model="referencia" class="mb-3" type="text" id="referencia" @input.native="referencias"  placeholder="Referencia" />
-                    </b-input-group>
-                    </b-form-group>
-                </b-col>
-                <b-col>
-                    <b-form-group label="N° Movilizado" class="mb-3">
-                    <b-input-group>
-                    <b-form-input v-model="nmovilizado" class="mb-3" type="number" id="nmovilizado" @input.native="movilizado" placeholder="Num. Movilizado" />
-                    </b-input-group>
-                    </b-form-group>
-                </b-col>
-        </b-row>
-        <b-row>
-            <b-button @click="consulta()">
-                Consultar
-            </b-button>
-        </b-row>
+            </b-row>
+            <b-row v-show="prueba=='first'">
+                    <b-col>
+                        <b-form-group label="Rango de Fechas" class="mb-3">
+                            <date-picker disabled="true" id="fecha" width="430" v-model="time1" placeholder="Rango de Fechas" range lang="en"></date-picker>
+                        </b-form-group>
+                    </b-col>
+            </b-row>
+            <b-row v-show="prueba=='second'">
+                    <b-col>
+                        <b-form-group label="Orden de Servicio" class="mb-3">
+                        <b-input-group>
+                        <b-form-input v-model="orden" class="mb-3" type="number" id="orden" @input.native="ordenes"  placeholder="Orden de Servicio" />
+                        </b-input-group>
+                        </b-form-group>
+                    </b-col>
+                    <b-col>
+                        <b-form-group label="Referencia" class="mb-3">
+                        <b-input-group>
+                        <b-form-input v-model="referencia" class="mb-3" type="text" id="referencia" @input.native="referencias"  placeholder="Referencia" />
+                        </b-input-group>
+                        </b-form-group>
+                    </b-col>
+                    <b-col>
+                        <b-form-group label="N° Movilizado" class="mb-3">
+                        <b-input-group>
+                        <b-form-input v-model="nmovilizado" class="mb-3" type="number" id="nmovilizado" @input.native="movilizado" placeholder="Num. Movilizado" />
+                        </b-input-group>
+                        </b-form-group>
+                    </b-col>
+            </b-row>
+            <b-row>
+                <b-button @click="consultar()">
+                    Consultar
+                </b-button>
+            </b-row>
         </b-card>
         <b-card>
             <b-row>
-                <router-view>
+                <router-view :consulta="consulta">
                 </router-view>
             </b-row>
         </b-card>
@@ -80,6 +93,7 @@ export default {
   },
 data(){
     return {
+        prueba: 'first',
         disable: true,
         load: false,
         orden: '',
@@ -90,11 +104,16 @@ data(){
         selectedCC: '',
         centros: {},
         time1: '',
-        validatecampo: ''
+        validatecampo: '',
+        options: [
+        { text: 'Rango de Fechas', value: 'first' },
+        { text: 'orden', value: 'second' }
+      ],
+        consulta:{}
     }
 },
 methods:{
-    consulta(){
+    consultar(){
         var selectCL = document.getElementById('clienteselect')
         var selectCC = document.getElementById('costoselect')
 
@@ -113,6 +132,19 @@ methods:{
         console.log(this.orden);
         console.log(this.referencia);
         console.log(this.nmovilizado);
+                    var login = localStorage.getItem("storedData");
+            var infologin =JSON.parse(login);  
+        this.axios.get(urlservicios+"/ObtenerOrdenesFiltrado/"+infologin.id_OperadorLogistico+"/null/null/null/null/null/null")
+            .then((response) => {
+                this.consulta=response.data
+                if(this.consulta==''){
+                    swal(
+                        'Oops...',
+                        'No se encontro ninguna Orden!',
+                        'error'
+                        )
+                }
+            })
         this.$router.replace('/inicio/trazabilidad/listado')
      }
     },
@@ -128,7 +160,7 @@ methods:{
             this.centros=response.data
             //console.log(this.centros)
             this.load=false
-            this.habilitar= false
+            this.disable= false
             })
         }.bind(this),2000)
     },
@@ -202,4 +234,8 @@ methods:{
     border: 1px solid white;
 }
 
+.car{
+    border: 1px solid transparent;
+    border-color: #c4c4c4
+}
 </style>

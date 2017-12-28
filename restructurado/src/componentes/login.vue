@@ -43,6 +43,7 @@
     </b-row>
 </b-container>  
 -->
+<!--
 <b-container>
   <div class="form-outer text-center d-flex align-items-center">
     <div class="form-inner">
@@ -66,6 +67,33 @@
     </div>
   </div>
 </b-container>
+-->
+<div class="page login-page">
+      <div class="container">
+        <div class="form-outer text-center d-flex align-items-center">
+          <div class="form-inner">
+            <div class="logo text-uppercase"><span> Way </span><strong class="text-primary"> Logistic </strong></div>
+            <p>Aplicativo para el manejo de procesos logisticos</p>
+            <form id="login-form" method="post">
+              <div class="form-group">
+                <label for="login-username" class="label-custom">User Name</label>
+                <input id="login-username" v-model="correo" type="text" name="loginUsername" required="">
+              </div>
+              <div class="form-group">
+                <label for="login-password" class="label-custom">Password</label>
+                <input id="login-password" v-model="password" type="password" name="loginPassword" required="">
+              </div>
+              <a  v-on:click="autenticar" class="btn btn-lg btn-success btn-block"> <span class="boton">Ingresar</span> </a>
+              <!-- This should be submit button but I replaced it with <a> for demo purposes-->
+            </form>
+          </div>
+          <div class="copyrights text-center">
+            <p>Design by <a href="http://www.waysolutions.co/" class="external">WaySoltions Tecnology</a></p>
+            <!-- Please do not remove the backlink to us unless you support further theme's development at https://bootstrapious.com/donate. It is part of the license conditions. Thank you for understanding :)-->
+          </div>
+        </div>
+      </div>
+    </div>
 </template>
 
 <script>

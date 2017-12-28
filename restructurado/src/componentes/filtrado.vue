@@ -15,7 +15,7 @@
                 <b-form-group 
                     label="Centros de Costo">
                     <b-form-select v-model="selectedCC" class="mb-3" :options="centros" 
-                    text-field="nombre" value-field="_id">
+                    text-field="nombre" value-field="_id" :disabled="habilitar">
                     </b-form-select>
                 </b-form-group>
             </b-col>
@@ -42,9 +42,11 @@
             <b-col md="6" class="my-1">
                 <b-form-group horizontal label="Estados" class="mb-0">
                     <b-input-group>
-                        <b-form-select  v-model="selected_state">
+                        <b-form-select  v-model="selected_state" :options="estados" text-field="nombre" value-field="nombre" @change.native="selestado">
+                            <!--
                         <option disabled selected value>--  --</option>
                             <option  v-for="(data,indice) in estados" :value="data.nombre">{{data.nombre}}</option>
+                        -->
                         </b-form-select>
                         <b-input-group-button>
                         </b-input-group-button>
@@ -82,10 +84,7 @@ export default {
             habilitar: true,
             load: false,
             consulta: [],
-            estados:[
-                {nombre: 'Activo'},
-                {nombre: 'Inactivo'}
-            ],
+            estados: {},
             selected_state: '',
             time1: '',
             selectedCL: '',
@@ -96,6 +95,9 @@ export default {
         };
     },
     methods:{
+        selestado(value){
+            this.selected_state=value.target.value
+        },
         numeros(valor) {
             var a = document.getElementById("telefono").value;
             var x = a.keyCode;
@@ -109,8 +111,7 @@ export default {
             }
         },
         detalles(indice){
-            console.log("entro a detalles")
-            console.log(this.consulta[indice]);
+
             bus.$emit('actualizar',indice)
         },
         consultar: function(){
@@ -153,7 +154,6 @@ export default {
             "/"+cliente+"/"+centrocosto+"/"+inicio+"/"+fin)
             .then((response) => {
                 this.consulta=response.data
-                console.log(this.consulta)
                 if(this.consulta==''){
                     swal(
                         'Oops...',
@@ -164,16 +164,13 @@ export default {
             })
         },
         SelectCC(value){
-            console.log(value.target.value);
             this.selectedCL=value.target.value
                   this.load = true;
             setTimeout(function(){
-            console.log("entramos a seleccionar cc")
             this.axios.get(urlservicios+"CentrosPorCliente/"+value.target.value)            
             //this.axios.get(urlservicios+"centros/")
             .then((response) => {
                 this.centros=response.data
-                //console.log(this.centros)
             this.load=false
             this.habilitar= false
             })
@@ -185,15 +182,17 @@ export default {
     },
 
     mounted: function () {
-        console.log("montado")
         var login = localStorage.getItem("storedData");
         var infologin =JSON.parse(login);
-        //console.log(infologin.id_OperadorLogistico)
     
         this.axios.get(urlservicios+"clientesOperador/"+infologin.id_OperadorLogistico)
         .then((response) => {
             this.clientes=response.data
-            //console.log(this.clientes)
+        })
+            
+        this.axios.get(urlservicios+"estados/")
+        .then((response) => {
+            this.estados=response.data
         })
                 
     },

@@ -1,11 +1,13 @@
 <template>
     <b-container fluid>
+        <b-card>
         <b-row>
           <router-link  to="/inicio/consultar/resultado" tag="button" class-active="active" 
           class="btn btn-secondary btn-lg fa fa-arrow-left ">
           Volver
           </router-link>
         </b-row>
+        </b-card>
             <b-row>
                 <h4>Cliente:</h4>
             </b-row>
@@ -58,11 +60,8 @@
             </b-pagination>
             </b-row>
             <b-row>
-                <b-form-select v-model="selected_curier"class="mb-3" >
-                    <option disabled selected value> Curiers </option>
-                    <option v-for="(data,indice) in curiers" :value="data">
-                        {{data.nombre}}
-                    </option>
+                <b-form-select v-model="selected_curier" class="mb-3"  :options="curiers" text-field="nombre" value-field="_id" @change.native="selectcuriers">
+
                 </b-form-select>
         </b-row>
         <b-row>
@@ -82,7 +81,7 @@
                     </template>
                     <b-row v-else>
                         <h4>Seleccione el Trayecto</h4>
-                        <b-form-select :id="data.id"  v-model="selection" >
+                        <b-form-select :id="data.id"  v-model="selection"  >
                             <option v-for="tray in trayectos" :value="tray" >{{tray.nombre}}</option>
                         </b-form-select>
                     </b-row>
@@ -127,6 +126,11 @@ export default {
     },
     
     methods: {
+        selectcuriers(value){
+            console.log("entro a selec curier");
+            console.log(value);
+            this.selected_curier=value.target.value
+        },
         Presiono(indi,dato){
             console.log("entro a presiono y el indice es -> "+indi);
             //this.campos.id_trayecto=this.selection._id
@@ -182,7 +186,7 @@ export default {
 
             var obj ={
                 id_orden: this.currentUser._id,
-                id_curier: seleccionado._id
+                id_curier: seleccionado
             }
             this.axios
                 .post(urlservicios+"/AsignarOrdenCurrier/",obj)
@@ -262,7 +266,8 @@ export default {
         )
         .then(response => {
             this.curiers = response.data;
-            //console.log(this.curiers);
+            console.log("curiers");
+            console.log(this.curiers);
         });
 
         bus.$on('thisEvent', function (userObject) {
