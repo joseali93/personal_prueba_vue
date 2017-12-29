@@ -1,26 +1,33 @@
 <template>
     <b-container>
         {{consulta}}
-        <b-table striped hover :items="consulta" :fields="fields">
-            
-            <template slot="nmovilizado" slot-scope="data">
-                {{data.item.detalle[0].id}}
-            </template> 
-             <template slot="productoslocal" slot-scope="data" >
-                {{data.item.detalle[0].productoslocal.nombre}}
-            </template> 
-            <template slot="servicioslocal" slot-scope="data">
-                {{data.item.detalle[0].servicioslocal.nombre}}
-            </template> 
-            <template slot="imagenes" slot-scope="data" >
-                <i class="btn btn-success fa fa-picture-o" v-show="imagen===true">
+            <b-row>
+                <b-table striped hover :items="consulta" :fields="fields">
                     
-                </i>
-            </template> 
-            <template slot="detalles" slot-scope="data">
-                <i class="btn btn-warning fa fa-info"  v-b-modal.myModal></i>
-            </template> 
-        </b-table>
+                    <template slot="nmovilizado" slot-scope="data">
+                        {{data.item.detalle[0].id}}
+                    </template> 
+                    <template slot="productoslocal" slot-scope="data" >
+                        {{data.item.detalle[0].productoslocal.nombre}}
+                    </template> 
+                    <template slot="servicioslocal" slot-scope="data">
+                        {{data.item.detalle[0].servicioslocal.nombre}}
+                    </template> 
+                    <template slot="imagenes" slot-scope="data" >
+                        <i class="btn btn-success fa fa-picture-o" v-show="imagen===true">
+                            
+                        </i>
+                    </template> 
+                    <template slot="detalles" slot-scope="data">
+                        <i class="btn btn-warning fa fa-info"  v-b-modal.myModal></i>
+                    </template> 
+                </b-table>
+            </b-row>
+            <b-row>
+                <b-button @click="exportarxls()">
+                    Exportar XLS
+                </b-button>
+            </b-row>
         <!-- the modal -->
         <b-modal id="myModal" size="lg">
             <b-container>
@@ -60,6 +67,12 @@
 <script>
 import {bus} from '../main'
 export default {
+    methods:{
+        exportarxls(){
+            console.log("entro a exportar excel");
+             alasql('SELECT * INTO XLS("Data.xls",{headers:true}) FROM ?',[this.consulta]);
+        }
+    },
     props:['consulta'],
     data () {
         return {

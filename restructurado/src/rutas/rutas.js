@@ -10,9 +10,13 @@ import preloadComponent from '../componentes/preload.vue'
 import ConsultTraceComponent from '../componentes/filtradoTraza.vue'
 import ListadoComponent from '../componentes/listadoTraza.vue'
 import NotFoundComponent from '../componentes/NotFound.vue'
-
+import prueba from '../componentes/prueba.vue'
 
 export const rutas = [    
+    {
+        path: '/prueba',
+        component: prueba,
+    },
     {
         path: '/',
         component: InicioComponent,
