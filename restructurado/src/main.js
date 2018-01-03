@@ -6,11 +6,15 @@ import VueRouter from 'vue-router'
 import {rutas} from './rutas/rutas.js'  
 import axios from 'axios'
 import VueAxios from 'vue-axios'
+import moment from "moment";
+import VueMomentJS from "vue-momentjs";
  
+Vue.use(VueMomentJS, moment); 
 
-Vue.use(VueRouter)
+Vue.use(VueRouter);
 Vue.use(BootstrapVue);
 Vue.use(VueAxios, axios)
+
 
 const enrutador = new VueRouter({
   routes: rutas,

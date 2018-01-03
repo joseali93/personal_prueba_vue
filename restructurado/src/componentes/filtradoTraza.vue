@@ -1,5 +1,8 @@
 <template>
     <b-container>
+        <template slot="header">
+            algo
+        </template>
         <preload v-show="load"></preload>
         <b-card>
             <b-row>
@@ -71,12 +74,10 @@
                 </b-button>
             </b-row>
         </b-card>
-        <b-card>
             <b-row>
                 <router-view :consulta="consulta">
                 </router-view>
             </b-row>
-        </b-card>
     </b-container>
 </template>
 
@@ -107,17 +108,13 @@ data(){
         validatecampo: '',
         options: [
         { text: 'Rango de Fechas', value: 'first' },
-        { text: 'orden', value: 'second' }
+        { text: 'Orden, Referencia, N° Movilizado', value: 'second' }
       ],
         consulta:{}
     }
 },
 methods:{
     consultar(){
-        var selectCL = document.getElementById('clienteselect')
-        var selectCC = document.getElementById('costoselect')
-
-
      if(this.selectedCL==''||this.selectedCC=='')
      {  
         this.validatecampo= {
@@ -128,13 +125,16 @@ methods:{
         this.validatecampo=''
         console.log("hace peticion");
         console.log(this.selectedCL);
-        console.log(this.selectedCC);
+        console.log("cento de costo"+this.selectedCC);
         console.log(this.orden);
         console.log(this.referencia);
         console.log(this.nmovilizado);
                     var login = localStorage.getItem("storedData");
             var infologin =JSON.parse(login);  
-        this.axios.get(urlservicios+"/ObtenerOrdenesFiltrado/"+infologin.id_OperadorLogistico+"/null/null/null/null/null/null")
+            this.load = true;
+            //console.log(urlservicios+"/ObtenerOrdenesFiltradoDetalle/"+this.selectedCC+"/"+this.selectedCL);
+        //this.axios.get(urlservicios+"/ObtenerOrdenesFiltrado/"+infologin.id_OperadorLogistico+"/null/null/null/null/null/null")
+        this.axios.get(urlservicios+"/ObtenerOrdenesFiltradoDetalle/"+this.selectedCC+"/"+this.selectedCL+'/null')
             .then((response) => {
                 this.consulta=response.data
                 if(this.consulta==''){
@@ -143,7 +143,9 @@ methods:{
                         'No se encontro ninguna Orden!',
                         'error'
                         )
-                }
+                        this.load = false;
+                }this.load = false;
+
             })
         this.$router.replace('/inicio/trazabilidad/listado')
      }
@@ -219,7 +221,7 @@ methods:{
         this.axios.get(urlservicios+"clientesOperador/"+infologin.id_OperadorLogistico)
         .then((response) => {
             this.clientes=response.data
-            //console.log(this.clientes)
+            console.log(this.clientes)
         })
                 
     },

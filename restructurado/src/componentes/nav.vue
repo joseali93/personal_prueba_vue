@@ -172,23 +172,23 @@
                 <img src="src/assets/logo.png" alt="RLP" class="img-fluid rounded-circle mCS_img_loaded">
                 
             </div>
-            <div class="sidenav-header-logo"><a href="index.html" class="brand-small text-center"> <strong>R</strong><strong class="text-primary">P</strong><strong>L</strong></a></div>
+            <div class="sidenav-header-logo"><a href="index.html" class="brand-small text-center"> <strong>W</strong><strong class="text-primary">L</strong></a></div>
             </div>
             <div class="main-menu">
             <ul id="side-main-menu" class="side-menu list-unstyled">                  
                 <li>
                     <b-link to="/inicio/orden">
-                        <i class="fa fa-tachometer"></i><span>Orden de Servicio</span>
+                        <i class="fa fa-plus-square-o"></i><span>Orden de Servicio</span>
                     </b-link>
                 </li>
                 <li> 
                     <b-link to="/inicio/consultar">
-                        <i class="fa fa-search"></i><span>Consultar Orden</span>
+                        <i class="fa fa-briefcase"></i><span>Consultar Orden</span>
                     </b-link>
                 </li>
                 <li> 
                     <b-link to="/inicio/trazabilidad">
-                        <i class="fa fa-search"></i><span>Consulta Trazabilidad</span>
+                        <i class="fa fa-info"></i><span>Consulta Trazabilidad</span>
                     </b-link>
                 </li>
             </ul>

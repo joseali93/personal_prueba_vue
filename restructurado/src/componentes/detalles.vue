@@ -1,13 +1,11 @@
 <template>
-    <b-container fluid>
-        <b-card>
+    <b-container fluid class="conta">
         <b-row>
           <router-link  to="/inicio/consultar/resultado" tag="button" class-active="active" 
           class="btn btn-secondary btn-lg fa fa-arrow-left ">
           Volver
           </router-link>
         </b-row>
-        </b-card>
             <b-row>
                 <h4>Cliente:</h4>
             </b-row>
@@ -284,5 +282,7 @@ export default {
 </script>
 
 <style>
-
+.conta {
+    padding: 3%
+}
 </style>

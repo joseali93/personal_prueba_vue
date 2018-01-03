@@ -66,8 +66,6 @@
                     </a>
                 </b-row>
                 </b-card-footer>
-
-
     </b-container>
 </template>
 
@@ -99,7 +97,6 @@ export default {
     methods: {
         ClientesSelect(seleccion){
             console.log(seleccion.target.value);
-            //this.selected_client=seleccion.target.value
             console.log("antro a selecion de clientes")
             for(var i=0;i<this.clientes.length;i++){
                 if(this.clientes[i]._id==seleccion.target.value){
@@ -115,7 +112,6 @@ export default {
                         this.centros=response.data
                         this.habilitar= false
                         this.load=false
-                        //console.log(this.centros)
                     })
                 }
             }.bind(this),1000)
@@ -137,7 +133,6 @@ export default {
                 selected_client:selected_client,
                 selected_center:selected_center
             };
-            //console.log(seleccionados)
             bus.$emit('remitente',seleccionados)
             localStorage.setItem("orden",JSON.stringify(seleccionados))
             this.$router.replace('/inicio/ordenservicio')
@@ -145,16 +140,12 @@ export default {
         }
     },
     beforeCreate: function () {
-
-        //console.log("antes")
         var test2 = localStorage.getItem("storedData");
         var test =JSON.parse(test2);
-        //console.log(test.id_OperadorLogistico)
         this.axios.get(urlservicios+"clientesOperador/"+test.id_OperadorLogistico)
         //this.axios.get(urlservicios+"clientes/")
         .then((response) => {
             this.clientes=response.data
-            console.log(this.clientes)
         })
         this.nombreusu;
         bus.$emit('remitente')

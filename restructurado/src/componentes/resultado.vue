@@ -5,7 +5,7 @@
             {{data.index + 1}}
         </template>
         <template slot="Cancelar" scope="data">
-            <i class="btn btn-danger fa fa-trash" ></i>
+            <i class="btn btn-danger fa fa-trash" @click="cancelarOrden(data)" ></i>
         </template> 
         <template slot="actualizar" scope="data">
 
@@ -22,6 +22,7 @@
 
 <script>
 import {bus} from '../main'
+import {urlservicios} from '../main'
 
 export default {
     props:['consulta'],
@@ -38,6 +39,14 @@ export default {
         }
     },
     methods: {
+        cancelarOrden(value){
+            console.log(value.item._id);
+                this.axios.get(urlservicios+"CancelarOrden/"+value.item._id)
+                    .then((response) => {
+                        console.log(response.data);
+                    })
+                
+        },
         actualizar(inde){
             console.log(inde)
             bus.$emit('items',inde)

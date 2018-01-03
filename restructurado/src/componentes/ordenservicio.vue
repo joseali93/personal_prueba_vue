@@ -1,43 +1,43 @@
 <template>
     <b-container>
-    <header class="content-heading text-capitalize">
-            <h2>Detalle de Orden de Servicio</h2>
-            <small>Permite de la creacion y edicion de los envios que tendra asociado la orden de servicio</small>
-    </header>
-    <b-card>
-        <b-row>
-            <b-col md="3" offset-md="11">
-                <b-btn class="rounded-circle" variant="danger"  v-b-modal.modalcrear><i class="fa fa-plus"></i></b-btn>
-            </b-col>
-        </b-row>
-        <b-row>
-            <b-table :fields="fields" :per-page="5" :current-page="currentPage" :items="DetalleServicio">
+      <header class="content-heading text-capitalize">
+              <h2>Detalle de Orden de Servicio</h2>
+              <small>Permite de la creacion y edicion de los envios que tendra asociado la orden de servicio</small>
+      </header>
+      <b-card>
+          <b-row>
+              <b-col md="3" offset-md="11">
+                  <b-btn class="rounded-circle" variant="danger"  v-b-modal.modalcrear><i class="fa fa-plus"></i></b-btn>
+              </b-col>
+          </b-row>
+          <b-row>
+              <b-table :fields="fields" :per-page="5" :current-page="currentPage" :items="DetalleServicio">
 
-                <template slot="eliminar" scope="data">
-                    <i class="btn btn-danger fa fa-trash" v-on:click="eliminar(index)" ></i>
-                </template>
-                <template slot="productoslocal" scope="data">
-                    {{data.value.nombre}}         
-                </template>
-                <template slot="servicioslocal" scope="data">
-                    {{data.value.nombre}}
-                </template>
-                <template slot="editar" scope="data">
-                    <i class="btn btn-success fa fa-pencil"  v-on:click="editar(data.index)" v-b-modal.modaleditar></i>
-                </template>
-            </b-table>
-            <b-pagination size="md" :total-rows="DetalleServicio.length" v-model="currentPage" :per-page="5">
-            </b-pagination>
-        </b-row>
-        <b-row>
-            <router-link  to="/inicio/orden" tag="button"  class-active="active" class="btn btn-primary">Anterior</router-link>
-            <a v-on:click="envioServicio">
-                <router-link  to="/inicio" tag="button" class-active="active" class="btn btn-primary">Fin</router-link>
-            </a>
-        </b-row>
-    </b-card>
-        <!-- Modal Adicionar -->
-        <b-modal id="modalcrear" ref="Modal" title="Adicionar Registro" size="lg">
+                  <template slot="eliminar" scope="data">
+                      <i class="btn btn-danger fa fa-trash" v-on:click="eliminar(index)" ></i>
+                  </template>
+                  <template slot="productoslocal" scope="data">
+                      {{data.value.nombre}}         
+                  </template>
+                  <template slot="servicioslocal" scope="data">
+                      {{data.value.nombre}}
+                  </template>
+                  <template slot="editar" scope="data">
+                      <i class="btn btn-success fa fa-pencil"  v-on:click="editar(data.index)" v-b-modal.modaleditar></i>
+                  </template>
+              </b-table>
+              <b-pagination size="md" :total-rows="DetalleServicio.length" v-model="currentPage" :per-page="5">
+              </b-pagination>
+          </b-row>
+          <b-row>
+              <router-link  to="/inicio/orden" tag="button"  class-active="active" class="btn btn-primary">Anterior</router-link>
+              <a v-on:click="envioServicio">
+                  <router-link  to="/inicio" tag="button" class-active="active" class="btn btn-primary">Fin</router-link>
+              </a>
+          </b-row>
+      </b-card>
+      <!-- Modal Adicionar -->
+      <b-modal id="modalcrear" ref="Modal" title="Adicionar Registro" size="lg">
             <b-container fluid>
               
                 <b-row>
@@ -128,9 +128,9 @@
                 <b-btn class="mt-3 float-right" variant="outline-success" v-on:click="ingresarOrden">Guardar</b-btn>
 
             </div>
-        </b-modal>
-        <!-- Modal Editar -->
-        <b-modal id="modaleditar" ref="ModalEdit" title="Editar Registro" size="lg">
+      </b-modal>
+      <!-- Modal Editar -->
+      <b-modal id="modaleditar" ref="ModalEdit" title="Editar Registro" size="lg">
             <b-container fluid>
                 <b-row>
                     <label >Seleccione el Producto:</label>
@@ -202,7 +202,7 @@
                 <b-btn class="mt-3 float-right" variant="outline-success" v-on:click="actualizar()">Guardar</b-btn>
 
             </div>
-        </b-modal>
+      </b-modal>
     </b-container>
 </template>
 
@@ -210,7 +210,6 @@
 import { bus } from "../main";
 import {urlservicios} from '../main'
 import Preload from '../componentes/preload.vue'
-
 export default {
   components :{
     Preload
@@ -265,37 +264,8 @@ export default {
   },
   watch: {
     selectproduct(n, o) {
-      //console.log("select");
-      //console.log(n, o)
-      /*
-      this.axios
-        .get(
-          urlservicios+"servicios/" +
-            this.selectproduct._id
-        )
-        .then(response => {
-          this.serviciosurl = response.data;
-          //console.log(this.serviciosurl);
-        });*/
     },
     selectservice(n, o) {
-      //console.log("ser");
-      //console.log(n, o)
-      /*
-      this.axios
-        .get(
-          urlservicios+"estructuraf/" +
-            this.selectproduct._id +
-            "/" +
-            this.selectservice._id
-        )
-        //200.116.52.29
-        .then(response => {
-          this.inputs = response.data;
-          //this.inputsED =response.data;
-          //console.log(this.inputs);
-          this.objeto = this.inputs.objeto;
-        });*/
     }
   },
   methods: {
@@ -465,7 +435,7 @@ export default {
         var detalleslocal = this.detalles;
 
         var detalles = {
-
+          tra: [],
           servicioslocal: servicioslocal,
           productoslocal: productoslocal,
           detalleslocal: detalleslocal
@@ -588,14 +558,17 @@ export default {
     },
     envioServicio() {
       console.log("se envia");
+      if(this.DetalleServicio==''||this.DetalleServicio==null||this.DetalleServicio==undefined)
+      {
+        console.log("no se envia");
+      }
+      else{
       console.log(this.DetalleServicio);
       var login = localStorage.getItem("storedData");
       var infologin = JSON.parse(login);
 
       var selec = localStorage.getItem("orden");
       var selecc = JSON.parse(selec);
-      //console.log(selecc)
-      //console.log(infologin._id);
       var objeto = {
         id_OperadorLogistico: infologin.id_OperadorLogistico,
         id_usuario: infologin._id,
@@ -609,7 +582,6 @@ export default {
         id_remitente: selecc.selected_client,
         detalle: this.DetalleServicio
       };
-      //console.log(JSON.stringify(objeto));
       this.axios
         .post(urlservicios+"GuardarOrden", objeto)
         .then(response => {
@@ -623,6 +595,7 @@ export default {
           );
         });
     }
+    }
   },
   created: function() {
     console.log("creado");
@@ -630,8 +603,7 @@ export default {
   beforeCreate: function() {
     var login = localStorage.getItem("storedData");
     var infologin = JSON.parse(login);
-    //console.log(infologin)
-    //console.log(infologin.id_OperadorLogistico);
+    console.log(infologin.id_OperadorLogistico);
     this.axios
       .get(
         urlservicios+"productos/" +
@@ -648,6 +620,5 @@ export default {
 <style>
 .card{
     margin-top: 2%;
-
 }
 </style>
