@@ -33,7 +33,8 @@
                         label-size="lg">
                         <b-form-radio-group v-model="prueba"
                                         :options="options"
-                                        name="radiosSm">
+                                        name="radiosSm"
+                                        >
                         </b-form-radio-group>
                     </b-form-group>
                 </b-col>
@@ -75,7 +76,8 @@
             </b-row>
         </b-card>
             <b-row>
-                <router-view :consulta="consulta">
+                <router-view :consulta="consulta" :centro="centroseleccionado"
+                    :cliente="clienteseleccionado">
                 </router-view>
             </b-row>
     </b-container>
@@ -102,6 +104,8 @@ data(){
         nmovilizado: '',    
         selectedCL: '',
         clientes: {},
+        clienteseleccionado:{},
+        centroseleccionado: {},
         selectedCC: '',
         centros: {},
         time1: '',
@@ -114,41 +118,127 @@ data(){
     }
 },
 methods:{
+   
     consultar(){
-     if(this.selectedCL==''||this.selectedCC=='')
-     {  
-        this.validatecampo= {
-            border: '2px solid red'
-        }
-        swal("Oops...", "Falto algun seleccionar Cliente o Centro de Costo", "error");
-     }else{
-        this.validatecampo=''
-        console.log("hace peticion");
-        console.log(this.selectedCL);
-        console.log("cento de costo"+this.selectedCC);
-        console.log(this.orden);
-        console.log(this.referencia);
-        console.log(this.nmovilizado);
-                    var login = localStorage.getItem("storedData");
-            var infologin =JSON.parse(login);  
-            this.load = true;
-            //console.log(urlservicios+"/ObtenerOrdenesFiltradoDetalle/"+this.selectedCC+"/"+this.selectedCL);
-        //this.axios.get(urlservicios+"/ObtenerOrdenesFiltrado/"+infologin.id_OperadorLogistico+"/null/null/null/null/null/null")
-        this.axios.get(urlservicios+"/ObtenerOrdenesFiltradoDetalle/"+this.selectedCC+"/"+this.selectedCL+'/null')
-            .then((response) => {
-                this.consulta=response.data
-                if(this.consulta==''){
-                    swal(
-                        'Oops...',
-                        'No se encontro ninguna Orden!',
-                        'error'
-                        )
-                        this.load = false;
-                }this.load = false;
+        var inicio,fin
+        if(this.selectedCL==''||this.selectedCC=='')
+        {  
+            this.validatecampo= {
+                border: '2px solid red'
+            }
+            swal("Oops...", "Falto algun seleccionar Cliente o Centro de Costo", "error");
+        }else{
+            this.validatecampo=''
+            for(var i=0; i<this.clientes.length;i++){
+                        if(this.clientes[i]._id==this.selectedCL)
+                        {
+                        this.clienteseleccionado =this.clientes[i]
+                        }
+                    } 
+            for(var i=0; i<this.centros.length;i++){
+                if(this.centros[i]._id==this.selectedCC)
+                {
+                this.centroseleccionado =this.centros[i]
+                }
+            }
+            if(this.prueba=='first'){
+                console.log("tengo tiempo");
+                if(this.time1[0]==''||this.time1[0]==undefined||this.time1[0]==null||this.time1[1]==''||this.time1[1]==undefined||this.time1[1]==null)
+                {
+                    console.log("es vacio fecha");
+                    swal("Oops...", "Falto algun seleccionar el rango de fechas", "error");
 
-            })
-        this.$router.replace('/inicio/trazabilidad/listado')
-     }
+                }
+                else{
+                    inicio=this.time1[0]
+                    fin=this.time1[1]
+                    this.validatecampo=''
+                    this.load = true;
+                    console.log(urlservicios+"/ObtenerOrdenesFiltradoDetalle/"+this.selectedCC+"/"+this.selectedCL+'/null/null/null/'+inicio+'/'+fin+'');
+                    this.axios.get(urlservicios+"/ObtenerOrdenesFiltradoDetalle/"+this.selectedCC+"/"+this.selectedCL+'/null/null/null/'+inicio+'/'+fin+'')
+                        .then((response) => {
+                            this.consulta=response.data
+                            if(this.consulta==''){
+                                swal(
+                                    'Oops...',
+                                    'No se encontro ninguna Orden!',
+                                    'error'
+                                    )
+                                    this.load = false;
+                            }this.load = false;
+                            console.log(this.consulta);
+                            })
+
+                    this.$router.replace('/inicio/trazabilidad/listado')
+                }
+            }
+            else{
+                //ObtenerOrdenesFiltradoDetalle/:id_centro/:id_cliente/:consecutivo/:detalle/:referencia/:fecha_inicio/:fecha_final"
+                console.log("tengo campo");
+                if(this.orden!='null'||this.orden!=undefined||this.orden!=''){
+                    console.log(this.orden);  
+                    this.load = true;
+                    this.axios.get(urlservicios+"/ObtenerOrdenesFiltradoDetalle/"+this.selectedCC+"/"+this.selectedCL+'/'+this.orden+'/null/null/null/null')
+                        .then((response) => {
+                            this.consulta=response.data
+                            if(this.consulta==''){
+                                swal(
+                                    'Oops...',
+                                    'No se encontro ninguna Orden!',
+                                    'error'
+                                    )
+                                    this.load = false;
+                            }
+                            this.load = false;
+                            console.log(this.consulta);
+                            })
+
+                    this.$router.replace('/inicio/trazabilidad/listado')
+                }
+                if(this.referencia!=null){
+                    this.load = true;
+                    console.log(this.referencia);
+                    this.axios.get(urlservicios+"/ObtenerOrdenesFiltradoDetalle/"+this.selectedCC+"/"+this.selectedCL+'/null/null/'+this.referencia+'/null/null')
+                        .then((response) => {
+                            this.consulta=response.data
+                            
+                            if(this.consulta==''){
+                                swal(
+                                    'Oops...',
+                                    'No se encontro ninguna Orden!',
+                                    'error'
+                                    )
+                                    this.load = false;
+                            }
+                            console.log(this.consulta);
+                            this.load = false;
+                            })
+
+                    this.$router.replace('/inicio/trazabilidad/listado')
+                } 
+                if(this.nmovilizado!=''){
+                    this.load = true;
+                    console.log("movilizado");
+                    console.log(this.nmovilizado);
+                    this.axios.get(urlservicios+"ObtenerOrdenesFiltradoDetalle/"+this.selectedCC+"/"+this.selectedCL+'/null/'+this.nmovilizado+'/null/null/null')
+                        .then((response) => {
+                            this.consulta=response.data
+                            if(this.consulta==''){
+                                swal(
+                                    'Oops...',
+                                    'No se encontro ninguna Orden!',
+                                    'error'
+                                    )
+                                    this.load = false;
+                            }this.load = false;
+                            })
+
+                    this.$router.replace('/inicio/trazabilidad/listado')
+                }               
+            }
+            
+
+        }
     },
     SelectCC(value){
         console.log(value.target.value);
@@ -164,7 +254,7 @@ methods:{
             this.load=false
             this.disable= false
             })
-        }.bind(this),2000)
+        }.bind(this))
     },
     ordenes(value){
         console.log("entro a ordenes");
@@ -180,7 +270,7 @@ methods:{
             referencia.disabled= true
             nummovilizado.disabled=true
             this.referencia=''
-            this.nmovilizado='null'
+            this.nmovilizado=''
         }
     },
     referencias(value){
@@ -193,12 +283,13 @@ methods:{
         }else{
             orden.disabled=true
             nummovilizado.disabled=true
-            this.orden='null'
-            this.nmovilizado='null'
+            this.orden=''
+            this.nmovilizado=''
         }
     },
     movilizado(value){
         this.nmovilizado= value.target.value
+        console.log(this.nmovilizado);
         var orden =document.getElementById('orden')
         var referencia = document.getElementById('referencia')
         if(this.nmovilizado==''){
@@ -207,7 +298,7 @@ methods:{
         }else{
             orden.disabled=true
             referencia.disabled=true
-            this.orden='null'
+            this.orden=''
             this.referencia=''
         }
     },

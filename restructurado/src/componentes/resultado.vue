@@ -1,8 +1,12 @@
 <template>
   <b-container>
+      
     <b-table :fields="fields" :per-page="5" :current-page="currentPage" :items="consulta"> 
         <template slot="index" scope="data">
             {{data.index + 1}}
+        </template>
+        <template slot="estado" scope="data">
+            {{data.item.estado}}
         </template>
         <template slot="Cancelar" scope="data">
             <i class="btn btn-danger fa fa-trash" @click="cancelarOrden(data)" ></i>
@@ -34,21 +38,22 @@ export default {
                 'Cancelar',
                 { key: 'id', sortable: true },
                 { key: 'fecha_creacion',label:'Fecha Creacion Orden', sortable: false },
-                'actualizar'
+                'estado',
+                'actualizar',
+                
             ],
         }
     },
     methods: {
         cancelarOrden(value){
-            console.log(value.item._id);
+            console.log("entro");
                 this.axios.get(urlservicios+"CancelarOrden/"+value.item._id)
                     .then((response) => {
-                        console.log(response.data);
+                        //respuesta
                     })
                 
         },
         actualizar(inde){
-            console.log(inde)
             bus.$emit('items',inde)
             setTimeout(() => {
                 bus.$emit('thisEvent', {

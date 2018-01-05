@@ -19,10 +19,10 @@
                         {{data.item.servicioslocal.nombre}}
                     </template> 
                     <template slot="imagenes" slot-scope="data" >
-                        <i class="btn btn-success fa fa-picture-o" v-show="!consulta"></i>
+                        <i class="btn btn-success fa fa-picture-o" @click="image(data.item)"></i>
                     </template> 
                     <template slot="detalles" slot-scope="data">
-                        <i class="btn btn-warning fa fa-info" @click="actualizar(data.item,$event.target)"></i>
+                        <i class="btn btn-warning fa fa-info" @click="actualizar(data.item)"></i>
                     </template> 
                 </b-table>
                 <b-pagination size="md" :total-rows="consulta.length" v-model="currentPage" :per-page="5">
@@ -37,85 +37,130 @@
         <b-modal id="myModal" size="lg"  ref="myModalRef" lazy>
             <b-container>
                 <b-row>
-                    <b-form-group id="Cliente"
-                        label="Cliente:"
-                        label-for="Cliente"
-                        description="Cliente el cual genero la orden.">
-                    </b-form-group>
-                </b-row>
-                <b-row>
-                    <b-form-group id="CentroC"
-                        label="Centro de Costo:"
-                        label-for="CentroC"
-                        description="Centro de Costo el cual tiene asociada la orden.">
-                    </b-form-group>
-                </b-row>
-                <b-row>
-                    <b-col>
-                        <b-form-group id="numOrden"
-                            label="Numero de Orden:"
-                            description="Numero de la Orden.">
-                        </b-form-group>
+                    <b-col cols="6">
+                        <h1>Cliente :</h1>
                     </b-col>
                     <b-col>
-                        {{myModal.content.consec}}
+                        {{cliente.nombre}}
                     </b-col>
                 </b-row>
                 <b-row>
-                    <b-col>
-                        <b-form-group id="numdetalle"
-                            label="Numero del Detalle:"
-                            description="Numero del detalle.">
-                        </b-form-group>
+                   <b-col cols="6" >
+                       <h1>Centro de Costo :</h1>
                     </b-col>
-                    <b-col>
-                        {{myModal.content.id}}
+                    <b-col >
+                        {{centro.nombre}}
                     </b-col>
                 </b-row>
                 <b-row>
-                    <b-col>
-                        <b-form-group id="producto"
-                            label="Producto:"
-                            description="Producto asociado al detalle.">
-                        </b-form-group>
+                    <b-col cols="6" >
+                       <h3>Numero de Orden :</h3>
                     </b-col>
-                    <b-col>
-                        {{myModal.content.productoslocal}}                        
+                    <b-col >
+                        {{consultaactualizar.consec}}
+                    </b-col>
+                </b-row>     
+                <b-row>
+                    <b-col cols="6" >
+                       <h3>Numero de Consecutivo :</h3>
+                    </b-col>
+                    <b-col >
+                        {{consultaactualizar.id}}
+                    </b-col>           
+                </b-row>       
+                <b-row>
+                    <b-col cols="6" >
+                       <h3>Producto :</h3>
+                    </b-col>
+                    <b-col >
+                        {{consultaactualizar.productoslocal.nombre}}
+                    </b-col>               
+                </b-row>
+                <b-row>
+                    <b-col cols="6" >
+                       <h3>Producto :</h3>
+                    </b-col>
+                    <b-col >
+                        {{consultaactualizar.servicioslocal.nombre}}
+                    </b-col>              
+                </b-row>
+                <b-row>
+                    <b-col cols="6" >
+                       <h3>Informacion :</h3>
+                    </b-col>
+                </b-row>
+                <b-row v-for="(data,indice) in inputs.campos">
+                    <template v-if="data.type!='select'">
+                        <b-col cols="5">
+                            <label  class="col-sm-2 col-form-label col-form-label-sm" :style="data.style" >{{data.placeholder}}: </label>
+                        </b-col>
+                        <b-col cols="6">
+                            <b-form-input  :value="values(data.id)"
+                                type="text"
+                                :disabled="true">
+                         </b-form-input>
+                        </b-col>
+                    </template>
+                    <b-col v-else cols="5">
+                            <label  class="col-sm-2 col-form-label col-form-label-sm"  >{{data.vmodel}}: </label>
+                    </b-col>
+                    <b-col  v-show="data.type=='select'" cols="6">
+                        <b-form-input  :value="values(data.vmodel)"
+                            type="text"
+                            :disabled="true">
+                        </b-form-input>
+
                     </b-col>
                 </b-row>
                 <b-row>
-                    <b-col>
-                        <b-form-group id="servicio"
-                            label="Servicio:"
-                            description="Servicio asociado al detalle.">
-                        </b-form-group>
-                    </b-col>
-                    <b-col>
-                        {{myModal.content.servicioslocal}}                        
-                    </b-col>
-                </b-row>
-                <b-row>
-                    <b-col>
-                        <b-form-group id="info"
-                            label="Informacion:"
-                            >
-                        </b-form-group>
-                    </b-col>
-                    <b-col>
-                        {{myModal.content.detalleslocal}}                        
-                    </b-col>
-                </b-row>
-                <b-row>
-                    <b-form-group id="info"
+                    <b-form-group id="traza"
                             label="Trazabilidad:"
                             >
-                        </b-form-group>
+                    </b-form-group>
                 </b-row>
                 <b-row>
-                    <b-table :items="myModal.content.tra" >
+                    <b-table :items="consultaactualizar.tra" >
                     </b-table>
                 </b-row>
-                {{myModal.content}}
+            </b-container>
+        </b-modal>
+        <!-- Modal Component -->
+        <b-modal id="modalimagen" ref="ModalImaguni" title="Bootstrap-Vue">
+            <b-container>
+                <b-img :src="consultaactualizar.tra[0].imagenes[0]" fluid alt="Fluid image" />
+            </b-container>
+        </b-modal>
+        <!-- Modal Component -->
+        <b-modal id="modalimagenes" ref="ModalImagenes" title="Imagenes de Evidencia">
+            <b-container>
+                <template v-for="(data,indice) in consultaactualizar.tra[0].imagenes">
+                    <b-card no-body class="mb-1">
+                        <b-card-header header-tag="header" class="p-1" role="tab">
+                            <b-row>
+                                <b-col cols="8">
+                                    <b-btn block href="#" v-b-toggle="data.id" variant="info">
+                                        Evidencia {{indice+1}}
+                                    </b-btn>
+                                </b-col>
+                                <b-col cols="4">
+                                    <b-btn  active-class class="fa fa-envelope-o"
+                                    >
+                                        
+                                    </b-btn>
+                                </b-col>
+                            </b-row>
+
+                        </b-card-header>
+                        <b-collapse :id="data.id" accordion="my-accordion" role="tabpanel">
+                            <b-card-body>
+                                {{indice}}
+                            <p class="card-text">
+                                <b-img :src="data.url" fluid alt="Fluid image" />
+                            </p>
+                            </b-card-body>
+                        </b-collapse>
+                    </b-card>
+                </template>
             </b-container>
         </b-modal>
     </b-container>
@@ -125,6 +170,7 @@
 import {bus} from '../main'
 import moment from 'moment'
 import Preload from '../componentes/preload.vue'
+import {urlservicios} from '../main'
 
 
 export default {
@@ -138,12 +184,31 @@ export default {
         }
         }
     },
-    computed: {
+    watch: {
 
     },
     methods:{
+        image(value){
+            console.log("entro a imagen");
+            console.log(value);
+            this.consultaactualizar=value
+            if(this.consultaactualizar.tra.length==1)
+            {
+                console.log("tiene una imagen ");
+                this.$refs.ModalImaguni.show()
+
+            }
+            if(this.consultaactualizar.tra.length>1)
+            {
+                console.log("tiene mas de 2 imagenes");
+                this.$refs.ModalImagenes.show()
+            }
+        },
+        values(value){
+            return eval("this.consultaactualizar.detalleslocal.infor."+value)
+        },
         exportarxls(){
-            var consecutivo,id,estado,fechaT,producto,servicio,detalles,infor
+            var consecutivo,id,estado,fechaT,producto,servicio,detalles,infor,refe
             var variable=[], constante=[]
             var llaveslv1,llaveslv2,llaveslv3
             for(var i=0;i<this.consulta.length;i++){
@@ -156,10 +221,10 @@ export default {
                     if(llaveslv1[a]=='id'){
                         id=llaveslv1[a]
                     }
-                    if(llaveslv1[a]=='estado'){
+                    if(llaveslv1[a]=='nombre_proceso'){
                         estado=llaveslv1[a]
                     }
-                    if(llaveslv1[a]=='fechaUltimoEstadoT'){
+                    if(llaveslv1[a]=='fecha_estado'){
                         fechaT=llaveslv1[a]
                     }
                     if(llaveslv1[a]=='productoslocal'){
@@ -172,14 +237,18 @@ export default {
                         detalles= llaveslv1[a]
                         llaveslv2= Object.keys(this.consulta[i].detalleslocal);
                         for(var b=0; b<llaveslv2.length;b++){
+                        if(llaveslv2[b]=='referencia')
+                            {
+                                refe=llaveslv2[b]
+                            }
                             if(llaveslv2[b]=='infor'){
                                 infor= llaveslv2[b]
                                 llaveslv3=Object.keys(this.consulta[i].detalleslocal.infor);
                                 for(var c=0;c<llaveslv3.length;c++){
                                     variable[c]=llaveslv3[c]
                                 }
-
                             }
+
                         }
                     }
                 }
@@ -193,7 +262,6 @@ export default {
                     else{
                     consult+=detalles+ '->'+infor+'->'+variable[d]+' as '+variable[d]+','
                     }
-                    //console.log(consult);
                  }
                 var algo = 'SELECT '+
                     consecutivo+' as NumOrden, '+
@@ -201,13 +269,12 @@ export default {
                     estado+' as Estado, '+
                     fechaT+' as Fecha, '+
                     producto+ '->nombre as Producto, '+
-                     servicio+'->nombre as Servicio, '+
+                    servicio+'->nombre as Servicio, '+
+                    detalles+'->'+refe+' as Referencia, '+
                     consult+
                     //detalles+ '->'+infor+'->'+variable[2]+'as '+variable[2]+' '+
                     'INTO XLS("Data.xls",{headers:true}) FROM ?'
-                    console.log(algo);
                     alasql(algo,[this.consulta])
-                    console.log("entro a exportar excel");
                     /*
                     alasql('SELECT consec as NumOrden,'+
                     'id as NumMovilizado,'+
@@ -222,40 +289,59 @@ export default {
                     ' INTO XLS("Data.xls",{headers:true}) FROM ?',[this.consulta]);
                     */
         },
-        actualizar(value,button){
-            console.log(value);
-            this.myModal.content=value
-            this.$root.$emit('bv::show::modal', 'myModal', button)
+        actualizar(value){
+            this.consultaactualizar=value
+            this.$refs.myModalRef.show()
+            //openModal();
+            this.axios.get(urlservicios+"estructuraf/" +this.consultaactualizar.productoslocal._id +
+            "/" +this.consultaactualizar.servicioslocal._id)   
+            .then(response => {
+            this.inputs = response.data;
+            })
         },
-        openModal(){
-        }
     },
-    props:['consulta'],
+
+    beforeCreate: function() {
+    },
+    props:['consulta','centro','cliente'],
     data () {
         return {
-            myModal: {content: ''},
-            consultaactualizar: '',
+            
+            inputs:{},
+            consultaactualizar: {
+                consec:'',
+                id:'',
+                tra:[{imagenes:''}],
+                detalleslocal: {
+                    referencia: '',
+                    observaciones: '',
+                    infor: {},
+                    destinatario:{}
+                },
+                productoslocal: {},
+                servicioslocal: {},
+                fecha_estado: ''
+
+            },
             prueba: {},
             currentPage: 1,
-        imagen: false,
-        existe: true,
-        fields: [ 
-            { key: 'id', sortable: true , label: 'N° Orden de Servicio'},
-            {key:'nmovilizado', label: 'N° Movilizado'},
-            {key:'nombre_proceso', label: 'Estado'},
-            {key:'fecha_creacion', label: 'Fecha Ultima Actualizacion'},
-            {key:'productoslocal', label: 'Producto'},
-            {key:'servicioslocal', label: 'Servicio'},
-            'imagenes',
-            'detalles'
-               ],
+            imagen: false,
+            consu: {},
+            existe: true,
+            fields: [ 
+                { key: 'id', sortable: true , label: 'N° Orden de Servicio'},
+                {key:'nmovilizado', label: 'N° Movilizado'},
+                {key:'nombre_proceso', label: 'Estado'},
+                {key:'fecha_creacion', label: 'Fecha Ultima Actualizacion'},
+                {key:'productoslocal', label: 'Producto'},
+                {key:'servicioslocal', label: 'Servicio'},
+                'imagenes',
+                'detalles'
+            ],
         }
     },
-        mounted: function() {
-            console.log("antes de crearse");
-            this.prueba=consulta
-            console.log(this.prueba);
-        }
+
+
 }
 </script>
 
@@ -263,4 +349,5 @@ export default {
 .conta{
     padding: 5%
 }
+
 </style>

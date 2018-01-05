@@ -120,6 +120,7 @@ export default {
             var centrocosto
             var inicio
             var fin
+            console.log(this.selected_state);
             if(this.time1[0]===''||this.time1[0]===undefined){
                 inicio="null"
                 }else{

@@ -6,6 +6,9 @@
           Volver
           </router-link>
         </b-row>
+        <b-row>
+            {{info.estado}}
+        </b-row>
             <b-row>
                 <h4>Cliente:</h4>
             </b-row>
@@ -74,7 +77,9 @@
                             <label  class="col-sm-2 col-form-label col-form-label-sm" :style="data.style" >{{data.placeholder}}: </label>
                         </b-col>
                         <b-col cols="6">
-                            <input :type="data.type" :id="data.id" :style="data.style" :max="data.max" @keyup="Presiono(indice,data)" :placeholder="data.placeholder" :disabled="data.diseable" :value="values(data.id)"  required>
+                            <input :type="data.type" :id="data.id" :style="data.style" :max="data.max"
+                             @keyup="Presiono(indice,data)" :placeholder="data.placeholder" :disabled="data.diseable"
+                              :value="values(data.id)"  required>
                         </b-col>
                     </template>
                     <b-row v-else>
@@ -125,14 +130,11 @@ export default {
     
     methods: {
         selectcuriers(value){
-            console.log("entro a selec curier");
-            console.log(value);
+
             this.selected_curier=value.target.value
         },
         Presiono(indi,dato){
-            console.log("entro a presiono y el indice es -> "+indi);
-            //this.campos.id_trayecto=this.selection._id
-            console.log(this.campos);
+
 
             if(document.getElementById(this.inputs.campos[indi].id).value==null||document.getElementById(this.inputs.campos[indi].id).value==''){
                 swal(
@@ -151,26 +153,22 @@ export default {
                     )
                     document.getElementById(this.inputs.campos[indi].id).value=this.inputs.campos[indi].max
                     eval("this.campos."+document.getElementById(this.inputs.campos[indi].id).id+"="+document.getElementById(this.inputs.campos[indi].id).value)
-                    //console.log(this.campos);
                 }else{
                     eval("this.campos."+document.getElementById(this.inputs.campos[indi].id).id+"="+document.getElementById(this.inputs.campos[indi].id).value)
-                    //console.log(this.campos);
                 }
                 
-                console.log("ok");
             }
 
         },
         values(dato){
+            console.log(eval("this.currentUser.detalle[this.indices].detalleslocal.infor"));
             return eval("this.currentUser.detalle[this.indices].detalleslocal.infor."+dato)
         },
-
         hideModal(){
           this.$refs.ModalAct.hide();
         },
         ingresarTrayectos(){
             this.campos.id_trayecto=this.selection._id
-            console.log(this.campos);
             var objeto = {
                 id_trayecto:this.selection._id,
             }; 
@@ -181,79 +179,116 @@ export default {
                     this.$refs.ModalAct.hide();
         },
         asignar(seleccionado){
-
+            console.log(seleccionado);
+            console.log(typeof(seleccionado));
+            console.log(this.info.detalle);
+            for(var p=0;p<this.info.detalle.length;p++){
+                console.log(this.info.detalle[p].detalleslocal.infor);
+                
+                
+            }
+            if(seleccionado==''){
+                console.log("entro al if");
+                seleccionado='null'
+                console.log(seleccionado);
+            }
             var obj ={
                 id_orden: this.currentUser._id,
                 id_curier: seleccionado
             }
             this.axios
-                .post(urlservicios+"/AsignarOrdenCurrier/",obj)
+                .post(urlservicios+"AsignarOrdenCurrier/",obj)
                 .then(response => {
-                this.Documento = response.data.message;
-
+                this.Documento = response.data;
+                if(this.Documento.validacion==false){
                 swal(
+                    "Cuidado!",
+                    "" + this.Documento.message,
+                    "warning"
+                );
+                }
+                else{
+                    swal(
                     "Excelente!",
-                    "" + this.Documento,
+                    "" + this.Documento.message,
                     "success"
                 );
+                }
+  
                 });
         },
         actualizar(indice){
-            //console.log(indice);
-            this.indices=indice
-            this.detallesactualizar= this.currentUser.detalle[indice].detalleslocal
-            //console.log(this.currentUser)
-            var produc= this.currentUser.detalle[indice].productoslocal._id
-            var serv = this.currentUser.detalle[indice].servicioslocal._id
-            this.axios.get(urlservicios+"estructuraf/" +produc +
-            "/" +serv)   
-            .then(response => {
-            this.inputs = response.data;
-            //console.log(this.inputs.campos);
-            this.campos= response.data.objeto
-            for(var i=0;i<this.inputs.campos.length;i++){
-                if(this.inputs.campos[i].type=='select'){
-                    //console.log("es un select");
-                    var login = localStorage.getItem("storedData");
-                    var infologin = JSON.parse(login);
-                    this.axios.get(this.inputs.campos[i].urlobjeto+infologin.id_OperadorLogistico)   
-                    .then(response => {
-                    this.trayectos = response.data;
-
-                    //console.log("son los trayectos"+this.trayectos);
-                    })
-                }else{
-                    //console.log("no es selects");
+            console.log(this.info.estado);
+            if(this.info.estado=='orden de servicio cancelada'||this.info.estado=='Orden De Servicio Recogida'||this.info.estado=='Orden de servicio cerrada')
+            {
+                console.log("desabilito");
+                this.indices=indice
+                this.detallesactualizar= this.currentUser.detalle[indice].detalleslocal
+                var produc= this.currentUser.detalle[indice].productoslocal._id
+                var serv = this.currentUser.detalle[indice].servicioslocal._id
+                this.axios.get(urlservicios+"estructuraf/" +produc +
+                "/" +serv)   
+                .then(response => {
+                this.inputs = response.data;
+                this.campos= response.data.objeto
+                console.log(this.inputs.campos);
+                for(var i=0;i<this.inputs.campos.length;i++){
+                    this.inputs.campos[i].diseable='true'
+                    if(this.inputs.campos[i].type=='select'){
+                        var login = localStorage.getItem("storedData");
+                        var infologin = JSON.parse(login);
+                        this.axios.get(this.inputs.campos[i].urlobjeto+infologin.id_OperadorLogistico)   
+                        .then(response => {
+                        this.trayectos = response.data;
+                        })
+                    }else{
+                    }
                 }
+                }).catch(function(error){
+                })
             }
-            }).catch(function(error){
-              //console.log("error estruc -> "+JSON.stringify(error));
-            })
+            else
+            {
+                console.log("habilid");
+                this.indices=indice
+                this.detallesactualizar= this.currentUser.detalle[indice].detalleslocal
+                var produc= this.currentUser.detalle[indice].productoslocal._id
+                var serv = this.currentUser.detalle[indice].servicioslocal._id
+                this.axios.get(urlservicios+"estructuraf/" +produc +
+                "/" +serv)   
+                .then(response => {
+                this.inputs = response.data;
+                this.campos= response.data.objeto
+                console.log(this.inputs.campos);
+                for(var i=0;i<this.inputs.campos.length;i++){
+                    if(this.inputs.campos[i].type=='select'){
+                        var login = localStorage.getItem("storedData");
+                        var infologin = JSON.parse(login);
+                        this.axios.get(this.inputs.campos[i].urlobjeto+infologin.id_OperadorLogistico)   
+                        .then(response => {
+                        this.trayectos = response.data;
+                        })
+                    }else{
+                    }
+                }
+                }).catch(function(error){
+                })
+            }
+
 
         }
     },
     watch: {
       currentUser (n, o) {
-        //console.log(n, o)
       },
     selection(n,o){
-        //console.log(n, o)
-        //console.log("cambio inputs");
-        //console.log(this.indices);
-        //console.log(this.inputs.campos[this.indices]);
     }
   },
       mounted: function () {
 
-      //console.log('User outside eventbus:', this.currentUser) // Shows empty user
     },
     created: function(){
-        /*let orden = this.$route.params.orden
-        this.axios.get("http://200.116.52.29:3000/logistica/ObtenerOrdenesFiltrado/"+orden+"/null/null/null")
-            .then((response) => {
-                this.consulta=response.data
-                //console.log(this.consulta)
-            })*/
+
     }, 
     beforeCreate: function() {
         var login = localStorage.getItem("storedData");
@@ -264,15 +299,12 @@ export default {
         )
         .then(response => {
             this.curiers = response.data;
-            console.log("curiers");
-            console.log(this.curiers);
+
         });
 
         bus.$on('thisEvent', function (userObject) {
-        //console.log('event received!', userObject)
         this.currentUser = userObject.inde.item
         this.info=this.currentUser
-        //console.log('The user: ', this.currentUser) // Shows correct new user data
       }.bind(this))
     }
 }
