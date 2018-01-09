@@ -435,7 +435,7 @@ export default {
         var detalleslocal = this.detalles;
 
         var detalles = {
-          tra: [],
+          trazabilidad: [],
           servicioslocal: servicioslocal,
           productoslocal: productoslocal,
           detalleslocal: detalleslocal

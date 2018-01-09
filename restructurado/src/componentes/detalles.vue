@@ -6,6 +6,7 @@
           Volver
           </router-link>
         </b-row>
+        {{info}}
         <b-row>
             {{info.estado}}
         </b-row>
@@ -94,7 +95,7 @@
             </b-container>
             <div slot="modal-footer" class="w-100">
                     <b-btn class="mt-3" variant="outline-danger"  @click="hideModal">Cancelar</b-btn>
-                    <b-btn class="mt-3 float-right" variant="outline-success" v-on:click="ingresarTrayectos">Guardar</b-btn>
+                    <b-btn class="mt-3 float-right" variant="outline-success" v-on:click="ingresarTrayectos()">Guardar</b-btn>
 
             </div>
         </b-modal>
@@ -108,6 +109,8 @@ import {urlservicios} from '../main'
 export default {
     data(){
         return{
+            camposT:[],
+            id_trayectos:[],
             detallesactualizar: '',
             fields: [
                 { key: "productoslocal", label: "Productos" },
@@ -134,8 +137,6 @@ export default {
             this.selected_curier=value.target.value
         },
         Presiono(indi,dato){
-
-
             if(document.getElementById(this.inputs.campos[indi].id).value==null||document.getElementById(this.inputs.campos[indi].id).value==''){
                 swal(
                     'Oops...',
@@ -158,70 +159,154 @@ export default {
                 }
                 
             }
+            //console.log(this.campos);
 
         },
         values(dato){
-            console.log(eval("this.currentUser.detalle[this.indices].detalleslocal.infor"));
+            //console.log(eval("this.currentUser.detalle[this.indices].detalleslocal.infor"));
             return eval("this.currentUser.detalle[this.indices].detalleslocal.infor."+dato)
         },
         hideModal(){
           this.$refs.ModalAct.hide();
         },
-        ingresarTrayectos(){
+        ingresarTrayectos(){            
             this.campos.id_trayecto=this.selection._id
             var objeto = {
                 id_trayecto:this.selection._id,
             }; 
+
+            console.log();
             this.axios
                 .post(urlservicios+"ActualizarTrayecto/"+this.currentUser._id+"/"+this.currentUser.detalle[this.indices].id, objeto)
                 .then(response => {
                 });
-                    this.$refs.ModalAct.hide();
+
+            var objeto2 = {
+                id_trayecto:this.selection._id,
+                indice:this.indices,
+                detalle:this.currentUser.detalle[this.indices].id
+            }; 
+            this.id_trayectos.push(objeto2)
+            this.$refs.ModalAct.hide();
+                    
         },
         asignar(seleccionado){
-            console.log(seleccionado);
-            console.log(typeof(seleccionado));
-            console.log(this.info.detalle);
-            for(var p=0;p<this.info.detalle.length;p++){
-                console.log(this.info.detalle[p].detalleslocal.infor);
+            //console.log(this.id_trayectos);
+            var contaa=0,contab=0
+            if(this.id_trayectos.length==0&&this.info.detalle.length>0){
+                for(var x=0;x<this.info.detalle.length;x++){    
+                    if(this.currentUser.detalle[x].detalleslocal.infor+'.id_trayecto'=="000000000000000000000000")
+                    {
+                        console.log(x);
+                        console.log(this.currentUser.detalle[x].detalleslocal.infor.id_trayecto);
+                        console.log("hay uno en 00");
+                        contaa=contaa+1
+                        swal(
+                            "Cuidado!",
+                            "No puede Asignar Curier sin seleccionar trayectos",
+                            "error"
+                        );
+                        break;
+
+                    }
+                    else
+                    {
+                        console.log(x);
+                        console.log(this.currentUser.detalle[x].detalleslocal.infor.id_trayecto);
+                        console.log("no es 00");
+                        contab=contab+1
+                            
+                    }
+                }
+                if(contaa==0)
+                {
+                    console.log("puede hacer peticion");
+                    if(seleccionado==''){
+                    seleccionado='null'
+                    }
+                    var obj ={
+                        id_orden: this.currentUser._id,
+                        id_curier: seleccionado
+                    }
+
+                    
+                    this.axios
+                        .post(urlservicios+"AsignarOrdenCurrier/",obj)
+                        .then(response => {
+                        this.Documento = response.data;
+                        if(this.Documento.validacion==false){
+                        swal(
+                            "Cuidado!",
+                            "" + this.Documento.message,
+                            "warning"
+                        );
+                        }
+                        else{
+                            swal(
+                            "Excelente!",
+                            "" + this.Documento.message,
+                            "success"
+                        );
+                        }
+        
+                        });
+                        
+                }
+                else
+                {
+                    console.log("no hace la peticion");
+                    
+                }
                 
-                
-            }
-            if(seleccionado==''){
+            }else{
+                if(this.id_trayectos.length<=this.info.detalle.length)
+                {
+                    console.log("es menor");
+                    swal(
+                        "Cuidado!",
+                        "No puede Asignar Curier sin seleccionar trayectos",
+                        "error"
+                    );
+                }
+                if(seleccionado==''){
                 console.log("entro al if");
                 seleccionado='null'
                 console.log(seleccionado);
-            }
-            var obj ={
-                id_orden: this.currentUser._id,
-                id_curier: seleccionado
-            }
-            this.axios
-                .post(urlservicios+"AsignarOrdenCurrier/",obj)
-                .then(response => {
-                this.Documento = response.data;
-                if(this.Documento.validacion==false){
-                swal(
-                    "Cuidado!",
-                    "" + this.Documento.message,
-                    "warning"
-                );
                 }
-                else{
+                var obj ={
+                    id_orden: this.currentUser._id,
+                    id_curier: seleccionado
+                }
+                console.log(this.info.detalle.length);
+                console.log(this.id_trayectos.length);
+                
+                this.axios
+                    .post(urlservicios+"AsignarOrdenCurrier/",obj)
+                    .then(response => {
+                    this.Documento = response.data;
+                    if(this.Documento.validacion==false){
                     swal(
-                    "Excelente!",
-                    "" + this.Documento.message,
-                    "success"
-                );
-                }
-  
-                });
+                        "Cuidado!",
+                        "" + this.Documento.message,
+                        "warning"
+                    );
+                    }
+                    else{
+                        swal(
+                        "Excelente!",
+                        "" + this.Documento.message,
+                        "success"
+                    );
+                    }
+    
+                    });
+                    
+            }
         },
         actualizar(indice){
-            console.log(this.info.estado);
+            //console.log(this.info.estado);
             if(this.info.estado=='orden de servicio cancelada'||this.info.estado=='Orden De Servicio Recogida'||this.info.estado=='Orden de servicio cerrada')
             {
-                console.log("desabilito");
                 this.indices=indice
                 this.detallesactualizar= this.currentUser.detalle[indice].detalleslocal
                 var produc= this.currentUser.detalle[indice].productoslocal._id
@@ -231,7 +316,7 @@ export default {
                 .then(response => {
                 this.inputs = response.data;
                 this.campos= response.data.objeto
-                console.log(this.inputs.campos);
+                //console.log(this.inputs.campos);
                 for(var i=0;i<this.inputs.campos.length;i++){
                     this.inputs.campos[i].diseable='true'
                     if(this.inputs.campos[i].type=='select'){
@@ -249,7 +334,6 @@ export default {
             }
             else
             {
-                console.log("habilid");
                 this.indices=indice
                 this.detallesactualizar= this.currentUser.detalle[indice].detalleslocal
                 var produc= this.currentUser.detalle[indice].productoslocal._id
@@ -259,7 +343,7 @@ export default {
                 .then(response => {
                 this.inputs = response.data;
                 this.campos= response.data.objeto
-                console.log(this.inputs.campos);
+                //console.log(this.inputs.campos);
                 for(var i=0;i<this.inputs.campos.length;i++){
                     if(this.inputs.campos[i].type=='select'){
                         var login = localStorage.getItem("storedData");
