@@ -19,7 +19,7 @@
                         {{data.item.servicioslocal.nombre}}
                     </template> 
                     <template slot="imagenes" slot-scope="data" >
-                        <i class="btn btn-success fa fa-picture-o" @click="image(data.item)"></i>
+                        <i class="btn btn-success fa fa-picture-o" @click="image(data.item)" v-show="mostrar"></i>
                     </template> 
                     <template slot="detalles" slot-scope="data">
                         <i class="btn btn-warning fa fa-info" @click="actualizar(data.item)"></i>
@@ -119,7 +119,16 @@
                     </b-form-group>
                 </b-row>
                 <b-row>
-                    <b-table :items="consultaactualizar.tra" >
+                    <b-table :items="consultaactualizar.trazabilidad" :fields="campostra">
+                        <template slot="fecha" slot-scope="data">
+                            {{data.item.fecha |formatdate}}
+                        </template>
+                        <template slot="nombre" slot-scope="data">
+                            {{data.item.nombre}}
+                        </template>
+                        <template slot="estado" slot-scope="data">
+                            {{data.item.estado}}
+                        </template>
                     </b-table>
                 </b-row>
             </b-container>
@@ -127,13 +136,13 @@
         <!-- Modal Component -->
         <b-modal id="modalimagen" ref="ModalImaguni" title="Bootstrap-Vue">
             <b-container>
-                <b-img :src="consultaactualizar.tra[0].imagenes[0]" fluid alt="Fluid image" />
+                <b-img :src="consultaactualizar.trazabilidad[0].imagenes[0]" fluid alt="Fluid image" />
             </b-container>
         </b-modal>
         <!-- Modal Component -->
         <b-modal id="modalimagenes" ref="ModalImagenes" title="Imagenes de Evidencia">
             <b-container>
-                <template v-for="(data,indice) in consultaactualizar.tra[0].imagenes">
+                <template v-for="(data,indice) in consultaactualizar.trazabilidad[0].imagenes">
                     <b-card no-body class="mb-1">
                         <b-card-header header-tag="header" class="p-1" role="tab">
                             <b-row>
@@ -192,13 +201,23 @@ export default {
             console.log("entro a imagen");
             console.log(value);
             this.consultaactualizar=value
-            if(this.consultaactualizar.tra.length==1)
+            if(this.consultaactualizar.trazabilidad[0].imagenes.length==0)
+            {
+                console.log("no tiene imagenes");
+                swal(
+                    "No se tienen Imagenes",
+                    "No hay imagenes disponibles",
+                    "warning"
+                )
+            }
+            if(this.consultaactualizar.trazabilidad[0].imagenes.length==1)
             {
                 console.log("tiene una imagen ");
+                console.log(this.consultaactualizar.trazabilidad[0].imagenes);
                 this.$refs.ModalImaguni.show()
 
             }
-            if(this.consultaactualizar.tra.length>1)
+            if(this.consultaactualizar.trazabilidad[0].imagenes.length>1)
             {
                 console.log("tiene mas de 2 imagenes");
                 this.$refs.ModalImagenes.show()
@@ -306,12 +325,18 @@ export default {
     props:['consulta','centro','cliente'],
     data () {
         return {
-            
+            mostrar: false,
+            campostra:[
+                { key: "fecha", label: "Fecha" },
+                { key: "nombre", label: "Nombre" },
+                { key: "estado", label: "Estado" },
+                
+            ],
             inputs:{},
             consultaactualizar: {
                 consec:'',
                 id:'',
-                tra:[{imagenes:''}],
+                trazabilidad:[{imagenes:''}],
                 detalleslocal: {
                     referencia: '',
                     observaciones: '',
@@ -330,7 +355,7 @@ export default {
             existe: true,
             fields: [ 
                 { key: 'id', sortable: true , label: 'N° Orden de Servicio'},
-                {key:'nmovilizado', label: 'N° Movilizado'},
+                {key:'nmovilizado',  label: 'N° Movilizado'},
                 {key:'nombre_proceso', label: 'Estado'},
                 {key:'fecha_creacion', label: 'Fecha Ultima Actualizacion'},
                 {key:'productoslocal', label: 'Producto'},

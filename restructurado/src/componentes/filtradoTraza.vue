@@ -236,8 +236,6 @@ methods:{
                     this.$router.replace('/inicio/trazabilidad/listado')
                 }               
             }
-            
-
         }
     },
     SelectCC(value){

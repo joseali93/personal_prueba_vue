@@ -416,8 +416,7 @@ export default {
     },
     ingresarOrden() {
       console.log("ingreso orden");
-      console.log(this.inputs);
-
+      console.log(eval("this.objeto"));
       if (
         this.selectproduct == "" ||
         this.selectservice == "" ||
@@ -441,7 +440,9 @@ export default {
           detalleslocal: detalleslocal
         };
         this.DetalleServicio.push(detalles);
-
+        this.DetalleServicio.map((obj,indc)=>{
+          console.log(obj);
+        })
         console.log( this.DetalleServicio);
         //blanquear datos
         this.habilitar=true,

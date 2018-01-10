@@ -47,34 +47,35 @@ export default {
     methods: {
         cancelarOrden(value){
             this.consulta.map((obj,ind)=>{
-                
                 if(obj.id==value.item.id)
                     {
                         if(obj.estado=="Orden De Servicio Creada"||obj.estado=="Orden De Servicio Asignada")
                         {
+                            this.axios.get(urlservicios+"CancelarOrden/"+value.item._id)
+                                .then((response) => {
+                                    console.log(response.data);
+                                    if(response.data.message=="orden de servicio actualizada")
+                                    {
+                                        swal(
+                                            "Eliminado Correctamente",
+                                            "Se elimino correctamente",
+                                            "success"
+                                        )
+                                    }
+                                })
                             this.consulta.splice(ind,1)
                         }
-                        console.log(obj);
-
+                        else
+                        {
+                            swal(
+                                "No se puede Eliminar",
+                                "Por que los siguientes estados no lo permiten",
+                                "error"
+                            );
+                        }
                     }
                 })
-                /*
-                this.axios.get(urlservicios+"CancelarOrden/"+value.item._id)
-                    .then((response) => {
-                        console.log(response.data.message);
-                        if(response.status==200){
-                            this.consulta.map((obj,ind)=>{
-                            
-                            if(obj.id==value.item.id)
-                                {
-                                    console.log(obj);
-                                    this.consulta.splice(ind,1)
-                                }
-                            })
-                            }
-                        
-                    })
-                    */
+                    
                
         },
         actualizar(inde){
