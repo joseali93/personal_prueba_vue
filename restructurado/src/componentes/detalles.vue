@@ -6,7 +6,7 @@
           Volver
           </router-link>
         </b-row>
-        {{info}}
+        
         <b-row>
             {{info.estado}}
         </b-row>
@@ -48,6 +48,9 @@
             </b-row>     
         <b-row>
             <b-table :fields="fields" :per-page="3" :current-page="currentPage" :items="this.currentUser.detalle">
+                <template slot="consecutivo" scope="data">
+                    {{data.item.id}}
+                </template>
                 <template slot="productoslocal" scope="data">
                     {{data.value.nombre}}         
                 </template>
@@ -55,7 +58,7 @@
                     {{data.value.nombre}}
                 </template>
                 <template slot="editar" scope="data">
-                    <i class="btn btn-outline-warning fa fa-info" v-on:click="actualizar(data.index)" v-b-modal.modalactualizar></i>
+                    <i class="btn btn-outline-warning fa fa-info" v-on:click.stop="actualizar(data.index,data.item.id)" v-b-modal.modalactualizar></i>
                 </template>
             </b-table>
             <b-pagination size="md" :total-rows="this.currentUser.detalle.length" v-model="currentPage" :per-page="3">
@@ -109,10 +112,13 @@ import {urlservicios} from '../main'
 export default {
     data(){
         return{
+            consecutivo:'',
             camposT:[],
+            inputstotales:[],
             id_trayectos:[],
             detallesactualizar: '',
             fields: [
+                { key: "consecutivo", label: "Consecutivo" },
                 { key: "productoslocal", label: "Productos" },
                 { key: "servicioslocal", label: "Servicios" },
                 "editar"
@@ -167,103 +173,47 @@ export default {
             return eval("this.currentUser.detalle[this.indices].detalleslocal.infor."+dato)
         },
         hideModal(){
+            this.selection=''
           this.$refs.ModalAct.hide();
         },
-        ingresarTrayectos(){            
+        ingresarTrayectos(){        
+            console.log(this.consecutivo);   
             this.campos.id_trayecto=this.selection._id
             var objeto = {
                 id_trayecto:this.selection._id,
             }; 
-/*
-            console.log();
+            
+            for(var x=0;x<this.currentUser.detalle.length;x++)
+            {  
+                if(this.currentUser.detalle[x].id==this.consecutivo)
+                {   
+                    console.log("entro al if");
+                    this.currentUser.detalle[x].detalleslocal.infor.id_trayecto=this.selection._id
+                    console.log(this.currentUser.detalle[x].detalleslocal.infor);
+                }
+                
+            }
+            
+            
             this.axios
-                .post(urlservicios+"ActualizarTrayecto/"+this.currentUser._id+"/"+this.currentUser.detalle[this.indices].id, objeto)
+                .post(urlservicios+"ActualizarTrayecto/"+this.currentUser._id+"/"+this.consecutivo, objeto)
                 .then(response => {
+                    console.log(response);
                 });
-*/
+
             var objeto2 = {
                 id_trayecto:this.selection._id,
                 indice:this.indices,
                 detalle:this.currentUser.detalle[this.indices].id
             }; 
             this.id_trayectos.push(objeto2)
+                        this.selection=''
             this.$refs.ModalAct.hide();
                     
         },
-        asignar(seleccionado){
-            var traye=[],detalle,pendientes=[],contabueno=0,contamalo=0
-            if(this.info.detalle.length>0){
-                for(var a=0;a<this.info.detalle.length;a++)
-                {
-                    detalle=this.info.detalle[a].detalleslocal.infor
-                    if(detalle==undefined||detalle=='undefined'||detalle==''){
-                        console.log("no existe");
-                    }else
-                    {
-                        var obj ={
-                            id_trayecto: detalle.id_trayecto,
-                            posicion: a
-                        }
-                        traye.push(obj)
-                    }
-                }
-                for(var x=0;x<traye.length;x++)
-                {
-                    if(traye[x].id_trayecto=="000000000000000000000000")
-                    {
-                        pendientes.push(traye[x])
-                    }
-                }
-                if(this.id_trayectos.length==0)
-                {
-                    console.log("no tiene trayextos nuevos");
-                    console.log(pendientes);
-                }
-                else
-                {
-                    console.log("tiene trayectos nuevos");
-                    console.log(this.id_trayectos);
-                    console.log(pendientes);
-                    for(var a=0,b=0;a<this.id_trayectos.length||b<pendientes.length;a++,b++)
-                    {
-                        console.log(this.id_trayectos[a]);
-                        console.log(pendientes[b]);
-                        if(this.id_trayectos[a]==undefined||this.id_trayectos[a]=="undefined"||pendientes[b]==undefined||pendientes[b]=="undefined")
-                        {
-                            console.log("anda indefindo");
-                        }
-                        else
-                        {
-                            if(this.id_trayectos[a].indice==pendientes[b].posicion)
-                            {
-                                console.log("se modifico ok");
-                                contabueno=contabueno+1
-                            }
-                            else
-                            {
-                                console.log("no se modifica");
-                                contamalo=contamalo+1
-                            }
-                        }
-                        
-                    }
-                    if(contabueno==pendientes.length)
-                    {
-                        console.log("hacemos peticion");
-                    }
-                    else
-                    {
-                        console.log("no hacemos peticion");
-                    }
-                    console.log(contabueno);
-                    console.log(contamalo);
-                    console.log(traye);
-                    console.log(pendientes);
-                }
-            
-            }
-/*
-                    if(seleccionado==''){
+        asignarcurier(seleccionado)
+        {
+            if(seleccionado==''){
                     seleccionado='null'
                     }
                     var obj ={
@@ -291,10 +241,60 @@ export default {
                         );
                         }
         
-                        });*/
-
+                        });
         },
-        actualizar(indice){
+        asignar(seleccionado)
+        {
+            var bandera
+            this.currentUser.detalle.map((obj,ind)=>{
+                console.log("detalles");
+                //console.log(obj.detalleslocal.infor)
+                this.inputstotales[ind].campos.map((objinput,indi)=>{
+                    //console.log(eval('obj.detalleslocal.infor.'+objinput.vmodel));
+                    if(objinput.requerido_edi==true)
+                    {
+                        if(eval('obj.detalleslocal.infor.'+objinput.vmodel)==''||
+                            eval('obj.detalleslocal.infor.'+objinput.vmodel)==null||
+                            eval('obj.detalleslocal.infor.'+objinput.vmodel)==undefined||
+                            eval('obj.detalleslocal.infor.'+objinput.vmodel)=="000000000000000000000000")
+                        {
+                            console.log("debe completar alguno");
+                            console.log(ind);
+                            console.log(eval('obj.detalleslocal.infor'));
+
+                            bandera=false
+
+                        }
+                        else
+                        {
+                            console.log("anda completo todo");
+                            bandera=true
+                        }
+                    }
+                    else
+                    {
+                        console.log("no se exige");
+                    }
+                    
+                })
+            }) 
+            if(bandera==true)
+            {
+                console.log("hacemos peticion");
+                this.asignarcurier(seleccionado)
+            }
+            else
+            {
+                console.log("no hacemos peticion");
+                swal(
+                    "Falta algo por completar!",
+                    "Revisa los detalles",
+                    "error"
+                );
+            }
+        },
+        actualizar(indice,consecutivo){
+            this.consecutivo=consecutivo
             //console.log(this.info.estado);
             if(this.info.estado=='orden de servicio cancelada'||this.info.estado=='Orden De Servicio Recogida'||this.info.estado=='Orden de servicio cerrada')
             {
@@ -357,10 +357,12 @@ export default {
       currentUser (n, o) {
       },
     selection(n,o){
-    }
+    },
+
   },
       mounted: function () {
-
+          console.log("montado");
+          
     },
     created: function(){
 
@@ -380,6 +382,7 @@ export default {
         bus.$on('thisEvent', function (userObject) {
         this.currentUser = userObject.inde.item
         this.info=this.currentUser
+        this.inputstotales=userObject.inputstotales
       }.bind(this))
     }
 }

@@ -46,18 +46,54 @@ export default {
     },
     methods: {
         cancelarOrden(value){
-            console.log("entro");
+            this.consulta.map((obj,ind)=>{
+                
+                if(obj.id==value.item.id)
+                    {
+                        if(obj.estado=="Orden De Servicio Creada"||obj.estado=="Orden De Servicio Asignada")
+                        {
+                            this.consulta.splice(ind,1)
+                        }
+                        console.log(obj);
+
+                    }
+                })
+                /*
                 this.axios.get(urlservicios+"CancelarOrden/"+value.item._id)
                     .then((response) => {
-                        //respuesta
+                        console.log(response.data.message);
+                        if(response.status==200){
+                            this.consulta.map((obj,ind)=>{
+                            
+                            if(obj.id==value.item.id)
+                                {
+                                    console.log(obj);
+                                    this.consulta.splice(ind,1)
+                                }
+                            })
+                            }
+                        
                     })
-                
+                    */
+               
         },
         actualizar(inde){
-            bus.$emit('items',inde)
+            console.log(inde.item.detalle.length);
+            var inputstotales=[]
+             for(var a=0;a<inde.item.detalle.length;a++)
+            {
+                var produc= inde.item.detalle[a].productoslocal._id
+                var serv = inde.item.detalle[a].servicioslocal._id
+                this.axios.get(urlservicios+"estructuraf/" +produc +
+                "/" +serv).then(response => {
+
+                        inputstotales.push(response.data)
+                })
+            }   
+            bus.$emit('items',inde,inputstotales)
             setTimeout(() => {
                 bus.$emit('thisEvent', {
-                    inde
+                    inde, inputstotales
                 })
                 }, )
             this.$router.replace('/inicio/consultar/detalles')
