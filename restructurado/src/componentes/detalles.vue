@@ -174,13 +174,13 @@ export default {
             var objeto = {
                 id_trayecto:this.selection._id,
             }; 
-
+/*
             console.log();
             this.axios
                 .post(urlservicios+"ActualizarTrayecto/"+this.currentUser._id+"/"+this.currentUser.detalle[this.indices].id, objeto)
                 .then(response => {
                 });
-
+*/
             var objeto2 = {
                 id_trayecto:this.selection._id,
                 indice:this.indices,
@@ -191,36 +191,78 @@ export default {
                     
         },
         asignar(seleccionado){
-            //console.log(this.id_trayectos);
-            var contaa=0,contab=0
-            if(this.id_trayectos.length==0&&this.info.detalle.length>0){
-                for(var x=0;x<this.info.detalle.length;x++){    
-                    if(this.currentUser.detalle[x].detalleslocal.infor+'.id_trayecto'=="000000000000000000000000")
+            var traye=[],detalle,pendientes=[],contabueno=0,contamalo=0
+            if(this.info.detalle.length>0){
+                for(var a=0;a<this.info.detalle.length;a++)
+                {
+                    detalle=this.info.detalle[a].detalleslocal.infor
+                    if(detalle==undefined||detalle=='undefined'||detalle==''){
+                        console.log("no existe");
+                    }else
                     {
-                        console.log(x);
-                        console.log(this.currentUser.detalle[x].detalleslocal.infor.id_trayecto);
-                        console.log("hay uno en 00");
-                        contaa=contaa+1
-                        swal(
-                            "Cuidado!",
-                            "No puede Asignar Curier sin seleccionar trayectos",
-                            "error"
-                        );
-                        break;
-
+                        var obj ={
+                            id_trayecto: detalle.id_trayecto,
+                            posicion: a
+                        }
+                        traye.push(obj)
+                    }
+                }
+                for(var x=0;x<traye.length;x++)
+                {
+                    if(traye[x].id_trayecto=="000000000000000000000000")
+                    {
+                        pendientes.push(traye[x])
+                    }
+                }
+                if(this.id_trayectos.length==0)
+                {
+                    console.log("no tiene trayextos nuevos");
+                    console.log(pendientes);
+                }
+                else
+                {
+                    console.log("tiene trayectos nuevos");
+                    console.log(this.id_trayectos);
+                    console.log(pendientes);
+                    for(var a=0,b=0;a<this.id_trayectos.length||b<pendientes.length;a++,b++)
+                    {
+                        console.log(this.id_trayectos[a]);
+                        console.log(pendientes[b]);
+                        if(this.id_trayectos[a]==undefined||this.id_trayectos[a]=="undefined"||pendientes[b]==undefined||pendientes[b]=="undefined")
+                        {
+                            console.log("anda indefindo");
+                        }
+                        else
+                        {
+                            if(this.id_trayectos[a].indice==pendientes[b].posicion)
+                            {
+                                console.log("se modifico ok");
+                                contabueno=contabueno+1
+                            }
+                            else
+                            {
+                                console.log("no se modifica");
+                                contamalo=contamalo+1
+                            }
+                        }
+                        
+                    }
+                    if(contabueno==pendientes.length)
+                    {
+                        console.log("hacemos peticion");
                     }
                     else
                     {
-                        console.log(x);
-                        console.log(this.currentUser.detalle[x].detalleslocal.infor.id_trayecto);
-                        console.log("no es 00");
-                        contab=contab+1
-                            
+                        console.log("no hacemos peticion");
                     }
+                    console.log(contabueno);
+                    console.log(contamalo);
+                    console.log(traye);
+                    console.log(pendientes);
                 }
-                if(contaa==0)
-                {
-                    console.log("puede hacer peticion");
+            
+            }
+/*
                     if(seleccionado==''){
                     seleccionado='null'
                     }
@@ -249,59 +291,8 @@ export default {
                         );
                         }
         
-                        });
-                        
-                }
-                else
-                {
-                    console.log("no hace la peticion");
-                    
-                }
-                
-            }else{
-                if(this.id_trayectos.length<=this.info.detalle.length)
-                {
-                    console.log("es menor");
-                    swal(
-                        "Cuidado!",
-                        "No puede Asignar Curier sin seleccionar trayectos",
-                        "error"
-                    );
-                }
-                if(seleccionado==''){
-                console.log("entro al if");
-                seleccionado='null'
-                console.log(seleccionado);
-                }
-                var obj ={
-                    id_orden: this.currentUser._id,
-                    id_curier: seleccionado
-                }
-                console.log(this.info.detalle.length);
-                console.log(this.id_trayectos.length);
-                
-                this.axios
-                    .post(urlservicios+"AsignarOrdenCurrier/",obj)
-                    .then(response => {
-                    this.Documento = response.data;
-                    if(this.Documento.validacion==false){
-                    swal(
-                        "Cuidado!",
-                        "" + this.Documento.message,
-                        "warning"
-                    );
-                    }
-                    else{
-                        swal(
-                        "Excelente!",
-                        "" + this.Documento.message,
-                        "success"
-                    );
-                    }
-    
-                    });
-                    
-            }
+                        });*/
+
         },
         actualizar(indice){
             //console.log(this.info.estado);
