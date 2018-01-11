@@ -1,16 +1,17 @@
 <template>
     <b-container>
-        <template slot="header">
-            algo
-        </template>
+        <header class="content-heading">
+                <h3>Consultar Trazabilidad</h3>
+                    <small>Se permite la busqueda de detalles seleccionando los siguientes filtros </small>
+            </header>
         <preload v-show="load"></preload>
-        <b-card>
+        <b-card class="car">
             <b-row>
                     <b-col>
                         <b-form-group 
                         label="Clientes">
                             <b-form-select v-model="selectedCL" id="clienteselect" v-bind:style="validatecampo" :options="clientes"  
-                            text-field="nombre" value-field="_id" @change.native="SelectCC" required>
+                            text-field="nombre" value-field="_id" @change.native="SelectCC" required >
                                     <!-- this slot appears above the options from 'options' prop -->          
                             </b-form-select>
                         </b-form-group>
@@ -143,11 +144,13 @@ methods:{
             }
             if(this.prueba=='first'){
                 console.log("tengo tiempo");
+                this.orden=''
+                this.referencia=''
+                this.nmovilizado=''
                 if(this.time1[0]==''||this.time1[0]==undefined||this.time1[0]==null||this.time1[1]==''||this.time1[1]==undefined||this.time1[1]==null)
                 {
                     console.log("es vacio fecha");
                     swal("Oops...", "Falto algun seleccionar el rango de fechas", "error");
-
                 }
                 else{
                     inicio=this.time1[0]
@@ -174,67 +177,89 @@ methods:{
             }
             else{
                 //ObtenerOrdenesFiltradoDetalle/:id_centro/:id_cliente/:consecutivo/:detalle/:referencia/:fecha_inicio/:fecha_final"
-                console.log("tengo campo");
-                if(this.orden!='null'||this.orden!=undefined||this.orden!=''){
-                    console.log(this.orden);  
-                    this.load = true;
-                    this.axios.get(urlservicios+"/ObtenerOrdenesFiltradoDetalle/"+this.selectedCC+"/"+this.selectedCL+'/'+this.orden+'/null/null/null/null')
-                        .then((response) => {
-                            this.consulta=response.data
-                            if(this.consulta==''){
-                                swal(
-                                    'Oops...',
-                                    'No se encontro ninguna Orden!',
-                                    'error'
-                                    )
-                                    this.load = false;
-                            }
-                            this.load = false;
-                            console.log(this.consulta);
-                            })
-
-                    this.$router.replace('/inicio/trazabilidad/listado')
+                this.time1=''
+                if(this.orden==''&&this.referencia==''&&this.nmovilizado=='')
+                {
+                    swal(
+                        'Oops...',
+                        'Debe completar algun campo!',
+                        'error'
+                        )
                 }
-                if(this.referencia!=null){
-                    this.load = true;
-                    console.log(this.referencia);
-                    this.axios.get(urlservicios+"/ObtenerOrdenesFiltradoDetalle/"+this.selectedCC+"/"+this.selectedCL+'/null/null/'+this.referencia+'/null/null')
-                        .then((response) => {
-                            this.consulta=response.data
-                            
-                            if(this.consulta==''){
-                                swal(
-                                    'Oops...',
-                                    'No se encontro ninguna Orden!',
-                                    'error'
-                                    )
-                                    this.load = false;
-                            }
-                            console.log(this.consulta);
-                            this.load = false;
-                            })
+                else{
+                    if(this.orden==null||this.orden=='')
+                    {
+                        console.log("entro orden vacio");
+                    }
+                    else
+                    {
+                        this.load = true;
+                        this.axios.get(urlservicios+"/ObtenerOrdenesFiltradoDetalle/"+this.selectedCC+"/"+this.selectedCL+'/'+this.orden+'/null/null/null/null')
+                            .then((response) => {
+                                this.consulta=response.data
+                                if(this.consulta==''){
+                                    swal(
+                                        'Oops...',
+                                        'No se encontro ninguna Orden!',
+                                        'error'
+                                        )
+                                        this.load = false;
+                                }
+                                this.load = false;
+                                console.log(this.consulta);
+                                })
 
-                    this.$router.replace('/inicio/trazabilidad/listado')
-                } 
-                if(this.nmovilizado!=''){
-                    this.load = true;
-                    console.log("movilizado");
-                    console.log(this.nmovilizado);
-                    this.axios.get(urlservicios+"ObtenerOrdenesFiltradoDetalle/"+this.selectedCC+"/"+this.selectedCL+'/null/'+this.nmovilizado+'/null/null/null')
-                        .then((response) => {
-                            this.consulta=response.data
-                            if(this.consulta==''){
-                                swal(
-                                    'Oops...',
-                                    'No se encontro ninguna Orden!',
-                                    'error'
-                                    )
-                                    this.load = false;
-                            }this.load = false;
-                            })
+                        this.$router.replace('/inicio/trazabilidad/listado')
+                    }
+                    if(this.referencia==''||this.referencia==null){
+                        console.log("referencia vacio");
+                    } 
+                    else
+                    {
+                        console.log("tiene algo");
+                            this.load = true;
+                            this.axios.get(urlservicios+"/ObtenerOrdenesFiltradoDetalle/"+this.selectedCC+"/"+this.selectedCL+'/null/null/'+this.referencia+'/null/null')
+                            .then((response) => {
+                                this.consulta=response.data
+                                
+                                if(this.consulta==''){
+                                    swal(
+                                        'Oops...',
+                                        'No se encontro ninguna Orden!',
+                                        'error'
+                                        )
+                                        this.load = false;
+                                }
+                                console.log(this.consulta);
+                                this.load = false;
+                                })
 
-                    this.$router.replace('/inicio/trazabilidad/listado')
-                }               
+                        this.$router.replace('/inicio/trazabilidad/listado')
+                    }
+                    if(this.nmovilizado==''||this.nmovilizado==null){
+                        
+                    }
+                    else
+                    {
+                        this.load = true;
+                        console.log("movilizado");
+                        console.log(this.nmovilizado);
+                        this.axios.get(urlservicios+"ObtenerOrdenesFiltradoDetalle/"+this.selectedCC+"/"+this.selectedCL+'/null/'+this.nmovilizado+'/null/null/null')
+                            .then((response) => {
+                                this.consulta=response.data
+                                if(this.consulta==''){
+                                    swal(
+                                        'Oops...',
+                                        'No se encontro ninguna Orden!',
+                                        'error'
+                                        )
+                                        this.load = false;
+                                }this.load = false;
+                                })
+
+                        this.$router.replace('/inicio/trazabilidad/listado')
+                    }   
+                }            
             }
         }
     },

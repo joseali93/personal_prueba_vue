@@ -416,15 +416,35 @@ export default {
     },
     ingresarOrden() {
       console.log("ingreso orden");
-      console.log(eval("this.objeto"));
+      var pivote=true
+      if(this.objeto==undefined)
+      {
+        console.log("no hay que evaluar");
+      }
+      else
+      {
+        console.log("evaluamos");
+        var llaves=''
+        llaves=Object.keys(this.objeto)
+        for(var x=0;x<llaves.length;x++){          
+          if(eval('this.objeto.'+llaves[x])==''||eval('this.objeto.'+llaves[x]=='null')||eval('this.objeto.'+llaves[x]==null))
+          {
+            console.log("pivote tru");
+            console.log(eval('this.objeto.'+llaves[x]));
+            pivote=false
+          }
+        }
+      }
+      console.log(pivote);
       if (
         this.selectproduct == "" ||
         this.selectservice == "" ||
         this.detalles.destinatario.nombre == "" ||
         this.detalles.destinatario.telefono == "" ||
         this.detalles.destinatario.direccion == "" ||
-        this.objeto ==""
+        pivote==false
       ) {
+        console.log("alerta");
         swal("Oops...", "Falto algun campo por completar!", "error");
       } else {
         var servicioslocal = this.selectservicio;
@@ -440,10 +460,10 @@ export default {
           detalleslocal: detalleslocal
         };
         this.DetalleServicio.push(detalles);
-        this.DetalleServicio.map((obj,indc)=>{
+/*        this.DetalleServicio.map((obj,indc)=>{
           console.log(obj);
         })
-        console.log( this.DetalleServicio);
+        console.log( this.DetalleServicio);*/
         //blanquear datos
         this.habilitar=true,
         (this.objeto = ""),

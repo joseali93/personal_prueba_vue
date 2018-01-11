@@ -1,52 +1,59 @@
 <template>
-    <b-container class="prueba">
+    <b-container class="prueba" >
         <header class="content-heading">
-            <h3>INFORMACION RECOGIDA</h3>
+            <h3>INFORMACION DE RECOGIDA</h3>
                 <small>Se visualiza la seleccion de cliente y centro de costo</small>
         </header>
         
         <b-card class="cards">
             <b-row>
-                <h3>Seleccione el Cliente</h3>
-                    <b-form-select v-model="selected_client" class="mb-3" 
+                <b-col>
+                    <h3>Seleccione el Cliente</h3>
+                    <b-form-select v-model="selected_client" class="mb-3"  
                     :options="clientes" text-field="nombre" value-field="_id" @change.native="ClientesSelect" >  
                     </b-form-select>
+                </b-col>
+                <b-col>
+                    <h3>Seleccione el Centro de Costos</h3>
+                    <preload v-if="load"></preload>
+                    <b-form-select v-model="selected_center" class="mb-3"
+                    :options="centros" text-field="nombre" value-field="_id" :disabled="habilitar" v-else >
+                    </b-form-select>
+                </b-col>
             </b-row>
-                
-            <b-row>
-                <h3>Seleccione el Centro de Costos</h3>
-            <preload v-if="load"></preload>
-            <b-form-select v-model="selected_center" class="mb-3"
-            :options="centros" text-field="nombre" value-field="_id" :disabled="habilitar" v-else >
-            </b-form-select>
-            </b-row>
+
         </b-card>
-        <b-card>
+        <b-card class="cards">
                 <b-row>
+                    <b-col>
                     <b-form-group id="exampleInputGroup1"
                         label="Direccion: ">
                             <b-form-input id="direccion"
-                            size="lg"
+                                size="lg"
                                 type="text"
                                 v-model="selected_cliente.direccion"
                                 required
                                 placeholder="Direccion">
                             </b-form-input>
                     </b-form-group>
+                    </b-col>
                 </b-row>
                 <b-row>
+                    <b-col>
                     <b-form-group id="exampleInputGroup2"
                         label="Contacto: ">
                             <b-form-input id="direccion"
-                            size="lg"
+                                size="lg"
                                 type="text"
                                 v-model="selected_cliente.nombre"
                                 required
                                 placeholder="Nombre">
                             </b-form-input>
                     </b-form-group>
+                    </b-col>
                 </b-row>
                 <b-row>
+                    <b-col>
                     <b-form-group id="exampleInputGroup3"
                         label="Telefono: " >
                             <b-form-input id="direccion"
@@ -57,8 +64,9 @@
                                 placeholder="Telefono">
                             </b-form-input>
                     </b-form-group>
+                    </b-col>
                 </b-row>
-                            </b-card>
+        </b-card>
                 <b-card-footer>
                 <b-row>
                     <a  v-on:click="actualizar"> 
@@ -83,6 +91,7 @@ export default {
     data () {
 
     return {
+        
         selected_client: '',
         selected_center: '',
         selected_cliente: {},

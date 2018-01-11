@@ -1,4 +1,4 @@
-require('./libs/style.default.css')
+require('./assets/libs/style.default.css')
 import Vue from 'vue'
 import App from './App.vue'
 import BootstrapVue from 'bootstrap-vue'

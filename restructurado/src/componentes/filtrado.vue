@@ -1,70 +1,73 @@
 <template>
-  <b-container>
-      <preload v-show="load"></preload>
-      <b-card>
-        <b-row>
-            <b-col>
-                <b-form-group 
-                    label="Clientes">
-                <b-form-select v-model="selectedCL" class="mb-3" :options="clientes"  
-                text-field="nombre" value-field="_id" @change.native="SelectCC">                        
-                </b-form-select>
-                </b-form-group>
-            </b-col>
-            <b-col>
-                <b-form-group 
-                    label="Centros de Costo">
-                    <b-form-select v-model="selectedCC" class="mb-3" :options="centros" 
-                    text-field="nombre" value-field="_id" :disabled="habilitar">
+    <b-container>
+            <header class="content-heading">
+                <h3>Consultar Ordenes de Servicio</h3>
+                    <small>Se permite la busqueda por las diferentes opciones </small>
+            </header>
+        <preload v-show="load"></preload>
+        <b-card class="car">
+            <b-row>
+                <b-col>
+                    <b-form-group 
+                        label="Clientes">
+                    <b-form-select v-model="selectedCL" class="mb-3" :options="clientes"  
+                    text-field="nombre" value-field="_id" @change.native="SelectCC">                        
                     </b-form-select>
-                </b-form-group>
-            </b-col>
-        </b-row>
-        <b-row>
-            <b-col>
-                <b-form-group label="Rango de Fechas" class="mb-3">
-                <date-picker width=450  v-model="time1" range lang="en"></date-picker>
-                </b-form-group>
-            </b-col>
-            <b-col>  
-            </b-col>
-            <b-col>
-            </b-col>
-        </b-row>
-        <b-row>
-            <b-col md="6" class="my-1">
-                <b-form-group horizontal label="Orden de servicios" class="mb-0">
-                    <b-input-group>
-                        <b-form-input v-model="filter" type="number" @keyup="numeros(this)" placeholder="Type to Search" />
-                    </b-input-group>
-                </b-form-group>
-            </b-col>
-            <b-col md="6" class="my-1">
-                <b-form-group horizontal label="Estados" class="mb-0">
-                    <b-input-group>
-                        <b-form-select  v-model="selected_state" :options="estados" text-field="nombre" value-field="nombre" @change.native="selestado">
-                            <!--
-                        <option disabled selected value>--  --</option>
-                            <option  v-for="(data,indice) in estados" :value="data.nombre">{{data.nombre}}</option>
-                        -->
+                    </b-form-group>
+                </b-col>
+                <b-col>
+                    <b-form-group 
+                        label="Centros de Costo">
+                        <b-form-select v-model="selectedCC" class="mb-3" :options="centros" 
+                        text-field="nombre" value-field="_id" :disabled="habilitar">
                         </b-form-select>
-                        <b-input-group-button>
-                        </b-input-group-button>
-                    </b-input-group>
-                </b-form-group>
-            </b-col>
-        </b-row>
-      
-        <b-row>
-            <b-btn to="/inicio/consultar/resultado"  class="mt-3 float-right" variant="primary" v-on:click="consultar()">Consultar</b-btn>
-        </b-row>
+                    </b-form-group>
+                </b-col>
+            </b-row>
+            <b-row>
+                <b-col>
+                    <b-form-group label="Rango de Fechas" class="mb-3">
+                    <date-picker width=450  v-model="time1" range lang="en"></date-picker>
+                    </b-form-group>
+                </b-col>
+                <b-col>  
+                </b-col>
+                <b-col>
+                </b-col>
+            </b-row>
+            <b-row>
+                <b-col md="6" class="my-1">
+                    <b-form-group horizontal label="Orden de servicios" class="mb-0">
+                        <b-input-group>
+                            <b-form-input v-model="filter" type="number" @keyup="numeros(this)" placeholder="Type to Search" />
+                        </b-input-group>
+                    </b-form-group>
+                </b-col>
+                <b-col md="6" class="my-1">
+                    <b-form-group horizontal label="Estados" class="mb-0">
+                        <b-input-group>
+                            <b-form-select  v-model="selected_state" :options="estados" text-field="nombre" value-field="nombre" @change.native="selestado">
+                                <!--
+                            <option disabled selected value>--  --</option>
+                                <option  v-for="(data,indice) in estados" :value="data.nombre">{{data.nombre}}</option>
+                            -->
+                            </b-form-select>
+                            <b-input-group-button>
+                            </b-input-group-button>
+                        </b-input-group>
+                    </b-form-group>
+                </b-col>
+            </b-row>    
+            <b-row>
+                <b-btn to="/inicio/consultar/resultado"  class="mt-3 float-right" variant="primary" v-on:click="consultar()">Consultar</b-btn>
+            </b-row>
         </b-card>
-        <b-row>
-            <router-view :consulta="consulta">
+            <b-row>
+                <router-view :consulta="consulta">
 
-            </router-view>
-        </b-row>
-    </b-container>
+                </router-view>
+            </b-row>
+        </b-container>
 </template>
 
 <script>
@@ -81,6 +84,10 @@ export default {
   },
     data() {
         return {
+            items: [{
+                text: 'Consultar Ordenes de Servicio',
+                active: true
+            }],
             habilitar: true,
             load: false,
             consulta: [],
@@ -201,5 +208,13 @@ export default {
 </script>
 
 <style>
-
+.cards{
+    margin-top: 2%;
+    border-top-width: 3px;
+    border-color: gray
+}
+.car{
+    border: 1px solid transparent;
+    border-color: #c4c4c4
+}
 </style>

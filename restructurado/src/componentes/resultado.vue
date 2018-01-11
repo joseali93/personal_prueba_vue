@@ -1,27 +1,27 @@
 <template>
-  <b-container>
-      
-    <b-table :fields="fields" :per-page="5" :current-page="currentPage" :items="consulta"> 
-        <template slot="index" scope="data">
-            {{data.index + 1}}
-        </template>
-        <template slot="estado" scope="data">
-            {{data.item.estado}}
-        </template>
-        <template slot="Cancelar" scope="data">
-            <i class="btn btn-danger fa fa-trash" @click="cancelarOrden(data)" ></i>
-        </template> 
-        <template slot="actualizar" scope="data">
+    <b-container class="cards">
+        
+        <b-table :fields="fields" :per-page="5" :current-page="currentPage" :items="consulta" :bordered="true"> 
+            <template slot="index" scope="data">
+                {{data.index + 1}}
+            </template>
+            <template slot="estado" scope="data">
+                {{data.item.estado}}
+            </template>
+            <template slot="Cancelar" scope="data">
+                <i class="btn btn-danger fa fa-trash" @click="cancelarOrden(data)" ></i>
+            </template> 
+            <template slot="actualizar" scope="data">
 
-              <b-button variant="warning" class="fa fa-cogs" @click="actualizar(data)"></b-button>
+                <b-button variant="warning" class="fa fa-cogs" @click="actualizar(data)"></b-button>
 
-            <!--<router-link  to="/inicio/consultar"  tag="button" class-active="active" class="btn btn-warning fa fa-cogs"></router-link>
-            -->
-        </template>                       
-    </b-table>
-    <b-pagination size="md" :total-rows="consulta.length" v-model="currentPage" :per-page="5">
-    </b-pagination>
-  </b-container>
+                <!--<router-link  to="/inicio/consultar"  tag="button" class-active="active" class="btn btn-warning fa fa-cogs"></router-link>
+                -->
+            </template>                       
+        </b-table>
+        <b-pagination size="md" :total-rows="consulta.length" v-model="currentPage" :per-page="5">
+        </b-pagination>
+    </b-container>
 </template>
 
 <script>
@@ -105,5 +105,9 @@ export default {
 </script>
 
 <style>
-
+.cards{
+    margin-top: 2%;
+    border-top-width: 3px;
+    border-color: gray
+}
 </style>

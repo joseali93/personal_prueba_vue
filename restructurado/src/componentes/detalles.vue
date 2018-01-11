@@ -181,13 +181,15 @@ export default {
             this.campos.id_trayecto=this.selection._id
             var objeto = {
                 id_trayecto:this.selection._id,
+                nombre:this.selection.nombre
             }; 
-            
+            console.log(this.selection);
             for(var x=0;x<this.currentUser.detalle.length;x++)
             {  
                 if(this.currentUser.detalle[x].id==this.consecutivo)
                 {   
                     console.log("entro al if");
+                    console.log(this.currentUser.detalle[x]);
                     this.currentUser.detalle[x].detalleslocal.infor.id_trayecto=this.selection._id
                     console.log(this.currentUser.detalle[x].detalleslocal.infor);
                 }

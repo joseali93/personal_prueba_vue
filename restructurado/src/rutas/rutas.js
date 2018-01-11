@@ -10,6 +10,7 @@ import preloadComponent from '../componentes/preload.vue'
 import ConsultTraceComponent from '../componentes/filtradoTraza.vue'
 import ListadoComponent from '../componentes/listadoTraza.vue'
 import NotFoundComponent from '../componentes/NotFound.vue'
+import Blank from '../componentes/componentInBlank.vue'
 import prueba from '../componentes/prueba.vue'
 
 export const rutas = [    
@@ -41,7 +42,7 @@ export const rutas = [
                 path: 'consultar',  component: ConsultComponent,props: true,
                 children:[
                     {
-                        path: '',  component: InicializaComponent,  props: true,  
+                        path: '',  component: Blank,  props: true,  
                         
                     },
                     {
@@ -64,7 +65,7 @@ export const rutas = [
                 component: ConsultTraceComponent, props: true,
                 children:[
                     {
-                        path: '',  component: InicializaComponent,  props: true,  
+                        path: '',  component: Blank,  props: true,  
                         
                     },
                     {

@@ -1,8 +1,9 @@
 <template>
     <b-container class="conta">
             <b-row>
+                {{consulta}}
                 <b-table  :items="consulta" :fields="fields"
-                :per-page="5" :current-page="currentPage">
+                :per-page="5" :current-page="currentPage" :bordered="true">
                     <template slot="id" slot-scope="data">
                         {{data.item.consec}}
                     </template>
@@ -19,7 +20,7 @@
                         {{data.item.servicioslocal.nombre}}
                     </template> 
                     <template slot="imagenes" slot-scope="data" >
-                        <i class="btn btn-success fa fa-picture-o" @click="image(data.item)" v-show="mostrar"></i>
+                        <i class="btn btn-success fa fa-picture-o" @click="image(data.item)" v-show="!consultaactualizar.trazabilidad[0].imagenes.length==0"></i>
                     </template> 
                     <template slot="detalles" slot-scope="data">
                         <i class="btn btn-warning fa fa-info" @click="actualizar(data.item)"></i>
@@ -35,6 +36,14 @@
             </b-row>
         <!-- the modal -->
         <b-modal id="myModal" size="lg"  ref="myModalRef" lazy>
+            <div slot="modal-header" class="w-100">
+         <b-btn size="sm" class="float-left" variant="info" >
+           Evidencia
+         </b-btn>
+         <b-btn size="sm" class="float-right" variant="danger" @click="cerrar">
+           Cerrar
+         </b-btn>
+       </div>
             <b-container>
                 <b-row>
                     <b-col cols="6">
@@ -62,7 +71,7 @@
                 </b-row>     
                 <b-row>
                     <b-col cols="6" >
-                       <h3>Numero de Consecutivo :</h3>
+                       <h3>Numero de Movilizado :</h3>
                     </b-col>
                     <b-col >
                         {{consultaactualizar.id}}
@@ -112,11 +121,18 @@
 
                     </b-col>
                 </b-row>
+                <b-row v-for="(data,indice) in llavesv">
+                        {{data}}
+                        <template v-for="(dato,ind) in valores">
+                            {{dato}}
+                        </template>
+                </b-row>
                 <b-row>
                     <b-form-group id="traza"
                             label="Trazabilidad:"
                             >
                     </b-form-group>
+                    {{consultaactualizar.trazabilidad}}
                 </b-row>
                 <b-row>
                     <b-table :items="consultaactualizar.trazabilidad" :fields="campostra">
@@ -197,6 +213,11 @@ export default {
 
     },
     methods:{
+        cerrar(value){
+            console.log(value);
+            console.log("entro a cerrar");
+            this.$refs.myModalRef.hide();
+        },
         image(value){
             console.log("entro a imagen");
             console.log(value);
@@ -310,6 +331,21 @@ export default {
         },
         actualizar(value){
             this.consultaactualizar=value
+            var llaves
+            llaves=Object.keys(this.consultaactualizar.detalleslocal.infor)
+            if(this.valores.length==0)
+            {
+            llaves.map((obj,ind)=>{
+                if(typeof(eval('value.detalleslocal.infor.'+obj))=='object'){
+                    
+                }else{
+                    this.valores.push(eval('value.detalleslocal.infor.'+obj))
+                    this.llavesv.push(obj)
+                }
+            })
+            }
+            console.log(this.valores);
+            console.log(this.llavesv);
             this.$refs.myModalRef.show()
             //openModal();
             this.axios.get(urlservicios+"estructuraf/" +this.consultaactualizar.productoslocal._id +
@@ -326,6 +362,8 @@ export default {
     data () {
         return {
             mostrar: false,
+            valores: [],
+            llavesv:[],
             campostra:[
                 { key: "fecha", label: "Fecha" },
                 { key: "nombre", label: "Nombre" },
@@ -360,7 +398,7 @@ export default {
                 {key:'fecha_creacion', label: 'Fecha Ultima Actualizacion'},
                 {key:'productoslocal', label: 'Producto'},
                 {key:'servicioslocal', label: 'Servicio'},
-                'imagenes',
+                {key:'imagenes', label: 'Pruebas de Evidencia'},
                 'detalles'
             ],
         }
