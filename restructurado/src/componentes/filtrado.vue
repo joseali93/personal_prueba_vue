@@ -59,7 +59,7 @@
                 </b-col>
             </b-row>    
             <b-row>
-                <b-btn to="/inicio/consultar/resultado"  class="mt-3 float-right" variant="primary" v-on:click="consultar()">Consultar</b-btn>
+                <b-btn   variant="primary" exact-active-class v-on:click="consultar()">Consultar</b-btn>
             </b-row>
         </b-card>
             <b-row>
@@ -168,6 +168,9 @@ export default {
                         'No se encontro ninguna Orden!',
                         'error'
                         )
+                }
+                else{
+                           this.$router.replace('/inicio/consultar/resultado')
                 }
             })
         },

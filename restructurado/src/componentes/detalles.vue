@@ -6,7 +6,7 @@
           Volver
           </router-link>
         </b-row>
-        
+        {{info}}
         <b-row>
             {{info.estado}}
         </b-row>
@@ -177,44 +177,56 @@ export default {
           this.$refs.ModalAct.hide();
         },
         ingresarTrayectos(){        
-            console.log(this.consecutivo);   
-            this.campos.id_trayecto=this.selection._id
-            var objeto = {
-                id_trayecto:this.selection._id,
-                nombre:this.selection.nombre
-            }; 
-            console.log(this.selection);
-            for(var x=0;x<this.currentUser.detalle.length;x++)
-            {  
-                if(this.currentUser.detalle[x].id==this.consecutivo)
-                {   
-                    console.log("entro al if");
-                    console.log(this.currentUser.detalle[x]);
-                    this.currentUser.detalle[x].detalleslocal.infor.id_trayecto=this.selection._id
-                    console.log(this.currentUser.detalle[x].detalleslocal.infor);
+            console.log(this.info.estado);
+            if(this.info.estado=="orden de servicio cancelada")
+            {
+                swal(
+                    "Cuidado!",
+                    "Orden de Servicio Cancelada",
+                    "warning"
+                );            }
+            else{
+                console.log(this.consecutivo);   
+                this.campos.id_trayecto=this.selection._id
+                var objeto = {
+                    id_trayecto:this.selection._id,
+                    nombre:this.selection.nombre
+                }; 
+                console.log(this.selection);
+                for(var x=0;x<this.currentUser.detalle.length;x++)
+                {  
+                    if(this.currentUser.detalle[x].id==this.consecutivo)
+                    {   
+                        console.log("entro al if");
+                        console.log(this.currentUser.detalle[x]);
+                        this.currentUser.detalle[x].detalleslocal.infor.id_trayecto=this.selection._id
+                        console.log(this.currentUser.detalle[x].detalleslocal.infor);
+                    }
+                    
                 }
                 
+                
+                this.axios
+                    .post(urlservicios+"ActualizarTrayecto/"+this.currentUser._id+"/"+this.consecutivo, objeto)
+                    .then(response => {
+                        console.log(response);
+                    });
+
+                var objeto2 = {
+                    id_trayecto:this.selection._id,
+                    indice:this.indices,
+                    detalle:this.currentUser.detalle[this.indices].id
+                }; 
+                this.id_trayectos.push(objeto2)
+                            this.selection=''
+                this.$refs.ModalAct.hide();
             }
             
-            
-            this.axios
-                .post(urlservicios+"ActualizarTrayecto/"+this.currentUser._id+"/"+this.consecutivo, objeto)
-                .then(response => {
-                    console.log(response);
-                });
-
-            var objeto2 = {
-                id_trayecto:this.selection._id,
-                indice:this.indices,
-                detalle:this.currentUser.detalle[this.indices].id
-            }; 
-            this.id_trayectos.push(objeto2)
-                        this.selection=''
-            this.$refs.ModalAct.hide();
                     
         },
         asignarcurier(seleccionado)
         {
+            console.log(this.info.estado);
             if(seleccionado==''){
                     seleccionado='null'
                     }
@@ -249,8 +261,7 @@ export default {
         {
             var bandera
             this.currentUser.detalle.map((obj,ind)=>{
-                console.log("detalles");
-                //console.log(obj.detalleslocal.infor)
+
                 this.inputstotales[ind].campos.map((objinput,indi)=>{
                     //console.log(eval('obj.detalleslocal.infor.'+objinput.vmodel));
                     if(objinput.requerido_edi==true)
@@ -262,8 +273,8 @@ export default {
                         {
                             console.log("debe completar alguno");
                             console.log(ind);
+                            console.log(objinput);
                             console.log(eval('obj.detalleslocal.infor'));
-
                             bandera=false
 
                         }

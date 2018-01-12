@@ -30,10 +30,19 @@
               </b-pagination>
           </b-row>
           <b-row>
+            <b-col class="float-left" cols="5">
+                                    <b-btn to="/inicio/orden" variant="primary">Anterior</b-btn>
+
+            </b-col>
+            <b-col class="d-flex flex-row-reverse">
+                                    <b-btn   @click="envioServicio" variant="primary">Finalizar</b-btn>
+
+            </b-col>
+                                    <!--
               <router-link  to="/inicio/orden" tag="button"  class-active="active" class="btn btn-primary">Anterior</router-link>
               <a v-on:click="envioServicio">
                   <router-link  to="/inicio" tag="button" class-active="active" class="btn btn-primary">Fin</router-link>
-              </a>
+              </a>-->
           </b-row>
       </b-card>
       <!-- Modal Adicionar -->
@@ -124,8 +133,8 @@
                 </b-row>
             </b-container>
             <div slot="modal-footer" class="w-100">
-                <b-btn class="mt-3" variant="outline-danger"  @click="hideModal">Cancelar</b-btn>
-                <b-btn class="mt-3 float-right" variant="outline-success" v-on:click="ingresarOrden">Guardar</b-btn>
+                <b-btn class="mt-3" variant="danger"  @click="hideModal">Cancelar</b-btn>
+                <b-btn class="mt-3 float-right" variant="success" v-on:click="ingresarOrden">Guardar</b-btn>
 
             </div>
       </b-modal>
@@ -198,8 +207,8 @@
                 </b-row>
             </b-container>
             <div slot="modal-footer" class="w-100">
-                <b-btn class="mt-3" variant="outline-danger"  @click="hideModal">Cancelar</b-btn>
-                <b-btn class="mt-3 float-right" variant="outline-success" v-on:click="actualizar()">Guardar</b-btn>
+                <b-btn class="mt-3" variant="danger"  @click="hideModal">Cancelar</b-btn>
+                <b-btn class="mt-3 float-right" variant="success" v-on:click="actualizar()">Guardar</b-btn>
 
             </div>
       </b-modal>
@@ -578,10 +587,15 @@ export default {
 
     },
     envioServicio() {
-      console.log("se envia");
       if(this.DetalleServicio==''||this.DetalleServicio==null||this.DetalleServicio==undefined)
       {
         console.log("no se envia");
+        swal(
+            "Atencion!",
+            "La Orden debe tener minimo un detalle ",
+            "error"
+          );
+
       }
       else{
       console.log(this.DetalleServicio);
@@ -615,6 +629,7 @@ export default {
             "success"
           );
         });
+       this.$router.replace('/inicio')
     }
     }
   },

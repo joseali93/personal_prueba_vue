@@ -9,7 +9,8 @@
                 {{data.item.estado}}
             </template>
             <template slot="Cancelar" scope="data">
-                <i class="btn btn-danger fa fa-trash" @click="cancelarOrden(data)" ></i>
+                <b-button variant="danger" class="fa fa-ban" @click="cancelarOrden(data)"></b-button>
+                
             </template> 
             <template slot="actualizar" scope="data">
 

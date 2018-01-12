@@ -70,7 +70,7 @@
                 <b-card-footer>
                 <b-row>
                     <a  v-on:click="actualizar"> 
-                        <b-btn v-on:click="actualizar">Continuar</b-btn>
+                        <b-btn v-on:click="actualizar" variant="primary">Continuar</b-btn>
                     </a>
                 </b-row>
                 </b-card-footer>
