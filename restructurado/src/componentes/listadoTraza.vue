@@ -1,7 +1,6 @@
 <template>
     <b-container class="conta">
             <b-row>
-                {{consulta}}
                 <b-table  :items="consulta" :fields="fields"
                 :per-page="5" :current-page="currentPage" :bordered="true">
                     <template slot="id" slot-scope="data">
@@ -20,7 +19,7 @@
                         {{data.item.servicioslocal.nombre}}
                     </template> 
                     <template slot="imagenes" slot-scope="data" >
-                        <i class="btn btn-success fa fa-picture-o" @click="image(data.item)" v-show="!consultaactualizar.trazabilidad[0].imagenes.length==0"></i>
+                        <i class="btn btn-success fa fa-picture-o" @click="image(data.item)" v-show="data.item.trazabilidad[0].EsCierre=='true'"></i>
                     </template> 
                     <template slot="detalles" slot-scope="data">
                         <i class="btn btn-warning fa fa-info" @click="actualizar(data.item)"></i>
@@ -36,14 +35,7 @@
             </b-row>
         <!-- the modal -->
         <b-modal id="myModal" size="lg"  ref="myModalRef" lazy>
-            <div slot="modal-header" class="w-100">
-         <b-btn size="sm" class="float-left" variant="info" >
-           Evidencia
-         </b-btn>
-         <b-btn size="sm" class="float-right" variant="danger" @click="cerrar">
-           Cerrar
-         </b-btn>
-       </div>
+            
             <b-container>
                 <b-row>
                     <b-col cols="6">
@@ -98,33 +90,18 @@
                        <h3>Informacion :</h3>
                     </b-col>
                 </b-row>
-                <b-row v-for="(data,indice) in inputs.campos">
-                    <template v-if="data.type!='select'">
-                        <b-col cols="5">
-                            <label  class="col-sm-2 col-form-label col-form-label-sm" :style="data.style" >{{data.placeholder}}: </label>
-                        </b-col>
-                        <b-col cols="6">
-                            <b-form-input  :value="values(data.id)"
-                                type="text"
-                                :disabled="true">
-                         </b-form-input>
-                        </b-col>
-                    </template>
-                    <b-col v-else cols="5">
-                            <label  class="col-sm-2 col-form-label col-form-label-sm"  >{{data.vmodel}}: </label>
-                    </b-col>
-                    <b-col  v-show="data.type=='select'" cols="6">
-                        <b-form-input  :value="values(data.vmodel)"
-                            type="text"
-                            :disabled="true">
-                        </b-form-input>
+                <b-row v-for="(data,indice) in final">
 
-                    </b-col>
-                </b-row>
-                <b-row v-for="(data,indice) in llavesv">
-                        {{data}}
-                        <template v-for="(dato,ind) in valores">
-                            {{dato}}
+                        <b-col cols="5">
+                            <label  class="col-sm-2 col-form-label col-form-label-sm">{{data.nombre}}: </label>
+                        </b-col>
+                        <template >
+                            <b-col cols="6">
+                                <b-form-input  :value="data.valores"
+                                    type="text"
+                                    :disabled="true">
+                            </b-form-input>
+                            </b-col>
                         </template>
                 </b-row>
                 <b-row>
@@ -132,7 +109,6 @@
                             label="Trazabilidad:"
                             >
                     </b-form-group>
-                    {{consultaactualizar.trazabilidad}}
                 </b-row>
                 <b-row>
                     <b-table :items="consultaactualizar.trazabilidad" :fields="campostra">
@@ -142,34 +118,34 @@
                         <template slot="nombre" slot-scope="data">
                             {{data.item.nombre}}
                         </template>
-                        <template slot="estado" slot-scope="data">
-                            {{data.item.estado}}
+                        <template slot="imagen" slot-scope="data">
+                                <i class="btn btn-success fa fa-picture-o" @click="imagenmodal(data.item)" v-show="data.item.imagenes.length>0">
+                                </i>   
                         </template>
                     </b-table>
                 </b-row>
             </b-container>
         </b-modal>
-        <!-- Modal Component -->
-        <b-modal id="modalimagen" ref="ModalImaguni" title="Bootstrap-Vue">
+        <!-- Modal Component 1 imagen -->
+        <b-modal id="modalimagen" ref="ModalImaguni" title="Evidencia">
             <b-container>
-                <b-img :src="consultaactualizar.trazabilidad[0].imagenes[0]" fluid alt="Fluid image" />
+                <b-img :src="modalima.trazabilidad[0].imagenes[0].url" fluid alt="Fluid image" />
             </b-container>
         </b-modal>
-        <!-- Modal Component -->
-        <b-modal id="modalimagenes" ref="ModalImagenes" title="Imagenes de Evidencia">
+        <!-- Modal Component 2 imagenes -->
+        <b-modal id="modalimagenes" ref="ModalImagenes" title="Imagenes de Evidencia" lazy>
             <b-container>
-                <template v-for="(data,indice) in consultaactualizar.trazabilidad[0].imagenes">
+                <template v-for="(data,indice) in modalima.trazabilidad[0].imagenes">
                     <b-card no-body class="mb-1">
                         <b-card-header header-tag="header" class="p-1" role="tab">
                             <b-row>
                                 <b-col cols="8">
-                                    <b-btn block href="#" v-b-toggle="data.id" variant="info">
+                                    <b-btn block v-b-toggle="data.id" variant="info">
                                         Evidencia {{indice+1}}
                                     </b-btn>
                                 </b-col>
                                 <b-col cols="4">
-                                    <b-btn  active-class class="fa fa-envelope-o"
-                                    >
+                                    <b-btn  active-class class="fa fa-envelope-o">
                                         
                                     </b-btn>
                                 </b-col>
@@ -178,7 +154,43 @@
                         </b-card-header>
                         <b-collapse :id="data.id" accordion="my-accordion" role="tabpanel">
                             <b-card-body>
-                                {{indice}}
+                            <p class="card-text">
+                                <b-img :src="data.url" fluid alt="Fluid image" />
+                            </p>
+                            </b-card-body>
+                        </b-collapse>
+                    </b-card>
+                </template>
+            </b-container>
+        </b-modal>
+        <!-- Modal Component 1 imagen modal -->
+        <b-modal id="modalimagen" ref="ModalImagunidetalle" title="Evidencia">
+            <b-container>
+                <b-img :src="imgmodal.imagenes[0].url" fluid alt="Fluid image" />
+            </b-container>
+        </b-modal>
+        <!-- Modal Component 2 imagenes modal  -->
+        <b-modal id="modalimagenes" ref="ModalImagenesdetalle" title="Imagenes de Evidencia" lazy>
+            <b-container>
+                <template v-for="(data,indice) in imgmodal.imagenes">
+                    <b-card no-body class="mb-1">
+                        <b-card-header header-tag="header" class="p-1" role="tab">
+                            <b-row>
+                                <b-col cols="8">
+                                    <b-btn block v-b-toggle="data.id" variant="info">
+                                        Evidencia {{indice+1}}
+                                    </b-btn>
+                                </b-col>
+                                <b-col cols="4">
+                                    <b-btn  active-class class="fa fa-envelope-o">
+                                        
+                                    </b-btn>
+                                </b-col>
+                            </b-row>
+
+                        </b-card-header>
+                        <b-collapse :id="data.id" accordion="my-accordion" role="tabpanel">
+                            <b-card-body>
                             <p class="card-text">
                                 <b-img :src="data.url" fluid alt="Fluid image" />
                             </p>
@@ -218,29 +230,38 @@ export default {
             console.log("entro a cerrar");
             this.$refs.myModalRef.hide();
         },
+        imagenmodal(data){
+            console.log("entro a el modal");
+            if(data.imagenes.length==1)
+            {
+                this.imgmodal=data
+                 this.$refs.ModalImagunidetalle.show()
+            }
+            if(data.imagenes.length>1)
+            {
+                this.imgmodal=data
+                this.$refs.ModalImagenesdetalle.show()
+            }
+        },
         image(value){
             console.log("entro a imagen");
             console.log(value);
-            this.consultaactualizar=value
-            if(this.consultaactualizar.trazabilidad[0].imagenes.length==0)
+            this.modalima=value
+            if(this.modalima.trazabilidad[0].imagenes.length==0)
             {
-                console.log("no tiene imagenes");
                 swal(
                     "No se tienen Imagenes",
                     "No hay imagenes disponibles",
                     "warning"
                 )
             }
-            if(this.consultaactualizar.trazabilidad[0].imagenes.length==1)
+            if(this.modalima.trazabilidad[0].imagenes.length==1)
             {
-                console.log("tiene una imagen ");
-                console.log(this.consultaactualizar.trazabilidad[0].imagenes);
                 this.$refs.ModalImaguni.show()
 
             }
-            if(this.consultaactualizar.trazabilidad[0].imagenes.length>1)
+            if(this.modalima.trazabilidad[0].imagenes.length>1)
             {
-                console.log("tiene mas de 2 imagenes");
                 this.$refs.ModalImagenes.show()
             }
         },
@@ -341,11 +362,15 @@ export default {
                 }else{
                     this.valores.push(eval('value.detalleslocal.infor.'+obj))
                     this.llavesv.push(obj)
+                    var objetogrande={
+                        nombre:obj,
+                        valores:eval('value.detalleslocal.infor.'+obj)
+                    }
+                    this.final.push(objetogrande)
+
                 }
             })
             }
-            console.log(this.valores);
-            console.log(this.llavesv);
             this.$refs.myModalRef.show()
             //openModal();
             this.axios.get(urlservicios+"estructuraf/" +this.consultaactualizar.productoslocal._id +
@@ -362,19 +387,63 @@ export default {
     data () {
         return {
             mostrar: false,
+            imgmodal: {
+                fecha:'',
+                EsCierre:'',
+                nombre:'',
+                id_ProcesoLogistico:'',
+                imagenes:[
+                {
+                    id: '',
+                    url: ''
+                }
+                ]
+            },
+            final:[],
             valores: [],
             llavesv:[],
             campostra:[
                 { key: "fecha", label: "Fecha" },
                 { key: "nombre", label: "Nombre" },
-                { key: "estado", label: "Estado" },
+                { key: "imagen", label: "Imagenes" },
                 
             ],
             inputs:{},
             consultaactualizar: {
                 consec:'',
                 id:'',
-                trazabilidad:[{imagenes:''}],
+                url:'',
+                trazabilidad:[
+                    {
+                        imagenes:[{
+                            url:'',
+                            id:'',
+                        }]
+                    }
+                    ],
+                detalleslocal: {
+                    referencia: '',
+                    observaciones: '',
+                    infor: {},
+                    destinatario:{}
+                },
+                productoslocal: {},
+                servicioslocal: {},
+                fecha_estado: ''
+
+            },
+            modalima: {
+                consec:'',
+                id:'',
+                url:'',
+                trazabilidad:[
+                    {
+                        imagenes:[{
+                            url:'',
+                            id:'',
+                        }]
+                    }
+                    ],
                 detalleslocal: {
                     referencia: '',
                     observaciones: '',
