@@ -22,7 +22,7 @@
                         <i class="btn btn-success fa fa-picture-o" @click="image(data.item)" v-show="data.item.trazabilidad[0].EsCierre=='true'"></i>
                     </template> 
                     <template slot="detalles" slot-scope="data">
-                        <i class="btn btn-warning fa fa-info" @click="actualizar(data.item)"></i>
+                        <i class="btn btn-success fa fa-info" @click="actualizar(data.item)"></i>
                     </template> 
                 </b-table>
                 <b-pagination size="md" :total-rows="consulta.length" v-model="currentPage" :per-page="5">
@@ -370,14 +370,36 @@ export default {
 
                 }
             })
+
             }
-            this.$refs.myModalRef.show()
+            //this.$refs.myModalRef.show()
             //openModal();
             this.axios.get(urlservicios+"estructuraf/" +this.consultaactualizar.productoslocal._id +
             "/" +this.consultaactualizar.servicioslocal._id)   
             .then(response => {
             this.inputs = response.data;
             })
+
+            var client=this.cliente
+            var centro=this.centro
+            var personal={
+                cliente:client,
+                centro:centro,
+                inputs:this.final
+            }
+            
+            setTimeout(() => {
+                bus.$emit('resultado', {
+                    value ,personal
+                })
+                }, )
+            this.$router.replace('/inicio/trazabilidad/resultado')
+            var ocultartra=false
+            setTimeout(() => {
+                bus.$emit('ocultartra', {
+                    ocultartra 
+                })
+                }, )
         },
     },
 

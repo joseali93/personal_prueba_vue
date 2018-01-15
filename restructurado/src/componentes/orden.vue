@@ -70,7 +70,11 @@
                 <b-card-footer>
                 <b-row>
                     <a  v-on:click="actualizar"> 
-                        <b-btn v-on:click="actualizar" variant="primary">Continuar</b-btn>
+                        <b-btn v-on:click="actualizar" variant="primary">
+                            
+                            Continuar
+                            <i class="fa fa-chevron-right" aria-hidden="true"></i>
+                        </b-btn>
                     </a>
                 </b-row>
                 </b-card-footer>
@@ -113,17 +117,14 @@ export default {
                 }
             }
             this.load = true;
-            setTimeout(function(){
                 if(seleccion!==undefined){
                 this.axios.get(urlservicios+"CentrosPorCliente/"+seleccion.target.value)
-                    // this.axios.get("http://192.168.1.69:3000/logistica/centros/"+seleccion._id)
                     .then((response) => {
                         this.centros=response.data
                         this.habilitar= false
                         this.load=false
                     })
                 }
-            }.bind(this),1000)
 
 
         },
@@ -148,11 +149,44 @@ export default {
         }
         }
     },
+    mounted: function () {
+        var orden=localStorage.getItem("orden");
+        var ordenjson=JSON.parse(orden)
+        console.log(orden);
+        if(orden==null||orden=='null'||orden=='')
+        {
+            console.log("entro primera vez");
+        }
+        else
+        {
+            console.log("ya tiene algo seleccionado");
+            this.selected_client=ordenjson.selected_client
+            this.selected_center=ordenjson.selected_center
+            this.axios.get(urlservicios+"CentrosPorCliente/"+this.selected_client)
+                    .then((response) => {
+                        this.centros=response.data
+                        this.habilitar= false
+                        this.load=false
+                    })
+            var test2 = localStorage.getItem("storedData");
+            var test =JSON.parse(test2);
+            this.axios.get(urlservicios+"clientesOperador/"+test.id_OperadorLogistico)
+            .then((response) => {
+                this.clientes=response.data
+                for(var i=0;i<this.clientes.length;i++){
+                if(this.clientes[i]._id==this.selected_client){
+                    this.selected_cliente=this.clientes[i]
+                }
+            }
+            })
+            
+        }
+    },
     beforeCreate: function () {
+        console.log("antes");
         var test2 = localStorage.getItem("storedData");
         var test =JSON.parse(test2);
         this.axios.get(urlservicios+"clientesOperador/"+test.id_OperadorLogistico)
-        //this.axios.get(urlservicios+"clientes/")
         .then((response) => {
             this.clientes=response.data
         })

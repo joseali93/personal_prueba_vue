@@ -1,6 +1,5 @@
 <template>
     <b-container class="cards">
-        
         <b-table :fields="fields" :per-page="5" :current-page="currentPage" :items="consulta" :bordered="true"> 
             <template slot="index" scope="data">
                 {{data.index + 1}}
@@ -12,9 +11,12 @@
                 <b-button variant="danger" class="fa fa-ban" @click="cancelarOrden(data)"></b-button>
                 
             </template> 
+            <template slot="fecha_creacion" scope="data">
+                {{data.item.fecha_creacion | formatdate}}
+            </template>
             <template slot="actualizar" scope="data">
 
-                <b-button variant="warning" class="fa fa-cogs" @click="actualizar(data)"></b-button>
+                <b-button variant="success" class="fa fa-pencil-square-o"  @click="actualizar(data)"></b-button>
 
                 <!--<router-link  to="/inicio/consultar"  tag="button" class-active="active" class="btn btn-warning fa fa-cogs"></router-link>
                 -->
@@ -28,9 +30,17 @@
 <script>
 import {bus} from '../main'
 import {urlservicios} from '../main'
+import moment from 'moment'
 
 export default {
     props:['consulta'],
+    filters: {
+        formatdate: function(value) {
+        if (value) {
+            return moment(String(value)).format('MM/DD/YYYY')
+        }
+        }
+    },
     data(){
         return{
             currentPage: 1,
@@ -80,7 +90,7 @@ export default {
                
         },
         actualizar(inde){
-            console.log(inde.item.detalle.length);
+            var ocultar=false
             var inputstotales=[]
              for(var a=0;a<inde.item.detalle.length;a++)
             {
@@ -95,7 +105,13 @@ export default {
             bus.$emit('items',inde,inputstotales)
             setTimeout(() => {
                 bus.$emit('thisEvent', {
-                    inde, inputstotales
+                    inde, inputstotales, 
+                })
+                }, )
+            bus.$emit('ocul',ocultar)
+            setTimeout(() => {
+                bus.$emit('ocultar', {
+                    ocultar 
                 })
                 }, )
             this.$router.replace('/inicio/consultar/detalles')

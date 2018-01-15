@@ -1,53 +1,75 @@
 <template>
     <b-container fluid class="conta">
         <b-row>
+            <b-btn @click="volver" variant="success">
+                <i class="fa fa-chevron-left" aria-hidden="true"></i>
+                Volver
+            </b-btn>
+            <!---
           <router-link  to="/inicio/consultar/resultado" tag="button" class-active="active" 
           class="btn btn-secondary btn-lg fa fa-arrow-left ">
           Volver
           </router-link>
+          -->
         </b-row>
-        {{info}}
         <b-row>
-            {{info.estado}}
+            <b-col>
+                <b-row>
+                    <b-col>
+                        <h4>Cliente:</h4>
+                    </b-col>
+                    <b-col>
+                        <p>{{info.remitente.nombre}}</p> 
+                    </b-col>
+                </b-row>
+                <b-row>
+                    <b-col>
+                        <h4>Direccion Cliente:</h4>
+                    </b-col>
+                    <b-col>
+                        <p>{{info.remitente.direccion}}</p> 
+                    </b-col>
+                </b-row>
+                <b-row>
+                    <b-col>
+                        <h4>Centro de Costo:</h4>
+                    </b-col>
+                    <b-col>
+                        <p>{{info.centro.nombre}}</p> 
+                    </b-col>
+                </b-row>
+                <b-row>
+                    <b-col>
+                        <h4>Direccion Centro de Costo:</h4>
+                    </b-col>
+                    <b-col>
+                        <p>{{info.centro.direccion}}</p> 
+                    </b-col>
+                </b-row>
+            </b-col>
+            <b-col>
+                <b-row>
+                    <b-col>
+                        <h4>Fecha Creación:</h4>
+                    </b-col>
+                    <b-col>
+                        <p>{{info.fecha_creacion | formatdate}}</p> 
+                    </b-col>
+                </b-row>
+                <b-row>
+                    <b-col>
+                        <h4>Estado Orden de Servicio:</h4>
+                    </b-col>
+                    <b-col>
+                        <p>{{info.estado}}</p> 
+                    </b-col>
+                </b-row>
+            </b-col>
         </b-row>
-            <b-row>
-                <h4>Cliente:</h4>
-            </b-row>
-            <b-row>
-                <p>{{info.remitente.nombre}}</p> 
-            </b-row>
-            <b-row>
-                <h5>Direccion:</h5>
-            </b-row>
-            <b-row>
-                <p>{{info.remitente.direccion}}</p> 
-            </b-row>
-            <b-row>
-                <h4>Centro de Costo:</h4>
-            </b-row>
-            <b-row>
-                <p>{{info.centro.nombre}}</p> 
-            </b-row>
-            <b-row>
-                <h4>Direccion Centro de Costo:</h4>
-            </b-row>
-            <b-row>
-                <p>{{info.centro.direccion}}</p> 
-            </b-row>
-            <b-row>
-                <h4>Fecha Creación:</h4>
-            </b-row>
-            <b-row>
-                <p>{{info.fecha_creacion}}</p> 
-            </b-row>    
-            <b-row>
-                <h4>Estado:</h4>
-            </b-row>
-            <b-row>
-                <p>{{info.estado}}</p> 
-            </b-row>     
+
+              
         <b-row>
-            <b-table :fields="fields" :per-page="3" :current-page="currentPage" :items="this.currentUser.detalle">
+            <b-table :fields="fields" :per-page="5" :current-page="currentPage" :items="this.currentUser.detalle">
                 <template slot="consecutivo" scope="data">
                     {{data.item.id}}
                 </template>
@@ -58,38 +80,40 @@
                     {{data.value.nombre}}
                 </template>
                 <template slot="editar" scope="data">
-                    <i class="btn btn-outline-warning fa fa-info" v-on:click.stop="actualizar(data.index,data.item.id)" v-b-modal.modalactualizar></i>
+                    <i class="btn btn-success fa fa-pencil" v-on:click.stop="actualizar(data.index,data.item.id)" v-b-modal.modalactualizar></i>
                 </template>
             </b-table>
-            <b-pagination size="md" :total-rows="this.currentUser.detalle.length" v-model="currentPage" :per-page="3">
+            <b-pagination size="md" :total-rows="this.currentUser.detalle.length" v-model="currentPage" :per-page="5">
             </b-pagination>
             </b-row>
             <b-row>
+                <h4>Seleccione el Currier: </h4>
                 <b-form-select v-model="selected_curier" class="mb-3"  :options="curiers" text-field="nombre" value-field="_id" @change.native="selectcuriers">
-
                 </b-form-select>
-        </b-row>
+            </b-row>
         <b-row>
             <b-btn size="lg" variant="success" @click="asignar(selected_curier)">Aceptar</b-btn>
         </b-row>
         <!-- Modal para Trayectos-->
         <b-modal id="modalactualizar" ref="ModalAct" title="Editar Registro" size="lg">
             <b-container fluid>
-                <b-row v-for="(data,indice) in inputs.campos"> 
+                <b-row v-for="(data,indice) in inputs.campos" class="my-1"> 
                     <template v-if="data.type!='select'">
                         <b-col cols="5">
                             <label  class="col-sm-2 col-form-label col-form-label-sm" :style="data.style" >{{data.placeholder}}: </label>
                         </b-col>
                         <b-col cols="6">
-                            <input :type="data.type" :id="data.id" :style="data.style" :max="data.max"
+                            <input class="form-control form-control-sm"  :type="data.type" :id="data.id" :style="data.style" :max="data.max"
                              @keyup="Presiono(indice,data)" :placeholder="data.placeholder" :disabled="data.diseable"
                               :value="values(data.id)"  required>
                         </b-col>
                     </template>
                     <b-row v-else>
                         <h4>Seleccione el Trayecto</h4>
-                        <b-form-select :id="data.id"  v-model="selection"  >
+                        <b-form-select :id="data.id" :options="trayectos" text-field="nombre" value-field="_id"  v-model="selection"  >
+                            <!--
                             <option v-for="tray in trayectos" :value="tray" >{{tray.nombre}}</option>
+                            -->
                         </b-form-select>
                     </b-row>
 
@@ -97,8 +121,8 @@
 
             </b-container>
             <div slot="modal-footer" class="w-100">
-                    <b-btn class="mt-3" variant="outline-danger"  @click="hideModal">Cancelar</b-btn>
-                    <b-btn class="mt-3 float-right" variant="outline-success" v-on:click="ingresarTrayectos()">Guardar</b-btn>
+                    <b-btn class="mt-3" variant="danger"  @click="hideModal">Cancelar</b-btn>
+                    <b-btn class="mt-3 float-right" variant="success" v-on:click="ingresarTrayectos()">Guardar</b-btn>
 
             </div>
         </b-modal>
@@ -108,6 +132,8 @@
 <script>
 import {bus} from '../main'
 import {urlservicios} from '../main'
+import moment from 'moment'
+
 
 export default {
     data(){
@@ -129,15 +155,31 @@ export default {
             curiers: '',
             Documento: '',
             selection: null,
-            trayectos: {},
+            trayectos: null,
             indices:'',
             inputs: '',
             campos: {},
             info:{}
         }
     },
-    
+        filters: {
+        formatdate: function(value) {
+        if (value) {
+            return moment(String(value)).format('MM/DD/YYYY')
+        }
+        }
+    },
     methods: {
+        volver(){
+            var ocultar=true
+            setTimeout(() => {
+                bus.$emit('ocultar', {
+                    ocultar 
+                })
+                }, )
+            this.$router.replace('/inicio/consultar/resultado')
+
+        },
         selectcuriers(value){
 
             this.selected_curier=value.target.value
@@ -176,8 +218,8 @@ export default {
             this.selection=''
           this.$refs.ModalAct.hide();
         },
-        ingresarTrayectos(){        
-            console.log(this.info.estado);
+        ingresarTrayectos(){     
+            var nombresel
             if(this.info.estado=="orden de servicio cancelada")
             {
                 swal(
@@ -186,21 +228,29 @@ export default {
                     "warning"
                 );            }
             else{
-                console.log(this.consecutivo);   
-                this.campos.id_trayecto=this.selection._id
+                this.campos.id_trayecto=this.selection
+                console.log(this.trayectos.length);
+                for(var x=0;x<this.trayectos.length;x++)
+                {
+                    console.log(this.trayectos[x]);
+                    console.log(this.selection);
+                    if(this.trayectos[x]._id==this.selection)
+                    {
+                        console.log("saco el nombre");
+                        nombresel=this.trayectos[x].nombre
+                        console.log(this.trayectos[x].nombre);
+                    }
+                }
                 var objeto = {
-                    id_trayecto:this.selection._id,
-                    nombre:this.selection.nombre
+                    id_trayecto:this.selection,
+                    nombre:nombresel
                 }; 
-                console.log(this.selection);
                 for(var x=0;x<this.currentUser.detalle.length;x++)
                 {  
                     if(this.currentUser.detalle[x].id==this.consecutivo)
                     {   
-                        console.log("entro al if");
-                        console.log(this.currentUser.detalle[x]);
+
                         this.currentUser.detalle[x].detalleslocal.infor.id_trayecto=this.selection._id
-                        console.log(this.currentUser.detalle[x].detalleslocal.infor);
                     }
                     
                 }
@@ -209,15 +259,16 @@ export default {
                 this.axios
                     .post(urlservicios+"ActualizarTrayecto/"+this.currentUser._id+"/"+this.consecutivo, objeto)
                     .then(response => {
-                        console.log(response);
+                        //console.log(response);
                     });
 
                 var objeto2 = {
-                    id_trayecto:this.selection._id,
+                    id_trayecto:this.selection,
                     indice:this.indices,
                     detalle:this.currentUser.detalle[this.indices].id
                 }; 
                 this.id_trayectos.push(objeto2)
+                console.log(this.id_trayectos);
                             this.selection=''
                 this.$refs.ModalAct.hide();
             }
@@ -260,22 +311,26 @@ export default {
         asignar(seleccionado)
         {
             var bandera
+            var pendientes,llaves
             this.currentUser.detalle.map((obj,ind)=>{
-
+                
                 this.inputstotales[ind].campos.map((objinput,indi)=>{
-                    //console.log(eval('obj.detalleslocal.infor.'+objinput.vmodel));
+                    //console.log(Object.keys(eval('obj.detalleslocal.infor')));
+                    
                     if(objinput.requerido_edi==true)
                     {
                         if(eval('obj.detalleslocal.infor.'+objinput.vmodel)==''||
                             eval('obj.detalleslocal.infor.'+objinput.vmodel)==null||
                             eval('obj.detalleslocal.infor.'+objinput.vmodel)==undefined||
-                            eval('obj.detalleslocal.infor.'+objinput.vmodel)=="000000000000000000000000")
+                            eval('obj.detalleslocal.infor.'+objinput.vmodel)=='000000000000000000000000')
+
                         {
-                            console.log("debe completar alguno");
+                           /* console.log( typeof(eval('obj.detalleslocal.infor.'+objinput.vmodel)));
                             console.log(ind);
                             console.log(objinput);
-                            console.log(eval('obj.detalleslocal.infor'));
+                            console.log(eval('obj.detalleslocal.infor'));*/
                             bandera=false
+                            pendientes=ind+1
 
                         }
                         else
@@ -291,6 +346,27 @@ export default {
                     
                 })
             }) 
+            this.currentUser.detalle.map((obj,ind)=>{
+                llaves=Object.keys(eval('obj.detalleslocal.infor'))
+                    //console.log(objinput);
+                    llaves.map((objlla,ind)=>{
+                        if(typeof(eval('obj.detalleslocal.infor.'+objlla))=='object')
+                        {
+                            console.log("hay un ojeto");
+                            bandera=true
+                        }
+                        else{
+                            console.log("no hay un objeto");
+                            if(this.id_trayectos.length>0){
+                                bandera=true
+                            }
+                            else{
+                                bandera=false
+                            }
+                        }
+                    })
+            })
+
             if(bandera==true)
             {
                 console.log("hacemos peticion");
@@ -301,13 +377,15 @@ export default {
                 console.log("no hacemos peticion");
                 swal(
                     "Falta algo por completar!",
-                    "Revisa los detalles",
+                    "Revisa el detalle "+pendientes,
                     "error"
                 );
             }
         },
         actualizar(indice,consecutivo){
             this.consecutivo=consecutivo
+                      var vacio=  { _id: null, nombre: 'Por Favor Seleccione un Trayecto' };
+
             //console.log(this.info.estado);
             if(this.info.estado=='orden de servicio cancelada'||this.info.estado=='Orden De Servicio Recogida'||this.info.estado=='Orden de servicio cerrada')
             {
@@ -329,6 +407,9 @@ export default {
                         this.axios.get(this.inputs.campos[i].urlobjeto+infologin.id_OperadorLogistico)   
                         .then(response => {
                         this.trayectos = response.data;
+                        this.trayectos.unshift(vacio)
+                        console.log(this.trayectos);
+
                         })
                     }else{
                     }

@@ -31,11 +31,15 @@
           </b-row>
           <b-row>
             <b-col class="float-left" cols="5">
-                                    <b-btn to="/inicio/orden" variant="primary">Anterior</b-btn>
+              <b-btn to="/inicio/orden" variant="primary">
+              <i class="fa fa-chevron-left" aria-hidden="true">  </i>
+               Anterior</b-btn>
 
             </b-col>
             <b-col class="d-flex flex-row-reverse">
-                                    <b-btn   @click="envioServicio" variant="primary">Finalizar</b-btn>
+                                    <b-btn   @click="envioServicio" variant="primary">
+                                      <i class="fa fa-check" aria-hidden="true"></i>
+                                      Finalizar</b-btn>
 
             </b-col>
                                     <!--
@@ -71,35 +75,32 @@
                     </b-form-select>
                 </b-row>
                 <b-row>
-                    <h2> Informacion: </h2>
+                    <h2 v-show="selectservice"> Informacion Adicional: </h2>
                     <br>
-                    <h4 v-show="!selectservice">
-                      <br>
-                        Seleccione un producto y un servicio
-                    </h4>
+
                     <br>
                 </b-row>
-                <b-row v-for="(data,indice) in inputs.campos"> 
-                    <b-col>
+                <b-row v-for="(data,indice) in inputs.campos" class="my-1"> 
+                    <b-col >
                         <label  class="col-sm-2 col-form-label col-form-label-sm" :style="data.style" >{{data.placeholder}}: </label>
                     </b-col>
                     <b-col>
-                        <input :type="data.type" :id="data.id" :style="data.style" :max="data.max" :placeholder="data.placeholder" @keyup="Presiono(indice)"   required>
+                        <input class="form-control form-control-sm" :type="data.type" :id="data.id" :style="data.style" :max="data.max" :placeholder="data.placeholder" @keyup="Presiono(indice)"   required>
                     </b-col>
                     
                 </b-row>
-                                 <b-form-row>
+                  <b-form-row  v-show="selectservice">
                     <b-col>
                         <label  class="col-sm-2 col-form-label col-form-label-sm">Referencia: </label>
                     </b-col>
                     <b-col>
-                         <input type="text"  id="referencia"   placeholder="Referencia" v-model="detalles.referencia">
+                         <input type="text" class="form-control form-control-sm" id="referencia"   placeholder="Referencia" v-model="detalles.referencia">
                     </b-col>
                 </b-form-row>
-                <b-row>
+                <b-row v-show="selectservice">
                     <h2>Destinatario: </h2>
                 </b-row>
-                <b-form-row>
+                <b-form-row v-show="selectservice" class="my-1">
                     <b-col>
                         <label  class="col-sm-2 col-form-label col-form-label-sm">Nombre: </label>
                     </b-col>
@@ -107,7 +108,7 @@
                         <input type="text" class="form-control form-control-sm"  placeholder="Nombre" v-model="detalles.destinatario.nombre">
                     </b-col>
                 </b-form-row>
-                <b-form-row>
+                <b-form-row v-show="selectservice" class="my-1">
                     <b-col>
                         <label  class="col-sm-2 col-form-label col-form-label-sm">Direccion: </label>
                     </b-col>
@@ -115,7 +116,7 @@
                         <input type="text" class="form-control form-control-sm"  placeholder="Direccion" v-model="detalles.destinatario.direccion">
                     </b-col>
                 </b-form-row>
-                <b-form-row>
+                <b-form-row v-show="selectservice" class="my-1">
                     <b-col>
                         <label  class="col-sm-2 col-form-label col-form-label-sm">Telefono: </label>
                     </b-col>
@@ -123,18 +124,24 @@
                         <input type="text" class="form-control form-control-sm" id="telefono" @keyup="numeros(this)" placeholder="Telefono" v-model="detalles.destinatario.telefono">
                     </b-col>
                 </b-form-row>
-                <b-row>
+                <b-form-row v-show="selectservice">
+                  <b-col>
                     <b-form-textarea id="textarea1"
                         v-model="detalles.observaciones"
                         placeholder="Ingrese las observaciones necesarias"
                         :rows="3"
                         :max-rows="6">
                     </b-form-textarea>
-                </b-row>
+                  </b-col>
+                </b-form-row>
             </b-container>
             <div slot="modal-footer" class="w-100">
-                <b-btn class="mt-3" variant="danger"  @click="hideModal">Cancelar</b-btn>
-                <b-btn class="mt-3 float-right" variant="success" v-on:click="ingresarOrden">Guardar</b-btn>
+                <b-btn class="mt-3" variant="danger"  @click="hideModal">
+                  <i class="fa fa-times-circle" aria-hidden="true">  </i>
+                  Cancelar</b-btn>
+                <b-btn class="mt-3 float-right" variant="success" v-on:click="ingresarOrden">
+                  <i class="fa fa-floppy-o">  </i> Guardar
+                </b-btn>
 
             </div>
       </b-modal>
@@ -151,15 +158,15 @@
                     <b-form-select v-model="selectservice" class="mb-3"  :options="serviciosurl" @change.native="campos" text-field="nombre" value-field="_id">
                     </b-form-select>
                 </b-row>
-                <b-row>
+                <b-row  v-if="mostrar">
                     <h2> Informacion: </h2>
                 </b-row>
-                <b-row v-for="(data,indice) in inputsED.campos"> 
+                <b-row v-for="(data,indice) in inputsED.campos" class="my-1"> 
                     <b-col>
                         <label  class="col-sm-2 col-form-label col-form-label-sm" :style="data.style">{{data.placeholder}}: </label>
                     </b-col>
                     <b-col>
-                        <input :type="data.type" :id="data.id" :max="data.max" :style="data.style" :placeholder="data.placeholder"@keyup="PresionoED(indice)"  :value="valores(data.id)" required>
+                        <input class="form-control form-control-sm" :type="data.type" :id="data.id" :max="data.max" :style="data.style" :placeholder="data.placeholder"@keyup="PresionoED(indice)"  :value="valores(data.id)" required>
                     </b-col>
                 </b-row>
                  <b-form-row>
@@ -173,7 +180,7 @@
                 <b-row>
                     <h2>Destinatario: </h2>
                 </b-row>
-                <b-form-row>
+                <b-form-row class="my-1">
                     <b-col>
                         <label  class="col-sm-2 col-form-label col-form-label-sm">Nombre: </label>
                     </b-col>
@@ -181,7 +188,7 @@
                         <input type="text" class="form-control form-control-sm" id="editarnombre"  placeholder="Nombre" v-model="detalleseditar.destinatario.nombre">
                     </b-col>
                 </b-form-row>
-                <b-form-row>
+                <b-form-row class="my-1">
                     <b-col>
                         <label  class="col-sm-2 col-form-label col-form-label-sm">Direccion: </label>
                     </b-col>
@@ -189,7 +196,7 @@
                         <input type="text" class="form-control form-control-sm" id="editardire" placeholder="Direccion" v-model="detalleseditar.destinatario.direccion">
                     </b-col>
                 </b-form-row>
-                <b-form-row>
+                <b-form-row class="my-1">
                     <b-col>
                         <label  class="col-sm-2 col-form-label col-form-label-sm">Telefono: </label>
                     </b-col>
@@ -207,8 +214,12 @@
                 </b-row>
             </b-container>
             <div slot="modal-footer" class="w-100">
-                <b-btn class="mt-3" variant="danger"  @click="hideModal">Cancelar</b-btn>
-                <b-btn class="mt-3 float-right" variant="success" v-on:click="actualizar()">Guardar</b-btn>
+                <b-btn class="mt-3" variant="danger"  @click="hideModal">
+                  <i class="fa fa-times-circle" aria-hidden="true">  </i>
+                  Cancelar</b-btn>
+                <b-btn class="mt-3 float-right " variant="success" v-on:click="actualizar()">
+                  <i class="fa fa-floppy-o"></i> Guardar 
+                </b-btn>
 
             </div>
       </b-modal>
@@ -225,6 +236,7 @@ export default {
   },
   data() {
     return {
+      mostrar: true,
       habilitar: true,
       load: false,
       selection: '',
@@ -241,8 +253,8 @@ export default {
       productosurl: {},
       selectproducto:{},
       serviciosurl: {},
-      selectservice: "",
-      selectproduct: "",
+      selectservice: null,
+      selectproduct: null,
       selectservicio:{},
       inputs: "",
       objeto: "",
@@ -355,11 +367,12 @@ export default {
         var productoslocal = this.selectproducto;
         var servicioslocal = this.selectservicio;
         var detalles = {
+          trazabilidad: [],
           servicioslocal: servicioslocal,
           productoslocal: productoslocal,
           detalleslocal: detalleslocal
         };
-        console.log(detalles);
+        console.log(JSON.stringify(detalles));
         this.DetalleServicio.splice(this.indices, 1);
         this.DetalleServicio.splice(this.indices, 0, detalles);
         (this.objeto = ""),
@@ -389,16 +402,16 @@ export default {
       this.indices = index;
       console.log("entro al editar");
       this.detalleseditar = this.DetalleServicio[index].detalleslocal;
-      this.selectproduct = this.DetalleServicio[index].productoslocal;
-      this.selectservice = this.DetalleServicio[index].servicioslocal;
+      this.selectproduct = this.DetalleServicio[index].productoslocal._id;
+      this.selectservice = this.DetalleServicio[index].servicioslocal._id;
       console.log(this.selectservice);
 
       this.axios
         .get(
         urlservicios+"estructuraf/" +
-            this.selectproduct._id +
+            this.selectproduct +
             "/" +
-            this.selectservice._id
+            this.selectservice
         )
         .then(response => {
           this.inputsED = response.data;
@@ -407,9 +420,8 @@ export default {
     hideModal() {
       (this.objeto = ""),
         (this.inputs = ""),
-        //toastr.success("Se agrego exitosamente");
-        this.selectservice = "";
-        this.selectproduct = "";
+        this.selectservice = null;
+        this.selectproduct = null;
         (this.objeto = ""),
         (this.detalles = {
           destinatario: {
@@ -471,15 +483,15 @@ export default {
         this.DetalleServicio.push(detalles);
 /*        this.DetalleServicio.map((obj,indc)=>{
           console.log(obj);
-        })
-        console.log( this.DetalleServicio);*/
+        })*/
+        console.log(JSON.stringify(this.DetalleServicio));
         //blanquear datos
         this.habilitar=true,
         (this.objeto = ""),
           (this.inputs = ""),
           toastr.success("Se agrego exitosamente");
-        this.selectservice = "";
-        this.selectproduct = "";
+        this.selectservice = null,
+        this.selectproduct = null;
         (this.objeto = ""),
           (this.detalles = {
             destinatario: {
@@ -536,6 +548,7 @@ export default {
       //console.log(this.detalleseditar)
     },
     service(value) {
+          var vacio=  { _id: null, nombre: 'Por Favor Seleccione un Servicio' };
       console.log("entro a seleccion");
       this.load = true;
       for(var i=0; i<this.productosurl.length;i++){
@@ -544,15 +557,15 @@ export default {
           this.selectproducto =this.productosurl[i]
         }
       }
-      setTimeout(function(){
         this.axios.get(urlservicios+"servicios/"+this.selectproducto._id)
         .then(response => {
             this.serviciosurl = response.data;
             this.load=false
             this.habilitar= false
             //console.log(this.serviciosurl);
+            this.serviciosurl.unshift(vacio)
+
         });
-      }.bind(this),1000)
 
             
     },
@@ -565,7 +578,6 @@ export default {
           this.selectservicio =this.serviciosurl[i]
         }
       }
-        setTimeout(function(){
          this.axios.get(
           urlservicios+"estructuraf/" +
             this.selectproducto._id +
@@ -583,7 +595,6 @@ export default {
             }).catch(function(error){
               //console.log("error estruc -> "+JSON.stringify(error));
             })
-        }.bind(this),2000)
 
     },
     envioServicio() {
@@ -630,6 +641,7 @@ export default {
           );
         });
        this.$router.replace('/inicio')
+       localStorage.removeItem('orden');
     }
     }
   },
@@ -637,6 +649,7 @@ export default {
     console.log("creado");
   },
   beforeCreate: function() {
+    var vacio=  { _id: null, nombre: 'Por Favor Seleccione un Producto' };
     var login = localStorage.getItem("storedData");
     var infologin = JSON.parse(login);
     console.log(infologin.id_OperadorLogistico);
@@ -647,7 +660,8 @@ export default {
       )
       .then(response => {
         this.productosurl = response.data;
-        //console.log(this.productosurl);
+        this.productosurl.unshift(vacio)
+
       });
   }
 };

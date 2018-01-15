@@ -1,11 +1,12 @@
 <template>
     <b-container>
-        <header class="content-heading">
+        
+        <preload v-show="load"></preload>
+        <b-card class="car" v-show="ocultartra">
+            <header slot="header" class="content-heading">
                 <h3>Consultar Trazabilidad</h3>
                     <small>Se permite la busqueda de detalles seleccionando los siguientes filtros </small>
             </header>
-        <preload v-show="load"></preload>
-        <b-card class="car">
             <b-row>
                     <b-col>
                         <b-form-group 
@@ -26,7 +27,7 @@
                     </b-col>
             </b-row>
         </b-card>
-        <b-card class="car">
+        <b-card class="car"  v-show="ocultartra">
             <b-row>
                 <b-col>
                     <b-form-group 
@@ -97,6 +98,7 @@ export default {
   },
 data(){
     return {
+        ocultartra: true,
         prueba: 'first',
         disable: true,
         load: false,
@@ -118,6 +120,12 @@ data(){
         consulta:{}
     }
 },
+    updated: function () {
+        bus.$on('ocultartra', function (userObject) {
+        
+        this.ocultartra = userObject.ocultartra
+      }.bind(this))
+    },
 methods:{
    
     consultar(){

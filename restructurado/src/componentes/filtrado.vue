@@ -1,11 +1,12 @@
 <template>
     <b-container>
-            <header class="content-heading">
+    
+        <preload v-show="load"></preload>
+        <b-card class="car" v-show="ocultar">
+            <header class="content-heading" slot="header">
                 <h3>Consultar Ordenes de Servicio</h3>
                     <small>Se permite la busqueda por las diferentes opciones </small>
             </header>
-        <preload v-show="load"></preload>
-        <b-card class="car">
             <b-row>
                 <b-col>
                     <b-form-group 
@@ -27,30 +28,25 @@
             <b-row>
                 <b-col>
                     <b-form-group label="Rango de Fechas" class="mb-3">
-                    <date-picker width=450  v-model="time1" range lang="en"></date-picker>
+                    <date-picker width=400  v-model="time1" range lang="en"></date-picker>
                     </b-form-group>
                 </b-col>
-                <b-col>  
+                <b-col md="6" class="my-1">
+                    <b-form-group  label="Orden de servicios" class="mb-0">
+                        <b-input-group>
+                            <b-form-input v-model="filter" type="number" @keyup="numeros(this)" placeholder="Digite numero Orden de Servicio" />
+                        </b-input-group>
+                    </b-form-group>
                 </b-col>
                 <b-col>
                 </b-col>
             </b-row>
             <b-row>
+             
                 <b-col md="6" class="my-1">
-                    <b-form-group horizontal label="Orden de servicios" class="mb-0">
-                        <b-input-group>
-                            <b-form-input v-model="filter" type="number" @keyup="numeros(this)" placeholder="Type to Search" />
-                        </b-input-group>
-                    </b-form-group>
-                </b-col>
-                <b-col md="6" class="my-1">
-                    <b-form-group horizontal label="Estados" class="mb-0">
+                    <b-form-group  label="Estados" class="mb-0">
                         <b-input-group>
                             <b-form-select  v-model="selected_state" :options="estados" text-field="nombre" value-field="nombre" @change.native="selestado">
-                                <!--
-                            <option disabled selected value>--  --</option>
-                                <option  v-for="(data,indice) in estados" :value="data.nombre">{{data.nombre}}</option>
-                            -->
                             </b-form-select>
                             <b-input-group-button>
                             </b-input-group-button>
@@ -59,7 +55,9 @@
                 </b-col>
             </b-row>    
             <b-row>
-                <b-btn   variant="primary" exact-active-class v-on:click="consultar()">Consultar</b-btn>
+                <b-col  md="6">
+                <b-btn class="my-1"  variant="primary" exact-active-class v-on:click="consultar()">Consultar</b-btn>
+                </b-col>
             </b-row>
         </b-card>
             <b-row>
@@ -84,6 +82,7 @@ export default {
   },
     data() {
         return {
+            ocultar: true,
             items: [{
                 text: 'Consultar Ordenes de Servicio',
                 active: true
@@ -92,11 +91,11 @@ export default {
             load: false,
             consulta: [],
             estados: {},
-            selected_state: '',
+            selected_state: null,
             time1: '',
-            selectedCL: '',
-            clientes: {},
-            selectedCC: '',
+            selectedCL: null,
+            clientes: null,
+            selectedCC: null,
             centros: {},
             filter: ''
         };
@@ -175,6 +174,7 @@ export default {
             })
         },
         SelectCC(value){
+            var vacio=  { _id: null, nombre: 'Por Favor Seleccione un Cliente' };
             this.selectedCL=value.target.value
                   this.load = true;
             setTimeout(function(){
@@ -182,6 +182,7 @@ export default {
             //this.axios.get(urlservicios+"centros/")
             .then((response) => {
                 this.centros=response.data
+                this.centros.unshift(vacio)
             this.load=false
             this.habilitar= false
             })
@@ -191,23 +192,33 @@ export default {
             }
         
     },
-
+    updated: function () {
+        bus.$on('ocultar', function (userObject) {
+        
+        this.ocultar = userObject.ocultar
+      }.bind(this))
+    },
     mounted: function () {
+        var vacio=  { _id: null, nombre: 'Por Favor Seleccione un Cliente' };
+        var vacio2= { nombre: 'Por Favor Seleccione un Cliente' };
         var login = localStorage.getItem("storedData");
         var infologin =JSON.parse(login);
     
         this.axios.get(urlservicios+"clientesOperador/"+infologin.id_OperadorLogistico)
         .then((response) => {
             this.clientes=response.data
+            this.clientes.unshift(vacio)
+
         })
             
         this.axios.get(urlservicios+"estados/")
         .then((response) => {
             this.estados=response.data
         })
-                
+            
+        
     },
-};
+}
 </script>
 
 <style>
