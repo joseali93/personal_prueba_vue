@@ -277,12 +277,13 @@ export default {
         },
         asignarcurier(seleccionado)
         {
-            console.log(this.info.estado);
+            console.log(seleccionado);
+            console.log(this.currentUser._id);
             if(seleccionado==''){
                     seleccionado='null'
                     }
                     var obj ={
-                        id_orden: this.currentUser._id,
+                        id_orden:this.currentUser._id,
                         id_curier: seleccionado
                     }
 

@@ -93,7 +93,43 @@
                         </template>
                     </b-table>
         </b-row>
+        <!-- Modal Component 1 imagen modal -->
+        <b-modal id="modalimagen" ref="ModalImagunidetalle" title="Evidencia">
+            <b-container>
+                <b-img :src="imgmodal.imagenes[0].url" fluid alt="Fluid image" />
+            </b-container>
+        </b-modal>
+        <!-- Modal Component 2 imagenes modal  -->
+        <b-modal id="modalimagenes" ref="ModalImagenesdetalle" title="Imagenes de Evidencia" lazy>
+            <b-container>
+                <template v-for="(data,indice) in imgmodal.imagenes">
+                    <b-card no-body class="mb-1">
+                        <b-card-header header-tag="header" class="p-1" role="tab">
+                            <b-row>
+                                <b-col cols="8">
+                                    <b-btn block v-b-toggle="data.id" variant="info">
+                                        Evidencia {{indice+1}}
+                                    </b-btn>
+                                </b-col>
+                                <b-col cols="4">
+                                    <b-btn  active-class class="fa fa-envelope-o">
+                                        
+                                    </b-btn>
+                                </b-col>
+                            </b-row>
 
+                        </b-card-header>
+                        <b-collapse :id="data.id" accordion="my-accordion" role="tabpanel">
+                            <b-card-body>
+                            <p class="card-text">
+                                <b-img :src="data.url" fluid alt="Fluid image" />
+                            </p>
+                            </b-card-body>
+                        </b-collapse>
+                    </b-card>
+                </template>
+            </b-container>
+        </b-modal>
         
     </b-container>
 </template>
@@ -115,7 +151,19 @@ export default {
                 { key: "nombre", label: "Nombre" },
                 { key: "imagen", label: "Imagenes" },
                 
-            ]
+            ],
+            imgmodal: {
+                fecha:'',
+                EsCierre:'',
+                nombre:'',
+                id_ProcesoLogistico:'',
+                imagenes:[
+                {
+                    id: '',
+                    url: ''
+                }
+                ]
+            },
         }
     },
         filters: {
@@ -126,6 +174,19 @@ export default {
         }
     },
     methods: {
+        imagenmodal(data){
+            console.log("entro a el modal");
+            if(data.imagenes.length==1)
+            {
+                this.imgmodal=data
+                 this.$refs.ModalImagunidetalle.show()
+            }
+            if(data.imagenes.length>1)
+            {
+                this.imgmodal=data
+                this.$refs.ModalImagenesdetalle.show()
+            }
+        },
         volver(){
             var ocultartra=true
             setTimeout(() => {
