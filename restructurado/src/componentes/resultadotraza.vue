@@ -6,10 +6,10 @@
                     Volver
                 </b-btn>
         </b-row>
-        <b-row>
-        </b-row>
-        <b-row>
-            <b-col>
+    <b-card-group deck>
+        <b-card title="Informacion Remitente"
+               >
+            <b-card-body class="card-text">
                 <b-row>
                     <b-col>
                         <h3>Cliente :</h3>
@@ -20,48 +20,72 @@
                 </b-row>
                  <b-row>
                     <b-col>
-                        <h3>Centro de Costos :</h3>
+                        <h3>Centro de Costos:</h3>
                     </b-col>
                     <b-col>
                         {{otro.centro.nombre}}
                     </b-col>
                 </b-row>
-                <b-row>
+            </b-card-body>
+        </b-card>
+        <b-card title="Informacion Destinatario"
+                >
+                <b-card-body class="card-text">
+                    <b-row>
                     <b-col>
-                        <h3>Numero Orden de Servicio:</h3>
+                        <h3>Nombre:</h3>
                     </b-col>
                     <b-col>
-                        {{info.consec}}
-                    </b-col>
-                </b-row>
-                <b-row>
-                    <b-col>
-                        <h3>Numero de Movilizado:</h3>
-                    </b-col>
-                    <b-col>
-                        {{info.id}}
+                        {{info.detalleslocal.destinatario.nombre}}
                     </b-col>
                 </b-row>
-               
-            </b-col>
-            
+                <b-row>
+                    <b-col>
+                        <h3>Direccion:</h3>
+                    </b-col>
+                    <b-col>
+                        {{info.detalleslocal.destinatario.direccion}}
+                    </b-col>
+                </b-row>
+                </b-card-body>
+        </b-card>
+    </b-card-group>
+    <b-col class="borderF">
+        <b-row>
+                <b-col>
+                    <h3>Numero Orden de Servicio:</h3>
+                </b-col>
+                <b-col>
+                    {{info.consec}}
+                </b-col>
+            </b-row>
+            <b-row>
+                <b-col>
+                    <h3>Numero de Movilizado:</h3>
+                </b-col>
+                <b-col>
+                    {{info.id}}
+                </b-col>
+            </b-row>
+            <b-row>
+                <b-col>
+                    <h3>Producto:</h3>
+                </b-col>
+                <b-col>
+                    {{info.productoslocal.nombre}}
+                </b-col>
+            </b-row>
+            <b-row>
+                <b-col>
+                    <h3>Servicio:</h3>
+                </b-col>
+                <b-col>
+                    {{info.servicioslocal.nombre}}
+                </b-col>
+            </b-row>
+        <b-row>
             <b-col>
-                <b-row>
-                    <b-col>
-                        <h3>Producto:</h3>
-                    </b-col>
-                    <b-col>
-                        {{info.productoslocal.nombre}}
-                    </b-col>
-                </b-row>
-                <b-row>
-                    <b-col>
-                        <h3>Servicios:</h3>
-                    </b-col>
-                    <b-col>
-                        {{info.servicioslocal.nombre}}
-                    </b-col>
-                </b-row>
+
             </b-col>
         </b-row>
         <b-row v-for="(data,indice) in inputs" class="my-1">
@@ -78,6 +102,13 @@
                             </b-col>
                         </template>
                 </b-row>
+                    </b-col>
+
+        <b-row>
+            <h3>
+                Seguimiento del Detalle:
+            </h3>
+        </b-row>
         <b-row>
             <b-table :items="info.trazabilidad" :fields="campostra">
                         <template slot="fecha" slot-scope="data">
@@ -93,13 +124,14 @@
                     </b-table>
         </b-row>
         <!-- Modal Component 1 imagen modal -->
-        <b-modal id="modalimagen" ref="ModalImagunidetalle" title="Evidencia">
+        <b-modal id="modalimagen" ref="ModalImagunidetalle" title="Evidencia Digital">
             <b-container>
                 <b-img :src="imgmodal.imagenes[0].url" fluid alt="Fluid image" />
             </b-container>
         </b-modal>
         <!-- Modal Component 2 imagenes modal  -->
-        <b-modal id="modalimagenes" ref="ModalImagenesdetalle" title="Imagenes de Evidencia" lazy>
+        <b-modal id="modalimagenes" ref="ModalImagenesdetalle" title="Evidencia Digital"
+        data-toggle="modal" lazy> 
             <b-container>
                 <template v-for="(data,indice) in imgmodal.imagenes">
                     <b-card no-body class="mb-1">
@@ -111,8 +143,12 @@
                                     </b-btn>
                                 </b-col>
                                 <b-col cols="4">
-                                    <b-btn  active-class class="fa fa-envelope-o">
+                                    <b-btn  active-class class="fa fa-envelope-o algo" @click="enviarcorreo" >
                                         
+                                    </b-btn>
+                                    <b-btn  active-class :href="data.url" target="_blank" >
+                                        <i class="fa fa-download" aria-hidden="true"></i>
+
                                     </b-btn>
                                 </b-col>
                             </b-row>
@@ -134,11 +170,12 @@
 </template>
 
 <script>
+$.fn.modal.Constructor.prototype.enforceFocus = function () {};
 import {bus} from '../main'
 import moment from 'moment'
 import Preload from '../componentes/preload.vue'
 import {urlservicios} from '../main'
-
+$.fn.modal.Constructor.prototype.enforceFocus = function () {};
 export default {
     data () {
         return {
@@ -173,6 +210,24 @@ export default {
         }
     },
     methods: {
+       
+        enviarcorreo(){
+            console.log("entro a enviarcorreo");
+            
+                
+                 swal({
+                    title: 'Submit email to run ajax request',
+                    input: 'text',
+                    inputAttributes: {'id':'jose'},
+                    showCancelButton: true,
+                    confirmButtonText: 'Submit',
+                 })
+
+                var d = document.getElementById("jose"); 
+                d.focus();
+            
+       
+        },
         imagenmodal(data){
             console.log("entro a el modal");
             if(data.imagenes.length==1)
@@ -211,5 +266,10 @@ export default {
 </script>
 
 <style>
+.borderF {
+    border: 1px solid #DCDCDC;
+    margin: 1%;
+    padding: 1%
+}
 
 </style>

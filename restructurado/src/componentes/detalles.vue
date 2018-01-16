@@ -75,7 +75,7 @@
                     {{data.value.nombre}}
                 </template>
                 <template slot="editar" scope="data">
-                    <i class="btn btn-success fa fa-pencil" v-on:click.stop="actualizar(data.index,data.item.id)" v-b-modal.modalactualizar></i>
+                    <i class="btn btn-success fa fa-table" v-on:click.stop="actualizar(data.index,data.item.id)" v-b-modal.modalactualizar></i>
                 </template>
             </b-table>
             <b-pagination size="md" :total-rows="this.currentUser.detalle.length" v-model="currentPage" :per-page="5">
@@ -91,11 +91,87 @@
         </b-row>
         <!-- Modal para Trayectos-->
         <b-modal id="modalactualizar" ref="ModalAct" title="Editar Registro" size="lg">
+            <div slot="modal-header" class="w-100">
+                <p class="float-left">Editar Registro - Numero de Movilizado {{info.detalle[indemodal].id}}</p>
+            </div>
             <b-container fluid>
-                <b-row v-for="(data,indice) in inputs.campos" class="my-1"> 
+                <b-row>
+                    <b-col cols="5" class="borderF">
+                        <h2>
+                            Remitente
+                        </h2>
+                        <b-row>
+                            
+                            <b-col>
+                                <label class="col-form-label col-form-label-sm text-capitalize">
+                                Nombre Remitente:
+                                </label>
+                            </b-col>
+                            <b-col>
+                                <b-row class=" col-form-label col-form-label-sm">
+                                    {{info.remitente.nombre}}
+                                </b-row>
+                            </b-col>                           
+                        </b-row>
+                        <b-row>
+                            <b-col>
+                                <label class=" col-form-label col-form-label-sm text-capitalize">
+                                Direccion Remitente:
+                                </label>
+                            </b-col>
+                            <b-col>
+                                <b-row class=" col-form-label col-form-label-sm">
+                                    {{info.remitente.direccion}}
+                                </b-row>
+                            </b-col>
+                        </b-row>   
+                    </b-col>
+                    <b-col cols="6" class="borderF">
+                        <h2>
+                            Destinatario
+                        </h2>
+                        <b-row>
+                            <b-col>
+                                <label class=" col-form-label col-form-label-sm text-capitalize">
+                                Nombre Destinatario:
+                                </label>
+                            </b-col>
+                            <b-col>
+                                <b-row class=" col-form-label col-form-label-sm"> 
+                                    {{info.detalle[0].detalleslocal.destinatario.nombre}}
+                                </b-row>
+                            </b-col>
+                        </b-row>
+                        <b-row>
+                            <b-col>
+                                 <label class=" col-form-label col-form-label-sm text-capitalize">
+                                Direccion Destinatario:
+                                </label>
+                            </b-col>
+                            <b-col>
+                                <b-row class=" col-form-label col-form-label-sm">
+                                    {{info.detalle[0].detalleslocal.destinatario.direccion}}
+                                </b-row>
+                            </b-col>
+                        </b-row>                    
+                    </b-col>
+                </b-row>
+                <b-row >
+                    <b-col>
+                        <h2>
+                        <label class="col-form-label col-form-label-sm text-capitalize">N° Orden de Servicio</label>
+                        </h2>
+                    </b-col>
+                    <b-col>
+                        <h2>
+                        {{info.id}}
+                        </h2>
+                    </b-col>
+                </b-row>
+                    <b-row v-for="(data,indice) in inputs.campos" class="my-1 card-text"> 
                     <template v-if="data.type!='select'">
                         <b-col cols="5">
-                            <label  class="col-sm-2 col-form-label col-form-label-sm" :style="data.style" >{{data.placeholder}}: </label>
+                            <label  class="col-form-label col-form-label-sm text-capitalize" :style="data.style" >{{data.placeholder}}: </label>
                         </b-col>
                         <b-col cols="6">
                             <input class="form-control form-control-sm"  :type="data.type" :id="data.id" :style="data.style" :max="data.max"
@@ -103,21 +179,25 @@
                               :value="values(data.id)"  required>
                         </b-col>
                     </template>
-                    <b-row v-else>
-                        <h4>Seleccione el Trayecto</h4>
-                        <b-form-select :id="data.id" :options="trayectos" text-field="nombre" value-field="_id"  v-model="selection"  >
-                            <!--
-                            <option v-for="tray in trayectos" :value="tray" >{{tray.nombre}}</option>
-                            -->
-                        </b-form-select>
-                    </b-row>
+                    <template v-else class="my-1 card-text">
+                        <b-col cols="5">
+                            <label class="col-form-label col-form-label-sm text-capitalize">Seleccione el Trayecto</label>
+                        </b-col>
+                        <b-col cols="6">
+                            <b-form-select class="col-form-label col-form-label-sm " :id="data.id" :options="trayectos" text-field="nombre" value-field="_id"  v-model="selection"  >
+                            </b-form-select>
+                        </b-col>
+                    </template>
 
                 </b-row>
-
             </b-container>
             <div slot="modal-footer" class="w-100">
-                    <b-btn class="mt-3" variant="danger"  @click="hideModal">Cancelar</b-btn>
-                    <b-btn class="mt-3 float-right" variant="success" v-on:click="ingresarTrayectos()">Guardar</b-btn>
+                    <b-btn class="mt-3" variant="danger"  @click="hideModal">
+                        <i class="fa fa-times-circle" aria-hidden="true">  </i>
+                        Cancelar</b-btn>
+                    <b-btn class="mt-3 float-right " variant="success" v-on:click="ingresarTrayectos()">
+                         <i class="fa fa-floppy-o" aria-hidden="true"></i>
+                    Guardar</b-btn>
 
             </div>
         </b-modal>
@@ -133,6 +213,7 @@ import moment from 'moment'
 export default {
     data(){
         return{
+            indemodal:0,
             vali:'',
             consecutivo:'',
             camposT:[],
@@ -140,7 +221,7 @@ export default {
             id_trayectos:[],
             detallesactualizar: '',
             fields: [
-                { key: "consecutivo", label: "Consecutivo" },
+                { key: "consecutivo", label: "N. Movilizado" },
                 { key: "productoslocal", label: "Productos" },
                 { key: "servicioslocal", label: "Servicios" },
                 "editar"
@@ -381,6 +462,7 @@ export default {
             }
         },
         actualizar(indice,consecutivo){
+            this.indemodal=indice
             this.consecutivo=consecutivo
                       var vacio=  { _id: null, nombre: 'Por Favor Seleccione un Trayecto' };
 
@@ -490,5 +572,9 @@ export default {
 <style>
 .conta {
     padding: 3%
+}
+.borderF {
+    border: 1px solid #DCDCDC;
+    margin: 1%
 }
 </style>

@@ -1,6 +1,8 @@
 <template>
     <b-container class="cards">
-        {{algo}}
+        <h3>
+            Listado de Ordenes de Servicio:
+        </h3>
         <b-table :fields="fields" :per-page="5" :current-page="currentPage" :items="consulta" :bordered="true"> 
             <template slot="index" scope="data">
                 {{data.index + 1}}
@@ -9,7 +11,8 @@
                 {{data.item.estado}}
             </template>
             <template slot="Cancelar" scope="data">
-                <b-button variant="danger" class="fa fa-ban" @click="cancelarOrden(data)"></b-button>
+                <b-button variant="danger" class="fa fa-ban" @click="cancelarOrden(data)" 
+                v-show="data.item.estado!='orden de servicio cancelada'"></b-button>
                 
             </template> 
             <template slot="fecha_creacion" scope="data">
@@ -59,6 +62,50 @@ export default {
     },
     methods: {
         cancelarOrden(value){
+            swal({
+                title: 'Esta seguro ?',
+                text: "Luego no se podra revertir el estado de la orden!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                cancelButtonText:'Cancelar',
+                confirmButtonText: 'Confirmar'
+                }).then((result) => {
+                if (result.value) {
+                    console.log("elimino");
+                    this.consulta.map((obj,ind)=>{
+                if(obj.id==value.item.id)
+                    {
+                        if(obj.estado=="Orden De Servicio Creada"||obj.estado=="Orden De Servicio Asignada")
+                        {
+                            this.axios.get(urlservicios+"CancelarOrden/"+value.item._id)
+                                .then((response) => {
+                                    console.log(response.data);
+                                    if(response.data.message=="orden de servicio actualizada")
+                                    {
+                                        swal("Orden Eliminada!", "Orden de Servicio Cancelada!", "success");
+
+                                    }
+                                })
+                            this.consulta.splice(ind,1)
+                        }
+                        else
+                        {
+                            swal(
+                                "No se puede Eliminar",
+                                "Por que el estado actual de la Orden no lo permite",
+                                "error"
+                            );
+                        }
+                    }
+                })
+                }
+                else{
+                    console.log("no elimino");
+                }
+                })
+            /*
             this.consulta.map((obj,ind)=>{
                 if(obj.id==value.item.id)
                     {
@@ -69,11 +116,8 @@ export default {
                                     console.log(response.data);
                                     if(response.data.message=="orden de servicio actualizada")
                                     {
-                                        swal(
-                                            "Eliminado Correctamente",
-                                            "Se elimino correctamente",
-                                            "success"
-                                        )
+                                        swal("Orden Eliminada!", "Orden de Servicio Cancelada!", "success");
+
                                     }
                                 })
                             this.consulta.splice(ind,1)
@@ -82,14 +126,14 @@ export default {
                         {
                             swal(
                                 "No se puede Eliminar",
-                                "Por que los siguientes estados no lo permiten",
+                                "Por que el estado actual de la Orden no lo permite",
                                 "error"
                             );
                         }
                     }
                 })
                     
-               
+             */  
         },
         actualizar(inde){
             var ocultar=false

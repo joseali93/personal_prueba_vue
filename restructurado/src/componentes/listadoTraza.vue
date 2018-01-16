@@ -1,5 +1,8 @@
 <template>
     <b-container class="conta">
+        <h3>
+            Listado de Detalles obtenidos:
+        </h3>
             <b-row>
                 <b-table  :items="consulta" :fields="fields"
                 :per-page="5" :current-page="currentPage" :bordered="true">
@@ -30,6 +33,7 @@
             </b-row>
             <b-row>
                 <b-button @click="exportarxls()">
+                    <i class="fa fa-file-excel-o" aria-hidden="true"></i>
                     Exportar EXCEL
                 </b-button>
             </b-row>
@@ -127,13 +131,13 @@
             </b-container>
         </b-modal>
         <!-- Modal Component 1 imagen -->
-        <b-modal id="modalimagen" ref="ModalImaguni" title="Evidencia">
+        <b-modal id="modalimagen" ref="ModalImaguni" title="Evidencia Digital">
             <b-container>
                 <b-img :src="modalima.trazabilidad[0].imagenes[0].url" fluid alt="Fluid image" />
             </b-container>
         </b-modal>
         <!-- Modal Component 2 imagenes -->
-        <b-modal id="modalimagenes" ref="ModalImagenes" title="Imagenes de Evidencia" lazy>
+        <b-modal id="modalimagenes" ref="ModalImagenes" title="Evidencia Digital" lazy>
             <b-container>
                 <template v-for="(data,indice) in modalima.trazabilidad[0].imagenes">
                     <b-card no-body class="mb-1">
@@ -164,13 +168,13 @@
             </b-container>
         </b-modal>
         <!-- Modal Component 1 imagen modal -->
-        <b-modal id="modalimagen" ref="ModalImagunidetalle" title="Evidencia">
+        <b-modal id="modalimagen" ref="ModalImagunidetalle" title="Evidencia Digital">
             <b-container>
                 <b-img :src="imgmodal.imagenes[0].url" fluid alt="Fluid image" />
             </b-container>
         </b-modal>
         <!-- Modal Component 2 imagenes modal  -->
-        <b-modal id="modalimagenes" ref="ModalImagenesdetalle" title="Imagenes de Evidencia" lazy>
+        <b-modal id="modalimagenes" ref="ModalImagenesdetalle" title="Evidencia Digital" lazy>
             <b-container>
                 <template v-for="(data,indice) in imgmodal.imagenes">
                     <b-card no-body class="mb-1">
@@ -489,7 +493,7 @@ export default {
                 {key:'fecha_creacion', label: 'Fecha Ultima Actualizacion'},
                 {key:'productoslocal', label: 'Producto'},
                 {key:'servicioslocal', label: 'Servicio'},
-                {key:'imagenes', label: 'Pruebas de Evidencia'},
+                {key:'imagenes', label: 'Prueba de Entrega'},
                 'detalles'
             ],
         }
