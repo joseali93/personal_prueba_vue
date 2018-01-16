@@ -240,6 +240,7 @@ export default {
   },
   data() {
     return {
+      
       mostrar: true,
       habilitar: true,
       load: false,
@@ -468,9 +469,14 @@ export default {
         this.detalles.destinatario.telefono == "" ||
         this.detalles.destinatario.direccion == "" ||
         pivote==false
-      ) {
+        ) {
         console.log("alerta");
-        swal("Oops...", "Falto algun campo por completar!", "error");
+        
+          swal("Oops...", "Falto completar algun campo", "error");                    
+        
+
+
+
       } else {
         var servicioslocal = this.selectservicio;
         this.detallesc = this.detalles;

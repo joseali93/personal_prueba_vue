@@ -71,15 +71,10 @@
                         </b-form-group>
                     </b-col>
             </b-row>
-<<<<<<< HEAD
-            <b-row>
-                <b-button @click="consultar()">
-                    <i class="fa fa-search" aria-hidden="true"></i>
-=======
             <b-row class="my-1">
                 <b-col>
                 <b-button @click="consultar()" variant="success" class="my-1">
->>>>>>> be89817d3f860517f1f44b490411614e94c5621e
+                    <i class="fa fa-search" aria-hidden="true"></i>
                     Consultar
                 </b-button>
                 </b-col>

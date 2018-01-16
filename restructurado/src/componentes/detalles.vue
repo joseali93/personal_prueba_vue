@@ -5,12 +5,7 @@
                 <i class="fa fa-chevron-left" aria-hidden="true"></i>
                 Volver
             </b-btn>
-            <!---
-          <router-link  to="/inicio/consultar/resultado" tag="button" class-active="active" 
-          class="btn btn-secondary btn-lg fa fa-arrow-left ">
-          Volver
-          </router-link>
-          -->
+        
         </b-row>
         <b-row>
             <b-col>
@@ -138,6 +133,7 @@ import moment from 'moment'
 export default {
     data(){
         return{
+            vali:'',
             consecutivo:'',
             camposT:[],
             inputstotales:[],
@@ -172,9 +168,10 @@ export default {
     methods: {
         volver(){
             var ocultar=true
+            var eliminar= this.vali
             setTimeout(() => {
                 bus.$emit('ocultar', {
-                    ocultar 
+                    ocultar,eliminar 
                 })
                 }, )
             this.$router.replace('/inicio/consultar/resultado')
@@ -457,7 +454,10 @@ export default {
   },
       mounted: function () {
           console.log("montado");
-          
+       bus.$on('ocultar', function (userObject) {
+        
+        this.ocultar = userObject.ocultar
+      }.bind(this))
     },
     created: function(){
 
@@ -476,6 +476,7 @@ export default {
 
         bus.$on('thisEvent', function (userObject) {
         this.currentUser = userObject.inde.item
+        this.vali=userObject.inde
         this.info=this.currentUser
         this.inputstotales=userObject.inputstotales
       }.bind(this))

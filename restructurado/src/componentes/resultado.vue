@@ -1,5 +1,6 @@
 <template>
     <b-container class="cards">
+        {{algo}}
         <b-table :fields="fields" :per-page="5" :current-page="currentPage" :items="consulta" :bordered="true"> 
             <template slot="index" scope="data">
                 {{data.index + 1}}
@@ -43,6 +44,7 @@ export default {
     },
     data(){
         return{
+            algo:'',
             currentPage: 1,
             fields: [
                 'index',
@@ -115,7 +117,18 @@ export default {
                 })
                 }, )
             this.$router.replace('/inicio/consultar/detalles')
-        }
+        },
+         mounted: function () {  
+             bus.$on('ocultar', function (userObject) {
+        
+            this.algo = userObject
+            console.log(this.algo);
+        }.bind(this))
+
+
+
+          
+        },
     }
     
 }

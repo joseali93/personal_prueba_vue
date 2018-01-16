@@ -7,7 +7,6 @@
                 </b-btn>
         </b-row>
         <b-row>
-            {{info}}
         </b-row>
         <b-row>
             <b-col>
