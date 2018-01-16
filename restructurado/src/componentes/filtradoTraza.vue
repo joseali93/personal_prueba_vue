@@ -71,10 +71,12 @@
                         </b-form-group>
                     </b-col>
             </b-row>
-            <b-row>
-                <b-button @click="consultar()">
+            <b-row class="my-1">
+                <b-col>
+                <b-button @click="consultar()" variant="success" class="my-1">
                     Consultar
                 </b-button>
+                </b-col>
             </b-row>
         </b-card>
             <b-row>
