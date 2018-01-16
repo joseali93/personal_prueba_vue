@@ -73,6 +73,7 @@
             </b-row>
             <b-row>
                 <b-button @click="consultar()">
+                    <i class="fa fa-search" aria-hidden="true"></i>
                     Consultar
                 </b-button>
             </b-row>

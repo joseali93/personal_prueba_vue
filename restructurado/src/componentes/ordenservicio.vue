@@ -1,10 +1,14 @@
 <template>
     <b-container>
-      <header class="content-heading text-capitalize">
-              <h2>Detalle de Orden de Servicio</h2>
-              <small>Permite de la creacion y edicion de los envios que tendra asociado la orden de servicio</small>
-      </header>
+       <header  class="content-heading text-capitalize text-center">
+          <h2>Generacion Orden de Servicio</h2>
+          <small></small>
+        </header>
       <b-card>
+        <header slot="header" class="content-heading text-capitalize">
+          <h2>Detalle de Orden de Servicio</h2>
+          <small>Permite de la creacion y edicion de los envios que tendra asociado la orden de servicio</small>
+        </header>
           <b-row>
               <b-col md="3" offset-md="11">
                   <b-btn class="rounded-circle" variant="danger"  v-b-modal.modalcrear><i class="fa fa-plus"></i></b-btn>
@@ -82,7 +86,7 @@
                 </b-row>
                 <b-row v-for="(data,indice) in inputs.campos" class="my-1"> 
                     <b-col >
-                        <label  class="col-sm-2 col-form-label col-form-label-sm" :style="data.style" >{{data.placeholder}}: </label>
+                        <label  class="col-sm-2 col-form-label col-form-label-sm text-capitalize" :style="data.style" >{{data.placeholder}}: </label>
                     </b-col>
                     <b-col>
                         <input class="form-control form-control-sm" :type="data.type" :id="data.id" :style="data.style" :max="data.max" :placeholder="data.placeholder" @keyup="Presiono(indice)"   required>
@@ -163,7 +167,7 @@
                 </b-row>
                 <b-row v-for="(data,indice) in inputsED.campos" class="my-1"> 
                     <b-col>
-                        <label  class="col-sm-2 col-form-label col-form-label-sm" :style="data.style">{{data.placeholder}}: </label>
+                        <label  class="col-sm-2 col-form-label col-form-label-sm text-capitalize" :style="data.style">{{data.placeholder}}: </label>
                     </b-col>
                     <b-col>
                         <input class="form-control form-control-sm" :type="data.type" :id="data.id" :max="data.max" :style="data.style" :placeholder="data.placeholder"@keyup="PresionoED(indice)"  :value="valores(data.id)" required>

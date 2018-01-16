@@ -1,11 +1,15 @@
 <template>
     <b-container class="prueba" >
-        <header class="content-heading">
-            <h3>INFORMACION DE RECOGIDA</h3>
-                <small>Se visualiza la seleccion de cliente y centro de costo</small>
+        <header  class="content-heading text-capitalize text-center">
+          <h2>Generacion Orden de Servicio</h2>
+          <small></small>
         </header>
         
         <b-card class="cards">
+        <header slot="header" class="content-heading ">
+            <h3>INFORMACION DE RECOGIDA</h3>
+                <small>Se visualiza la seleccion de cliente y centro de costo</small>
+        </header>
             <b-row>
                 <b-col>
                     <h3>Seleccione el Cliente</h3>
