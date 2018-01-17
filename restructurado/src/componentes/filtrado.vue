@@ -176,7 +176,7 @@ export default {
             })
         },
         SelectCC(value){
-            var vacio=  { _id: null, nombre: 'Por Favor Seleccione un Cliente' };
+            var vacio=  { _id: null, nombre: 'Por Favor Seleccione un Centro de Costo' };
             this.selectedCL=value.target.value
                   this.load = true;
             setTimeout(function(){

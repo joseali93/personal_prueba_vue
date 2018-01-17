@@ -109,7 +109,10 @@
                         <label  class="col-sm-2 col-form-label col-form-label-sm">Nombre: </label>
                     </b-col>
                     <b-col>
-                        <input type="text" class="form-control form-control-sm"  placeholder="Nombre" v-model="detalles.destinatario.nombre">
+                        <b-form-input type="text" class="form-control form-control-sm"  placeholder="Nombre" v-model="detalles.destinatario.nombre"
+                         :state="estado.nombre"></b-form-input>
+                        <!--<input type="text" class="form-control form-control-sm"  placeholder="Nombre" v-model="detalles.destinatario.nombre">
+                        -->
                     </b-col>
                 </b-form-row>
                 <b-form-row v-show="selectservice" class="my-1">
@@ -117,7 +120,9 @@
                         <label  class="col-sm-2 col-form-label col-form-label-sm">Direccion: </label>
                     </b-col>
                     <b-col>
-                        <input type="text" class="form-control form-control-sm"  placeholder="Direccion" v-model="detalles.destinatario.direccion">
+                      <b-form-input type="text"  class="form-control form-control-sm"  :state="estado.direccion" placeholder="Direccion" v-model="detalles.destinatario.direccion"> </b-form-input>
+                        <!--<input type="text" class="form-control form-control-sm"  placeholder="Direccion" v-model="detalles.destinatario.direccion">
+                        -->
                     </b-col>
                 </b-form-row>
                 <b-form-row v-show="selectservice" class="my-1">
@@ -125,7 +130,7 @@
                         <label  class="col-sm-2 col-form-label col-form-label-sm">Telefono: </label>
                     </b-col>
                     <b-col>
-                        <input type="text" class="form-control form-control-sm" id="telefono" @keyup="numeros(this)" placeholder="Telefono" v-model="detalles.destinatario.telefono">
+                        <input type="text"  class="form-control form-control-sm" id="telefono" @keyup="numeros(this)" placeholder="Telefono" v-model="detalles.destinatario.telefono">
                     </b-col>
                 </b-form-row>
                 <b-form-row v-show="selectservice">
@@ -240,7 +245,11 @@ export default {
   },
   data() {
     return {
-      
+      estado:{
+        direccion:null,
+        nombre:null,
+        telefono:null
+      },
       mostrar: true,
       habilitar: true,
       load: false,
@@ -441,6 +450,8 @@ export default {
       this.$refs.ModalEdit.hide();
     },
     ingresarOrden() {
+      this.estado.nombre=null
+      this.estado.direccion=null
       console.log("ingreso orden");
       var pivote=true
       if(this.objeto==undefined)
@@ -470,6 +481,12 @@ export default {
         this.detalles.destinatario.direccion == "" ||
         pivote==false
         ) {
+          if(this.detalles.destinatario.nombre==''){
+            this.estado.nombre=false
+          }
+          if(this.detalles.destinatario.direccion==''){
+            this.estado.direccion=false
+          }
         console.log("alerta");
         
           swal("Oops...", "Falto completar algun campo", "error");                    
@@ -491,7 +508,7 @@ export default {
           detalleslocal: detalleslocal
         };
         this.DetalleServicio.push(detalles);
-/*        this.DetalleServicio.map((obj,indc)=>{
+        /*        this.DetalleServicio.map((obj,indc)=>{
           console.log(obj);
         })*/
         console.log(JSON.stringify(this.DetalleServicio));

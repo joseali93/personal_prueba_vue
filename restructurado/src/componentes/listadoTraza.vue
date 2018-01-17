@@ -38,8 +38,7 @@
                 </b-button>
             </b-row>
         <!-- the modal -->
-        <b-modal id="myModal" size="lg"  ref="myModalRef" lazy>
-            
+        <b-modal id="myModal" size="lg"  ref="myModalRef" lazy>      
             <b-container>
                 <b-row>
                     <b-col cols="6">
@@ -135,6 +134,27 @@
             <b-container>
                 <b-img :src="modalima.trazabilidad[0].imagenes[0].url" fluid alt="Fluid image" />
             </b-container>
+            <div slot="modal-footer" class="w-100">
+                
+                <b-btn size="sm" class="float-left" variant="primary" v-b-toggle.todo>
+                Enviar todas
+                </b-btn>
+                <b-collapse class="mt-2" id="todo">
+                            <b-card>
+                                 <b-form inline>
+                                <b-form-input v-model="emailT"
+                                    type="email"
+                                    placeholder="Ingrese su email"
+                                    @input="validacorreoT" :state="estadoT"></b-form-input>
+                                    <b-btn  active-class class="fa fa-envelope-o algo" @click="enviarcorreoT(modalima)" >
+                                    </b-btn>
+                                 </b-form>
+                            </b-card>
+                    </b-collapse>
+                <b-btn size="sm" class="float-right" variant="primary" @click="closemodal">
+                Close
+                </b-btn>
+            </div>
         </b-modal>
         <!-- Modal Component 2 imagenes -->
         <b-modal id="modalimagenes" ref="ModalImagenes" title="Evidencia Digital" lazy>
@@ -149,8 +169,11 @@
                                     </b-btn>
                                 </b-col>
                                 <b-col cols="4">
-                                    <b-btn  active-class class="fa fa-envelope-o">
-                                        
+                                    <b-btn v-b-toggle="data.email">
+                                    <i class="fa fa-envelope-o" aria-hidden="true"></i>
+                                    </b-btn>
+                                    <b-btn  active-class :href="data.url" target="_blank" >
+                                        <i class="fa fa-download" aria-hidden="true"></i>
                                     </b-btn>
                                 </b-col>
                             </b-row>
@@ -163,17 +186,55 @@
                             </p>
                             </b-card-body>
                         </b-collapse>
+                        <b-collapse class="mt-2" :id="data.email">
+                            <b-card>
+                                 <b-form inline>
+                                <b-form-input v-model="email"
+                                    type="email"
+                                    placeholder="Ingrese su email"
+                                    @input="validacorreo" :state="estado"></b-form-input>
+                                    <b-btn  active-class class="fa fa-envelope-o algo" @click="enviarcorreo(data)" >
+                                    </b-btn>
+                                 </b-form>
+                            </b-card>
+                    </b-collapse>
                     </b-card>
                 </template>
             </b-container>
+            <div slot="modal-footer" class="w-100">
+                <b-btn @click="showCollapse = !showCollapse"
+                    :class="showCollapse ? 'collapsed' : null"
+                    aria-controls="todo"
+                    :aria-expanded="showCollapse ? 'true' : 'false'">
+                Toggle Collapse
+                </b-btn>
+                <!--<b-btn size="sm" class="float-left" variant="primary" v-b-toggle.todo>
+                Enviar todas
+                </b-btn>-->
+                <b-collapse class="mt-2" id="todo" v-model="showCollapse">
+                            <b-card>
+                                 <b-form inline>
+                                <b-form-input v-model="emailT"
+                                    type="email"
+                                    placeholder="Ingrese su email"
+                                    @input="validacorreoT" :state="estadoT"></b-form-input>
+                                    <b-btn  active-class class="fa fa-envelope-o algo" @click="enviarcorreoT(modalima)" >
+                                    </b-btn>
+                                 </b-form>
+                            </b-card>
+                    </b-collapse>
+                <b-btn size="sm" class="float-right" variant="primary" @click="closemodal">
+                Close
+                </b-btn>
+            </div>
         </b-modal>
-        <!-- Modal Component 1 imagen modal -->
+        <!-- Modal Component 1 imagen modal 
         <b-modal id="modalimagen" ref="ModalImagunidetalle" title="Evidencia Digital">
             <b-container>
                 <b-img :src="imgmodal.imagenes[0].url" fluid alt="Fluid image" />
             </b-container>
         </b-modal>
-        <!-- Modal Component 2 imagenes modal  -->
+        <!-- Modal Component 2 imagenes modal 
         <b-modal id="modalimagenes" ref="ModalImagenesdetalle" title="Evidencia Digital" lazy>
             <b-container>
                 <template v-for="(data,indice) in imgmodal.imagenes">
@@ -186,8 +247,11 @@
                                     </b-btn>
                                 </b-col>
                                 <b-col cols="4">
-                                    <b-btn  active-class class="fa fa-envelope-o">
-                                        
+                                     <b-btn v-b-toggle="data.email">
+                                    <i class="fa fa-envelope-o" aria-hidden="true"></i>
+                                    </b-btn>
+                                    <b-btn  active-class :href="data.url" target="_blank" >
+                                        <i class="fa fa-download" aria-hidden="true"></i>
                                     </b-btn>
                                 </b-col>
                             </b-row>
@@ -200,10 +264,11 @@
                             </p>
                             </b-card-body>
                         </b-collapse>
+                        
                     </b-card>
                 </template>
             </b-container>
-        </b-modal>
+        </b-modal>  -->
     </b-container>
 </template>
 
@@ -229,13 +294,142 @@ export default {
 
     },
     methods:{
+        validacorreo(value){
+           if(value.length==0){
+               this.emailvalido=null
+               return(this.estado=null)
+           }
+           if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value))
+            {   
+                this.emailvalido=true
+                return (this.estado=true)
+            }
+                this.emailvalido=false
+                return (this.estado=false)
+            
+
+       },
+        enviarcorreo(value){
+            var objeto
+            if(this.emailvalido==null||this.email==''){
+                swal(
+                    'Falta Completar el Email',
+                    'Complete el e-mail',
+                    'error'
+                    )
+            }
+            if(this.emailvalido==false){
+                swal(
+                    'Formato Ivalido',
+                    'Ingrese un e-mail valido',
+                    'warning'
+                    )
+            }
+            if(this.emailvalido==true){
+                console.log("email ok");
+                console.log(this.modalima);
+                console.log(value);
+                objeto={
+                    correo:this.email,
+                    norden:this.modalima.consec,
+                    nmovilizado:this.modalima.id,
+                    nomproceso:this.modalima.nombre_proceso,
+                    imagenes:[{
+                        ruta:value.ruta,
+                        id:value.id
+                    }]
+                    
+                }
+                this.axios.post(urlservicios+"EnviarCorreoImagen", objeto)
+                .then(response => {
+                this.respuesta = response.data;
+                console.log(response);
+                console.log(objeto);
+                swal(
+                    "Excelente!",
+                    " " + this.respuesta,
+                    "success"
+                );
+                });
+                console.log(objeto);
+
+            }
+
+
+        },
+        validacorreoT(value){
+            if(value.length==0){
+               this.emailvalidoT=null
+               return(this.estadoT=null)
+           }
+           if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value))
+            {   
+                this.emailvalidoT=true
+                return (this.estadoT=true)
+            }
+                this.emailvalidoT=false
+                return (this.estadoT=false)
+        },
+        enviarcorreoT(value){
+            console.log("entro a envio todo");
+            console.log(value);
+            if(this.emailvalidoT==null||this.emailT==''){
+                swal(
+                    'Falta Completar el Email',
+                    'Complete el e-mail',
+                    'error'
+                    )
+            }
+            if(this.emailvalidoT==false){
+                swal(
+                    'Formato Ivalido',
+                    'Ingrese un e-mail valido',
+                    'warning'
+                    )
+            }
+            if(this.emailvalidoT==true){
+                console.log("email ok");
+                var objeto
+                var objetoimanes=[]
+                value.trazabilidad[0].imagenes.map((obj,ind)=>{
+                    console.log(obj);
+                    objeto={
+                        ruta:obj.ruta,
+                        id:obj.id
+                    }
+                    objetoimanes.push(objeto)
+                })
+                var objeT={
+                        correo:this.emailT,
+                        norden:this.modalima.consec,
+                        nmovilizado:this.modalima.id,
+                        nomproceso:this.modalima.nombre_proceso,
+                        imagenes:objetoimanes
+                }
+                console.log(objeT);
+                this.axios.post(urlservicios+"EnviarCorreoImagen", objeT)
+                    .then(response => {
+                    this.respuesta = response.data;
+                    console.log(response);
+                    swal(
+                        "Excelente!",
+                        " " + this.respuesta,
+                        "success"
+                    );
+                    });
+            }
+            
+        },
+        closemodal(){
+            this.$refs.ModalImaguni.hide()     
+            this.$refs.ModalImagenes.hide()            
+        },
         cerrar(value){
             console.log(value);
             console.log("entro a cerrar");
             this.$refs.myModalRef.hide();
         },
         imagenmodal(data){
-            console.log("entro a el modal");
             if(data.imagenes.length==1)
             {
                 this.imgmodal=data
@@ -248,8 +442,7 @@ export default {
             }
         },
         image(value){
-            console.log("entro a imagen");
-            console.log(value);
+
             this.modalima=value
             if(this.modalima.trazabilidad[0].imagenes.length==0)
             {
@@ -412,6 +605,14 @@ export default {
     props:['consulta','centro','cliente'],
     data () {
         return {
+            showCollapse: false,
+            respuesta:'',
+            email:'',
+            emailT:'',
+            emailvalido: null,
+            emailvalidoT: null,                  
+            estado:null,
+            estadoT:null,
             mostrar: false,
             imgmodal: {
                 fecha:'',

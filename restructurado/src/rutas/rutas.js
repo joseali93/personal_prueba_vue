@@ -13,7 +13,7 @@ import ResultTraceComponent from '../componentes/resultadotraza.vue'
 import NotFoundComponent from '../componentes/NotFound.vue'
 import Blank from '../componentes/componentInBlank.vue'
 import prueba from '../componentes/prueba.vue'
-
+import EnterExitComponent from '../componentes/EntradaSalidas.vue'
 export const rutas = [    
     {
         path: '/prueba',
@@ -78,6 +78,20 @@ export const rutas = [
                         
                     },
                     
+                    {
+                        path:'*',
+                        redirect: '/404'
+                    } 
+                ]
+            },
+            {
+                path: 'entradasalida',
+                component: EnterExitComponent, props: true,
+                children:[
+                    {
+                        path: '',  component: Blank,  props: true,  
+                        
+                    },    
                     {
                         path:'*',
                         redirect: '/404'

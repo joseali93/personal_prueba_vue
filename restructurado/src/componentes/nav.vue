@@ -29,6 +29,11 @@
                         <i class="fa fa-info"></i><span>Consulta Trazabilidad</span>
                     </b-link>
                 </li>
+                <li> 
+                    <b-link to="/inicio/entradasalida">
+                        <i class="fa fa-rebel"></i><span>Entradas y Salidas</span>
+                    </b-link>
+                </li>
             </ul>
             </div>
 

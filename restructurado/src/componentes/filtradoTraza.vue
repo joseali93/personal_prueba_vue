@@ -108,11 +108,11 @@ data(){
         orden: '',
         referencia:'',
         nmovilizado: '',    
-        selectedCL: '',
+        selectedCL: null,
         clientes: {},
         clienteseleccionado:{},
         centroseleccionado: {},
-        selectedCC: '',
+        selectedCC: null,
         centros: {},
         time1: '',
         validatecampo: '',
@@ -275,15 +275,17 @@ methods:{
         }
     },
     SelectCC(value){
-        console.log(value.target.value);
+                    var vacio=  { _id: null, nombre: 'Por Favor Seleccione un Centro de Costo' };
+
         this.selectedCL=value.target.value
         this.load = true;
         setTimeout(function(){
-            console.log("entramos a seleccionar cc")
             this.axios.get(urlservicios+"CentrosPorCliente/"+value.target.value)            
             //this.axios.get(urlservicios+"centros/")
             .then((response) => {
             this.centros=response.data
+            this.centros.unshift(vacio)
+
             //console.log(this.centros)
             this.load=false
             this.disable= false
@@ -291,9 +293,7 @@ methods:{
         }.bind(this))
     },
     ordenes(value){
-        console.log("entro a ordenes");
         this.orden =value.target.value
-        console.log(this.orden);
         var referencia = document.getElementById('referencia')
         var nummovilizado =document.getElementById('nmovilizado')
 
@@ -323,7 +323,6 @@ methods:{
     },
     movilizado(value){
         this.nmovilizado= value.target.value
-        console.log(this.nmovilizado);
         var orden =document.getElementById('orden')
         var referencia = document.getElementById('referencia')
         if(this.nmovilizado==''){
@@ -338,6 +337,8 @@ methods:{
     },
 },
     mounted: function () {
+        var vacio=  { _id: null, nombre: 'Por Favor Seleccione un Cliente' };
+        var vacio2= { nombre: 'Por Favor Seleccione un Cliente' };
         console.log("montado")
         var login = localStorage.getItem("storedData");
         var infologin =JSON.parse(login);
@@ -346,7 +347,8 @@ methods:{
         this.axios.get(urlservicios+"clientesOperador/"+infologin.id_OperadorLogistico)
         .then((response) => {
             this.clientes=response.data
-            console.log(this.clientes)
+            this.clientes.unshift(vacio)
+            //console.log(this.clientes)
         })
                 
     },

@@ -100,8 +100,8 @@ export default {
 
     return {
         
-        selected_client: '',
-        selected_center: '',
+        selected_client: null,
+        selected_center: null,
         selected_cliente: {},
         selected_centro:{},
         clientes: {},
@@ -115,6 +115,8 @@ export default {
         ClientesSelect(seleccion){
             console.log(seleccion.target.value);
             console.log("antro a selecion de clientes")
+                        var vacio=  { _id: null, nombre: 'Por Favor Seleccione un Centro de Costo' };
+
             for(var i=0;i<this.clientes.length;i++){
                 if(this.clientes[i]._id==seleccion.target.value){
                     this.selected_cliente=this.clientes[i]
@@ -125,8 +127,11 @@ export default {
                 this.axios.get(urlservicios+"CentrosPorCliente/"+seleccion.target.value)
                     .then((response) => {
                         this.centros=response.data
+                        this.centros.unshift(vacio)
+
                         this.habilitar= false
                         this.load=false
+                        
                     })
                 }
 
@@ -188,11 +193,15 @@ export default {
     },
     beforeCreate: function () {
         console.log("antes");
+                var vacio=  { _id: null, nombre: 'Por Favor Seleccione un Cliente' };
+
         var test2 = localStorage.getItem("storedData");
         var test =JSON.parse(test2);
         this.axios.get(urlservicios+"clientesOperador/"+test.id_OperadorLogistico)
         .then((response) => {
             this.clientes=response.data
+                        this.clientes.unshift(vacio)
+
         })
         this.nombreusu;
         bus.$emit('remitente')
