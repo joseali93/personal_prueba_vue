@@ -7,15 +7,15 @@
         <div class="side-navbar-wrapper">
             <div class="sidenav-header d-flex align-items-center justify-content-center">
             <div class="sidenav-header-inner text-center " >
-              <b-link to="/inicio">
-                <b-img :src="imagen" rounded  fluid alt="Responsive image" 
+              <b-link to="/inicio" >
+                <b-img :src="imagen" fluid alt="Responsive image" 
                 class="img-fluid   mCS_img_loaded"/>
                 <!--
                 <img src="src/assets/logo.png" alt="RLP" class="img-fluid rounded-circle mCS_img_loaded">
                 -->
               </b-link>
             </div>
-            <div class="sidenav-header-logo"><a  class="brand-small text-center"><b-link to="/inicio"> <strong>W</strong><strong class="text-primary">L</strong></b-link></a></div>
+            <div class="sidenav-header-logo"><a  class="brand-small text-center"><b-link to="/inicio"> <strong class="text-dark">W</strong><strong class="text-primary">L</strong></b-link></a></div>
             </div>
             <div class="main-menu">
             <ul id="side-main-menu" class="side-menu list-unstyled">                  
@@ -66,10 +66,10 @@
                   <div class="brand-text d-none d-md-inline-block"><span> </span><strong class="text-primary"></strong></div></b-link></a></div>
               <ul class="nav-menu list-unstyled d-flex flex-md-row align-items-md-center">
                 <li class="nav-item">
-                  <b-button variant="link" class="nav-link logout" @click="Salir()">
+                  <b-link variant="link" class="nav-link logout" @click="Salir()">
                     Logout
                     <i class="fa fa-sign-out"></i>
-                  </b-button>
+                  </b-link>
 
                 </li>
                </ul>
@@ -152,6 +152,14 @@ export default {
 </script>
 
 <style>
+nav.side-navbar .sidenav-header
+{
+background:white;  
+}
+nav.side-navbar .sidenav-header img{
+  width: 100%;
+  height: auto;  
+}
 imagen{
   width: 50px;
   height: 18.462px;

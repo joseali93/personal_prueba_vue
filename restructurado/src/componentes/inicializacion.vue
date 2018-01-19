@@ -4,9 +4,9 @@
     <div class="content-heading text-capitalize">
       Bienvenido {{nombreusu}}
     </div>
-      <div class="panel panel-default  text-capitalize" >
+      <div class="panel panel-default" >
         <h3>
-            Este es un aplicativo para manejo de operaciones logisticas
+            <strong >Way</strong><strong class="text-primary">Logistic</strong> es un aplicativo para el manejo logistico de su empresa
         </h3>
       </div>
     </div>

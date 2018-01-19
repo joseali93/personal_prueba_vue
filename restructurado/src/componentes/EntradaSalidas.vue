@@ -1,11 +1,5 @@
 <template>
     <b-container>
-        <b-row>
-            <h3>Seleccione el Proceso Logistico</h3>
-            <b-form-select v-model="selected"  text-field="nombre" value-field="_id"
-            :options="procesosLog" class="mb-3" @input="procesoseleccionado">
-            </b-form-select>
-        </b-row>
         <b-row class="my-1 ">
             <b-col class="float-right">
                 <b-btn class="float-right rounded"  variant="success" v-show="selected!=null"  v-b-modal.modal1>
@@ -13,8 +7,15 @@
                 </b-btn>
             </b-col>
         </b-row>
+        <b-row>
+            <h3>Seleccione el Proceso Logistico</h3>
+            <b-form-select v-model="selected"  text-field="nombre" value-field="_id"
+            :options="procesosLog" class="mb-3" @input="procesoseleccionado">
+            </b-form-select>
+        </b-row>
+        
         <b-row class="my-1"> 
-        <template v-for="(data, indice) in inputs.campos">
+        <template v-for="(data) in inputs.campos">
             <template v-if="data.vmodel=='id_centrologistico'">   
                          
                 <b-form-select :id="data.id" v-model="objeto.id_centrologistico" text-field="nombre" value-field="_id" 
