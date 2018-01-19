@@ -21,7 +21,7 @@
                     <h3>Seleccione el Centro de Costos</h3>
                     <preload v-if="load"></preload>
                     <b-form-select v-model="selected_center" class="mb-3"
-                    :options="centros" text-field="nombre" value-field="_id" :disabled="habilitar" v-else >
+                    :options="centros" text-field="nombre" value-field="_id" @change.native="centrosseleccionado" :disabled="habilitar" v-else >
                     </b-form-select>
                 </b-col>
             </b-row>
@@ -35,7 +35,7 @@
                             <b-form-input id="direccion"
                                 size="lg"
                                 type="text"
-                                v-model="selected_cliente.direccion"
+                                v-model="selected_centro.direccion"
                                 required
                                 placeholder="Direccion">
                             </b-form-input>
@@ -112,6 +112,16 @@ export default {
     },
    
     methods: {
+        centrosseleccionado(seleccion){
+            console.log("entro a select centro");
+            console.log(seleccion);
+            console.log(this.centros);
+             for(var i=0;i<this.centros.length;i++){
+                if(this.centros[i]._id==seleccion.target.value){
+                    this.selected_centro=this.centros[i]
+                }
+            }
+        },
         ClientesSelect(seleccion){
             console.log(seleccion.target.value);
             console.log("antro a selecion de clientes")
@@ -122,16 +132,28 @@ export default {
                     this.selected_cliente=this.clientes[i]
                 }
             }
-            this.load = true;
+            var load=true
+            setTimeout(() => {
+                bus.$emit('load', {
+                    load 
+                })
+                }, )
+            //this.load = true;
                 if(seleccion!==undefined){
+
                 this.axios.get(urlservicios+"CentrosPorCliente/"+seleccion.target.value)
                     .then((response) => {
                         this.centros=response.data
                         this.centros.unshift(vacio)
 
                         this.habilitar= false
-                        this.load=false
-                        
+                        //this.load=false
+                        var load=false
+                        setTimeout(() => {
+                            bus.$emit('load', {
+                                load 
+                            })
+                            }, )
                     })
                 }
 
@@ -146,6 +168,8 @@ export default {
                     'error'
                 )
             }else{
+               
+            }
             var selected_client= this.selected_client
             var selected_center= this.selected_center
             var seleccionados = {
@@ -156,9 +180,9 @@ export default {
             localStorage.setItem("orden",JSON.stringify(seleccionados))
             this.$router.replace('/inicio/ordenservicio')
         }
-        }
-    },
-    mounted: function () {
+        },
+    
+        mounted: function () {
         var orden=localStorage.getItem("orden");
         var ordenjson=JSON.parse(orden)
         console.log(orden);
@@ -175,7 +199,13 @@ export default {
                     .then((response) => {
                         this.centros=response.data
                         this.habilitar= false
-                        this.load=false
+                        //this.load=false
+                        var load=false
+                        setTimeout(() => {
+                            bus.$emit('load', {
+                                load 
+                            })
+                            }, )
                     })
             var test2 = localStorage.getItem("storedData");
             var test =JSON.parse(test2);

@@ -1,6 +1,6 @@
 <template>
-    <div class="center">
-        <img src="http://www.sowashco.org/files/images/loading2.gif" class="imagen">                        
+    <div class="center ">
+        <img src="https://www.ole.com.ar/static/OLEOleV2/images/loading.gif"  class="imagen ">                        
     </div>
 </template>
 
@@ -10,14 +10,24 @@ export default {
 }
 </script>
 
-<style>
+<style> 
 .center {
-    position: absolute;
-    margin: 17% 30%;
-    text-align: center;
-    z-index: 9;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  display: block;
+  background-color: gray;
+    z-index: 9000;
     opacity : 0.5;
-    
-    
+    top: 0;
+    bottom: 0;     
+}
+.imagen{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    margin: auto;
 }
 </style>

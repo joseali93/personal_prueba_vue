@@ -130,7 +130,7 @@
             </b-container>
             <div slot="modal-footer" class="w-100">
                 <b-btn size="sm" class="float-left" variant="primary" v-b-toggle.todo>
-                Enviar todas
+                Enviar Correo
                 </b-btn>
                 <b-collapse class="mt-2" id="todo">
                             <b-card>
@@ -139,13 +139,13 @@
                                     type="email"
                                     placeholder="Ingrese su email"
                                     @input="validacorreoT" :state="estadoT"></b-form-input>
-                                    <b-btn  active-class class="fa fa-envelope-o algo" @click="enviarcorreoT(imgmodal)" >
+                                    <b-btn  active-class class="fa fa-arrow-right algo" @click="enviarcorreoT(imgmodal)" >
                                     </b-btn>
                                  </b-form>
                             </b-card>
                     </b-collapse>
-                <b-btn size="sm" class="float-right" variant="primary" @click="closemodal">
-                Close
+                <b-btn size="sm" class="float-right " variant="danger" @click="closemodal">
+                Cerrar
                 </b-btn>
             </div>
         </b-modal>
@@ -187,7 +187,7 @@
                                     type="email"
                                     placeholder="Ingrese su email"
                                     @input="validacorreo" :state="estado"></b-form-input>
-                                    <b-btn  active-class class="fa fa-envelope-o algo" @click="enviarcorreo(data)" >
+                                    <b-btn  active-class class="fa fa-arrow-right algo" @click="enviarcorreo(data)" v-b-toggle="data.email">
                                     </b-btn>
                                  </b-form>
                             </b-card>
@@ -196,9 +196,9 @@
                 </template>
                 
             </b-container>
-           <div slot="modal-footer" class="w-100">
-                <b-btn size="sm" class="float-left" variant="primary" v-b-toggle.todo>
-                Enviar todas
+            <div slot="modal-header" class="w-100">
+                <b-btn size="sm" class="float-left" variant="success" v-b-toggle.todo>
+                Enviar Correo
                 </b-btn>
                 <b-collapse class="mt-2" id="todo">
                             <b-card>
@@ -207,13 +207,16 @@
                                     type="email"
                                     placeholder="Ingrese su email"
                                     @input="validacorreoT" :state="estadoT"></b-form-input>
-                                    <b-btn  active-class class="fa fa-envelope-o algo" @click="enviarcorreoT(imgmodal)" >
+                                    <b-btn  active-class class="fa fa-arrow-right algo" @click="enviarcorreoT(imgmodal)" >
                                     </b-btn>
                                  </b-form>
                             </b-card>
                     </b-collapse>
-                <b-btn size="sm" class="float-right" variant="primary" @click="closemodal">
-                Close
+            </div>
+           <div slot="modal-footer" class="w-100">
+                
+                <b-btn size="sm" class="float-right" variant="danger" @click="closemodal">
+                Cerrar
                 </b-btn>
             </div>
         </b-modal>
@@ -222,12 +225,10 @@
 </template>
 
 <script>
-$.fn.modal.Constructor.prototype.enforceFocus = function () {};
 import {bus} from '../main'
 import moment from 'moment'
 import Preload from '../componentes/preload.vue'
 import {urlservicios} from '../main'
-$.fn.modal.Constructor.prototype.enforceFocus = function () {};
 export default {
     data () {
         return {
@@ -300,6 +301,13 @@ export default {
                     )
             }
             if(this.emailvalidoT==true){
+                var load=true
+                    setTimeout(() => {
+                        console.log("emite");
+                        bus.$emit('load', {
+                            load
+                        })
+                        }, )
                 var objeT
                 var objeto
                 var objetoimanes=[]
@@ -323,6 +331,12 @@ export default {
                     .then(response => {
                     this.respuesta = response.data;
                     console.log(response);
+                    var load=false
+                    setTimeout(() => {
+                        bus.$emit('load', {
+                            load
+                        })
+                        }, )
                     swal(
                         "Excelente!",
                         " " + this.respuesta,
@@ -369,6 +383,12 @@ export default {
             }
             if(this.emailvalido==true){
                 console.log("email ok");
+                var load=true
+                    setTimeout(() => {
+                        bus.$emit('load', {
+                            load
+                        })
+                        }, )
                 console.log(this.info);
                 console.log(value);
                 objeto={
@@ -388,6 +408,12 @@ export default {
                 this.respuesta = response.data;
                 console.log(response);
                 console.log(objeto);
+                var load=false
+                    setTimeout(() => {
+                        bus.$emit('load', {
+                            load
+                        })
+                        }, )
                 swal(
                     "Excelente!",
                     " " + this.respuesta,

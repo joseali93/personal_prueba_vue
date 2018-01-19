@@ -1,7 +1,28 @@
 <template>
 <div>
-    
-    {{productosurl}}
+   <b-btn v-b-toggle.myCollapse>
+  <span class="when-opened">Close</span>
+  <span class="when-closed">Open</span>
+  My Collapse
+</b-btn>
+<b-collapse id="myCollapse">
+  <!-- content here -->
+  <p>algoasdasd asda</p>
+</b-collapse>
+
+
+
+<b-btn @click="showCollapse = !showCollapse"
+           :class="showCollapse ? 'collapsed' : null"
+           aria-controls="collapse4"
+           :aria-expanded="showCollapse ? 'true' : 'false'">
+      Toggle Collapse
+    </b-btn>
+    <b-collapse class="mt-2" v-model="showCollapse" id="collapse4">
+      <b-card>
+        I should start open!
+      </b-card>
+    </b-collapse>
 </div>
 </template>
 
@@ -11,6 +32,8 @@ import {urlservicios} from '../main'
 export default {
   data () {
     return {
+            showCollapse: true,
+
         message: 'holaaa',
         productosurl:''
     }
@@ -34,5 +57,11 @@ export default {
   }
 }
 </script>
+<style >
+.collapsed > .when-opened,
+:not(.collapsed) > .when-closed {
+  display: none;
+}
+</style>
 
 <!-- accordion-1.vue -->

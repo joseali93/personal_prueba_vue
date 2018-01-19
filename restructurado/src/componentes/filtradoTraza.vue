@@ -1,7 +1,6 @@
 <template>
     <b-container>
         
-        <preload v-show="load"></preload>
         <b-card class="car" v-show="ocultartra">
             <header slot="header" class="content-heading">
                 <h3>Consultar Trazabilidad</h3>
@@ -38,7 +37,15 @@
                                         name="radiosSm"
                                         >
                         </b-form-radio-group>
+
                     </b-form-group>
+                    
+                </b-col>
+                <b-col >
+                    <b-btn active-class class="float-right" @click="limpiarfiltro">
+                        <i class="fa fa-refresh" aria-hidden="true"></i>
+                        Busqueda
+                    </b-btn>
                 </b-col>
             </b-row>
             <b-row v-show="prueba=='first'">
@@ -130,7 +137,21 @@ data(){
       }.bind(this))
     },
 methods:{
-   
+   limpiarfiltro(){
+       console.log("entro a limpiar filtro");
+       this.time1='',
+       this.referencia='',
+       this.nmovilizado='',
+       this.orden=''
+        var referencia = document.getElementById('referencia')
+        var nummovilizado =document.getElementById('nmovilizado')
+        var orden =document.getElementById('orden')
+        referencia.disabled= false
+        nummovilizado.disabled=false
+        orden.disabled=false
+
+
+   },
     consultar(){
         var inicio,fin
         if(this.selectedCL==''||this.selectedCC=='')
@@ -167,7 +188,13 @@ methods:{
                     inicio=this.time1[0]
                     fin=this.time1[1]
                     this.validatecampo=''
-                    this.load = true;
+                    //this.load = true;
+                    var load=true
+                    setTimeout(() => {
+                        bus.$emit('load', {
+                            load 
+                        })
+                        }, )
                     console.log(urlservicios+"/ObtenerOrdenesFiltradoDetalle/"+this.selectedCC+"/"+this.selectedCL+'/null/null/null/'+inicio+'/'+fin+'');
                     this.axios.get(urlservicios+"/ObtenerOrdenesFiltradoDetalle/"+this.selectedCC+"/"+this.selectedCL+'/null/null/null/'+inicio+'/'+fin+'')
                         .then((response) => {
@@ -178,8 +205,14 @@ methods:{
                                     'No se encontro ninguna Orden!',
                                     'error'
                                     )
-                                    this.load = false;
-                            }this.load = false;
+                                    //this.load = false;
+                            }//this.load = false;
+                            var load=false
+                            setTimeout(() => {
+                                bus.$emit('load', {
+                                    load
+                                })
+                                }, )
                             console.log(this.consulta);
                             })
 
@@ -205,6 +238,12 @@ methods:{
                     else
                     {
                         this.load = true;
+                        var load=true
+                    setTimeout(() => {
+                        bus.$emit('load', {
+                            load
+                        })
+                        }, )
                         this.axios.get(urlservicios+"/ObtenerOrdenesFiltradoDetalle/"+this.selectedCC+"/"+this.selectedCL+'/'+this.orden+'/null/null/null/null')
                             .then((response) => {
                                 this.consulta=response.data
@@ -215,8 +254,20 @@ methods:{
                                         'error'
                                         )
                                         this.load = false;
+                                        var load=false
+                    setTimeout(() => {
+                        bus.$emit('load', {
+                            load
+                        })
+                        }, )
                                 }
                                 this.load = false;
+                                var load=false
+                    setTimeout(() => {
+                        bus.$emit('load', {
+                            load
+                        })
+                        }, )
                                 console.log(this.consulta);
                                 })
 
@@ -229,6 +280,12 @@ methods:{
                     {
                         console.log("tiene algo");
                             this.load = true;
+                            var load=true
+                    setTimeout(() => {
+                        bus.$emit('load', {
+                            load
+                        })
+                        }, )
                             this.axios.get(urlservicios+"/ObtenerOrdenesFiltradoDetalle/"+this.selectedCC+"/"+this.selectedCL+'/null/null/'+this.referencia+'/null/null')
                             .then((response) => {
                                 this.consulta=response.data
@@ -240,9 +297,21 @@ methods:{
                                         'error'
                                         )
                                         this.load = false;
+                                        var load=false
+                    setTimeout(() => {
+                        bus.$emit('load', {
+                            load
+                        })
+                        }, )
                                 }
                                 console.log(this.consulta);
                                 this.load = false;
+                                var load=false
+                    setTimeout(() => {
+                        bus.$emit('load', {
+                            load
+                        })
+                        }, )
                                 })
 
                         this.$router.replace('/inicio/trazabilidad/listado')
@@ -253,6 +322,12 @@ methods:{
                     else
                     {
                         this.load = true;
+                        var load=true
+                    setTimeout(() => {
+                        bus.$emit('load', {
+                            load
+                        })
+                        }, )
                         console.log("movilizado");
                         console.log(this.nmovilizado);
                         this.axios.get(urlservicios+"ObtenerOrdenesFiltradoDetalle/"+this.selectedCC+"/"+this.selectedCL+'/null/'+this.nmovilizado+'/null/null/null')
@@ -265,7 +340,19 @@ methods:{
                                         'error'
                                         )
                                         this.load = false;
+                                        var load=false
+                    setTimeout(() => {
+                        bus.$emit('load', {
+                            load
+                        })
+                        }, )
                                 }this.load = false;
+                                var load=false
+                    setTimeout(() => {
+                        bus.$emit('load', {
+                            load
+                        })
+                        }, )
                                 })
 
                         this.$router.replace('/inicio/trazabilidad/listado')
@@ -279,7 +366,12 @@ methods:{
 
         this.selectedCL=value.target.value
         this.load = true;
-        setTimeout(function(){
+        var load=true
+                    setTimeout(() => {
+                        bus.$emit('load', {
+                            load
+                        })
+                        }, )
             this.axios.get(urlservicios+"CentrosPorCliente/"+value.target.value)            
             //this.axios.get(urlservicios+"centros/")
             .then((response) => {
@@ -288,9 +380,14 @@ methods:{
 
             //console.log(this.centros)
             this.load=false
+            var load=false
+                    setTimeout(() => {
+                        bus.$emit('load', {
+                            load
+                        })
+                        }, )
             this.disable= false
             })
-        }.bind(this))
     },
     ordenes(value){
         this.orden =value.target.value

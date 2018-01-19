@@ -1,7 +1,6 @@
 <template>
     <b-container>
     
-        <preload v-show="load"></preload>
         <b-card class="car" v-show="ocultar">
             <header class="content-heading" slot="header">
                 <h3>Consultar Ordenes de Servicio</h3>
@@ -159,18 +158,37 @@ export default {
                 }   
             var login = localStorage.getItem("storedData");
             var infologin =JSON.parse(login);  
-            this.axios.get(urlservicios+"/ObtenerOrdenesFiltrado/"+infologin.id_OperadorLogistico+"/"+this.filter+"/"+this.selected_state+
+            var load=true
+                setTimeout(() => {
+                    bus.$emit('load', {
+                        load 
+                    })
+                    }, )
+            this.axios.get(urlservicios+"ObtenerOrdenesFiltrado/"+infologin.id_OperadorLogistico+"/"+this.filter+"/"+this.selected_state+
             "/"+cliente+"/"+centrocosto+"/"+inicio+"/"+fin)
             .then((response) => {
                 this.consulta=response.data
                 if(this.consulta==''){
+                    var load=false
+                    setTimeout(() => {
+                        bus.$emit('load', {
+                            load
+                        })
+                        }, )
                     swal(
                         'Oops...',
                         'No se encontro ninguna Orden!',
                         'error'
                         )
+                        
                 }
                 else{
+                    var load=false
+            setTimeout(() => {
+                bus.$emit('load', {
+                    load
+                })
+                }, )
                            this.$router.replace('/inicio/consultar/resultado')
                 }
             })
@@ -178,17 +196,27 @@ export default {
         SelectCC(value){
             var vacio=  { _id: null, nombre: 'Por Favor Seleccione un Centro de Costo' };
             this.selectedCL=value.target.value
-                  this.load = true;
-            setTimeout(function(){
+                  //this.load = true;
+                  var load=true
+                setTimeout(() => {
+                    bus.$emit('load', {
+                        load 
+                    })
+                    }, )
             this.axios.get(urlservicios+"CentrosPorCliente/"+value.target.value)            
             //this.axios.get(urlservicios+"centros/")
             .then((response) => {
                 this.centros=response.data
                 this.centros.unshift(vacio)
-            this.load=false
+            //this.load=false
+            var load=false
+            setTimeout(() => {
+                bus.$emit('load', {
+                    load
+                })
+                }, )
             this.habilitar= false
             })
-             }.bind(this),2000)
 
 
             }

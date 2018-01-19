@@ -85,20 +85,24 @@
                     <br>
                 </b-row>
                 <b-row v-for="(data,indice) in inputs.campos" class="my-1"> 
+                  <template v-if="data.type!='select'">
                     <b-col >
-                        <label  class="col-sm-2 col-form-label col-form-label-sm text-capitalize" :style="data.style" >{{data.placeholder}}: </label>
+                        <label  class="col-sm-2 col-form-label col-form-label-sm text-capitalize" :style="[data.style]" >{{data.placeholder}}: </label>
                     </b-col>
                     <b-col>
-                        <input class="form-control form-control-sm" :type="data.type" :id="data.id" :style="data.style" :max="data.max" :placeholder="data.placeholder" @keyup="Presiono(indice)"   required>
+                        <input class="form-control form-control-sm" :type="data.type" :id="data.id" :style="[data.style,validatecampo]" :max="data.max" :placeholder="data.placeholder" @keyup="Presiono(indice)"   required>
                     </b-col>
-                    
+                  </template>
                 </b-row>
                   <b-form-row  v-show="selectservice">
                     <b-col>
                         <label  class="col-sm-2 col-form-label col-form-label-sm">Referencia: </label>
                     </b-col>
                     <b-col>
-                         <input type="text" class="form-control form-control-sm" id="referencia"   placeholder="Referencia" v-model="detalles.referencia">
+                      <b-form-input type="text" class="form-control form-control-sm"  placeholder="Referencia" v-model="detalles.referencia"
+                         :state="estado.referencia"></b-form-input>
+                         <!--<input type="text" class="form-control form-control-sm" id="referencia"   placeholder="Referencia" v-model="detalles.referencia">
+                         -->
                     </b-col>
                 </b-form-row>
                 <b-row v-show="selectservice">
@@ -130,7 +134,13 @@
                         <label  class="col-sm-2 col-form-label col-form-label-sm">Telefono: </label>
                     </b-col>
                     <b-col>
-                        <input type="text"  class="form-control form-control-sm" id="telefono" @keyup="numeros(this)" placeholder="Telefono" v-model="detalles.destinatario.telefono">
+                      <!--
+                         <b-form-input type="text"  class="form-control form-control-sm"  :state="estado.telefono" 
+                         placeholder="Telefono" v-model="detalles.destinatario.telefono" @keyup="numeros(this)"> </b-form-input>
+                         -->
+                         
+                        <input type="text" :style="validatecampoTel"  class="form-control form-control-sm" id="telefono" @keyup="numeros(this)" placeholder="Telefono" v-model="detalles.destinatario.telefono">
+                        
                     </b-col>
                 </b-form-row>
                 <b-form-row v-show="selectservice">
@@ -171,19 +181,33 @@
                     <h2> Informacion: </h2>
                 </b-row>
                 <b-row v-for="(data,indice) in inputsED.campos" class="my-1"> 
+                  <template v-if="data.type!='select'">
+                    <b-col >
+                        <label  class="col-sm-2 col-form-label col-form-label-sm text-capitalize" :style="[data.style]" >{{data.placeholder}}: </label>
+                    </b-col>
+                    <b-col>
+                        <input class="form-control form-control-sm" :type="data.type" :id="data.id" :style="[data.style,validatecampo]" :max="data.max" :placeholder="data.placeholder" @keyup="PresionoED(indice)"  :value="valores(data.id)"   required>
+                    </b-col>
+                  </template>
+              <!--
                     <b-col>
                         <label  class="col-sm-2 col-form-label col-form-label-sm text-capitalize" :style="data.style">{{data.placeholder}}: </label>
                     </b-col>
                     <b-col>
-                        <input class="form-control form-control-sm" :type="data.type" :id="data.id" :max="data.max" :style="data.style" :placeholder="data.placeholder"@keyup="PresionoED(indice)"  :value="valores(data.id)" required>
+                        <input class="form-control form-control-sm" :type="data.type" :id="data.id" :max="data.max" :style="data.style" :placeholder="data.placeholder" @keyup="PresionoED(indice)"  :value="valores(data.id)" required>
                     </b-col>
+                    -->
                 </b-row>
                  <b-form-row>
                     <b-col>
                         <label  class="col-sm-2 col-form-label col-form-label-sm">Referencia: </label>
                     </b-col>
                     <b-col>
+                      <b-form-input type="text" class="form-control form-control-sm"  placeholder="Referencia" v-model="detalleseditar.referencia"
+                         :state="estado.referencia"></b-form-input>
+                         <!--
                         <input type="text" class="form-control form-control-sm" id="referenciaedit"   placeholder="Referencia" v-model="detalleseditar.referencia">
+                        -->
                     </b-col>
                 </b-form-row>
                 <b-row>
@@ -194,7 +218,11 @@
                         <label  class="col-sm-2 col-form-label col-form-label-sm">Nombre: </label>
                     </b-col>
                     <b-col>
+                      <b-form-input type="text" class="form-control form-control-sm"  placeholder="Nombre" v-model="detalleseditar.destinatario.nombre"
+                         :state="estado.nombre"></b-form-input>
+                         <!--
                         <input type="text" class="form-control form-control-sm" id="editarnombre"  placeholder="Nombre" v-model="detalleseditar.destinatario.nombre">
+                        -->
                     </b-col>
                 </b-form-row>
                 <b-form-row class="my-1">
@@ -202,7 +230,11 @@
                         <label  class="col-sm-2 col-form-label col-form-label-sm">Direccion: </label>
                     </b-col>
                     <b-col>
+                      <b-form-input type="text" class="form-control form-control-sm"  placeholder="Direccion" v-model="detalleseditar.destinatario.direccion"
+                         :state="estado.direccion"></b-form-input>
+                         <!--
                         <input type="text" class="form-control form-control-sm" id="editardire" placeholder="Direccion" v-model="detalleseditar.destinatario.direccion">
+                          -->
                     </b-col>
                 </b-form-row>
                 <b-form-row class="my-1">
@@ -210,7 +242,7 @@
                         <label  class="col-sm-2 col-form-label col-form-label-sm">Telefono: </label>
                     </b-col>
                     <b-col>
-                        <input type="text" class="form-control form-control-sm" id="telefonoedit"  @keyup="numeroseditar(this)"  placeholder="Telefono" v-model="detalleseditar.destinatario.telefono">
+                        <input type="text" :style="validatecampoTel" class="form-control form-control-sm" id="telefonoedit"  @keyup="numeroseditar(this)"  placeholder="Telefono" v-model="detalleseditar.destinatario.telefono">
                     </b-col>
                 </b-form-row>
                 <b-row>
@@ -248,8 +280,11 @@ export default {
       estado:{
         direccion:null,
         nombre:null,
-        telefono:null
+        telefono:null,
+        referencia:null,
       },
+      validatecampo: '',
+      validatecampoTel:'',
       mostrar: true,
       habilitar: true,
       load: false,
@@ -314,32 +349,44 @@ export default {
       var x = a.keyCode;
       if (!(a >= 48 || a <= 57)) {
         swal("Oops...", "Solo deben ser numeros !", "error");
+        this.validatecampoTel= {
+                border: '1px solid  #ff8080'
+            }
         return (document.getElementById("telefonoedit").value = "");
       } else if (a.length >= 9) {
         // if no is more then the value
         swal("Oops...", "Maximo 10 digitos!", "error");
+        this.validatecampoTel= {
+                border: '1px solid  #ff8080'
+            }
         return (document.getElementById("telefonoedit").value = "");
       }
     },
     numeros(valor) {
-      //console.log("entro a numeros");
+      console.log("entro a numeros");
       //console.log(document.getElementById("telefono").value)
       var a = document.getElementById("telefono").value;
       //var x=check.which;
       //var x = a.charCode;
       var x = a.keyCode;
       if (!(a >= 48 || a <= 57)) {
-        swal("Oops...", "Solo deben ser numeros :)!", "error");
+        swal("Oops...", "Solo deben ser numeros !", "error");
+        this.validatecampoTel= {
+                border: '1px solid  #ff8080'
+            }
         return (document.getElementById("telefono").value = "");
       } else if (a.length >= 9) {
         // if no is more then the value
         swal("Oops...", "Maximo 10 digitos!", "error");
+        this.validatecampoTel= {
+                border: '1px solid  #ff8080'
+            }
         return (document.getElementById("telefono").value = "");
       }
     },
     PresionoED(index) {
       console.log("entro al presionar editar");
-
+      this.validatecampo= ''
       setTimeout(
         function() {
           if (
@@ -370,12 +417,52 @@ export default {
     },
     actualizar() {
       console.log("actualizar");
+            this.validatecampoTel=''
+      var pivoteedi=false
+      this.estado.nombre=null
+      this.estado.direccion=null
+      this.estado.referencia=null
 
+     for(var x=0;x<Object.keys(this.detalleseditar.infor).length;x++){
+       if(eval('this.detalleseditar.infor.'+this.inputsED.campos[x].vmodel)==''||
+       eval('this.detalleseditar.infor.'+this.inputsED.campos[x].vmodel)==null||
+       eval('this.detalleseditar.infor.'+this.inputsED.campos[x].vmodel)=='null')
+       {
+         pivoteedi=true
+         this.validatecampo= {
+                border: '1px solid  #ff8080'
+            }
+       }
+     }
+      console.log(pivoteedi);
       if (
         this.detalleseditar.destinatario.nombre == "" ||
-        this.detalleseditar.destinatario.direccion == "" 
+        this.detalleseditar.destinatario.direccion == "" ||
+        this.detalleseditar.referencia==""||
+        pivoteedi==true||
+        this.detalleseditar.destinatario.telefono==''
+        
       ) {
-        swal("Oops...", "Falto algun campo por completar!", "error");
+        if(this.detalleseditar.destinatario.telefono==''){
+          this.validatecampoTel= {
+                border: '1px solid  #ff8080'
+            }
+                      swal("Oops...", "Falto algun campo por completar!", "error");
+
+        }
+        if(this.detalleseditar.destinatario.nombre == ""){
+          this.estado.nombre=false
+          swal("Oops...", "Falto algun campo por completar!", "error");
+        }
+        if(this.detalleseditar.destinatario.direccion == "" ){
+          this.estado.direccion=false
+          swal("Oops...", "Falto algun campo por completar!", "error");
+        }
+        if(        this.detalleseditar.referencia==""  ){
+          this.estado.referencia=false
+          swal("Oops...", "Falto algun campo por completar!", "error");
+        }
+        
       } else {
         var detalleslocal = this.detalleseditar;
         var productoslocal = this.selectproducto;
@@ -386,7 +473,7 @@ export default {
           productoslocal: productoslocal,
           detalleslocal: detalleslocal
         };
-        console.log(JSON.stringify(detalles));
+        //console.log(JSON.stringify(detalles));
         this.DetalleServicio.splice(this.indices, 1);
         this.DetalleServicio.splice(this.indices, 0, detalles);
         (this.objeto = ""),
@@ -404,7 +491,6 @@ export default {
             infor: {},
             observaciones: ""
           });
-        //console.log(this.DetalleServicio);
         this.$refs.ModalEdit.hide();
       }
     },
@@ -450,8 +536,10 @@ export default {
       this.$refs.ModalEdit.hide();
     },
     ingresarOrden() {
+      this.validatecampoTel=''
       this.estado.nombre=null
       this.estado.direccion=null
+      this.estado.referencia=null
       console.log("ingreso orden");
       var pivote=true
       if(this.objeto==undefined)
@@ -468,6 +556,9 @@ export default {
           {
             console.log("pivote tru");
             console.log(eval('this.objeto.'+llaves[x]));
+            this.validatecampo= {
+                border: '1px solid  #ff8080'
+            }
             pivote=false
           }
         }
@@ -479,13 +570,22 @@ export default {
         this.detalles.destinatario.nombre == "" ||
         this.detalles.destinatario.telefono == "" ||
         this.detalles.destinatario.direccion == "" ||
-        pivote==false
+        pivote==false||
+        this.detalles.referencia==''
         ) {
+          if(this.detalles.destinatario.telefono == ""){
+            this.validatecampoTel= {
+                border: '1px solid  #ff8080'
+            }
+          }
           if(this.detalles.destinatario.nombre==''){
             this.estado.nombre=false
           }
           if(this.detalles.destinatario.direccion==''){
             this.estado.direccion=false
+          }
+          if(this.detalles.referencia==''){
+            this.estado.referencia=false
           }
         console.log("alerta");
         
@@ -577,7 +677,13 @@ export default {
     service(value) {
           var vacio=  { _id: null, nombre: 'Por Favor Seleccione un Servicio' };
       console.log("entro a seleccion");
-      this.load = true;
+      //this.load = true;
+       var load=true
+            setTimeout(() => {
+                bus.$emit('load', {
+                    load 
+                })
+                }, )
       for(var i=0; i<this.productosurl.length;i++){
         if(this.productosurl[i]._id==value.target.value)
         {
@@ -587,7 +693,13 @@ export default {
         this.axios.get(urlservicios+"servicios/"+this.selectproducto._id)
         .then(response => {
             this.serviciosurl = response.data;
-            this.load=false
+            //this.load=false
+            var load2=false
+            setTimeout(() => {
+                bus.$emit('load', {
+                    load2 
+                })
+                }, )
             this.habilitar= false
             //console.log(this.serviciosurl);
             this.serviciosurl.unshift(vacio)
@@ -598,7 +710,13 @@ export default {
     },
     campos(value) {
       console.log("inputs");
-            this.load = true;
+            //this.load = true;
+            var load=true
+            setTimeout(() => {
+                bus.$emit('load', {
+                    load 
+                })
+                }, )
       for(var i=0; i<this.serviciosurl.length;i++){
         if(this.serviciosurl[i]._id==value.target.value)
         {
@@ -616,8 +734,13 @@ export default {
             console.log(this.inputs);
             this.objeto = this.inputs.objeto;
             console.log(this.objeto)
-            this.load=false
-
+            //this.load=false
+            var load2=false
+            setTimeout(() => {
+                bus.$emit('load', {
+                    load2 
+                })
+                }, )
 
             }).catch(function(error){
               //console.log("error estruc -> "+JSON.stringify(error));

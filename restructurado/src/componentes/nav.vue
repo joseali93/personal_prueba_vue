@@ -1,13 +1,18 @@
 <template>
    <div>
+     <preload v-show="load" ></preload>
      <nav class="side-navbar mCustomScrollbar _mCS_1 mCS_no_scrollbar">
             <div id="mCSB_1" class="mCustomScrollBox mCS-light mCSB_vertical mCSB_inside" style="max-height: none;" tabindex="0">
             <div id="mCSB_1_container" class="mCSB_container mCS_y_hidden mCS_no_scrollbar_y" style="position: relative; top: 0px; left: 0px;" dir="ltr">
         <div class="side-navbar-wrapper">
             <div class="sidenav-header d-flex align-items-center justify-content-center">
-            <div class="sidenav-header-inner text-center">
+            <div class="sidenav-header-inner text-center " >
               <b-link to="/inicio">
+                <b-img :src="imagen" rounded  fluid alt="Responsive image" 
+                class="img-fluid   mCS_img_loaded"/>
+                <!--
                 <img src="src/assets/logo.png" alt="RLP" class="img-fluid rounded-circle mCS_img_loaded">
+                -->
               </b-link>
             </div>
             <div class="sidenav-header-logo"><a  class="brand-small text-center"><b-link to="/inicio"> <strong>W</strong><strong class="text-primary">L</strong></b-link></a></div>
@@ -76,6 +81,8 @@
       <section class="dashboard-header section-padding">
         <div class="container-fluid">
            <div class="content-wrapper">
+           
+
             <router-view
               v-bind:nombreusu="nombreusu">
             </router-view>
@@ -103,14 +110,24 @@
 
 <script>
 import Preload from "../componentes/preload.vue";
+import {bus} from '../main'
 
 export default {
   data() {
     return {
-      nombreusu: ""
+      nombreusu: "",
+      load:'',
+      imagen:'',
       
     };
   },
+    updated: function () {
+      //console.log("actualizamos en nav");
+       bus.$on('load', function (userObject) {
+        this.load = userObject.load
+        //console.log(this.load);
+      }.bind(this))
+    },
   methods:{
     Salir(val){
       console.log("entro a salir");
@@ -126,6 +143,7 @@ export default {
     var test2 = localStorage.getItem("storedData");
     var test = JSON.parse(test2);
     this.nombreusu = test.nombre;
+    this.imagen = test.url_logo
   },
   beforeCreate: function() {
     console.log("antes");
@@ -134,6 +152,10 @@ export default {
 </script>
 
 <style>
+imagen{
+  width: 50px;
+  height: 18.462px;
+};
 ul>li>a:hover{
   text-decoration: none;
 };

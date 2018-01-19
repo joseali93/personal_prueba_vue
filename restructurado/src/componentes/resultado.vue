@@ -35,8 +35,12 @@
 import {bus} from '../main'
 import {urlservicios} from '../main'
 import moment from 'moment'
+import Preload from '../componentes/preload.vue'
 
 export default {
+    components :{
+    Preload
+  },
     props:['consulta'],
     filters: {
         formatdate: function(value) {
@@ -154,10 +158,22 @@ export default {
                     inde, inputstotales, 
                 })
                 }, )
+                var load=true
+                setTimeout(() => {
+                    bus.$emit('load', {
+                        load 
+                    })
+                    }, )
             bus.$emit('ocul',ocultar)
             setTimeout(() => {
                 bus.$emit('ocultar', {
                     ocultar 
+                })
+                }, )
+                var load=false
+            setTimeout(() => {
+                bus.$emit('load', {
+                    load
                 })
                 }, )
             this.$router.replace('/inicio/consultar/detalles')
