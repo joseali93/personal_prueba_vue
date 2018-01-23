@@ -10,7 +10,6 @@ import moment from "moment";
 import VueMomentJS from "vue-momentjs";
  
 Vue.use(VueMomentJS, moment); 
-
 Vue.use(VueRouter);
 Vue.use(BootstrapVue);
 Vue.use(VueAxios, axios)

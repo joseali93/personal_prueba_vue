@@ -3,28 +3,45 @@
         <b-row class="my-1 ">
             <b-col class="float-right">
                 <b-btn class="float-right rounded"  variant="success" v-show="selected!=null"  v-b-modal.modal1>
-                    <i class="fa fa-plus-square-o" aria-hidden="true"></i>
+                    <i class="fa fa-plus-square-o" aria-hidden="true"></i> Adicionar Movilizados
                 </b-btn>
             </b-col>
         </b-row>
         <b-row>
             <h3>Seleccione el Proceso Logistico</h3>
-            <b-form-select v-model="selected"  text-field="nombre" value-field="_id"
+            <b-form-select v-model="selected"  text-field="nombre" value-field="_id" 
             :options="procesosLog" class="mb-3" @input="procesoseleccionado">
             </b-form-select>
         </b-row>
         
         <b-row class="my-1"> 
-        <template v-for="(data) in inputs.campos">
-            <template v-if="data.vmodel=='id_centrologistico'">   
-                         
-                <b-form-select :id="data.id" v-model="objeto.id_centrologistico" text-field="nombre" value-field="_id" 
-                :options="centrologistico" class="mb-3">
-                </b-form-select>
+        <template v-for="(data,indice) in inputs.campos">
+            <template v-if="data.type=='text'">   
+                    <label>Ingrese {{ data.placeholder }}:</label>
+                
+                    <b-form-input 
+                    :id="data.id"
+                    :type="data.type"
+                    :placeholder="data.placeholder"
+                    @input="digitar(data)"
+                    :state="data.estado"></b-form-input>
+    
             </template>
-            <template v-if="data.vmodel=='id_curier'">
-                 <b-form-select :id="data.id" v-model="objeto.id_curier" text-field="nombre" value-field="_id" 
-                 :options="curiers" class="mb-3">
+            <template v-if="data.type=='number'">
+                    <label>Ingrese {{ data.placeholder }}:</label>
+                    <b-form-input 
+                    :id="data.id"
+                    :type="data.type"
+                    :placeholder="data.placeholder"
+                    @input="digitar(data)"
+                    :state="data.estado">
+                    </b-form-input>
+            </template>
+            <template v-if="data.type=='select'">
+                <h3>Seleccione el {{data.placeholder}}</h3>
+                 <b-form-select :id="data.id" text-field="nombre" value-field="_id" 
+                 :options="opciones[indice]" @change="seleccionado(data)" class="mb-3"
+                 :state="data.estado">
                 </b-form-select>
             </template>
         </template>
@@ -38,8 +55,13 @@
             CONTADOR
             {{itemsmovilizados.length}}
         </b-row>
-        <b-row v-show="itemsmovilizados.length>0">
+         <b-row v-show="itemsmovilizados.length>0">
             <b-btn>
+                Generar
+            </b-btn>
+        </b-row>
+        <b-row >
+            <b-btn variant="success" @click="generarManifiesto">
                 Generar
             </b-btn>
         </b-row>
@@ -99,6 +121,7 @@ import Preload from '../componentes/preload.vue'
 export default {
     data(){
         return{
+            opciones:[],
             curier: '',
             centrologistico:{},
             curiers:{},
@@ -132,6 +155,67 @@ export default {
         }
     },
     methods:{
+        generarManifiesto(){
+            console.log("entro a generar manifiesto");
+            if(this.objeto==undefined){
+                console.log("no hago nada");
+            }
+            else{
+                var llaves=Object.keys(this.objeto)
+                var bandera
+                for(var x=0;x<llaves.length;x++){
+                this.inputs.campos[x].estado=null
+                }
+                for(var x=0;x<llaves.length;x++){
+                    if(eval('this.objeto.'+llaves[x])=='')
+                    {
+                        this.inputs.campos[x].estado=false
+                        swal("Debe completarse", 
+                        "Seleccione "+this.inputs.campos[x].placeholder,
+                        "error");
+                        bandera=true
+                    }
+                }
+                console.log(this.objeto);
+                if(bandera==true)
+                {
+                    console.log("no hacemos peticion");
+                }
+                else
+                {
+                    console.log("hacemos peticion");
+                }
+            }
+            
+
+        },
+        digitar(value){
+            setTimeout(
+            function() {
+            console.log("entro a digitar");
+            var x = document.getElementById(value.id).value
+            if(x==''||x==null||x==""){
+                eval('this.objeto.'+value.vmodel+'='+value.min)
+                document.getElementById(value.id).value=value.min
+            }else{
+                if(x>value.max)
+                {
+                    document.getElementById(value.id).value=value.min
+                    eval('this.objeto.'+value.vmodel+'='+value.min)
+                }else{
+                    eval('this.objeto.'+value.vmodel+'='+'x')
+                }
+            }
+            }.bind(this))
+            console.log(this.objeto);
+        },
+        seleccionado(value){
+            console.log("entro a seleccionado");
+
+            var x = document.getElementById(value.id).value
+            eval('this.objeto.'+value.vmodel+'='+'x')
+
+        },
         adicionar(value){
             console.log("entro a adicionar");
             console.log(value);
@@ -148,6 +232,7 @@ export default {
         procesoseleccionado(value){
             console.log("cambio");
             this.selected=value 
+            console.log(value);
             var login = localStorage.getItem("storedData");
             var infologin = JSON.parse(login);
             //console.log(infologin.id_OperadorLogistico);
@@ -156,39 +241,40 @@ export default {
                 .then(response => {
                 this.inputs = response.data;
                 this.objeto=this.inputs.objeto
-                
+                //console.log(this.inputs);
+                //console.log(this.objeto);
                 if(this.objeto==undefined||this.objeto=='undefined')
                 {
 
-}
+            }
                 else
                 {
-                    console.log("hago peticiones");
+                    //console.log("hago peticiones");
                     var llaves = Object.keys(this.objeto);
-                    llaves.forEach(ele=>{
+                    //llaves.forEach(ele=>{
                     this.inputs.campos.forEach(element => {
-                    if(element.vmodel=="id_centrologistico"){
+                        //console.log(ele);
+                        //console.log("valida if");
+                        //console.log(element.urlobjeto);
+                    if(element.urlobjeto==undefined){
+                        console.log("no se hace peticion de url");       
+                    }
+                    else{
+                        console.log("se hace peticion url");
                         this.axios.get(element.urlobjeto+
                             infologin.id_OperadorLogistico)
                             .then(resp1 => {
-                                 var vacio=  { _id: "", nombre: 'Por Favor Seleccione un Centro Logistico' };
-                                this.centrologistico=resp1.data
-                                this.centrologistico.unshift(vacio)
+                                 var vacio=  { _id: "", nombre: 'Por Favor Seleccione un Campo' };
+                                 var respuesta=resp1.data
+                                 respuesta.unshift(vacio)
+                                 this.opciones.push(respuesta)
+                                
                                 
                             })
                     }
-                    if(element.vmodel=="id_curier"){
-                         this.axios.get(element.urlobjeto+
-                            infologin.id_OperadorLogistico)
-                            .then(resp1 => {
-                                var vacio=  { _id: "", nombre: 'Por Favor Seleccione un Curier' };
-                                this.curiers=resp1.data
-                                this.curiers.unshift(vacio)
-                                
-                            })
-                    }
+                   
                     });
-                });
+                //});
                 }   
             });
 

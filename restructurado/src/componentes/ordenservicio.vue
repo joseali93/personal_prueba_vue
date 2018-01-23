@@ -499,6 +499,11 @@ export default {
       toastr.error("Se elmino exitosamente");
     },
     editar(index) {
+      this.validatecampo=''
+      this.validatecampoTel=''
+      this.estado.nombre=null
+      this.estado.direccion=null
+      this.estado.referencia=null
       this.indices = index;
       console.log("entro al editar");
       this.detalleseditar = this.DetalleServicio[index].detalleslocal;
@@ -559,7 +564,7 @@ export default {
             this.validatecampo= {
                 border: '1px solid  #ff8080'
             }
-            pivote=false
+            pivote=true
           }
         }
       }
@@ -796,13 +801,11 @@ export default {
     }
   },
   created: function() {
-    console.log("creado");
   },
   beforeCreate: function() {
     var vacio=  { _id: null, nombre: 'Por Favor Seleccione un Producto' };
     var login = localStorage.getItem("storedData");
     var infologin = JSON.parse(login);
-    console.log(infologin.id_OperadorLogistico);
     this.axios
       .get(
         urlservicios+"productos/" +

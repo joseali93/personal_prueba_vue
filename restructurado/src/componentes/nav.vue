@@ -15,7 +15,7 @@
                 -->
               </b-link>
             </div>
-            <div class="sidenav-header-logo"><a  class="brand-small text-center"><b-link to="/inicio"> <strong class="text-dark">W</strong><strong class="text-primary">L</strong></b-link></a></div>
+            <div class="sidenav-header-logo"><a  class="brand-small text-center"><b-link > <strong class="text-dark">W</strong><strong class="text-primary">L</strong></b-link></a></div>
             </div>
             <div class="main-menu">
             <ul id="side-main-menu" class="side-menu list-unstyled">                  
@@ -124,7 +124,9 @@ export default {
     updated: function () {
       //console.log("actualizamos en nav");
        bus.$on('load', function (userObject) {
+     
         this.load = userObject.load
+
         //console.log(this.load);
       }.bind(this))
     },

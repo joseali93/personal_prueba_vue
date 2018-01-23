@@ -132,8 +132,11 @@ data(){
 },
     updated: function () {
         bus.$on('ocultartra', function (userObject) {
-        
-        this.ocultartra = userObject.ocultartra
+        if(userObject.ocultartra==undefined){
+            this.ocultartra = true
+        }else{
+            this.ocultartra = userObject.ocultartra
+        }
       }.bind(this))
     },
 methods:{

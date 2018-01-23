@@ -176,8 +176,16 @@ export default {
                 selected_client:selected_client,
                 selected_center:selected_center
             };
+            var selecciones={
+                idcliente:selected_client,
+                idcentro:selected_center,
+                infocliente:this.selected_cliente,
+                infocentro:this.selected_centro,
+            }
+        console.log(selecciones);
             bus.$emit('remitente',seleccionados)
             localStorage.setItem("orden",JSON.stringify(seleccionados))
+            localStorage.setItem("infoorden",JSON.stringify(selecciones))
             this.$router.replace('/inicio/ordenservicio')
         }
         },
