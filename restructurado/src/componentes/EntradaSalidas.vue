@@ -17,8 +17,7 @@
         <b-row class="my-1"> 
         <template v-for="(data,indice) in inputs.campos">
             <template v-if="data.type=='text'">   
-                    <label>Ingrese {{ data.placeholder }}:</label>
-                
+                    <label>Ingrese {{ data.placeholder }}:</label>   
                     <b-form-input 
                     :id="data.id"
                     :type="data.type"
@@ -56,57 +55,76 @@
             {{itemsmovilizados.length}}
         </b-row>
          <b-row v-show="itemsmovilizados.length>0">
-            <b-btn>
-                Generar
-            </b-btn>
-        </b-row>
-        <b-row >
             <b-btn variant="success" @click="generarManifiesto">
                 Generar
             </b-btn>
         </b-row>
+        <!--
+        <b-row >
+            <b-btn >
+                Generar
+            </b-btn>
+        </b-row>
+        -->
         <!-- Modal Component -->
-        <b-modal id="modal1" title="Manifiestos" size="lg">
+        <b-modal id="modal1" title="Manifiestos" size="lg" :no-close-on-esc="true">
             <b-container fluid>
-                <b-row>
+                 <b-row class="my-1">
+                    <b-col>
+                        <b-form-select v-model="concepto" :options="listadoconcepto"
+                         text-field="nombre" value-field="_id" class="my-1">
+                        </b-form-select>
+                    </b-col>
+                </b-row>
+                <b-row class="my-1">
                     <b-col >
-                    <b-form>
                         <b-form-input v-model="text1"
                         class="float-left"
                         type="number"
-                        placeholder="Ingrese N° Movilizado"></b-form-input>
+                        id="nmovilizado"
+                        placeholder="Ingrese N° Movilizado" @keyup.enter.native="adicionar(text1)"
+                        v-b-tooltip.hover title="Digite el N de Movilizado!"></b-form-input>
                         
-                    </b-form>
                     </b-col>
+                    <!--
                     <b-col>
                         <b-btn variant="success" class="float-right" @click="adicionar(text1)">
                             Agregar
                         </b-btn>
                     </b-col>
+                    -->
+                </b-row>
+               
+                <b-row class="my-1">
+                    <b-col >
+                    </b-col>
+                    <b-col  class="my-3">
+                        Total de Unidades Ingresadas:
+                        <strong>
+                        {{mostrar()}}
+                        </strong>
+                    </b-col>
                 </b-row>
                 <b-row>
-                    <b-col class="my-1">
-                        N° de movilizados ingresados:
-                        {{itemsmovilizados.length}}
-                    </b-col>
                     <b-col>
-                        <b-form-select v-model="selected" :options="options" class="my-1">
-                        </b-form-select>
+                        <h3>Listado de Movilizados:</h3> 
+                            <b-table striped hover :fields="fields" :items="itemsmovilizados"
+                            :per-page="5" :current-page="currentPage">
+                                <template slot="elimnar" slot-scope="data">
+                                    <b-btn variant="danger" @click="borrar(data)">
+                                        <i class="fa fa-trash-o" aria-hidden="true"></i>
+                                    </b-btn>
+                                </template>
+                                <template slot="nmovilizado" slot-scope="data">
+                                {{data.item.id}}
+                                </template> 
+                            </b-table>
+                            <b-pagination size="md" :total-rows="itemsmovilizados.length"
+                            v-model="currentPage" :per-page="5">
+                            </b-pagination>
                     </b-col>
-                </b-row>
-                <b-row>
-                   <h3>listado de Movilizados:</h3> 
-                        <b-table striped hover :fields="fields" :items="itemsmovilizados"
-                         :per-page="10" :current-page="currentPage">
-                            <template slot="elimnar" slot-scope="data">
-                                <b-btn variant="danger">
-                                    <i class="fa fa-trash-o" aria-hidden="true"></i>
-                                </b-btn>
-                            </template> 
-                         </b-table>
-                        <b-pagination size="md" :total-rows="items.length"
-                         v-model="currentPage" :per-page="10">
-                        </b-pagination>
+
+                   
                 </b-row>
             </b-container>
         </b-modal>
@@ -121,6 +139,8 @@ import Preload from '../componentes/preload.vue'
 export default {
     data(){
         return{
+            concepto: null,
+            listadoconcepto:[],
             opciones:[],
             curier: '',
             centrologistico:{},
@@ -131,7 +151,9 @@ export default {
             procesosLog:{},
             inputs:'',
             currentPage:1,
-            fields: ['elimnar', 'nombre', 'nmovilizado' ],
+            fields: ['elimnar', 'nombre',
+                        { key: 'nmovilizado', label: 'N Movilizado' },
+                ],
             items: [
                {
                     nmovilizado:'',
@@ -140,21 +162,44 @@ export default {
             ],
             itemsmovilizados: [
             ],
-        options: [
-                { value: null, text: 'Please select an option' },
-                { value: 'a', text: 'This is First option' },
-                { value: 'b', text: 'Selected Option' },
-                { value: {'C': '3PO'}, text: 'This is an option with object value' },
-                { value: 'd', text: 'This one is disabled', disabled: true }
-            ],
             text1:'',
             selected: null,
             proceSeleccionado:'',
             selected2:null,
+            mensaje:'',
             
         }
     },
     methods:{
+        mostrar(){
+            var unidades=0
+            console.log("entro amostar");
+            if(this.itemsmovilizados.length<=0){
+                return 0
+            }
+            else{
+                console.log(this.itemsmovilizados);
+                for(var x=0; x<this.itemsmovilizados.length;x++)
+                {
+                    if(this.itemsmovilizados[x].unidades==0||
+                    this.itemsmovilizados[x].unidades=='0'||
+                    this.itemsmovilizados[x].unidades==null||
+                    this.itemsmovilizados[x].unidades=='null')
+                    {
+                        unidades=unidades+1
+                    }
+                    else{
+                        unidades=unidades+parseInt(this.itemsmovilizados[x].unidades)
+                    }
+                }
+                return unidades
+            }
+        },
+        borrar(value){
+            console.log("entro a borrar");
+            console.log(value)
+            this.itemsmovilizados.splice(value.index,1)
+        },
         generarManifiesto(){
             console.log("entro a generar manifiesto");
             if(this.objeto==undefined){
@@ -167,12 +212,16 @@ export default {
                 this.inputs.campos[x].estado=null
                 }
                 for(var x=0;x<llaves.length;x++){
-                    if(eval('this.objeto.'+llaves[x])=='')
-                    {
+                    if(eval('this.objeto.'+llaves[x])==''||eval('this.objeto.'+llaves[x])==null)
+                    {   
+
                         this.inputs.campos[x].estado=false
                         swal("Debe completarse", 
                         "Seleccione "+this.inputs.campos[x].placeholder,
-                        "error");
+                        "error",{
+                              allowEnterKey: true,
+
+                        });
                         bandera=true
                     }
                 }
@@ -184,6 +233,7 @@ export default {
                 else
                 {
                     console.log("hacemos peticion");
+                    console.log(this.itemsmovilizados);
                 }
             }
             
@@ -217,22 +267,138 @@ export default {
 
         },
         adicionar(value){
-            console.log("entro a adicionar");
-            console.log(value);
+            var agregar=true
+            var infoconcepto
+            
+            if(this.concepto==null){
+                console.log("hay concepto nulo");
+                infoconcepto={}
+            }
+            else{
+
+                for(var x=0;x<this.listadoconcepto.length;x++)
+                {
+                    if(this.listadoconcepto[x]._id==this.concepto){
+                        infoconcepto=this.listadoconcepto[x]
+                    }
+                }
+            }
             if(value==null||value=='')
             {
                 console.log("va vacio");
-                swal(
-                'Error',
-                'Ingrese un valor por favor',
-                'error'
-                )
+
+                swal({
+                title: 'Error!',
+                text: 'Ingrese un valor por favor',
+                type: 'error',
+                focusConfirm:true,
+                showConfirmButton: true,
+                allowOutsideClick:false,
+                allowEscapeKey:false,
+                allowEnterKey:true,
+                timer:3000
+                })
+            }
+            else
+            {
+                this.axios.get(urlservicios+"MovilizadoProcesosLogistico/" +
+                value+'/'+this.selected)
+                .then(response => {
+                    this.mensaje=response.data
+                    if(this.mensaje.message)
+                    {
+                        swal({
+                        title: 'Error!',
+                        text: ''+this.mensaje.message,
+                        type: 'error',
+                        focusConfirm:true,
+                        showConfirmButton: true,
+                        allowOutsideClick:false,
+                        allowEscapeKey:false,
+                        allowEnterKey:true,
+                        timer:3000
+                        })
+                    }
+                    if(this.mensaje.estado==true)
+                    {
+                        
+                        if(this.itemsmovilizados.length==0)
+                        {
+                            swal({
+                            position: 'center',
+                            type: 'success',
+                            title: 'Agregado correctamente',
+                            showConfirmButton: false,
+                            timer: 1000
+                            })
+                            this.mensaje.concepto=infoconcepto
+                            this.itemsmovilizados.push(this.mensaje)
+                        }
+                        else
+                        {
+                            for(var x=0;x<this.itemsmovilizados.length;x++){
+                                if(this.itemsmovilizados[x].id==this.mensaje.id)
+                                {
+                                    agregar=false
+                                }
+                            }
+                            if(agregar==false)
+                            {
+                                swal({
+                                    position: 'center',
+                                    type: 'error',
+                                    title: 'Ya se encuentra en el Listado',
+                                    showConfirmButton: false,
+                                    timer: 1000
+                                    })
+                            }
+                            else
+                            {
+                                swal({
+                                    position: 'center',
+                                    type: 'success',
+                                    title: 'Agregado correctamente',
+                                    showConfirmButton: false,
+                                    timer: 1000
+                                    })
+                                    this.mensaje.concepto=infoconcepto
+                                    this.itemsmovilizados.push(this.mensaje)
+                            }
+                        }
+
+                    }
+                    if(this.mensaje.estado==false)
+                    {
+                        swal({
+                        title: 'Error!',
+                        text: 'El N° Movilizado '+this.mensaje.id+' se encuentra en el siguiente proceso '+
+                        this.mensaje.proceso,
+                        type: 'error',
+                        focusConfirm:true,
+                        showConfirmButton: true,
+                        allowOutsideClick:false,
+                        allowEscapeKey:false,
+                        allowEnterKey:true,
+                        timer:4000
+                        })
+                        
+                    }
+                })
             }
         },
         procesoseleccionado(value){
+            var nvacio ={ _id: null, nombre: 'Por Favor Seleccione un Concepto' };
             console.log("cambio");
             this.selected=value 
-            console.log(value);
+            // console.log(this.procesosLog);
+            for(var x=0;x<this.procesosLog.length;x++)
+            {
+                if(this.procesosLog[x]._id==this.selected)
+                {
+                    this.listadoconcepto=this.procesosLog[x].conceptos
+                    this.listadoconcepto.unshift(nvacio)
+                }
+            }
             var login = localStorage.getItem("storedData");
             var infologin = JSON.parse(login);
             //console.log(infologin.id_OperadorLogistico);
