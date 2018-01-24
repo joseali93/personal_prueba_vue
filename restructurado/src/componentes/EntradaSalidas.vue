@@ -13,7 +13,6 @@
             :options="procesosLog" class="mb-3" @input="procesoseleccionado">
             </b-form-select>
         </b-row>
-        
         <b-row class="my-1"> 
         <template v-for="(data,indice) in inputs.campos">
             <template v-if="data.type=='text'">   
@@ -38,7 +37,7 @@
             </template>
             <template v-if="data.type=='select'">
                 <h3>Seleccione el {{data.placeholder}}</h3>
-                 <b-form-select :id="data.id" text-field="nombre" value-field="_id" 
+                 <b-form-select :id="data.id"  text-field="nombre" value-field="_id" 
                  :options="opciones[indice]" @change="seleccionado(data)" class="mb-3"
                  :state="data.estado">
                 </b-form-select>
@@ -59,13 +58,6 @@
                 Generar
             </b-btn>
         </b-row>
-        <!--
-        <b-row >
-            <b-btn >
-                Generar
-            </b-btn>
-        </b-row>
-        -->
         <!-- Modal Component -->
         <b-modal id="modal1" title="Manifiestos" size="lg" :no-close-on-esc="true">
             <b-container fluid>
@@ -86,13 +78,6 @@
                         v-b-tooltip.hover title="Digite el N de Movilizado!"></b-form-input>
                         
                     </b-col>
-                    <!--
-                    <b-col>
-                        <b-btn variant="success" class="float-right" @click="adicionar(text1)">
-                            Agregar
-                        </b-btn>
-                    </b-col>
-                    -->
                 </b-row>
                
                 <b-row class="my-1">
@@ -122,9 +107,7 @@
                             <b-pagination size="md" :total-rows="itemsmovilizados.length"
                             v-model="currentPage" :per-page="5">
                             </b-pagination>
-                    </b-col>
-
-                   
+                    </b-col>    
                 </b-row>
             </b-container>
         </b-modal>
@@ -224,11 +207,13 @@ export default {
                         });
                         bandera=true
                     }
+
                 }
                 console.log(this.objeto);
                 if(bandera==true)
                 {
                     console.log("no hacemos peticion");
+
                 }
                 else
                 {
@@ -260,8 +245,6 @@ export default {
             console.log(this.objeto);
         },
         seleccionado(value){
-            console.log("entro a seleccionado");
-
             var x = document.getElementById(value.id).value
             eval('this.objeto.'+value.vmodel+'='+'x')
 
@@ -418,15 +401,14 @@ export default {
                     //console.log("hago peticiones");
                     var llaves = Object.keys(this.objeto);
                     //llaves.forEach(ele=>{
-                    this.inputs.campos.forEach(element => {
-                        //console.log(ele);
-                        //console.log("valida if");
-                        //console.log(element.urlobjeto);
+
+                    this.inputs.campos.forEach((element,indice) => {
+                        console.log(indice);
+                        
                     if(element.urlobjeto==undefined){
                         console.log("no se hace peticion de url");       
                     }
                     else{
-                        console.log("se hace peticion url");
                         this.axios.get(element.urlobjeto+
                             infologin.id_OperadorLogistico)
                             .then(resp1 => {
@@ -437,6 +419,7 @@ export default {
                                 
                                 
                             })
+                        
                     }
                    
                     });
