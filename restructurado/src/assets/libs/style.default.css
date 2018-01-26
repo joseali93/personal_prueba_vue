@@ -1,3 +1,24 @@
+@media print {
+    body * {
+        visibility: hidden;
+    }
+    #print-content * {
+        visibility: visible;
+    }
+    .non-printableE {
+        display: none;
+    }
+    .modal{
+        position: absolute;
+        left: 0;
+        top: 0;
+        margin: 0;
+        padding: 0;
+        min-height:auto;
+        /**Remove scrollbar for printing.**/
+        overflow: visible !important;
+    }
+}
 .text-bold {
     font-weight: 700
 }

@@ -322,7 +322,7 @@ export default {
           this.$refs.ModalAct.hide();
         },
         ingresarTrayectos(){   
-            console.log(this.campos);  
+            //console.log(this.campos);  
             var nombresel
             if(this.info.estado=="orden de servicio cancelada")
             {
@@ -352,7 +352,7 @@ export default {
                         campos:this.campos
                     }; 
                     
-                    console.log(objeto);
+                    //console.log(objeto);
                     for(var x=0;x<this.currentUser.detalle.length;x++)
                     {  
                         if(this.currentUser.detalle[x].id==this.consecutivo)
@@ -372,9 +372,21 @@ export default {
 
                     var objeto2 = {
                         id_trayecto:this.selection,
+                        campos:this.campos,
                         indice:this.indices,
                         detalle:this.currentUser.detalle[this.indices].id
                     }; 
+                    console.log(this.id_trayectos.length);
+                    if(this.id_trayectos.length==0){
+                        console.log("no hago nada");
+                    }
+                    else{
+                        for(var x=0;x<this.id_trayectos.length;x++)
+                    {
+                        console.log(this.id_trayectos[x]);
+                    }
+                    }
+                    
                     this.id_trayectos.push(objeto2)
                     console.log(this.id_trayectos);
                                 this.selection=''
@@ -496,8 +508,7 @@ export default {
         actualizar(indice,consecutivo){
             this.indemodal=indice
             this.consecutivo=consecutivo
-                      var vacio=  { _id: null, nombre: 'Por Favor Seleccione un Trayecto' };
-
+            var vacio=  { _id: null, nombre: 'Por Favor Seleccione un Trayecto' };
             //console.log(this.info.estado);
             if(this.info.estado=='orden de servicio cancelada'||this.info.estado=='Orden De Servicio Recogida'||this.info.estado=='Orden de servicio cerrada')
             {

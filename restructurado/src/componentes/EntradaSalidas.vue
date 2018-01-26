@@ -49,9 +49,19 @@
             </b-form-select>
             {{curier}}
         </b-row>
-        <b-row>
-            CONTADOR
-            {{itemsmovilizados.length}}
+        <b-row class="my-1">
+            <b-col class="my-3">
+                        Total de Movilizados :
+                        <strong>
+                        {{itemsmovilizados.length}}
+                        </strong>
+                    </b-col>
+                    <b-col  class="my-3">
+                        Total de Unidades :
+                        <strong>
+                        {{mostrar()}}
+                        </strong>
+                    </b-col>
         </b-row>
          <b-row v-show="itemsmovilizados.length>0">
             <b-btn variant="success" @click="generarManifiesto">
@@ -81,10 +91,14 @@
                 </b-row>
                
                 <b-row class="my-1">
-                    <b-col >
+                    <b-col class="my-3">
+                        Total de Movilizados :
+                        <strong>
+                        {{itemsmovilizados.length}}
+                        </strong>
                     </b-col>
                     <b-col  class="my-3">
-                        Total de Unidades Ingresadas:
+                        Total de Unidades :
                         <strong>
                         {{mostrar()}}
                         </strong>
@@ -102,7 +116,13 @@
                                 </template>
                                 <template slot="nmovilizado" slot-scope="data">
                                 {{data.item.id}}
-                                </template> 
+                                </template>
+                                <template slot="unidades" slot-scope="data">
+                                {{data.item.unidades}}
+                                </template>
+                                <template slot="concepto" slot-scope="data">
+                                {{data.item.concepto.nombre}}
+                                </template>
                             </b-table>
                             <b-pagination size="md" :total-rows="itemsmovilizados.length"
                             v-model="currentPage" :per-page="5">
@@ -136,6 +156,8 @@ export default {
             currentPage:1,
             fields: ['elimnar', 'nombre',
                         { key: 'nmovilizado', label: 'N Movilizado' },
+                        { key: 'unidades', label: 'Unidades' },
+                        { key: 'concepto', label: 'Concepto' },
                 ],
             items: [
                {
@@ -156,7 +178,6 @@ export default {
     methods:{
         mostrar(){
             var unidades=0
-            console.log("entro amostar");
             if(this.itemsmovilizados.length<=0){
                 return 0
             }
@@ -374,14 +395,24 @@ export default {
             console.log("cambio");
             this.selected=value 
             // console.log(this.procesosLog);
+            
             for(var x=0;x<this.procesosLog.length;x++)
             {
                 if(this.procesosLog[x]._id==this.selected)
                 {
-                    this.listadoconcepto=this.procesosLog[x].conceptos
-                    this.listadoconcepto.unshift(nvacio)
+                    if(this.procesosLog[x].conceptos==null||
+                    this.procesosLog[x].conceptos==undefined)
+                    {
+                        console.log(this.procesosLog[x].conceptos);
+                        this.listadoconcepto.unshift(nvacio)
+                    }
+                    else{
+                        this.listadoconcepto=this.procesosLog[x].conceptos
+                        this.listadoconcepto.unshift(nvacio)
+                    }
                 }
             }
+            
             var login = localStorage.getItem("storedData");
             var infologin = JSON.parse(login);
             //console.log(infologin.id_OperadorLogistico);
