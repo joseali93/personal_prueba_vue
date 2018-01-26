@@ -5,12 +5,12 @@
 
      <b-row class="non-printableE" id="inicio">
        <b-col>
-         <b-btn v-b-modal="modallg1" variant="primary">
+         <b-btn v-b-modal="'modallg1'" variant="primary">
            ENTRADA
          </b-btn>
        </b-col>
        <b-col>
-         <b-btn v-b-modal.modallg2 variant="primary">
+         <b-btn v-b-modal="'modallg2'" variant="primary">
            SALIDA
          </b-btn>
        </b-col>
@@ -18,9 +18,10 @@
      </b-row>
 
     <!-- Modal Imprimir-->
-    <b-modal id="modallg2" size="lg" >
+
+    <b-modal id="modallg2" size="lg" v-model="modal2">
       <div slot="modal-header" class="w-100 non-printableE">
-         <b-btn size="sm" class="float-left" variant="primary">
+         <b-btn size="sm" class="float-left" variant="primary" @click="volver">
            Close
          </b-btn>
          <b-btn size="sm" class="float-right" variant="primary" @click="imprimir">
@@ -29,6 +30,7 @@
        </div>
       <b-container id="print-content">
         <b-row>
+          {{algo}}
           <b-col class="my-2">
             <b-img src="https://lorempixel.com/300/150/" fluid alt="Fluid image" />
           </b-col>
@@ -55,7 +57,7 @@
         </b-row>
         <b-row class="my-5">
         <b-col class="my-5">
-        <b-table  responsive="sm md" bordered	outlined :items="items2" :fields="fields2"></b-table>
+        <b-table  responsive="sm md" bordered	outlined :items="algo" :fields="fields2"></b-table>
         </b-col>
         </b-row>
         <b-row>
@@ -121,7 +123,9 @@
         </b-row>
         <b-row class="my-5">
           <b-col class="my-5">
-          <b-table  responsive="sm md" bordered	outlined :items="items" :fields="fields"></b-table>
+          <b-table  responsive="sm md" bordered	outlined :items="algo" :fields="fields">
+
+          </b-table>
           </b-col>
           </b-row>
           <b-row>
@@ -153,9 +157,14 @@
 
 <script>
 import {urlservicios} from '../main'
+import {bus} from '../main'
+
 export default {
   data () {
     return {
+      modal2:true,
+      algo:'',
+      
          fields: [
               { key: 'nmovilizado', label: 'N° Movilizado' },
               { key: 'cliente', label: 'Cliente' },
@@ -208,7 +217,9 @@ export default {
     
   },
   methods:{
-
+      volver(){
+        this.$router.push('/inicio/entradasalida')
+      },
       imprimir(){
         console.log("entro a imprimir")
       
@@ -218,7 +229,15 @@ export default {
       }
     },
     mounted: function() {
-      
+       bus.$on('modalinfo', function (userObject) {
+     
+        this.algo = userObject.itemsmodal
+
+        console.log(this.algo);
+      }.bind(this))
+    },
+    updated: function(){
+     
     },
   computed: {
   }

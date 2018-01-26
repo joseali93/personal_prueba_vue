@@ -13,11 +13,21 @@ import ResultTraceComponent from '../componentes/resultadotraza.vue'
 import NotFoundComponent from '../componentes/NotFound.vue'
 import Blank from '../componentes/componentInBlank.vue'
 import prueba from '../componentes/prueba.vue'
+import MEntrada from '../componentes/ModalEntrada.vue'
+import MSalida from '../componentes/ModalSalida.vue'
+
 import EnterExitComponent from '../componentes/EntradaSalidas.vue'
 export const rutas = [    
     {
         path: '/prueba',
         component: prueba,
+    },{
+        path: '/ModalEntrada',
+        component: MEntrada,
+    },
+    {
+        path: '/ModalSalida',
+        component: MSalida,
     },
     {
         path: '/',

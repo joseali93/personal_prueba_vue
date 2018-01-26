@@ -142,6 +142,7 @@ import Preload from '../componentes/preload.vue'
 export default {
     data(){
         return{
+            processSelected:'',
             concepto: null,
             listadoconcepto:[],
             opciones:[],
@@ -182,7 +183,7 @@ export default {
                 return 0
             }
             else{
-                console.log(this.itemsmovilizados);
+                //console.log(this.itemsmovilizados);
                 for(var x=0; x<this.itemsmovilizados.length;x++)
                 {
                     if(this.itemsmovilizados[x].unidades==0||
@@ -206,6 +207,7 @@ export default {
         },
         generarManifiesto(){
             console.log("entro a generar manifiesto");
+            console.log(this.itemsmovilizados);
             if(this.objeto==undefined){
                 console.log("no hago nada");
             }
@@ -230,7 +232,7 @@ export default {
                     }
 
                 }
-                console.log(this.objeto);
+                //console.log(this.objeto);
                 if(bandera==true)
                 {
                     console.log("no hacemos peticion");
@@ -239,11 +241,69 @@ export default {
                 else
                 {
                     console.log("hacemos peticion");
-                    console.log(this.itemsmovilizados);
+                    //console.log(this.itemsmovilizados);
                 }
             }
-            
+            var inforinputs=[]    
+            for(var x=0;x<this.opciones.length;x++){
 
+                var llaves=Object.keys(this.objeto)
+                for(var y=0;y<this.opciones[x].length;y++)
+                {
+                    if(this.opciones[x][y]._id==eval('this.objeto.'+llaves[x]))
+                    {
+                        console.log("obtengo la info");
+                        inforinputs[x]=this.opciones[x][y]
+                    }
+                }
+            }
+                            //console.log(inforinputs);
+            var inforvaria=inforinputs
+            var itemsmodal=this.itemsmovilizados
+            var varios=[]
+            var listMovilizados={
+
+            }
+            for(var x=0;x<this.itemsmovilizados.length;x++){
+                console.log(x);
+                if(this.itemsmovilizados[x].concepto._id==null||
+                this.itemsmovilizados[x].concepto._id==undefined)
+                {
+                    console.log(this.itemsmovilizados[x].id)
+                     var listMovilizados={
+
+                     numeroMovilizado:this.itemsmovilizados[x].id
+                     }
+                    varios.push(listMovilizados)
+
+                }
+                else{
+                     var listMovilizados={
+                         nombre_concepto:this.itemsmovilizados[x].concepto.nombre,
+                    id_concepto:this.itemsmovilizados[x].concepto._id,
+                    numeroMovilizado:this.itemsmovilizados[x].id
+                     }
+                                     varios.push(listMovilizados)
+
+                }
+                //console.log(listMovilizados);
+            }
+            
+            var envio ={
+                listadoMovilizados:varios,
+                infoManifiesto:this.objeto,
+                id_procesoLogistico:this.processSelected._id
+            }
+            console.log(envio);
+            
+            setTimeout(() => {
+                        bus.$emit('modalinfo', {
+                            itemsmodal,inforvaria
+                        })
+
+                        }, )
+            this.$router.push(this.processSelected.modal)
+            
         },
         digitar(value){
             setTimeout(
@@ -395,15 +455,18 @@ export default {
             console.log("cambio");
             this.selected=value 
             // console.log(this.procesosLog);
-            
-            for(var x=0;x<this.procesosLog.length;x++)
-            {
+            if(this.selected==null){
+            }else{
+                for(var x=0;x<this.procesosLog.length;x++)
+                {
                 if(this.procesosLog[x]._id==this.selected)
                 {
+
+                    this.processSelected=this.procesosLog[x]
                     if(this.procesosLog[x].conceptos==null||
                     this.procesosLog[x].conceptos==undefined)
                     {
-                        console.log(this.procesosLog[x].conceptos);
+                        //console.log(this.procesosLog[x].conceptos);
                         this.listadoconcepto.unshift(nvacio)
                     }
                     else{
@@ -411,7 +474,9 @@ export default {
                         this.listadoconcepto.unshift(nvacio)
                     }
                 }
+                }
             }
+            
             
             var login = localStorage.getItem("storedData");
             var infologin = JSON.parse(login);
@@ -434,7 +499,6 @@ export default {
                     //llaves.forEach(ele=>{
 
                     this.inputs.campos.forEach((element,indice) => {
-                        console.log(indice);
                         
                     if(element.urlobjeto==undefined){
                         console.log("no se hace peticion de url");       
