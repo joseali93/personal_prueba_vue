@@ -1,7 +1,7 @@
 <template>
     <b-container>
-        <b-row>
-        
+        <b-row id="ejemplo">
+
         </b-row>
         <b-modal id="modallg2" size="lg" v-model="modal" :no-close-on-esc="true">
             <div slot="modal-header" class="w-100 non-printableE">
@@ -12,7 +12,10 @@
                 Imprimir
                 </b-btn>
             </div>
-            <b-container id="print-content">
+            <div slot="modal-footer" class="w-100 non-printableE">
+               
+            </div>
+            <b-container fluid id="prueba">
                 <b-row>
                 <b-col class="my-2">
                     <b-img src="https://lorempixel.com/300/150/" fluid alt="Fluid image" />
@@ -40,7 +43,7 @@
                 </b-row>
                 <b-row class="my-5">
                 <b-col class="my-5">
-                <b-table  responsive="sm md" bordered	outlined :items="itemsmodal" :fields="fields2"></b-table>
+                <b-table  responsive="sm" bordered	outlined :items="itemsmodal" :fields="fields2"></b-table>
                 </b-col>
                 </b-row>
                 <b-row>
@@ -71,6 +74,7 @@
 </template>
 
 <script>
+
 import {urlservicios} from '../main'
 import {bus} from '../main'
 import moment from 'moment'
@@ -112,11 +116,19 @@ export default {
         this.$router.replace('/inicio/entradasalida')
       },
       imprimir(){
-        console.log("entro a imprimir")
-      
-          //document.getElementById('app').appendChild(imprimible);
-          document.getElementById("print-content");
-         window.print()
+
+
+        var Ndiv= null
+        Ndiv = document.createElement('div');
+        Ndiv.setAttribute('id', 'print-content');
+        Ndiv.setAttribute('class', 'printable');
+        
+        
+        var x=document.getElementById('prueba')
+        Ndiv= x.cloneNode(true)
+        document.getElementById('ejemplo').appendChild(Ndiv)
+        
+        window.print()
       }
     },
     mounted: function() {

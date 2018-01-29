@@ -329,7 +329,7 @@ export default {
                 id_procesoLogistico:this.processSelected._id
             }
             }
-            
+            console.log(this.processSelected.modal)
             console.log(envio);
             
             setTimeout(() => {
@@ -338,7 +338,7 @@ export default {
                         })
 
                         }, )
-                        console.log(this.processSelected.modal)
+            
             this.$router.push(this.processSelected.modal)
             
         },

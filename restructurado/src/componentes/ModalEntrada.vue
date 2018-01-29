@@ -15,6 +15,9 @@
            imprimir
          </b-btn>
        </div>
+       <div slot="modal-footer" class="w-100 non-printableE">
+               
+            </div>
       <b-container id="print-content">
         <b-row>
           <b-col class="my-2">
@@ -43,7 +46,7 @@
         </b-row>
         <b-row class="my-5">
           <b-col class="my-5">
-          <b-table  responsive="sm md" bordered	outlined :items="itemsmodal" :fields="fields">
+          <b-table  responsive=" md" bordered	outlined :items="itemsmodal" :fields="fields">
 
           </b-table>
           </b-col>
