@@ -1,11 +1,9 @@
 <template>
     <b-container>
         <b-row>
-         <b-btn v-b-modal="'modallg2'" variant="primary">
-           SALIDA
-         </b-btn>
+        
         </b-row>
-        <b-modal id="modallg2" size="lg" v-model="modal">
+        <b-modal id="modallg2" size="lg" v-model="modal" :no-close-on-esc="true">
             <div slot="modal-header" class="w-100 non-printableE">
                 <b-btn size="sm" class="float-left" variant="primary" @click="volver">
                 Volver

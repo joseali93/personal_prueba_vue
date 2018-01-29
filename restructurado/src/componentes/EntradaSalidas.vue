@@ -45,9 +45,9 @@
         </template>
         </b-row>
         <b-row v-show="proceSeleccionado.atencion_courier==true">
-            <b-form-select v-model="curier" text-field="nombre" value-field="_id" :options="curiers2" class="mb-3">
+            <b-form-select v-model="curier" text-field="nombre" value-field="_id" :options="curiers2" class="mb-3" 
+            :state="Scurier">
             </b-form-select>
-            {{curier}}
         </b-row>
         <b-row class="my-1">
             <b-col class="my-3">
@@ -68,6 +68,8 @@
                 Generar
             </b-btn>
         </b-row>
+
+        <router-view></router-view>
         <!-- Modal Component -->
         <b-modal id="modal1" title="Manifiestos" size="lg" :no-close-on-esc="true">
             <b-container fluid>
@@ -131,6 +133,7 @@
                 </b-row>
             </b-container>
         </b-modal>
+        
     </b-container>
 </template>
 
@@ -142,11 +145,12 @@ import Preload from '../componentes/preload.vue'
 export default {
     data(){
         return{
+            Scurier:null,
             processSelected:'',
             concepto: null,
             listadoconcepto:[],
             opciones:[],
-            curier: '',
+            curier: null,
             centrologistico:{},
             curiers:{},
             curiers2:{},
@@ -206,8 +210,9 @@ export default {
             this.itemsmovilizados.splice(value.index,1)
         },
         generarManifiesto(){
-            console.log("entro a generar manifiesto");
-            console.log(this.itemsmovilizados);
+            this.Scurier=null
+    
+            
             if(this.objeto==undefined){
                 console.log("no hago nada");
             }
@@ -245,7 +250,11 @@ export default {
                 }
             }
             var inforinputs=[]    
-            for(var x=0;x<this.opciones.length;x++){
+            console.log(this.objeto);
+            if(this.objeto==undefined){
+                console.log("no me llegan inputs variables");
+            }else{
+                for(var x=0;x<this.opciones.length;x++){
 
                 var llaves=Object.keys(this.objeto)
                 for(var y=0;y<this.opciones[x].length;y++)
@@ -256,7 +265,9 @@ export default {
                         inforinputs[x]=this.opciones[x][y]
                     }
                 }
+                }
             }
+           
                             //console.log(inforinputs);
             var inforvaria=inforinputs
             var itemsmodal=this.itemsmovilizados
@@ -289,11 +300,36 @@ export default {
                 //console.log(listMovilizados);
             }
             
+            if(this.proceSeleccionado.atencion_courier==true){
+               
+                if(this.curier!="null"&&this.curier!=''&&this.curier!=null)
+                {
+                   this.Scurier=null
+                }
+                else{
+                    swal("Debe completarse", 
+                        "Seleccione un curier",
+                        "error",{
+                              allowEnterKey: true,
+
+                        });
+                    this.Scurier=false
+                }
             var envio ={
+                listadoMovilizados:varios,
+                infoManifiesto:this.objeto,
+                id_procesoLogistico:this.processSelected._id,
+                id_courier:this.curier
+            }
+            }
+            else{
+                var envio ={
                 listadoMovilizados:varios,
                 infoManifiesto:this.objeto,
                 id_procesoLogistico:this.processSelected._id
             }
+            }
+            
             console.log(envio);
             
             setTimeout(() => {
@@ -302,6 +338,7 @@ export default {
                         })
 
                         }, )
+                        console.log(this.processSelected.modal)
             this.$router.push(this.processSelected.modal)
             
         },
@@ -454,6 +491,7 @@ export default {
             var nvacio ={ _id: null, nombre: 'Por Favor Seleccione un Concepto' };
             console.log("cambio");
             this.selected=value 
+            this.itemsmovilizados=[]
             // console.log(this.procesosLog);
             if(this.selected==null){
             }else{
@@ -535,7 +573,7 @@ export default {
                             urlservicios+"UsuariosCurier/"+infologin.id_OperadorLogistico)
                             .then(response => {
                                 this.curiers2 = response.data;
-                                var vacio=  { _id: "", nombre: 'Por Favor Seleccione un Curier' };
+                                var vacio=  { _id: "null", nombre: 'Por Favor Seleccione un Curier' };
                                 this.curiers2.unshift(vacio)
                                 
                             });

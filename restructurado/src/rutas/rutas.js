@@ -21,13 +21,6 @@ export const rutas = [
     {
         path: '/prueba',
         component: prueba,
-    },{
-        path: '/ModalEntrada',
-        component: MEntrada,
-    },
-    {
-        path: '/ModalSalida',
-        component: MSalida,
     },
     {
         path: '/',
@@ -101,7 +94,15 @@ export const rutas = [
                     {
                         path: '',  component: Blank,  props: true,  
                         
-                    },    
+                    }, 
+                    {
+                        path: 'ModalEntrada',
+                        component: MEntrada,
+                    },
+                    {
+                        path: 'ModalSalida',
+                        component: MSalida,
+                    },   
                     {
                         path:'*',
                         redirect: '/404'

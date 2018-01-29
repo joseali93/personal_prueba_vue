@@ -2,13 +2,11 @@
 <b-container>
   <b-row class="non-printableE" id="inicio">
        <b-col>
-         <b-btn v-b-modal="'modallg1'" variant="primary">
-           ENTRADA
-         </b-btn>
+        
        </b-col>
   </b-row>
    <!-- Modal Imprimir-->
-    <b-modal id="modallg1" size="lg" v-model="modal">
+    <b-modal id="modallg1" size="lg" v-model="modal" :no-close-on-esc="true">
       <div slot="modal-header" class="w-100 non-printableE ">
          <b-btn size="sm" class="float-left" variant="primary" @click="volver">
            Volver

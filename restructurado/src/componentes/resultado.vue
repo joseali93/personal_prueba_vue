@@ -4,21 +4,21 @@
             Listado de Ordenes de Servicio:
         </h3>
         <b-table :fields="fields" :per-page="5" :current-page="currentPage" :items="consulta" :bordered="true"> 
-            <template slot="index" scope="data">
+            <template slot="index" slot-scope="data">
                 {{data.index + 1}}
             </template>
-            <template slot="estado" scope="data">
+            <template slot="estado" slot-scope="data">
                 {{data.item.estado}}
             </template>
-            <template slot="Cancelar" scope="data">
+            <template slot="Cancelar" slot-scope="data">
                 <b-button variant="danger" class="fa fa-ban" @click="cancelarOrden(data)" 
                 v-show="data.item.estado!='orden de servicio cancelada'"></b-button>
                 
             </template> 
-            <template slot="fecha_creacion" scope="data">
+            <template slot="fecha_creacion" slot-scope="data">
                 {{data.item.fecha_creacion | formatdate}}
             </template>
-            <template slot="actualizar" scope="data">
+            <template slot="actualizar" slot-scope="data">
 
                 <b-button variant="success" class="fa fa-pencil-square-o"  @click="actualizar(data)"></b-button>
 
