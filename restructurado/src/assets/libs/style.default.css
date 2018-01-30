@@ -5,38 +5,40 @@
         -webkit-print-color-adjust: exact !important;
 
     }
-    .juana{
+    .footerimpresion{
+        border: 1px soldi red !important;
+    }
+    .imgpr{
+        background-color:transparent ;
+        margin-left: 5rem;
+        width: auto !important;
+        height: 300px;
+    }
+
+    .impresion{
+        margin: 5rem;
     }
     @page { margin: 0; }
-    .table{
-        page-break-inside: avoid;
+    .table, td, th{
+        margin: 2rem;
         width: auto;
         height: auto;
-
+        color: black;
+        border: 1px solid red !important;
     }
+   
     
     #mitablita {
         width: 80% !important;
         table-layout: fixed !important;
+        border: 1px solid red !important;
     }
-    .border{
+    #mitablita td, #mitablita th{
+        padding: 12px;
+    }
 
-    }
-  #prueba *{
-    visibility: visible;
-    width: 100%;
-    height: 100%;
-    margin: 0;
-    top: 0;
-        left: 0;
-        border: 0;
-        padding: 0;
-        position: relative;
-    left: 0;
-    top: 0;
-  }
  
-    #print-content * {
+    #print * {
         visibility: visible;
         width: 120%;
         margin: 0,0,0,0;
@@ -47,7 +49,18 @@
         position: relative; 
 
     }
-    
+    .printable {
+        display: block;
+        height: 100%;
+        width: 100%;
+        top: 0;
+        left: 0;
+        margin: 0;
+        border: 0;
+        padding: 0;
+        position: relative;
+        z-index: 20000;
+    }
     
 
     .non-printableE {
@@ -67,20 +80,8 @@
         overflow: visible !important;
     }
 }
-.juana{
-}
-.printable {
-    display: block;
-    height: 100%;
-    width: 100%;
-    top: 0;
-    left: 0;
-    margin: 0;
-    border: 0;
-    padding: 0;
-    position: relative;
-    z-index: 20000;
-}
+
+
 .text-bold {
     font-weight: 700
 }

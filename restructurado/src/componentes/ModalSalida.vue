@@ -14,29 +14,40 @@
                 Imprimir
                 </b-btn>
             </div>
-            <div slot="modal-footer" class="w-100 non-printableE">
-               
+            <div slot="modal-footer"  class="w-100 footerimpresion" >
+               <b-row>
+                <b-col>
+                    RPL LOGISTICA- IMPRIME: {{infoimpresion()}}
+                </b-col>
+                <b-col>
+                    FECHA: {{fechaimpre}}
+                </b-col>
+                </b-row>
             </div>
-            <b-container  id="prueba" >
+            <b-container  id="prueba" class="non-printableE " >
                 <b-row>
                 <b-col class="my-2">
-                    <b-img src="https://lorempixel.com/300/150/" fluid alt="Fluid image" />
+                    <b-img src="http://localhost:8080/src/assets/logo.png"  fluid alt="Fluid image" class="imgpr" />
+                    <!--
+            <b-img src="https://lorempixel.com/300/150/" fluid alt="Fluid image" />
+
+                        -->
                 </b-col>
                 <b-col class="my-2">
                     <b-row>
                     <h1>MANIFIESTO DE BODEGA SALIDA</h1>
                     </b-row>
                     <b-row>
-                    <h2>Ciudad:</h2> <strong class="text-capitalize"> {{otrainfo[0].ciudad}}</strong>
+                    <h2>Ciudad: <strong class="text-capitalize"> {{otrainfo[0].ciudad}}</strong></h2> 
                     </b-row>
                     <b-row>
-                    <h2>Bodega:</h2> <strong class="text-capitalize"> {{otrainfo[0].nombre}}</strong>
+                    <h2>Bodega: <strong class="text-capitalize"> {{otrainfo[0].nombre}}</strong></h2> 
                     </b-row>
                     <b-row>
-                    <h3>fecha:</h3>  <strong>{{fecha}}</strong>
+                    <h3>fecha: <strong>{{fecha}}</strong></h3>  
                     </b-row>
                     <b-row>
-                    <h3>Conductor:</h3> <strong class="text-capitalize"> {{otrainfo[1].nombre}} {{otrainfo[1].apellido}}</strong>
+                    <h3>Conductor: <strong class="text-uppercase"> {{otrainfo[1].nombre}} {{otrainfo[1].apellido}}</strong></h3> 
                     </b-row>
                     <b-row>
                     <h3>Auxiliar:</h3>
@@ -52,34 +63,37 @@
                 <b-col>
                 </b-col>
                 <b-col>
-                <b-row>
-                <h2>Total de Envios: </h2> <strong>{{itemsmodal.length}}</strong>
+                <b-row class="impresion">
+                <h2>Total de Envios:  <strong>{{itemsmodal.length}}</strong></h2>
                 </b-row>
-                <b-row>
-                <h2>Total de Unidades: </h2> <strong>{{Tunidades()}}</strong>
+                <b-row class="impresion">
+                <h2>Total de Unidades: <strong>{{Tunidades()}}</strong></h2> 
                 </b-row>
                 </b-col>
                 </b-row>
-                <b-row class="my-5">
+                <b-row class="my-5 impresion"> 
                 <p class="center-button">
                 RECIBE: ____________________________________________________________________________
                 </p>
                 </b-row>
-                <b-row>
+                <b-row class="my-5 impresion">
                 <p class="center-button">
                 ENTREGA: ___________________________________________________________________________
                 </p>
                 </b-row>
+                
             </b-container>
-            </b-modal>
+        </b-modal>
     </b-container>
 </template>
 
 <script>
-
+import $ from 'jquery'
 import {urlservicios} from '../main'
 import {bus} from '../main'
 import moment from 'moment'
+        moment.locale('es');
+
 export default {
     filters: {
         formatdate: function(value) {
@@ -91,6 +105,7 @@ export default {
     data(){
         return{
             fecha:  moment().format("DD/MM/YYYY"),
+            fechaimpre:moment().format('MMMM Do YYYY, h:mm:ss a'),
             otrainfo:'',
             modal:true,
             itemsmodal:[],
@@ -106,6 +121,11 @@ export default {
         }   
     },
     methods:{
+        infoimpresion(){
+            var login = localStorage.getItem("storedData");
+            var infologin = JSON.parse(login);
+            return infologin.nombre+' '+infologin.apellido
+        },
         Tunidades(){
             var retornar=0
             for(var x=0;x<this.itemsmodal.length;x++){
@@ -118,21 +138,22 @@ export default {
         this.$router.replace('/inicio/entradasalida')
       },
       imprimir(){
+          console.log("entro aimprimir");
+        if($("#print").length == 0)
+        {
+            var print =null
+            print = document.createElement('div');
+            print.setAttribute('id', 'print');
+            print.setAttribute('class', 'printable');
+            $(print).appendTo('body');
 
-         
-        var Ndiv= null
-        Ndiv = document.createElement('div');
-        Ndiv.setAttribute('id', 'print-content');
-        Ndiv.setAttribute('class', 'printable');
-        
-        Ndiv.innerHTML=document.getElementById('prueba').innerHTML
+        }
+          //$("#print").html($("#footerimpresion").html());
 
-        document.body.appendChild(Ndiv)
-        console.log(document.getElementById('print-content'))        
+          $("#print").html($("#prueba").html());
+          window.print();
 
-        window.print();
-                console.log(document.getElementById('print-content'))        
-
+        $("#print").remove();
       }
     },
     mounted: function() {
@@ -142,6 +163,8 @@ export default {
         this.otrainfo= userObject.inforvaria
         
       }.bind(this))
+
+        moment.locale('es');
     },
 }
 </script>

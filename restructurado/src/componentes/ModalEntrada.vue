@@ -18,26 +18,30 @@
        <div slot="modal-footer" class="w-100 non-printableE">
                
             </div>
-      <b-container id="print-content">
+      <b-container  id="prueba" class="non-printableE " >
         <b-row>
           <b-col class="my-2">
+                    <b-img src="http://localhost:8080/src/assets/logo.png"  fluid alt="Fluid image" class="imgpr" />
+                    <!--
             <b-img src="https://lorempixel.com/300/150/" fluid alt="Fluid image" />
+
+                        -->
           </b-col>
           <b-col class="my-2">
             <b-row>
             <h1>MANIFIESTO DE BODEGA ENTRADA</h1>
             </b-row>
             <b-row>
-            <h2>Ciudad:</h2> <strong class="text-capitalize"> {{otrainfo[0].ciudad}}</strong>
+            <h3>Ciudad:<strong class="text-capitalize"> {{otrainfo[0].ciudad}} </strong> </h3> 
             </b-row>
             <b-row>
-            <h3>Bodega:</h3> <strong class="text-capitalize"> {{otrainfo[0].nombre}}</strong>
+            <h3>Bodega: <strong class="text-capitalize"> {{otrainfo[0].nombre}}</strong></h3> 
             </b-row>
             <b-row>
-            <h3>fecha:</h3> <strong>{{fecha}}</strong>
+            <h3>fecha: <strong>{{fecha}}</strong></h3> 
             </b-row>
             <b-row>
-            <h3>Conductor:</h3> <strong class="text-capitalize"> {{otrainfo[1].nombre}} {{otrainfo[1].apellido}}</strong>
+            <h3>Conductor:  <strong class="text-uppercase"> {{otrainfo[1].nombre}} {{otrainfo[1].apellido}}</strong></h3> 
             </b-row>
             <b-row>
             <h3>Auxiliar:</h3>
@@ -46,9 +50,8 @@
         </b-row>
         <b-row class="my-5">
           <b-col class="my-5">
-          <b-table  responsive=" md" bordered	outlined :items="itemsmodal" :fields="fields">
+          <b-table id="mitablita" responsive="sm" bordered	outlined :items="itemsmodal" :fields="fields" class="juana"></b-table>
 
-          </b-table>
           </b-col>
           </b-row>
           <b-row>
@@ -56,20 +59,20 @@
           </b-col>
           <b-col>
           <b-row>
-          <h2>Total de Envios: </h2> <strong>{{itemsmodal.length}}</strong>
+          <h2>Total de Envios: <strong>{{itemsmodal.length}}</strong> </h2> 
           </b-row>
           <b-row>
-          <h2>Total de Unidades: </h2> <strong>{{Tunidades()}}</strong>
+          <h2>Total de Unidades: <strong>{{Tunidades()}}</strong></h2> 
           </b-row>
           </b-col>
         </b-row>
-        <b-row class="my-5">
+        <b-row class="my-5 impresion">
           <p class="center-button">
           RECIBE: ____________________________________________________________________________
           </p>
         </b-row>
-        <b-row>
-          <p class="center-button">
+        <b-row class="impresion">
+          <p class="center-button ">
           ENTREGA: ___________________________________________________________________________
           </p>
         </b-row>
@@ -79,6 +82,8 @@
 </template>
 
 <script>
+import $ from 'jquery'
+
 import {urlservicios} from '../main'
 import {bus} from '../main'
 import moment from 'moment'
@@ -125,12 +130,22 @@ export default {
         this.$router.replace('/inicio/entradasalida')
       },
       imprimir(){
-        console.log("entro a imprimir")
+       
+          if($("#print").length == 0)
+                {
+                    var print =null
+                    print = document.createElement('div');
+                    print.setAttribute('id', 'print');
+                    print.setAttribute('class', 'printable');
+                    $(print).appendTo('body');
+
+                }
+          $("#print").html($("#prueba").html());
+          window.print();
+
+          $("#print").remove();
+        }
       
-          //document.getElementById('app').appendChild(imprimible);
-          document.getElementById("print-content");
-         window.print()
-      }
     },
     mounted: function() {
        bus.$on('modalinfo', function (userObject) {
