@@ -1,5 +1,7 @@
 <template>
     <b-container>
+
+        
         <b-row id="ejemplo">
 
         </b-row>
@@ -15,7 +17,7 @@
             <div slot="modal-footer" class="w-100 non-printableE">
                
             </div>
-            <b-container fluid id="prueba">
+            <b-container  id="prueba" >
                 <b-row>
                 <b-col class="my-2">
                     <b-img src="https://lorempixel.com/300/150/" fluid alt="Fluid image" />
@@ -43,7 +45,7 @@
                 </b-row>
                 <b-row class="my-5">
                 <b-col class="my-5">
-                <b-table  responsive="sm" bordered	outlined :items="itemsmodal" :fields="fields2"></b-table>
+                <b-table id="mitablita" responsive="sm" bordered	outlined :items="itemsmodal" :fields="fields2" class="juana"></b-table>
                 </b-col>
                 </b-row>
                 <b-row>
@@ -117,18 +119,20 @@ export default {
       },
       imprimir(){
 
-
+         
         var Ndiv= null
         Ndiv = document.createElement('div');
         Ndiv.setAttribute('id', 'print-content');
         Ndiv.setAttribute('class', 'printable');
         
-        
-        var x=document.getElementById('prueba')
-        Ndiv= x.cloneNode(true)
-        document.getElementById('ejemplo').appendChild(Ndiv)
-        
-        window.print()
+        Ndiv.innerHTML=document.getElementById('prueba').innerHTML
+
+        document.body.appendChild(Ndiv)
+        console.log(document.getElementById('print-content'))        
+
+        window.print();
+                console.log(document.getElementById('print-content'))        
+
       }
     },
     mounted: function() {
@@ -141,7 +145,8 @@ export default {
     },
 }
 </script>
+<style  scopped>
 
-<style>
+            @import url("../css/PrintManifest.css") print;
 
-</style>
+        </style>
