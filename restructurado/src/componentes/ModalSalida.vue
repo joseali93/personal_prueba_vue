@@ -3,7 +3,7 @@
 
         
         <b-row id="ejemplo">
-
+             
         </b-row>
         <b-modal id="modallg2" size="lg" v-model="modal" :no-close-on-esc="true">
             <div slot="modal-header" class="w-100 non-printableE">
@@ -15,16 +15,99 @@
                 </b-btn>
             </div>
             <div slot="modal-footer"  class="w-100 footerimpresion" >
-               <b-row>
-                <b-col>
-                    RPL LOGISTICA- IMPRIME: {{infoimpresion()}}
-                </b-col>
-                <b-col>
-                    FECHA: {{fechaimpre}}
-                </b-col>
-                </b-row>
+               
             </div>
+            
+
             <b-container  id="prueba" class="non-printableE " >
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
+                <h1>Testing</h1>
                 <b-row>
                 <b-col class="my-2">
                     <b-img src="http://localhost:8080/src/assets/logo.png"  fluid alt="Fluid image" class="imgpr" />
@@ -35,10 +118,11 @@
                 </b-col>
                 <b-col class="my-2">
                     <b-row>
+
                     <h1>MANIFIESTO DE BODEGA SALIDA</h1>
                     </b-row>
                     <b-row>
-                    <h2>Ciudad: <strong class="text-capitalize"> {{otrainfo[0].ciudad}}</strong></h2> 
+                    <h1>Ciudad: <strong class="text-capitalize"> {{otrainfo[0].ciudad}}</strong></h1> 
                     </b-row>
                     <b-row>
                     <h2>Bodega: <strong class="text-capitalize"> {{otrainfo[0].nombre}}</strong></h2> 
@@ -82,6 +166,16 @@
                 </p>
                 </b-row>
                 
+            <footer>
+           <b-row>
+                <b-col>
+                    RPL LOGISTICA- IMPRIME: {{infoimpresion()}}
+                </b-col>
+                <b-col>
+                    FECHA: {{fechaimpre}}
+                </b-col>
+                </b-row>
+            </footer>
             </b-container>
         </b-modal>
     </b-container>
