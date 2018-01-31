@@ -20,94 +20,7 @@
             
 
             <b-container  id="prueba" class="non-printableE " >
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
-                <h1>Testing</h1>
+                
                 <b-row>
                 <b-col class="my-2">
                     <b-img src="http://localhost:8080/src/assets/logo.png"  fluid alt="Fluid image" class="imgpr" />
@@ -222,8 +135,10 @@ export default {
         },
         Tunidades(){
             var retornar=0
+            //console.log("entro a Total unidades");
+
             for(var x=0;x<this.itemsmodal.length;x++){
-                retornar=this.itemsmodal[x].unidades
+                retornar=retornar+parseInt(this.itemsmodal[x].unidades)
             }
             return retornar
         },

@@ -32,19 +32,19 @@
             <h1>MANIFIESTO DE BODEGA ENTRADA</h1>
             </b-row>
             <b-row>
-            <h3>Ciudad:<strong class="text-capitalize"> {{otrainfo[0].ciudad}} </strong> </h3> 
+              <label class="labels">Ciudad: <strong class="text-capitalize">{{otrainfo[0].ciudad}}</strong></label>
             </b-row>
             <b-row>
-            <h3>Bodega: <strong class="text-capitalize"> {{otrainfo[0].nombre}}</strong></h3> 
+            <label class="labels">Bodega: <strong class="text-capitalize">{{otrainfo[0].nombre}}</strong></label>
             </b-row>
             <b-row>
-            <h3>fecha: <strong>{{fecha}}</strong></h3> 
+            <label class="labels">Fecha: <strong class="text-capitalize">{{fecha}}</strong></label>
             </b-row>
             <b-row>
-            <h3>Conductor:  <strong class="text-uppercase"> {{otrainfo[1].nombre}} {{otrainfo[1].apellido}}</strong></h3> 
+            <label class="labels">Conductor: <strong class="text-uppercase">{{otrainfo[1].nombre}} {{otrainfo[1].apellido}}</strong></label>
             </b-row>
             <b-row>
-            <h3>Auxiliar:</h3>
+            <label class="labels">Auxiliar: <strong class="text-uppercase"></strong></label>
             </b-row>
           </b-col>
         </b-row>
@@ -59,10 +59,11 @@
           </b-col>
           <b-col>
           <b-row>
-          <h2>Total de Envios: <strong>{{itemsmodal.length}}</strong> </h2> 
+          <label class="labels">Total de Envios: <strong class="text-uppercase">{{itemsmodal.length}}</strong></label>
           </b-row>
           <b-row>
-          <h2>Total de Unidades: <strong>{{Tunidades()}}</strong></h2> 
+          <label class="labels">Total de Unidades: <strong class="text-uppercase">{{Tunidades()}}</strong></label>
+
           </b-row>
           </b-col>
         </b-row>
@@ -114,17 +115,15 @@ export default {
         }   
     },
     methods:{
-        Tunidades(){
-            var retornar=0
-            console.log("entro a Total unidades");
-            console.log(this.itemsmodal.length);
-            console.log(this.itemsmodal);
-            for(var x=0;x<this.itemsmodal.length;x++){
-                console.log(this.itemsmodal);
-                retornar=this.itemsmodal[x].unidades
-            }
-            return retornar
-        },
+      Tunidades(){
+          var retornar=0
+          console.log("entro a Total unidades");
+         
+          for(var x=0;x<this.itemsmodal.length;x++){
+              retornar=retornar+parseInt(this.itemsmodal[x].unidades)
+          }
+          return retornar
+      },
       volver(){
           console.log("entro a volver");
         this.$router.replace('/inicio/entradasalida')
@@ -159,5 +158,9 @@ export default {
 </script>
 
 <style>
+        @import url("../css/PrintManifest.css") print;
 
+.labels{
+  font-size: 20px;
+}
 </style>

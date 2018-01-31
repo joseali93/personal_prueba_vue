@@ -5,23 +5,16 @@
         -webkit-print-color-adjust: exact !important;
 
     }
+    
+    html{
+        margin: 0;
+    }
     footer {
-        display: -webkit-box;
-        display: -ms-flexbox;
-        display: flex;
-        -webkit-box-pack: justify;
-        -ms-flex-pack: justify;
-        justify-content: space-between;
-        width: 100%;
-        height: 90%;
         position: absolute;
-        padding-right: 2cm;
-        padding-bottom: 1cm;
-        color: red;
-        text-align: center;
-        margin-bottom: 10%;
+        
+        margin-left: 10rem;
+        bottom: 0; /* Because it's footer */
       }
-
     .imgpr{
         background-color:transparent ;
         margin-left: 5rem;
@@ -29,76 +22,49 @@
         height: 300px;
 
     }
-
     .impresion{
         margin: 5rem;
     }
+    /*
     @page {  size: letter portrait;
-        margin: 0cm 0cm 0cm 0cm;}
-    
+        margin: 0cm 0cm 0cm 0cm;
+   
+    } 
+    */
     .table, td, th{
         margin: 2rem;
         width: auto;
         height: auto;
         color: black;
-        border: 1px solid red !important;
+        page-break-before: left;
+        
         
     }
-   
-    
     #mitablita {
-        width: 80% !important;
+        width: 97% !important;
         height: auto;
         table-layout: fixed !important;
-        border: 1px solid red !important;
     }
     #mitablita td, #mitablita th{
         padding: 12px;
     }
-
- 
+    
     #print * {
         visibility: visible;
         width: 100%;
-        height: 90%;
+        height: 100%;
         margin: 0,0,0,0;
         top: 0;
         left: 0;
         border: 0;
         padding: 0;
-        position: relative; 
-       
+        position: relative;     
     }
-    .printable {
-        display: block;
-        height: 100%;
-        width: 100%;
-        top: 0;
-        left: 0;
-        margin: 0;
-        border: 0;
-        padding: 0;
-        position: relative;
-        z-index: 20000;
-    }
-    
-
     .non-printableE {
         display: none;
 
     }
-    .modal{
-        width: 100%;
-        height: 100%;
-        position: absolute;
-        left: 0;
-        top: 0;
-        margin: 0;
-        padding: 0;
-        min-height:auto;
-        /**Remove scrollbar for printing.**/
-        overflow: visible !important;
-    }
+
 }
 
 

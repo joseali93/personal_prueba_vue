@@ -2,7 +2,7 @@
     <b-container>
         <b-row class="my-1 ">
             <b-col class="float-right">
-                <b-btn class="float-right rounded"  variant="success" v-show="selected!=null"  v-b-modal.modal1>
+                <b-btn class="float-right rounded"  variant="success" @click="MostrarModal()" >
                     <i class="fa fa-plus-square-o" aria-hidden="true"></i> Adicionar Movilizados
                 </b-btn>
             </b-col>
@@ -14,6 +14,7 @@
             </b-form-select>
         </b-row>
         <b-row class="my-1"> 
+            {{objeto}}
         <template v-for="(data,indice) in inputs.campos">
             <template v-if="data.type=='text'">   
                     <label>Ingrese {{ data.placeholder }}:</label>   
@@ -37,7 +38,8 @@
             </template>
             <template v-if="data.type=='select'">
                 <h3>Seleccione el {{data.placeholder}}</h3>
-                 <b-form-select :id="data.id"  text-field="nombre" value-field="_id" 
+                
+                 <b-form-select :id="data.id" :value="valores(indice)"  text-field="nombre" value-field="_id" 
                  :options="opciones[indice]" @change="seleccionado(data)" class="mb-3"
                  :state="data.estado">
                 </b-form-select>
@@ -71,7 +73,7 @@
 
         <router-view></router-view>
         <!-- Modal Component -->
-        <b-modal id="modal1" title="Manifiestos" size="lg" :no-close-on-esc="true">
+        <b-modal id="modal1" ref="myModalRef" title="Manifiestos" size="lg" :no-close-on-esc="true">
             <b-container fluid>
                  <b-row class="my-1">
                     <b-col>
@@ -145,6 +147,9 @@ import Preload from '../componentes/preload.vue'
 export default {
     data(){
         return{
+            value:[],
+            id_centrologistico:null,
+            validacionModal:'',
             Scurier:null,
             processSelected:'',
             concepto: null,
@@ -181,6 +186,67 @@ export default {
         }
     },
     methods:{
+        valores(valores){
+            //console.log("entro a valores");
+            //console.log(valores);
+            var guardadoManifiesto = localStorage.getItem("Manifiesto");
+            var infoguardadoManifiesto =JSON.parse(guardadoManifiesto);
+            //this.objeto=infoguardadoManifiesto.inputs
+            if(infoguardadoManifiesto==null||
+            infoguardadoManifiesto=='null'){
+                return null
+            }
+            else
+            {
+                
+                //console.log(infoguardadoManifiesto.inputs);
+                var llaves =Object.keys(infoguardadoManifiesto.inputs)
+                eval('this.objeto.'+llaves[valores]+'='+'infoguardadoManifiesto.inputs.'+llaves[valores])
+                return eval('infoguardadoManifiesto.inputs.'+llaves[valores])
+            }
+            
+        },
+        MostrarModal(){
+            var bandera
+            console.log("entro a mostar modal");
+            console.log(this.objeto);
+            if(this.objeto==undefined||this.objeto=='')
+            {
+                console.log("no muestro");
+                swal("Debe completarse", 
+                        "Seleccione los campos previos",
+                        "error",{
+                              allowEnterKey: true,
+                        });
+            }
+            else{
+                var llaves = Object.keys(this.objeto)
+               
+                for(var x=0;x<llaves.length;x++){
+                    if(eval('this.objeto.'+llaves[x])=='null'||
+                    eval('this.objeto.'+llaves[x])==null){
+                        console.log("andavacio");
+                        bandera=true
+                    }
+                    
+                }
+                if(bandera==true)
+                {
+                    console.log("no muesto 2");
+                    swal("Debe completarse", 
+                        "Algun Campo esta pendiente de Seleccionar",
+                        "error",{
+                              allowEnterKey: true,
+                        });
+
+                }
+                else{
+                    this.$refs.myModalRef.show()                    
+                }
+                
+            }
+            
+        },
         mostrar(){
             var unidades=0
             if(this.itemsmovilizados.length<=0){
@@ -210,11 +276,12 @@ export default {
             this.itemsmovilizados.splice(value.index,1)
         },
         generarManifiesto(){
+            console.log("entro a generar");
             this.Scurier=null
     
             
             if(this.objeto==undefined){
-                console.log("no hago nada");
+                //console.log("no hago nada");
             }
             else{
                 var llaves=Object.keys(this.objeto)
@@ -240,19 +307,19 @@ export default {
                 //console.log(this.objeto);
                 if(bandera==true)
                 {
-                    console.log("no hacemos peticion");
+                    //console.log("no hacemos peticion");
 
                 }
                 else
                 {
-                    console.log("hacemos peticion");
+                    //console.log("hacemos peticion");
                     //console.log(this.itemsmovilizados);
                 }
             }
             var inforinputs=[]    
-            console.log(this.objeto);
+            //console.log(this.objeto);
             if(this.objeto==undefined){
-                console.log("no me llegan inputs variables");
+                //console.log("no me llegan inputs variables");
             }else{
                 for(var x=0;x<this.opciones.length;x++){
 
@@ -261,7 +328,7 @@ export default {
                 {
                     if(this.opciones[x][y]._id==eval('this.objeto.'+llaves[x]))
                     {
-                        console.log("obtengo la info");
+                        //console.log("obtengo la info");
                         inforinputs[x]=this.opciones[x][y]
                     }
                 }
@@ -276,11 +343,11 @@ export default {
 
             }
             for(var x=0;x<this.itemsmovilizados.length;x++){
-                console.log(x);
+                //console.log(x);
                 if(this.itemsmovilizados[x].concepto._id==null||
                 this.itemsmovilizados[x].concepto._id==undefined)
                 {
-                    console.log(this.itemsmovilizados[x].id)
+                    //console.log(this.itemsmovilizados[x].id)
                      var listMovilizados={
 
                      numeroMovilizado:this.itemsmovilizados[x].id
@@ -329,18 +396,50 @@ export default {
                 id_procesoLogistico:this.processSelected._id
             }
             }
-            console.log(this.processSelected.modal)
+            //console.log(this.processSelected.modal)
             console.log(envio);
-            
-            setTimeout(() => {
+
+
+                setTimeout(() => {
                         bus.$emit('modalinfo', {
                             itemsmodal,inforvaria
                         })
 
                         }, )
             
-            this.$router.push(this.processSelected.modal)
+                    this.$router.push(this.processSelected.modal)
+                    /*
+            this.axios
+            .post(urlservicios+"GenerarManifiestoWeb", envio)
+            .then(response => {
+                console.log(response);
+                this.validacionModal=response.validacionModal
+                if(this.validacionModal=true)
+                {
+                    console.log("mostramos modal");
+                    console.log(itemsmodal);
+                    console.log(inforvaria);
+                    setTimeout(() => {
+                        bus.$emit('modalinfo', {
+                            itemsmodal,inforvaria
+                        })
+
+                        }, )
             
+                    this.$router.push(this.processSelected.modal)
+                }
+                else
+                {
+                    console.log("no mostramos modal");
+                    swal("Debe completarse", 
+                        "No se puede Generar el Manifiesto en este momento",
+                        "error",{
+                              allowEnterKey: true,
+
+                        });
+
+                }
+            })*/
         },
         digitar(value){
             setTimeout(
@@ -363,13 +462,18 @@ export default {
             console.log(this.objeto);
         },
         seleccionado(value){
+            console.log("entro a seleccionado");
+            
             var x = document.getElementById(value.id).value
+            console.log(x);
             eval('this.objeto.'+value.vmodel+'='+'x')
-
+            console.log(this.objeto);
         },
         adicionar(value){
+            
             var agregar=true
             var infoconcepto
+            var algo
             
             if(this.concepto==null){
                 console.log("hay concepto nulo");
@@ -405,6 +509,7 @@ export default {
                 this.axios.get(urlservicios+"MovilizadoProcesosLogistico/" +
                 value+'/'+this.selected)
                 .then(response => {
+                    //console.log(response);
                     this.mensaje=response.data
                     if(this.mensaje.message)
                     {
@@ -425,6 +530,7 @@ export default {
                         
                         if(this.itemsmovilizados.length==0)
                         {
+                            
                             swal({
                             position: 'center',
                             type: 'success',
@@ -432,8 +538,20 @@ export default {
                             showConfirmButton: false,
                             timer: 1000
                             })
+                            
+                            this.text1=''
                             this.mensaje.concepto=infoconcepto
                             this.itemsmovilizados.push(this.mensaje)
+                            console.log(this.itemsmovilizados);
+                            console.log(this.objeto);
+                            console.log(this.curier);
+                            var guardado={
+                                        itemsmovilizados:this.itemsmovilizados,
+                                        inputs:this.objeto,
+                                        curier:this.curier,
+                                        ProSeleccionado:this.selected
+                                    }
+                                    localStorage.setItem('Manifiesto', JSON.stringify(guardado))
                         }
                         else
                         {
@@ -464,6 +582,19 @@ export default {
                                     })
                                     this.mensaje.concepto=infoconcepto
                                     this.itemsmovilizados.push(this.mensaje)
+                                    this.text1=''
+                                    console.log(this.itemsmovilizados);
+                                    console.log(this.objeto);
+                                    console.log(this.curier);
+                                    var guardado={
+                                        itemsmovilizados:this.itemsmovilizados,
+                                        inputs:this.objeto,
+                                        curier:this.curier,
+                                        ProSeleccionado:this.selected
+                                    }
+                                    localStorage.setItem('Manifiesto',  JSON.stringify(guardado))
+
+                                
                             }
                         }
 
@@ -545,7 +676,8 @@ export default {
                         this.axios.get(element.urlobjeto+
                             infologin.id_OperadorLogistico)
                             .then(resp1 => {
-                                 var vacio=  { _id: "", nombre: 'Por Favor Seleccione un Campo' };
+                                //this.value[indice]=null
+                                 var vacio=  { _id: 'null', nombre: 'Por Favor Seleccione un Campo' };
                                  var respuesta=resp1.data
                                  respuesta.unshift(vacio)
                                  this.opciones.push(respuesta)
@@ -587,7 +719,10 @@ export default {
         var vacio=  { _id: null, nombre: 'Por Favor Seleccione un Proceso logistico' };
         var login = localStorage.getItem("storedData");
         var infologin = JSON.parse(login);
-        //console.log(infologin.id_OperadorLogistico);
+        var guardadoManifiesto = localStorage.getItem("Manifiesto");
+        var infoguardadoManifiesto =JSON.parse(guardadoManifiesto);
+        console.log(infoguardadoManifiesto);
+        
         this.axios
         .get(
             urlservicios+"Procesos/" +
@@ -599,6 +734,31 @@ export default {
             console.log(this.procesosLog);
 
         });
+        if(infoguardadoManifiesto==null||infoguardadoManifiesto=='null')
+        {
+            console.log("no hay previo");
+        }else{
+            swal({
+            title: 'Hay un Manifiesto Pendiente?',
+            text: "Quiere continuar",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            cancelButtonText: 'Cancelar',
+            confirmButtonText: 'Si, Continuar'
+            }).then((result) => {
+            if (result.value) {
+                this.selected=infoguardadoManifiesto.ProSeleccionado
+                this.itemsmovilizados=infoguardadoManifiesto.itemsmovilizados
+                swal(
+                'Actualizado!',
+                'Puede continuar con el proceso.',
+                'success'
+                )
+            }
+            })
+        }
   }
 };
 
