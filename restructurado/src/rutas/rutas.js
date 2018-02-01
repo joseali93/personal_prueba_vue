@@ -15,6 +15,11 @@ import Blank from '../componentes/componentInBlank.vue'
 import prueba from '../componentes/prueba.vue'
 import MEntrada from '../componentes/ModalEntrada.vue'
 import MSalida from '../componentes/ModalSalida.vue'
+import ManifiestComponent from '../componentes/ConsultManifiestos.vue'
+import ResultManifiest from '../componentes/ResultManifiest.vue'
+import DetailManifiest from '../componentes/detalleManifiesto.vue'
+
+
 
 import EnterExitComponent from '../componentes/EntradaSalidas.vue'
 export const rutas = [    
@@ -109,6 +114,28 @@ export const rutas = [
                     } 
                 ]
             },
+            {
+                path: 'manifiestos',
+                component: ManifiestComponent, props: true,
+                children:[
+                    {
+                        path: '',  component: Blank,  props: true,  
+                        
+                    }, 
+                    {
+                        path: 'resultado',
+                        component: ResultManifiest,
+                    },
+                    {
+                        path: 'detalle',
+                        component: DetailManifiest,
+                    },
+                    {
+                        path:'*',
+                        redirect: '/404'
+                    } 
+                ]
+            }
             
         ]
     }, 

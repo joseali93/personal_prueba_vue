@@ -108,7 +108,7 @@ export default {
               { key: 'nombre', label: 'Cliente' },
               { key: 'ccosto', label: 'Centro de Costos' },
               { key: 'referencia', label: 'Referencia' },
-              { key: 'orden', label: 'N° Orden' },
+              { key: 'numeroOrden', label: 'N° Orden' },
               { key: 'peso', label: 'Peso' },
               { key: 'unidades', label: 'Unidades' },
             ],

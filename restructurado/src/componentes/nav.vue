@@ -39,6 +39,11 @@
                         <i class="fa fa-rebel"></i><span>Entradas y Salidas</span>
                     </b-link>
                 </li>
+                <li> 
+                    <b-link to="/inicio/manifiestos">
+                        <i class="fa fa-empire"></i><span> Manifiestos </span>
+                    </b-link>
+                </li>
             </ul>
             </div>
 

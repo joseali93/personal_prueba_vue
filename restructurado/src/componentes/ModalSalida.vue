@@ -121,7 +121,7 @@ export default {
               { key: 'nombre', label: 'Cliente' },
               { key: 'direccion', label: 'Dirección' },
               { key: 'referencia', label: 'Referencia' },
-              { key: 'orden', label: 'N° Orden' },
+              { key: 'numeroOrden', label: 'N° Orden' },
               { key: 'peso', label: 'Peso' },
               { key: 'unidades', label: 'Unidades' },
          ],
