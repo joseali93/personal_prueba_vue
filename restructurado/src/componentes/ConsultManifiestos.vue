@@ -35,7 +35,7 @@
             </b-row>
             <b-row>
                 <b-col>
-                    {{time1}}
+                
                         <b-form-group label="Rango de Fechas" class="mb-3">
                             <date-picker disabled="true" id="fecha" width="500" v-model="time1" placeholder="Rango de Fechas" range lang="en"></date-picker>
                         </b-form-group>

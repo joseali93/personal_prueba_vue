@@ -546,7 +546,7 @@ export default {
       this.estado.direccion=null
       this.estado.referencia=null
       console.log("ingreso orden");
-      var pivote=true
+      var pivote=false
       if(this.objeto==undefined)
       {
         console.log("no hay que evaluar");
@@ -559,6 +559,7 @@ export default {
         for(var x=0;x<llaves.length;x++){          
           if(eval('this.objeto.'+llaves[x])==''||eval('this.objeto.'+llaves[x]=='null')||eval('this.objeto.'+llaves[x]==null))
           {
+            console.log("");
             console.log("pivote tru");
             console.log(eval('this.objeto.'+llaves[x]));
             this.validatecampo= {
@@ -575,7 +576,7 @@ export default {
         this.detalles.destinatario.nombre == "" ||
         this.detalles.destinatario.telefono == "" ||
         this.detalles.destinatario.direccion == "" ||
-        pivote==false||
+        pivote==true||
         this.detalles.referencia==''
         ) {
           if(this.detalles.destinatario.telefono == ""){
@@ -616,7 +617,7 @@ export default {
         /*        this.DetalleServicio.map((obj,indc)=>{
           console.log(obj);
         })*/
-        console.log(JSON.stringify(this.DetalleServicio));
+        console.log((this.DetalleServicio));
         //blanquear datos
         this.habilitar=true,
         (this.objeto = ""),

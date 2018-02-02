@@ -822,6 +822,8 @@ export default {
                 'Puede continuar con el proceso.',
                 'success'
                 )
+            }else{
+                localStorage.removeItem('Manifiesto');
             }
             })
         }

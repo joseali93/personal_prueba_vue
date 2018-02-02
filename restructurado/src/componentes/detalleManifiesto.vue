@@ -7,7 +7,6 @@
             </b-btn>
         </b-row>
         <b-row>
-            {{valores.listaMovilizados}}
         </b-row>
         <b-row>
             <b-col>
@@ -37,7 +36,18 @@
         <b-row>
             <b-col>
                 <b-table bordered fixed hover
-                 :items="valores.listaMovilizados"  :fields="fields"></b-table>
+                 :items="valores.listaMovilizados"  :fields="fields">
+                <template slot="nmanifiesto" slot-scope="data">
+                        {{data.item.id_manifiesto}}
+                </template>
+                <template slot="id_orden" slot-scope="data">
+                        {{data.item.id_orden}}
+                </template>
+                <template slot="id_movilizado" slot-scope="data">
+                        {{data.item.id_movilizado}}
+                </template>
+               
+                 </b-table>
             </b-col>
         </b-row>
     </b-container>
@@ -53,8 +63,9 @@ export default {
         return{
             valores:'',
             fields:[
-                {key:'ido',  label: 'N° Orden'},
-                { key: 'idd', sortable: true , label: 'N° Manifiesto'},
+                {key:'nmanifiesto', label:'N° Manifiesto'},
+                {key:'id_orden',  label: 'N° Orden'},
+                {key:'id_movilizado', label:'N° Movilizado'},
                 {key:'unidades', label: 'Unidades'},
                 {key:'peso', label: 'Peso'},
             ],
@@ -80,9 +91,11 @@ export default {
         bus.$on('detallemanifiesto', function (userObject) {
             //console.log(userObject);
         this.valores=userObject.detalles
-        
-      }.bind(this))
-
+         for(var x=0;x<this.valores.listaMovilizados.length;x++){
+             this.valores.listaMovilizados[x].id_manifiesto=this.valores.id
+         }
+        }.bind(this))
+       
     }
 }
 </script>
