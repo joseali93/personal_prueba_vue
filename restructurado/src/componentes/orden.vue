@@ -1,4 +1,6 @@
 <template>
+<!-- SE PERMITE LA SELECCION DE LOS CLIENTE Y CENTRO DE COSTO QUE CORRESPONDA PARA LA REALIZACION 
+DE LA ORDEN DE SERVICIO -->
     <b-container class="prueba" >
         <header  class="content-heading text-capitalize text-center">
           <h2>Generacion Orden de Servicio</h2>
@@ -86,9 +88,12 @@
 </template>
 
 <script>
+/*
+    POR MEDIO DE LA SELECCION DE UN SELECT SE COMPLETAN LOS CAMPOS FALTANTES
+    LA DIRECCION LA DA EL CENTRO DE COSTO LUEGO DE SELECCIONADO
+*/
 import Orden from '../componentes/orden.vue'
 import Preload from '../componentes/preload.vue'
-
 import {bus} from '../main'
 import {urlservicios} from '../main'
 
@@ -112,10 +117,10 @@ export default {
     },
    
     methods: {
-        centrosseleccionado(seleccion){
-            console.log("entro a select centro");
-            console.log(seleccion);
-            console.log(this.centros);
+        centrosseleccionado(seleccion){  
+            /*
+                FUNCION DEL CUAL OBTENEMOS EL CENTRO QUE FUE SELECCIONADO SEGUN EL CLIENTE
+            */
              for(var i=0;i<this.centros.length;i++){
                 if(this.centros[i]._id==seleccion.target.value){
                     this.selected_centro=this.centros[i]
@@ -123,10 +128,10 @@ export default {
             }
         },
         ClientesSelect(seleccion){
-            console.log(seleccion.target.value);
-            console.log("antro a selecion de clientes")
-                        var vacio=  { _id: null, nombre: 'Por Favor Seleccione un Centro de Costo' };
-
+            /*
+                FUNCION DEL CUAL OBTENEMOS EL CLIENTE QUE FUE SELECCIONADO 
+            */
+            var vacio=  { _id: null, nombre: 'Por Favor Seleccione un Centro de Costo' };
             for(var i=0;i<this.clientes.length;i++){
                 if(this.clientes[i]._id==seleccion.target.value){
                     this.selected_cliente=this.clientes[i]
@@ -138,7 +143,6 @@ export default {
                     load 
                 })
                 }, )
-            //this.load = true;
                 if(seleccion!==undefined){
 
                 this.axios.get(urlservicios+"CentrosPorCliente/"+seleccion.target.value)
@@ -160,7 +164,6 @@ export default {
 
         },
         actualizar: function(){
-            console.log("entro a actualizar");
             if(this.selected_client==''||this.selected_center==''){
                 swal(
                     'Oops...',
@@ -182,7 +185,9 @@ export default {
                 infocliente:this.selected_cliente,
                 infocentro:this.selected_centro,
             }
-        console.log(selecciones);
+            /*
+                SE CREA UN LOCALSTORAGE EL CUAL PERMITE LA OBTENER LO QUE FUE SELECCIONADO PREVIAMENTE
+            */
             bus.$emit('remitente',seleccionados)
             localStorage.setItem("orden",JSON.stringify(seleccionados))
             localStorage.setItem("infoorden",JSON.stringify(selecciones))
@@ -193,21 +198,17 @@ export default {
         mounted: function () {
         var orden=localStorage.getItem("orden");
         var ordenjson=JSON.parse(orden)
-        console.log(orden);
         if(orden==null||orden=='null'||orden=='')
         {
-            console.log("entro primera vez");
         }
         else
         {
-            console.log("ya tiene algo seleccionado");
             this.selected_client=ordenjson.selected_client
             this.selected_center=ordenjson.selected_center
             this.axios.get(urlservicios+"CentrosPorCliente/"+this.selected_client)
                     .then((response) => {
                         this.centros=response.data
                         this.habilitar= false
-                        //this.load=false
                         var load=false
                         setTimeout(() => {
                             bus.$emit('load', {
@@ -230,9 +231,7 @@ export default {
         }
     },
     beforeCreate: function () {
-        console.log("antes");
-                var vacio=  { _id: null, nombre: 'Por Favor Seleccione un Cliente' };
-
+        var vacio=  { _id: null, nombre: 'Por Favor Seleccione un Cliente' };
         var test2 = localStorage.getItem("storedData");
         var test =JSON.parse(test2);
         this.axios.get(urlservicios+"clientesOperador/"+test.id_OperadorLogistico)

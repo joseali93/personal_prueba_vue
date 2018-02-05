@@ -19,7 +19,8 @@
                         <b-form-input v-model="nmanifiesto"
                         :state="nmanifiestoestado"
                         type="number"
-                        placeholder="Ingrese el numero de Manifiesto"></b-form-input>
+                        placeholder="Ingrese el numero de Manifiesto"
+                        v-on:keyup.enter.native="consultar()"></b-form-input>
                     </b-form-group>
                 </b-col>
             </b-row>
@@ -43,8 +44,8 @@
             </b-row>
             <b-row>
                 <b-col>
-                    <b-btn variant="success" class="center-button" @click="consultar()">
-                        <i class="fa fa-search" aria-hidden="true"></i>
+                    <b-btn variant="success" class="float-right" @click="consultar()">
+                        <i class="fa fa-search " aria-hidden="true"></i>
                         Consultar
                     </b-btn>
                 </b-col>
@@ -123,7 +124,7 @@ export default {
                         })
                         }, )
                 //console.log(urlservicios+"ConsultaManifiestos/"+nmanifiesto+'/'+idproce+'/'+fecha[0]+'/'+fecha[1]);
-                this.axios.get(urlservicios+"/ConsultaManifiestos/"+nmanifiesto+'/'+idproce+'/'+fecha[0]+'/'+fecha[1])
+                this.axios.get(urlservicios+"ConsultaManifiestos/"+nmanifiesto+'/'+idproce+'/'+fecha[0]+'/'+fecha[1])
                         .then((response) => {
                              var load=false
                             setTimeout(() => {

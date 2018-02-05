@@ -1,4 +1,5 @@
 <template>
+<!-- EN ESTE SE PERMITE LA GENERACION DE LOS DETALLES ASOCIADOS A UN CLIENTE Y CENTOR DE COSTO -->
     <b-container>
        <header  class="content-heading text-capitalize text-center">
           <h2>Generacion Orden de Servicio</h2>
@@ -17,16 +18,16 @@
           <b-row>
               <b-table :fields="fields" :per-page="5" :current-page="currentPage" :items="DetalleServicio">
 
-                  <template slot="eliminar" scope="data">
-                      <i class="btn btn-danger fa fa-trash" v-on:click="eliminar(index)" ></i>
+                  <template slot="eliminar" >
+                      <i class="btn btn-danger fa fa-trash" v-on:click="eliminar(index)" >asdsad</i>sdasdasd
                   </template>
-                  <template slot="productoslocal" scope="data">
+                  <template slot="productoslocal"  slot-scope="data">
                       {{data.value.nombre}}         
                   </template>
-                  <template slot="servicioslocal" scope="data">
+                  <template slot="servicioslocal"  slot-scope="data">
                       {{data.value.nombre}}
                   </template>
-                  <template slot="editar" scope="data">
+                  <template slot="editar"  slot-scope="data">
                       <i class="btn btn-success fa fa-pencil"  v-on:click="editar(data.index)" v-b-modal.modaleditar></i>
                   </template>
               </b-table>
@@ -46,11 +47,6 @@
                                       Finalizar</b-btn>
 
             </b-col>
-                                    <!--
-              <router-link  to="/inicio/orden" tag="button"  class-active="active" class="btn btn-primary">Anterior</router-link>
-              <a v-on:click="envioServicio">
-                  <router-link  to="/inicio" tag="button" class-active="active" class="btn btn-primary">Fin</router-link>
-              </a>-->
           </b-row>
       </b-card>
       <!-- Modal Adicionar -->
@@ -61,9 +57,6 @@
                     <label >Seleccione el Producto:</label>
                     <b-form-select v-model="selectproduct" class="mb-3"  id="produ" 
                     :options="productosurl" text-field="nombre" value-field="_id"  @change.native="service">
-                       <!-- <option  disabled selected >Productos</option>
-                        <option v-for="(data,indice) in productosurl" :value="data">{{data.nombre}}</option> 
-                        -->
                     </b-form-select>
                         
                 </b-row>
@@ -73,9 +66,6 @@
                     <b-form-select v-model="selectservice" class="mb-3" :options="serviciosurl"
                      @change.native="campos"
                      text-field="nombre" value-field="_id"  :disabled="habilitar" >
-                        <!--<option  disabled selected >Servicios</option>
-                        <option v-for="(data,indice) in serviciosurl" :value="data">{{data.nombre}}</option> 
-                        -->
                     </b-form-select>
                 </b-row>
                 <b-row>
@@ -84,7 +74,7 @@
 
                     <br>
                 </b-row>
-                <b-row v-for="(data,indice) in inputs.campos" class="my-1"> 
+                <b-row  v-for="(data,indice) in inputs.campos" class="my-1"> 
                   <template v-if="data.type!='select'">
                     <b-col >
                         <label  class="col-sm-2 col-form-label col-form-label-sm text-capitalize" :style="[data.style]" >{{data.placeholder}}: </label>

@@ -131,9 +131,28 @@ export const rutas = [
                         component: DetailManifiest,
                     },
                     {
-                        path:'*',
-                        redirect: '/404'
-                    } 
+                        path: 'entradasalida',
+                        component: EnterExitComponent, props: true,
+                        children:[
+                            {
+                                path: '',  component: Blank,  props: true,  
+                                
+                            }, 
+                            {
+                                path: 'ModalEntrada',
+                                component: MEntrada,
+                            },
+                            {
+                                path: 'ModalSalida',
+                                component: MSalida,
+                            },   
+                            {
+                                path:'*',
+                                redirect: '/404'
+                            } 
+                        ]
+                    }
+                    
                 ]
             }
             

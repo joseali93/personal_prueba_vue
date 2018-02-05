@@ -126,7 +126,8 @@ export default {
       },
       volver(){
           console.log("entro a volver");
-        this.$router.replace('/inicio/entradasalida')
+          this.$router.go(-1)
+        //this.$router.replace('/inicio/entradasalida')
       },
       imprimir(){
        

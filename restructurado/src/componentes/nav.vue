@@ -1,4 +1,5 @@
 <template>
+<!-- CONTENEDOR DE NAVBAR Y ASIDE-BAR-->
    <div>
      <preload v-show="load" ></preload>
      <nav class="side-navbar mCustomScrollbar _mCS_1 mCS_no_scrollbar">
@@ -10,14 +11,12 @@
               <b-link to="/inicio" >
                 <b-img :src="imagen" fluid alt="Responsive image" 
                 class="img-fluid   mCS_img_loaded"/>
-                <!--
-                <img src="src/assets/logo.png" alt="RLP" class="img-fluid rounded-circle mCS_img_loaded">
-                -->
               </b-link>
             </div>
             <div class="sidenav-header-logo"><a  class="brand-small text-center"><b-link > <strong class="text-dark">W</strong><strong class="text-primary">L</strong></b-link></a></div>
             </div>
             <div class="main-menu">
+              <!-- ASIDE BAR -->
             <ul id="side-main-menu" class="side-menu list-unstyled">                  
                 <li>
                     <b-link to="/inicio/orden">
@@ -61,7 +60,7 @@
         </div>
     </nav>
     <div class="page home-page">
-      <!-- navbar-->
+      <!-- NAVBAR-->
       <header class="header">
         <nav class="navbar">
           <div class="container-fluid">
@@ -82,12 +81,12 @@
           </div>
         </nav>
       </header>
-      <!-- Header Section-->
+      <!-- SECCION DEL HEADER Y CONTENIDO DIV-->
       <section class="dashboard-header section-padding">
         <div class="container-fluid">
            <div class="content-wrapper">
            
-
+            <!-- AQUI SE RENDERIZAN LAS VISTAS Y SE PASA PARMETROS  -->
             <router-view
               v-bind:nombreusu="nombreusu">
             </router-view>
@@ -95,7 +94,7 @@
         </div>
       </section>
 
-
+      <!-- FOOTER  -->
       <footer class="main-footer">
         <div class="container-fluid">
           <div class="row">
@@ -104,7 +103,6 @@
             </div>
             <div class="col-sm-6 text-right">
               <p>Design by <a href="http://www.waysolutions.co/" class="external">WaySolutions Tecnology</a></p>
-              <!-- Please do not remove the backlink to us unless you support further theme's development at https://bootstrapious.com/donate. It is part of the license conditions. Thank you for understanding :)-->
             </div>
           </div>
         </div>
