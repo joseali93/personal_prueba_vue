@@ -8,6 +8,7 @@
         
         </b-row>
         <b-row>
+            {{trayectos}}
             <b-col>
                 <b-row>
                     <b-col>
@@ -62,19 +63,19 @@
             </b-col>
         </b-row>
 
-              
+              {{info.detalle[0].detalleslocal.infor}}
         <b-row>
             <b-table :fields="fields" :per-page="5" :current-page="currentPage" :items="this.currentUser.detalle">
-                <template slot="consecutivo" scope="data">
+                <template slot="consecutivo" slot-scope="data">
                     {{data.item.id}}
                 </template>
-                <template slot="productoslocal" scope="data">
+                <template slot="productoslocal" slot-scope="data">
                     {{data.value.nombre}}         
                 </template>
-                <template slot="servicioslocal" scope="data">
+                <template slot="servicioslocal" slot-scope="data">
                     {{data.value.nombre}}
                 </template>
-                <template slot="editar" scope="data">
+                <template slot="editar" slot-scope="data">
                     <i class="btn btn-success fa fa-table" v-on:click.stop="actualizar(data.index,data.item.id)" v-b-modal.modalactualizar></i>
                 </template>
             </b-table>
@@ -95,6 +96,7 @@
                 <p class="float-left">Editar Registro - Numero de Movilizado {{info.detalle[indemodal].id}}</p>
             </div>
             <b-container fluid>
+                
                 <b-row>
                     <b-col cols="5" class="borderF">
                         <h2>
@@ -145,7 +147,7 @@
                         <b-row>
                             <b-col>
                                  <label class=" col-form-label col-form-label-sm text-capitalize">
-                                Direccion Destinatario:
+                                    Direccion Destinatario:
                                 </label>
                             </b-col>
                             <b-col>
@@ -251,22 +253,18 @@ export default {
         seleccionar(value){
             console.log("entro a algo");
             var nombresel
-             var trayactoobj
+            var trayactoobj
             var x = document.getElementById(value.id).value
             eval('this.campos.'+value.vmodel+'='+'x')
                     for(var x=0;x<this.trayectos.length;x++)
                     {
-                        //console.log(this.trayectos[x]);
-                        //console.log(this.selection);
                         if(this.trayectos[x]._id==eval('this.campos.'+value.vmodel))
                         {
                             trayactoobj={
                                 id_trayecto:eval('this.campos.'+value.vmodel),
                                 nombre:this.trayectos[x].nombre
                             }
-                            console.log(trayactoobj);
                             nombresel=this.trayectos[x].nombre
-                            //console.log(this.trayectos[x].nombre);
                         }
                     }
         },
@@ -314,6 +312,8 @@ export default {
         },
         values(dato){
             //console.log(eval("this.currentUser.detalle[this.indices].detalleslocal.infor"));
+            //console.log(this.trayectos);
+            //console.log(this.campos);
             eval('this.campos.'+dato+'='+"this.currentUser.detalle[this.indices].detalleslocal.infor."+dato)
             return eval("this.currentUser.detalle[this.indices].detalleslocal.infor."+dato)
         },
@@ -322,7 +322,7 @@ export default {
           this.$refs.ModalAct.hide();
         },
         ingresarTrayectos(){   
-            //console.log(this.campos);  
+            console.log(this.campos);  
             var nombresel
             if(this.info.estado=="orden de servicio cancelada")
             {
@@ -352,7 +352,7 @@ export default {
                         campos:this.campos
                     }; 
                     
-                    //console.log(objeto);
+                    console.log(objeto);
                     for(var x=0;x<this.currentUser.detalle.length;x++)
                     {  
                         if(this.currentUser.detalle[x].id==this.consecutivo)
@@ -376,19 +376,19 @@ export default {
                         indice:this.indices,
                         detalle:this.currentUser.detalle[this.indices].id
                     }; 
-                    console.log(this.id_trayectos.length);
+                   // console.log(this.id_trayectos.length);
                     if(this.id_trayectos.length==0){
-                        console.log("no hago nada");
+                        //console.log("no hago nada");
                     }
                     else{
                         for(var x=0;x<this.id_trayectos.length;x++)
                     {
-                        console.log(this.id_trayectos[x]);
+                        //console.log(this.id_trayectos[x]);
                     }
                     }
                     
                     this.id_trayectos.push(objeto2)
-                    console.log(this.id_trayectos);
+                    //console.log(this.id_trayectos);
                                 this.selection=''
                     this.$refs.ModalAct.hide();
                 }
@@ -516,15 +516,11 @@ export default {
                 this.detallesactualizar= this.currentUser.detalle[indice].detalleslocal
                 var produc= this.currentUser.detalle[indice].productoslocal._id
                 var serv = this.currentUser.detalle[indice].servicioslocal._id
-                console.log(urlservicios+"estructuraf/" +produc +
-                "/" +serv);
                 this.axios.get(urlservicios+"estructuraf/" +produc +
                 "/" +serv)   
                 .then(response => {
                 this.inputs = response.data;
                 this.campos= response.data.objeto
-                console.log("asdasd")
-                console.log(this.inputs);
                 for(var i=0;i<this.inputs.campos.length;i++){
                     this.inputs.campos[i].diseable='true'
                     if(this.inputs.campos[i].type=='select'){
@@ -534,7 +530,6 @@ export default {
                         .then(response => {
                         this.trayectos = response.data;
                         this.trayectos.unshift(vacio)
-                        console.log(this.trayectos);
 
                         })
                     }else{
@@ -562,6 +557,7 @@ export default {
                         this.axios.get(this.inputs.campos[i].urlobjeto+infologin.id_OperadorLogistico)   
                         .then(response => {
                         this.trayectos = response.data;
+                        this.trayectos.unshift(vacio)
                         })
                     }else{
                     }

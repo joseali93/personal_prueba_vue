@@ -18,8 +18,8 @@
           <b-row>
               <b-table :fields="fields" :per-page="5" :current-page="currentPage" :items="DetalleServicio">
 
-                  <template slot="eliminar" >
-                      <i class="btn btn-danger fa fa-trash" v-on:click="eliminar(index)" >asdsad</i>sdasdasd
+                  <template slot="eliminar" slot-scope="data">
+                      <i class="btn btn-danger fa fa-trash" v-on:click="eliminar(index)" ></i>
                   </template>
                   <template slot="productoslocal"  slot-scope="data">
                       {{data.value.nombre}}         

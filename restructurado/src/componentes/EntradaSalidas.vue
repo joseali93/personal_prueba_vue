@@ -213,15 +213,31 @@ export default {
         MostrarModal(){
             var bandera
             console.log("entro a mostar modal");
-            console.log(this.objeto);
             if(this.objeto==undefined||this.objeto=='')
             {
-                console.log("no muestro");
-                swal("Debe completarse", 
+                if(this.inputs==''){
+                    console.log("no tiene items");
+                    console.log(this.curier);
+                    if(this.curier=='null'||this.curier==null){
+                        console.log("hay curier vacio");
+                        swal("Debe completarse", 
                         "Seleccione los campos previos",
                         "error",{
                               allowEnterKey: true,
                         });
+                    }
+                    else{
+                        console.log("curier tiene valores");
+                        this.$refs.myModalRef.show()
+                    }
+                }else{
+                    swal("Debe completarse", 
+                        "Seleccione los campos previos",
+                        "error",{
+                              allowEnterKey: true,
+                        });
+                }
+                
             }
             else{
                 var llaves = Object.keys(this.objeto)
