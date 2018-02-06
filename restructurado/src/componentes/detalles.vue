@@ -286,7 +286,7 @@ export default {
                                 nombre:this.trayectos[x].nombre
                             }
                             console.log(this.indices);
-                            //console.log(typeof(this.currentUser.detalle[this.indices].detalleslocal.infor.trayactoobj));
+                            //console.log(typeof(this.currentUser.detalle[this.indices].detalleslocal.infor.trayectoobj));
                             console.log("----------------------");
                             console.log(this.currentUser.detalle[this.indices].detalleslocal.infor);
                             if(this.currentUser.detalle[this.indices].detalleslocal.infor.trayecto==undefined
@@ -492,10 +492,6 @@ export default {
                             eval('obj.detalleslocal.infor.'+objinput.vmodel)=='000000000000000000000000')
 
                         {
-                           /* console.log( typeof(eval('obj.detalleslocal.infor.'+objinput.vmodel)));
-                            console.log(ind);
-                            console.log(objinput);
-                            console.log(eval('obj.detalleslocal.infor'));*/
                             bandera=false
                             pendientes=ind+1
 
@@ -513,10 +509,14 @@ export default {
                     
                 })
             }) 
-            this.currentUser.detalle.map((obj,ind)=>{
+            var prueba
+            this.currentUser.detalle.some((obj,ind)=>{
                 llaves=Object.keys(eval('obj.detalleslocal.infor'))
                     console.log(obj);
                     llaves.map((objlla,ind)=>{
+                        prueba=objlla
+                        console.log("---------------");
+                        console.log(objlla);
                         if(typeof(eval('obj.detalleslocal.infor.'+objlla))=='object')
                         {
                             console.log("hay un ojeto");
@@ -525,10 +525,12 @@ export default {
                         }
                         else{
                             console.log("no hay un objeto");
-                           bandera=false
+                           //bandera=false
                         }
+
                     })
-            })
+           
+           })
 
             if(bandera==true)
             {
