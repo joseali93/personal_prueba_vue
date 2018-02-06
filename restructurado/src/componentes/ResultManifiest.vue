@@ -135,7 +135,7 @@ export default {
                 normalizado={
                     id:items[x].id_movilizado,
                     nombre:items[x].nombre_cliente,
-                    ccosto:items[x].nombre_centro,
+                    nombre_centro:items[x].nombre_centro,
                     direccion:items[x].direccion_destinatario,
                     referencia:items[x].referencia,
                     numeroOrden:items[x].id_orden,

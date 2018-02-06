@@ -11,7 +11,7 @@
     }
     footer {
         position: absolute;
-        
+        top: 0;
         margin-left: 10rem;
         bottom: 0; /* Because it's footer */
       }
@@ -31,38 +31,48 @@
    
     } 
     */
+
     .table, td, th{
         margin: 2rem;
         width: auto;
         height: auto;
         color: black;
+        table-layout: fixed;
         page-break-before: left;
         
+    }
+
+    #mitablita {
+        width: 98% !important;
+        height: auto;
+        
+        table-layout: auto !important;
         
     }
-    #mitablita {
-        width: 97% !important;
-        height: auto;
-        table-layout: fixed !important;
-    }
+
     #mitablita td, #mitablita th{
-        padding: 12px;
+        padding: 13px;
+        /*
+        table-layout: fixed !important;
+        */
     }
     
     #print * {
         visibility: visible;
         width: 100%;
         height: 100%;
-        margin: 0,0,0,0;
+        margin: 0mm,0mm,0mm,0mm;
         top: 0;
         left: 0;
         border: 0;
         padding: 0;
-        position: relative;     
+        position: relative;  
+        /*
+        table-layout: fixed !important;   
+        */
     }
     .non-printableE {
         display: none;
-
     }
 
 }

@@ -50,7 +50,8 @@
         </b-row>
         <b-row class="my-5">
           <b-col class="my-5">
-          <b-table id="mitablita" responsive="sm" bordered	outlined :items="itemsmodal" :fields="fields" class="juana"></b-table>
+          <b-table id="mitablita" responsive="sm" bordered :fixed="true"	
+          outlined :items="itemsmodal" :fields="fields" class="juana"></b-table>
 
           </b-col>
           </b-row>
@@ -106,7 +107,7 @@ export default {
             fields: [
               { key: 'id', label: 'N° Movilizado' },
               { key: 'nombre', label: 'Cliente' },
-              { key: 'ccosto', label: 'Centro de Costos' },
+              { key: 'nombre_centro', label: 'Centro de Costos' },
               { key: 'referencia', label: 'Referencia' },
               { key: 'numeroOrden', label: 'N° Orden' },
               { key: 'peso', label: 'Peso' },

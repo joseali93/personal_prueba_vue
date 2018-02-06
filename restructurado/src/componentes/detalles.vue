@@ -8,14 +8,13 @@
         
         </b-row>
         <b-row>
-            {{trayectos}}
             <b-col>
                 <b-row>
                     <b-col>
                         <h4>Cliente:</h4>
                     </b-col>
                     <b-col>
-                        <p>{{info.remitente.nombre}}</p> 
+                        <p>{{currentUser.remitente.nombre}}</p> 
                     </b-col>
                 </b-row>
                 <b-row>
@@ -23,7 +22,7 @@
                         <h4>Direccion Cliente:</h4>
                     </b-col>
                     <b-col>
-                        <p>{{info.remitente.direccion}}</p> 
+                        <p>{{currentUser.remitente.direccion}}</p> 
                     </b-col>
                 </b-row>
                 <b-row>
@@ -31,7 +30,7 @@
                         <h4>Centro de Costo:</h4>
                     </b-col>
                     <b-col>
-                        <p>{{info.centro.nombre}}</p> 
+                        <p>{{currentUser.centro.nombre}}</p> 
                     </b-col>
                 </b-row>
                 <b-row>
@@ -39,7 +38,7 @@
                         <h4>Direccion Centro de Costo:</h4>
                     </b-col>
                     <b-col>
-                        <p>{{info.centro.direccion}}</p> 
+                        <p>{{currentUser.centro.direccion}}</p> 
                     </b-col>
                 </b-row>
             </b-col>
@@ -49,7 +48,7 @@
                         <h4>Fecha Creación:</h4>
                     </b-col>
                     <b-col>
-                        <p>{{info.fecha_creacion | formatdate}}</p> 
+                        <p>{{currentUser.fecha_creacion | formatdate}}</p> 
                     </b-col>
                 </b-row>
                 <b-row>
@@ -57,15 +56,15 @@
                         <h4>Estado Orden de Servicio:</h4>
                     </b-col>
                     <b-col>
-                        <p>{{info.estado}}</p> 
+                        <p>{{currentUser.estado}}</p> 
                     </b-col>
                 </b-row>
             </b-col>
         </b-row>
 
-              {{info.detalle[0].detalleslocal.infor}}
+              
         <b-row>
-            <b-table :fields="fields" :per-page="5" :current-page="currentPage" :items="this.currentUser.detalle">
+            <b-table :fields="fields" ref="table" :per-page="5" :current-page="currentPage" :items="this.currentUser.detalle">
                 <template slot="consecutivo" slot-scope="data">
                     {{data.item.id}}
                 </template>
@@ -74,6 +73,9 @@
                 </template>
                 <template slot="servicioslocal" slot-scope="data">
                     {{data.value.nombre}}
+                </template>
+                 <template slot="infor" slot-scope="data">
+                    {{data.item.detalleslocal.infor}}
                 </template>
                 <template slot="editar" slot-scope="data">
                     <i class="btn btn-success fa fa-table" v-on:click.stop="actualizar(data.index,data.item.id)" v-b-modal.modalactualizar></i>
@@ -171,7 +173,7 @@
                     </b-col>
                 </b-row>
                     <b-row v-for="(data,indice) in inputs.campos" class="my-1 card-text"> 
-                    <template v-if="data.type!='select'">
+                    <template v-if="data.type=='number'">
                         <b-col cols="5">
                             <label  class="col-form-label col-form-label-sm text-capitalize" :style="data.style" >{{data.placeholder}}: </label>
                         </b-col>
@@ -181,13 +183,13 @@
                               :value="values(data.id)"  required>
                         </b-col>
                     </template>
-                    <template v-else class="my-1 card-text">
+                    <template v-if="data.type=='select'" class="my-1 card-text">
                         <b-col cols="5">
                             <label class="col-form-label col-form-label-sm text-capitalize">Seleccione el {{data.placeholder}}</label>
                         </b-col>
                         <b-col cols="6">
                             <b-form-select class="col-form-label col-form-label-sm " :id="data.id" :options="trayectos" text-field="nombre" value-field="_id" 
-                             @change="seleccionar(data)" >
+                             @input="seleccionar(data)" :value="valueseleccion(data,indice)">
                             </b-form-select>
                         </b-col>
                     </template>
@@ -227,7 +229,8 @@ export default {
                 { key: "consecutivo", label: "N. Movilizado" },
                 { key: "productoslocal", label: "Productos" },
                 { key: "servicioslocal", label: "Servicios" },
-                "editar"
+                "editar",
+                { key: "infor", label: "Informacion" }
                 ],
             currentPage: 1,
             currentUser: '',
@@ -250,23 +253,67 @@ export default {
         }
     },
     methods: {
+        valueseleccion(datos,indices){
+            //console.log(this.currentUser.detalle[0].detalleslocal.infor.trayectoobj.id_trayecto);
+            for(var x=0;x<this.currentUser.detalle.length;x++)
+            {
+                if(this.currentUser.detalle[this.indices].detalleslocal.infor.trayectoobj==undefined){
+                    console.log("no tiene trayectos");
+                    return null
+                }
+                else{
+                    var llaves =Object.keys(this.campos)
+                   
+                    return eval('this.currentUser.detalle[this.indices].detalleslocal.infor.trayectoobj.'+llaves[indices])
+                }
+            }
+            
+        },
         seleccionar(value){
             console.log("entro a algo");
-            var nombresel
-            var trayactoobj
+            var trayecto
+            var trayectoobj={}
             var x = document.getElementById(value.id).value
+            //console.log(this.indices);
             eval('this.campos.'+value.vmodel+'='+'x')
                     for(var x=0;x<this.trayectos.length;x++)
                     {
                         if(this.trayectos[x]._id==eval('this.campos.'+value.vmodel))
                         {
-                            trayactoobj={
+
+                            trayectoobj ={
                                 id_trayecto:eval('this.campos.'+value.vmodel),
                                 nombre:this.trayectos[x].nombre
                             }
-                            nombresel=this.trayectos[x].nombre
+                            console.log(this.indices);
+                            //console.log(typeof(this.currentUser.detalle[this.indices].detalleslocal.infor.trayactoobj));
+                            console.log("----------------------");
+                            console.log(this.currentUser.detalle[this.indices].detalleslocal.infor);
+                            if(this.currentUser.detalle[this.indices].detalleslocal.infor.trayecto==undefined
+                            ||this.currentUser.detalle[this.indices].detalleslocal.infor.trayecto==null)
+                            {
+                                console.log("no tiene trayecto ");
+                                this.currentUser.detalle[this.indices].detalleslocal.infor.trayectoobj={}
+                                this.currentUser.detalle[this.indices].detalleslocal.infor.trayectoobj=trayectoobj
+                                this.currentUser.detalle[this.indices].detalleslocal.infor.trayecto=this.trayectos[x].nombre
+                                trayecto=this.trayectos[x].nombre
+                                this.$refs.table.refresh();
+
+                            }
+                           else{
+                               console.log(" tiene trayecto ");
+                               this.currentUser.detalle[this.indices].detalleslocal.infor.trayectoobj=trayectoobj
+                               console.log(this.currentUser.detalle[this.indices].detalleslocal.infor);
+                                 this.currentUser.detalle[this.indices].detalleslocal.infor.trayecto=this.trayectos[x].nombre
+                                trayecto=this.trayectos[x].nombre
+                                                    this.$refs.table.refresh();
+
+                           }
+                           
                         }
                     }
+                            this.$refs.table.refresh();
+
         },
         volver(){
             var ocultar=true
@@ -311,20 +358,22 @@ export default {
 
         },
         values(dato){
-            //console.log(eval("this.currentUser.detalle[this.indices].detalleslocal.infor"));
-            //console.log(this.trayectos);
-            //console.log(this.campos);
+            
             eval('this.campos.'+dato+'='+"this.currentUser.detalle[this.indices].detalleslocal.infor."+dato)
             return eval("this.currentUser.detalle[this.indices].detalleslocal.infor."+dato)
         },
         hideModal(){
+
             this.selection=''
-          this.$refs.ModalAct.hide();
+            this.$refs.ModalAct.hide();
         },
         ingresarTrayectos(){   
-            console.log(this.campos);  
+            //console.log(this.campos);
+            this.$refs.table.refresh();
+            console.log(this.selection);  
             var nombresel
-            if(this.info.estado=="orden de servicio cancelada")
+            console.log(this.currentUser.detalle[this.indices].detalleslocal.infor);
+             if(this.info.estado=="orden de servicio cancelada")
             {
                 swal(
                     "Cuidado!",
@@ -332,27 +381,25 @@ export default {
                     "warning"
                 );            }
             else{
-               
                     this.selection=this.campos.id_trayecto
                     for(var x=0;x<this.trayectos.length;x++)
                     {
-                        //console.log(this.trayectos[x]);
-                        //console.log(this.selection);
                         if(this.trayectos[x]._id==this.selection)
                         {
                             console.log("saco el nombre");
                             nombresel=this.trayectos[x].nombre
-
-                            //console.log(this.trayectos[x].nombre);
                         }
                     }
+                    var prueba =this.currentUser.detalle[this.indices].detalleslocal.infor
+                    console.log(prueba);
                     var objeto = {
                         id_trayecto:this.selection,
                         nombre:nombresel,
                         campos:this.campos
                     }; 
-                    
-                    console.log(objeto);
+                    this.$refs.table.refresh();
+                    //console.log(objeto);
+                /*
                     for(var x=0;x<this.currentUser.detalle.length;x++)
                     {  
                         if(this.currentUser.detalle[x].id==this.consecutivo)
@@ -362,34 +409,31 @@ export default {
                         }
                         
                     }
+                    */
                     
                     
                     this.axios
                         .post(urlservicios+"ActualizarTrayecto/"+this.currentUser._id+"/"+this.consecutivo, objeto)
                         .then(response => {
-                            //console.log(response);
                         });
-
+                    this.$refs.table.refresh();
                     var objeto2 = {
                         id_trayecto:this.selection,
                         campos:this.campos,
                         indice:this.indices,
                         detalle:this.currentUser.detalle[this.indices].id
                     }; 
-                   // console.log(this.id_trayectos.length);
-                    if(this.id_trayectos.length==0){
-                        //console.log("no hago nada");
-                    }
-                    else{
-                        for(var x=0;x<this.id_trayectos.length;x++)
-                    {
-                        //console.log(this.id_trayectos[x]);
-                    }
-                    }
+                    console.log("-------------------------------------------");
+                    console.log(this.currentUser.detalle[this.indices].detalleslocal.infor);
+                    console.log("----------------------------------------------");
                     
-                    this.id_trayectos.push(objeto2)
-                    //console.log(this.id_trayectos);
-                                this.selection=''
+                    
+                    
+                    
+                    this.$refs.table.refresh();
+                    this.selection=''
+                    
+
                     this.$refs.ModalAct.hide();
                 }
                 
@@ -433,7 +477,7 @@ export default {
         },
         asignar(seleccionado)
         {
-            var bandera
+            var bandera=false
             var pendientes,llaves
             this.currentUser.detalle.map((obj,ind)=>{
                 
@@ -458,34 +502,30 @@ export default {
                         }
                         else
                         {
-                            console.log("anda completo todo");
+                            //console.log("anda completo todo");
                             bandera=true
                         }
                     }
                     else
                     {
-                        console.log("no se exige");
+                        //console.log("no se exige");
                     }
                     
                 })
             }) 
             this.currentUser.detalle.map((obj,ind)=>{
                 llaves=Object.keys(eval('obj.detalleslocal.infor'))
-                    //console.log(objinput);
+                    console.log(obj);
                     llaves.map((objlla,ind)=>{
                         if(typeof(eval('obj.detalleslocal.infor.'+objlla))=='object')
                         {
                             console.log("hay un ojeto");
+
                             bandera=true
                         }
                         else{
                             console.log("no hay un objeto");
-                            if(this.id_trayectos.length>0){
-                                bandera=true
-                            }
-                            else{
-                                bandera=false
-                            }
+                           bandera=false
                         }
                     })
             })
@@ -549,7 +589,6 @@ export default {
                 .then(response => {
                 this.inputs = response.data;
                 this.campos= response.data.objeto
-                //console.log(this.inputs.campos);
                 for(var i=0;i<this.inputs.campos.length;i++){
                     if(this.inputs.campos[i].type=='select'){
                         var login = localStorage.getItem("storedData");
@@ -565,12 +604,15 @@ export default {
                 }).catch(function(error){
                 })
             }
-
+            //console.log(this.currentUser.detalle[indice].detalleslocal.infor.trayectoobj)
 
         }
     },
     watch: {
       currentUser (n, o) {
+          console.log("algo");
+          console.log(n);
+          console.log(o);
       },
     selection(n,o){
     },
@@ -587,6 +629,7 @@ export default {
 
     }, 
     beforeCreate: function() {
+        var x=0
         var login = localStorage.getItem("storedData");
         var infologin = JSON.parse(login);
         this.axios
@@ -600,6 +643,15 @@ export default {
 
         bus.$on('thisEvent', function (userObject) {
         this.currentUser = userObject.inde.item
+        for(x;x<this.currentUser.detalle.length;x++){
+            if(this.currentUser.detalle[x].detalleslocal.infor.trayectoobj==undefined){
+                
+                this.currentUser.detalle[x]._rowVariant="danger"
+            }
+            else{
+                this.currentUser.detalle[x]._rowVariant="null"
+            }
+        }
         this.vali=userObject.inde
         this.info=this.currentUser
         this.inputstotales=userObject.inputstotales
