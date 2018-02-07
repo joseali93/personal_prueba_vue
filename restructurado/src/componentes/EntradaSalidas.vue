@@ -533,6 +533,8 @@ export default {
                             load 
                         })
                         }, )
+                        console.log(urlservicios+"MovilizadoProcesosLogistico/" +
+                value+'/'+this.selected);
                 this.axios.get(urlservicios+"MovilizadoProcesosLogistico/" +
                 value+'/'+this.selected)
                 .then(response => {

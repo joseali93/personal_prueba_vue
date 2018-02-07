@@ -17,7 +17,12 @@
             </div>
             <div class="main-menu">
               <!-- ASIDE BAR -->
-            <ul id="side-main-menu" class="side-menu list-unstyled">                  
+            <ul id="side-main-menu" class="side-menu list-unstyled">  
+               <li>
+                    <b-link :to="ruta" v-show="ruta!=null">
+                        <i class="fa fa-plus-square-o"></i><span>inicio </span>
+                    </b-link>
+                </li>                
                 <li>
                     <b-link to="/inicio/orden">
                         <i class="fa fa-plus-square-o"></i><span> Generacion Orden de Servicio </span>
@@ -121,7 +126,7 @@ export default {
       nombreusu: "",
       load:'',
       imagen:'',
-      
+      ruta:''
     };
   },
     updated: function () {
@@ -149,6 +154,7 @@ export default {
     var test = JSON.parse(test2);
     this.nombreusu = test.nombre;
     this.imagen = test.url_logo
+    this.ruta = test.ruta
   },
   beforeCreate: function() {
     console.log("antes");
