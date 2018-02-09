@@ -17,34 +17,29 @@
             </div>
             <div class="main-menu">
               <!-- ASIDE BAR -->
-            <ul id="side-main-menu" class="side-menu list-unstyled">  
-               <li>
-                    <b-link :to="ruta" v-show="ruta!=null">
-                        <i class="fa fa-plus-square-o"></i><span>inicio </span>
-                    </b-link>
-                </li>                
-                <li>
-                    <b-link to="/inicio/orden">
+            <ul id="side-main-menu" class="side-menu list-unstyled">                
+                <li v-for="(ruta,indice) in rutas">
+                    <b-link :to="ruta" v-if="indice=='ruta_uno'">
                         <i class="fa fa-plus-square-o"></i><span> Generacion Orden de Servicio </span>
                     </b-link>
                 </li>
-                <li> 
-                    <b-link to="/inicio/consultar">
+                <li v-for="(ruta,indice) in rutas"> 
+                    <b-link :to="ruta" v-if="indice=='ruta_dos'" >
                         <i class="fa fa-briefcase"></i><span> Consultar Ordenes de Servicio </span>
                     </b-link>
                 </li>
-                <li> 
-                    <b-link to="/inicio/trazabilidad">
+                <li  v-for="(ruta,indice) in rutas"> 
+                    <b-link :to="ruta" v-if="indice=='ruta_tres'">
                         <i class="fa fa-info"></i><span>Consulta Trazabilidad</span>
                     </b-link>
                 </li>
-                <li> 
-                    <b-link to="/inicio/entradasalida">
+                <li  v-for="(ruta,indice) in rutas"> 
+                    <b-link :to="ruta" v-if="indice=='ruta_cuatro'">
                         <i class="fa fa-rebel"></i><span>Entradas y Salidas</span>
                     </b-link>
                 </li>
-                <li> 
-                    <b-link to="/inicio/manifiestos">
+                <li  v-for="(ruta,indice) in rutas"> 
+                    <b-link :to="ruta" v-if="indice=='ruta_cinco'">
                         <i class="fa fa-empire"></i><span> Manifiestos </span>
                     </b-link>
                 </li>
@@ -90,7 +85,6 @@
       <section class="dashboard-header section-padding">
         <div class="container-fluid">
            <div class="content-wrapper">
-           
             <!-- AQUI SE RENDERIZAN LAS VISTAS Y SE PASA PARMETROS  -->
             <router-view
               v-bind:nombreusu="nombreusu">
@@ -126,7 +120,7 @@ export default {
       nombreusu: "",
       load:'',
       imagen:'',
-      ruta:''
+      rutas:'',
     };
   },
     updated: function () {
@@ -154,7 +148,35 @@ export default {
     var test = JSON.parse(test2);
     this.nombreusu = test.nombre;
     this.imagen = test.url_logo
-    this.ruta = test.ruta
+    if(test.id_rol.nombre=="courier"){
+      console.log("hay courier");
+      swal({
+                title: 'Es un Courier!',
+                text: "No tiene funcionalidades en el aplicativo Web",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                cancelButtonText:'Cancelar',
+                confirmButtonText: 'Salir'
+                }).then((result) => {
+                    if (result.value) {
+                        localStorage.clear();
+                        this.$router.replace('/')
+                    }
+                    else{
+                      console.log("se mantiene");
+                    }
+                   
+                    })
+    }else
+    {
+      this.rutas = test.id_rol.rutas
+    }
+    
+    console.log(test)
+    console.log(this.imagen);
+    console.log(this.rutas);
   },
   beforeCreate: function() {
     console.log("antes");

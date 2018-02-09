@@ -11,7 +11,8 @@
                     <b-form-group 
                         label="Clientes">
                     <b-form-select v-model="selectedCL" class="mb-3" :options="clientes"  
-                    text-field="nombre" value-field="_id" @change.native="SelectCC">                        
+                    text-field="nombre" value-field="_id" @change.native="SelectCC"
+                    :disabled="disabled_selectedCL">                        
                     </b-form-select>
                     </b-form-group>
                 </b-col>
@@ -83,6 +84,7 @@ export default {
   },
     data() {
         return {
+            disabled_selectedCL: false,
             ocultar: true,
             items: [{
                 text: 'Consultar Ordenes de Servicio',
@@ -127,7 +129,6 @@ export default {
             var centrocosto
             var inicio
             var fin
-            console.log(this.selected_state);
             if(this.time1[0]===''||this.time1[0]===undefined){
                 inicio="null"
                 }else{
@@ -164,6 +165,7 @@ export default {
                         load 
                     })
                     }, )
+                    console.log(this.selected_state);
             this.axios.get(urlservicios+"ObtenerOrdenesFiltrado/"+infologin.id_OperadorLogistico+"/"+this.filter+"/"+this.selected_state+
             "/"+cliente+"/"+centrocosto+"/"+inicio+"/"+fin)
             .then((response) => {
@@ -195,31 +197,57 @@ export default {
         },
         SelectCC(value){
             var vacio=  { _id: null, nombre: 'Por Favor Seleccione un Centro de Costo' };
-            this.selectedCL=value.target.value
-                  //this.load = true;
-                  var load=true
+            if(this.disabled_selectedCL==true)
+            {
+                this.selectedCL=value
+                var load=true
                 setTimeout(() => {
                     bus.$emit('load', {
                         load 
                     })
                     }, )
-            this.axios.get(urlservicios+"CentrosPorCliente/"+value.target.value)            
-            //this.axios.get(urlservicios+"centros/")
-            .then((response) => {
-                this.centros=response.data
-                this.centros.unshift(vacio)
-            //this.load=false
-            var load=false
-            setTimeout(() => {
-                bus.$emit('load', {
-                    load
+                this.axios.get(urlservicios+"CentrosPorCliente/"+this.selectedCL)            
+                //this.axios.get(urlservicios+"centros/")
+                .then((response) => {
+                    this.centros=response.data
+                    this.centros.unshift(vacio)
+                //this.load=false
+                var load=false
+                setTimeout(() => {
+                    bus.$emit('load', {
+                        load
+                    })
+                    }, )
+                this.habilitar= false
                 })
-                }, )
-            this.habilitar= false
-            })
-
-
+            }else{
+                this.selectedCL=value.target.value
+                  //this.load = true;
+                var load=true
+                setTimeout(() => {
+                    bus.$emit('load', {
+                        load 
+                    })
+                    }, )
+                this.axios.get(urlservicios+"CentrosPorCliente/"+value.target.value)            
+                //this.axios.get(urlservicios+"centros/")
+                .then((response) => {
+                    this.centros=response.data
+                    this.centros.unshift(vacio)
+                //this.load=false
+                var load=false
+                setTimeout(() => {
+                    bus.$emit('load', {
+                        load
+                    })
+                    }, )
+                this.habilitar= false
+                })
             }
+            
+
+
+        }
         
     },
     updated: function () {
@@ -233,17 +261,36 @@ export default {
         var vacio2= { nombre: 'Por Favor Seleccione un Cliente' };
         var login = localStorage.getItem("storedData");
         var infologin =JSON.parse(login);
-    
-        this.axios.get(urlservicios+"clientesOperador/"+infologin.id_OperadorLogistico)
-        .then((response) => {
-            this.clientes=response.data
-            this.clientes.unshift(vacio)
+        console.log(infologin.id_cliente);
+        var id_cliente
+        if(infologin.id_cliente==undefined||infologin.id_cliente==null){
+            console.log("no hay cliente");
+            id_cliente='null'
+            this.axios.get(urlservicios+"clientesOperador/"+infologin.id_OperadorLogistico
+            +'/'+id_cliente)
+            .then((response) => {
+                this.clientes=response.data
+                this.clientes.unshift(vacio)
 
-        })
+            })
+        }else{
+            console.log("hay cliente");
+            id_cliente=infologin.id_cliente
+            this.axios.get(urlservicios+"clientesOperador/"+infologin.id_OperadorLogistico
+            +'/'+id_cliente)
+            .then((response) => {
+                this.clientes=response.data
+                this.clientes.unshift(vacio)
+
+            })
+            this.disabled_selectedCL=true
+            this.SelectCC(id_cliente)
+        }
             
         this.axios.get(urlservicios+"estados/")
         .then((response) => {
             this.estados=response.data
+            console.log(this.estados);
         })
             
         

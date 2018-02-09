@@ -11,7 +11,8 @@
                         <b-form-group 
                         label="Clientes">
                             <b-form-select v-model="selectedCL" id="clienteselect" v-bind:style="validatecampo" :options="clientes"  
-                            text-field="nombre" value-field="_id" @change.native="SelectCC" required >
+                            text-field="nombre" value-field="_id" @change.native="SelectCC" required
+                            :disabled="disabled_selectedCL" >
                                     <!-- this slot appears above the options from 'options' prop -->          
                             </b-form-select>
                         </b-form-group>
@@ -108,6 +109,7 @@ export default {
   },
 data(){
     return {
+        disabled_selectedCL:false,
         ocultartra: true,
         prueba: 'first',
         disable: true,
@@ -365,24 +367,22 @@ methods:{
         }
     },
     SelectCC(value){
-                    var vacio=  { _id: null, nombre: 'Por Favor Seleccione un Centro de Costo' };
-
-        this.selectedCL=value.target.value
-        this.load = true;
-        var load=true
+        var vacio=  { _id: null, nombre: 'Por Favor Seleccione un Centro de Costo' };
+        if(this.disabled_selectedCL==true){
+            console.log(value);
+            this.selectedCL=value
+             var load=true
                     setTimeout(() => {
                         bus.$emit('load', {
                             load
                         })
                         }, )
-            this.axios.get(urlservicios+"CentrosPorCliente/"+value.target.value)            
-            //this.axios.get(urlservicios+"centros/")
+            this.axios.get(urlservicios+"CentrosPorCliente/"+this.selectedCL)            
             .then((response) => {
-            this.centros=response.data
-            this.centros.unshift(vacio)
+                this.centros=response.data
+                this.centros.unshift(vacio)
 
-            //console.log(this.centros)
-            this.load=false
+            
             var load=false
                     setTimeout(() => {
                         bus.$emit('load', {
@@ -391,6 +391,33 @@ methods:{
                         }, )
             this.disable= false
             })
+        }
+        else{
+            this.selectedCL=value.target.value
+            this.load = true;
+            var load=true
+                        setTimeout(() => {
+                            bus.$emit('load', {
+                                load
+                            })
+                            }, )
+                this.axios.get(urlservicios+"CentrosPorCliente/"+value.target.value)            
+                //this.axios.get(urlservicios+"centros/")
+                .then((response) => {
+                this.centros=response.data
+                this.centros.unshift(vacio)
+
+                //console.log(this.centros)
+                this.load=false
+                var load=false
+                        setTimeout(() => {
+                            bus.$emit('load', {
+                                load
+                            })
+                            }, )
+                this.disable= false
+                })
+        }
     },
     ordenes(value){
         this.orden =value.target.value
@@ -443,14 +470,28 @@ methods:{
         var login = localStorage.getItem("storedData");
         var infologin =JSON.parse(login);
         //console.log(infologin.id_OperadorLogistico)
-    
-        this.axios.get(urlservicios+"clientesOperador/"+infologin.id_OperadorLogistico)
-        .then((response) => {
-            this.clientes=response.data
-            this.clientes.unshift(vacio)
-            //console.log(this.clientes)
-        })
-                
+        if(infologin.id_cliente==undefined||infologin.id_cliente==null){
+            var id_cliente='null'
+            this.axios.get(urlservicios+"clientesOperador/"+infologin.id_OperadorLogistico+'/'+id_cliente)
+            .then((response) => {
+                this.clientes=response.data
+                this.clientes.unshift(vacio)
+                //console.log(this.clientes)
+            })
+        }
+        else
+        {
+            id_cliente=infologin.id_cliente
+            this.axios.get(urlservicios+"clientesOperador/"+infologin.id_OperadorLogistico+'/'+id_cliente)
+            .then((response) => {
+                this.clientes=response.data
+                this.clientes.unshift(vacio)
+                this.disabled_selectedCL=true
+                //console.log(this.clientes)
+                this.SelectCC(id_cliente)
+            })
+        }
+         
     },
 }
 </script>

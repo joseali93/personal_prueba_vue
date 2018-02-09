@@ -522,11 +522,41 @@ export default {
             var consecutivo,id,estado,fechaT,producto,servicio,detalles,infor,refe
             var variable=[], constante=[]
             var llaveslv1,llaveslv2,llaveslv3
+            var llav2cc,detallecc,llav2cl,detallecl
+            var nomcliente,dircliente
+            var nomcentro,dircentro
+            console.log(this.consulta);
             for(var i=0;i<this.consulta.length;i++){
                 llaveslv1=Object.keys(this.consulta[i])
                 for(var a=0;a<llaveslv1.length;a++){
-                    if(llaveslv1[a]=='consec')
+                    if(llaveslv1[a]=='centro_costos')
                     {
+                        detallecc=llaveslv1[a]
+                        llav2cc= Object.keys(this.consulta[i].centro_costos);
+                        for(var b=0; b<llav2cc.length;b++){
+                            if(llav2cc[b]=='direccion'){
+                                dircentro=llav2cc[b]
+                                
+                            }
+                            if(llav2cc[b]=='nombre'){
+                                nomcentro=llav2cc[b]
+                            }
+                        }
+                    }
+                    if(llaveslv1[a]=='cliente')
+                    {
+                        detallecl=llaveslv1[a]
+                        llav2cl= Object.keys(this.consulta[i].cliente);
+                        for(var b=0; b<llav2cl.length;b++){
+                            if(llav2cl[b]=='direccion'){
+                                dircliente=llav2cl[b]
+                            }
+                            if(llav2cl[b]=='nombre'){
+                                nomcliente=llav2cl[b]
+                            }
+                        }
+                    }
+                    if(llaveslv1[a]=='consec'){
                         consecutivo=llaveslv1[a];
                     }
                     if(llaveslv1[a]=='id'){
@@ -555,8 +585,24 @@ export default {
                             if(llaveslv2[b]=='infor'){
                                 infor= llaveslv2[b]
                                 llaveslv3=Object.keys(this.consulta[i].detalleslocal.infor);
+                                if(llaveslv3[c]=='trayectoobj')
+                                {
+                                    //console.log("no saco ");
+                                }
+                                else
+                                {
+                                    //console.log("saco");
+                                }
                                 for(var c=0;c<llaveslv3.length;c++){
-                                    variable[c]=llaveslv3[c]
+                                    if(llaveslv3[c]=='trayectoobj')
+                                {
+                                    //console.log("no saco ");
+                                }
+                                else
+                                {
+                                    //console.log("saco");
+                                     variable[c]=llaveslv3[c]
+                                }
                                 }
                             }
 
@@ -564,6 +610,10 @@ export default {
                     }
                 }
             }
+            console.log(nomcliente);
+            console.log(nomcentro);
+            var consultclient=''
+
             var consult='';
                 for(var d=0;d<variable.length;d++){
                     if(d==(variable.length-1))
@@ -575,6 +625,10 @@ export default {
                     }
                  }
                 var algo = 'SELECT '+
+                    detallecl+'->'+nomcliente+' as Cliente,'+
+                    detallecl+'->'+dircliente+' as Direccion_Cliente,'+
+                    detallecc+'->'+nomcentro+' as Centro_Costo,'+
+                    detallecc+'->'+dircentro+' as Direccion_CentroCosto,'+
                     consecutivo+' as NumOrden, '+
                     id+' as NumMovilizado,'+
                     estado+' as Estado, '+
@@ -586,19 +640,8 @@ export default {
                     //detalles+ '->'+infor+'->'+variable[2]+'as '+variable[2]+' '+
                     'INTO XLS("Data.xls",{headers:true}) FROM ?'
                     alasql(algo,[this.consulta])
-                    /*
-                    alasql('SELECT consec as NumOrden,'+
-                    'id as NumMovilizado,'+
-                    'estado as EstadoMovilizado,'+
-                    'fechaUltimoEstadoT as Fecha,'+
-                    'productoslocal->nombre as Producto,'+
-                    'servicioslocal->nombre as Servicio,'+
-                    'detalleslocal->referencia as Referencia,'+
-                    'detalleslocal->observaciones as Observaciones,'+
-                    'detalleslocal->infor->peso as Detalles_Peso,'+
-                    'detalleslocal->infor->variable as Detalle_X'+
-                    ' INTO XLS("Data.xls",{headers:true}) FROM ?',[this.consulta]);
-                    */
+                   
+                   
         },
         actualizar(value){
             this.consultaactualizar=value

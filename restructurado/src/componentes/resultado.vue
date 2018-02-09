@@ -66,7 +66,14 @@ export default {
     },
     methods: {
         cancelarOrden(value){
-            swal({
+            console.log(value);
+            var login = localStorage.getItem("storedData");
+            var infologin =JSON.parse(login);
+            console.log(infologin.id_cliente);  
+            console.log(this.consulta);
+            if(infologin.id_cliente==undefined||
+            infologin.id_cliente==null){
+                swal({
                 title: 'Esta seguro ?',
                 text: "Luego no se podra revertir el estado de la orden!",
                 type: 'warning',
@@ -76,68 +83,88 @@ export default {
                 cancelButtonText:'Cancelar',
                 confirmButtonText: 'Confirmar'
                 }).then((result) => {
-                if (result.value) {
-                    console.log("elimino");
-                    this.consulta.map((obj,ind)=>{
-                if(obj.id==value.item.id)
-                    {
-                        if(obj.estado=="Orden De Servicio Creada"||obj.estado=="Orden De Servicio Asignada")
+                    if (result.value) {
+                        console.log("elimino");
+                        this.consulta.map((obj,ind)=>{
+                    if(obj.id==value.item.id)
                         {
-                            this.axios.get(urlservicios+"CancelarOrden/"+value.item._id)
-                                .then((response) => {
-                                    console.log(response.data);
-                                    if(response.data.message=="orden de servicio actualizada")
-                                    {
-                                        swal("Orden Eliminada!", "Orden de Servicio Cancelada!", "success");
+                            if(obj.estado=="Orden De Servicio Creada"||obj.estado=="Orden De Servicio Asignada")
+                            {
+                                this.axios.get(urlservicios+"CancelarOrden/"+value.item._id)
+                                    .then((response) => {
+                                        console.log(response.data);
+                                        if(response.data.message=="orden de servicio actualizada")
+                                        {
+                                            swal("Orden Eliminada!", "Orden de Servicio Cancelada!", "success");
 
-                                    }
-                                })
-                            this.consulta.splice(ind,1)
+                                        }
+                                    })
+                                this.consulta.splice(ind,1)
+                            }
+                            else
+                            {
+                                swal(
+                                    "No se puede Eliminar",
+                                    "Por que el estado actual de la Orden no lo permite",
+                                    "error"
+                                );
+                            }
                         }
-                        else
-                        {
-                            swal(
-                                "No se puede Eliminar",
-                                "Por que el estado actual de la Orden no lo permite",
-                                "error"
-                            );
-                        }
+                        })
                     }
-                })
-                }
-                else{
-                    console.log("no elimino");
-                }
-                })
-            /*
-            this.consulta.map((obj,ind)=>{
-                if(obj.id==value.item.id)
-                    {
-                        if(obj.estado=="Orden De Servicio Creada"||obj.estado=="Orden De Servicio Asignada")
+                    else{
+                        console.log("no elimino");
+                    }
+                    })
+            }
+            else{
+                console.log("hay cliente");
+                swal({
+                title: 'Esta seguro ?',
+                text: "Luego no se podra revertir el estado de la orden!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                cancelButtonText:'Cancelar',
+                confirmButtonText: 'Confirmar'
+                }).then((result) => {
+                    if (result.value) {
+                        console.log("elimino");
+                        this.consulta.map((obj,ind)=>{
+                    if(obj.id==value.item.id)
                         {
-                            this.axios.get(urlservicios+"CancelarOrden/"+value.item._id)
-                                .then((response) => {
-                                    console.log(response.data);
-                                    if(response.data.message=="orden de servicio actualizada")
-                                    {
-                                        swal("Orden Eliminada!", "Orden de Servicio Cancelada!", "success");
+                            if(obj.estado=="Orden De Servicio Creada")
+                            {
+                                this.axios.get(urlservicios+"CancelarOrden/"+value.item._id)
+                                    .then((response) => {
+                                        console.log(response.data);
+                                        if(response.data.message=="orden de servicio actualizada")
+                                        {
+                                            swal("Orden Eliminada!", "Orden de Servicio Cancelada!", "success");
 
-                                    }
-                                })
-                            this.consulta.splice(ind,1)
+                                        }
+                                    })
+                                this.consulta.splice(ind,1)
+                            }
+                            else
+                            {
+                                swal(
+                                    "No se puede Eliminar",
+                                    "Por que el estado actual de la Orden no lo permite",
+                                    "error"
+                                );
+                            }
                         }
-                        else
-                        {
-                            swal(
-                                "No se puede Eliminar",
-                                "Por que el estado actual de la Orden no lo permite",
-                                "error"
-                            );
-                        }
+                        })
                     }
-                })
-                    
-             */  
+                    else{
+                        console.log("no elimino");
+                    }
+                    })
+            }
+            
+ 
         },
         actualizar(inde){
             var ocultar=false
@@ -184,10 +211,7 @@ export default {
             this.algo = userObject
             console.log(this.algo);
         }.bind(this))
-
-
-
-          
+        
         },
     }
     

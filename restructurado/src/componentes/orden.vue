@@ -16,7 +16,8 @@ DE LA ORDEN DE SERVICIO -->
                 <b-col>
                     <h3>Seleccione el Cliente</h3>
                     <b-form-select v-model="selected_client" class="mb-3"  
-                    :options="clientes" text-field="nombre" value-field="_id" @change.native="ClientesSelect" >  
+                    :options="clientes" text-field="nombre" value-field="_id" @change.native="ClientesSelect"
+                    :disabled="disable_selected_client" >  
                     </b-form-select>
                 </b-col>
                 <b-col>
@@ -104,7 +105,7 @@ export default {
     data () {
 
     return {
-        
+        disable_selected_client: false,
         selected_client: null,
         selected_center: null,
         selected_cliente: {},
@@ -131,35 +132,73 @@ export default {
             /*
                 FUNCION DEL CUAL OBTENEMOS EL CLIENTE QUE FUE SELECCIONADO 
             */
-            var vacio=  { _id: null, nombre: 'Por Favor Seleccione un Centro de Costo' };
-            for(var i=0;i<this.clientes.length;i++){
-                if(this.clientes[i]._id==seleccion.target.value){
-                    this.selected_cliente=this.clientes[i]
+           console.log("entro a seleccion clientes");
+           if(this.disable_selected_client==true){
+               var id_cliente
+               id_cliente=seleccion
+               var vacio=  { _id: null, nombre: 'Por Favor Seleccione un Centro de Costo' };
+                for(var i=0;i<this.clientes.length;i++){
+                    if(this.clientes[i]._id==id_cliente){
+                        this.selected_cliente=this.clientes[i]
+                    }
                 }
-            }
-            var load=true
-            setTimeout(() => {
-                bus.$emit('load', {
-                    load 
-                })
-                }, )
-                if(seleccion!==undefined){
-
-                this.axios.get(urlservicios+"CentrosPorCliente/"+seleccion.target.value)
-                    .then((response) => {
-                        this.centros=response.data
-                        this.centros.unshift(vacio)
-
-                        this.habilitar= false
-                        //this.load=false
-                        var load=false
-                        setTimeout(() => {
-                            bus.$emit('load', {
-                                load 
-                            })
-                            }, )
+                var load=true
+                setTimeout(() => {
+                    bus.$emit('load', {
+                        load 
                     })
+                    }, )
+                    if(seleccion!==undefined){
+
+                    this.axios.get(urlservicios+"CentrosPorCliente/"+id_cliente)
+                        .then((response) => {
+                            this.centros=response.data
+                            this.centros.unshift(vacio)
+
+                            this.habilitar= false
+                            //this.load=false
+                            var load=false
+                            setTimeout(() => {
+                                bus.$emit('load', {
+                                    load 
+                                })
+                                }, )
+                        })
+                    }
+           }
+           else
+           {
+                var vacio=  { _id: null, nombre: 'Por Favor Seleccione un Centro de Costo' };
+                for(var i=0;i<this.clientes.length;i++){
+                    if(this.clientes[i]._id==seleccion.target.value){
+                        this.selected_cliente=this.clientes[i]
+                    }
                 }
+                var load=true
+                setTimeout(() => {
+                    bus.$emit('load', {
+                        load 
+                    })
+                    }, )
+                    if(seleccion!==undefined){
+
+                    this.axios.get(urlservicios+"CentrosPorCliente/"+seleccion.target.value)
+                        .then((response) => {
+                            this.centros=response.data
+                            this.centros.unshift(vacio)
+
+                            this.habilitar= false
+                            //this.load=false
+                            var load=false
+                            setTimeout(() => {
+                                bus.$emit('load', {
+                                    load 
+                                })
+                                }, )
+                        })
+                    }
+           }
+            
 
 
         },
@@ -234,12 +273,35 @@ export default {
         var vacio=  { _id: null, nombre: 'Por Favor Seleccione un Cliente' };
         var test2 = localStorage.getItem("storedData");
         var test =JSON.parse(test2);
-        this.axios.get(urlservicios+"clientesOperador/"+test.id_OperadorLogistico)
-        .then((response) => {
-            this.clientes=response.data
-                        this.clientes.unshift(vacio)
+        console.log(test.id_cliente);
+        var id_cliente
+        if(test.id_cliente==undefined||test.id_cliente==null){
+            id_cliente='null'
+                this.axios.get(urlservicios+"clientesOperador/"+test.id_OperadorLogistico+'/'+id_cliente)
+                .then((response) => {
+                    this.clientes=response.data
+                                this.clientes.unshift(vacio)
 
-        })
+                })
+        }
+        else{
+            console.log("tengo cliente");
+            id_cliente=test.id_cliente
+            console.log(urlservicios+"clientesOperador/"+test.id_OperadorLogistico+'/'+id_cliente);
+            this.axios.get(urlservicios+"clientesOperador/"+test.id_OperadorLogistico+'/'+id_cliente)
+                .then((response) => {
+                    this.clientes=response.data
+                    this.selected_cliente.nombre=this.clientes[0].nombre
+                    this.selected_cliente.telefono=this.clientes[0].telefono
+                                this.clientes.unshift(vacio)
+                this.selected_client=id_cliente
+                this.disable_selected_client=true
+                this.ClientesSelect(id_cliente)
+                
+
+                })
+        }
+        
         this.nombreusu;
         bus.$emit('remitente')
     }, 

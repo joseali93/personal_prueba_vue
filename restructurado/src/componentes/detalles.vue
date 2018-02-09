@@ -8,6 +8,9 @@
         
         </b-row>
         <b-row>
+            {{currentUser}}
+        </b-row>
+        <b-row>
             <b-col>
                 <b-row>
                     <b-col>
@@ -74,9 +77,7 @@
                 <template slot="servicioslocal" slot-scope="data">
                     {{data.value.nombre}}
                 </template>
-                 <template slot="infor" slot-scope="data">
-                    {{data.item.detalleslocal.infor}}
-                </template>
+                
                 <template slot="editar" slot-scope="data">
                     <i class="btn btn-success fa fa-table" v-on:click.stop="actualizar(data.index,data.item.id)" v-b-modal.modalactualizar></i>
                 </template>
@@ -86,7 +87,8 @@
             </b-row>
             <b-row>
                 <h4>Seleccione el Currier: </h4>
-                <b-form-select v-model="selected_curier" class="mb-3"  :options="curiers" text-field="nombre" value-field="_id" @change.native="selectcuriers">
+                <b-form-select v-model="selected_curier" class="mb-3"  :options="curiers" text-field="nombre" value-field="_id" 
+                @change.native="selectcuriers" :disabled="selec_disable">
                 </b-form-select>
             </b-row>
         <b-row>
@@ -173,13 +175,13 @@
                     </b-col>
                 </b-row>
                     <b-row v-for="(data,indice) in inputs.campos" class="my-1 card-text"> 
-                    <template v-if="data.type=='number'">
+                    <template v-if="data.type=='number'" >
                         <b-col cols="5">
                             <label  class="col-form-label col-form-label-sm text-capitalize" :style="data.style" >{{data.placeholder}}: </label>
                         </b-col>
                         <b-col cols="6">
                             <input class="form-control form-control-sm"  :type="data.type" :id="data.id" :style="data.style" :max="data.max"
-                             @keyup="Presiono(indice,data)" :placeholder="data.placeholder" :disabled="data.diseable"
+                             @keyup="Presiono(indice,data)" :placeholder="data.placeholder" :disabled="desabilitar(data)"
                               :value="values(data.id)"  required>
                         </b-col>
                     </template>
@@ -189,7 +191,8 @@
                         </b-col>
                         <b-col cols="6">
                             <b-form-select class="col-form-label col-form-label-sm " :id="data.id" :options="trayectos" text-field="nombre" value-field="_id" 
-                             @input="seleccionar(data)" :value="valueseleccion(data,indice)">
+                             @input="seleccionar(data)" :value="valueseleccion(data,indice)" 
+                             :disabled="selec_disable">
                             </b-form-select>
                         </b-col>
                     </template>
@@ -218,6 +221,8 @@ import moment from 'moment'
 export default {
     data(){
         return{
+            id_cliente_local:null,
+            selec_disable: false,
             indemodal:0,
             vali:'',
             consecutivo:'',
@@ -230,11 +235,10 @@ export default {
                 { key: "productoslocal", label: "Productos" },
                 { key: "servicioslocal", label: "Servicios" },
                 "editar",
-                { key: "infor", label: "Informacion" }
                 ],
             currentPage: 1,
             currentUser: '',
-            selected_curier: '',
+            selected_curier: null,
             curiers: '',
             Documento: '',
             selection: null,
@@ -253,6 +257,18 @@ export default {
         }
     },
     methods: {
+        desabilitar(value){
+            console.log(value);
+            if(this.selec_disable==true){
+                console.log("desabilito todo");
+                return true
+            }
+            else
+            {
+                 console.log("no desabilito  todo");
+                 return value.requerido_edi
+            }
+        },
         valueseleccion(datos,indices){
             //console.log(this.currentUser.detalle[0].detalleslocal.infor.trayectoobj.id_trayecto);
             for(var x=0;x<this.currentUser.detalle.length;x++)
@@ -368,107 +384,109 @@ export default {
             this.$refs.ModalAct.hide();
         },
         ingresarTrayectos(){   
-            //console.log(this.campos);
-            this.$refs.table.refresh();
-            //console.log(this.selection);  
-            var nombresel
-            //console.log(this.currentUser.detalle[this.indices].detalleslocal.infor);
-             if(this.info.estado=="orden de servicio cancelada")
-            {
-                swal(
-                    "Cuidado!",
-                    "Orden de Servicio Cancelada",
-                    "warning"
-                );            }
-            else{
-                    this.selection=this.campos.id_trayecto
-                    for(var x=0;x<this.trayectos.length;x++)
-                    {
-                        if(this.trayectos[x]._id==this.selection)
+            if(this.id_cliente_local!=null){
+                this.$refs.ModalAct.hide();
+            }else{
+                //console.log(this.campos);
+                this.$refs.table.refresh();
+                //console.log(this.selection);  
+                var nombresel
+                //console.log(this.currentUser.detalle[this.indices].detalleslocal.infor);
+                if(this.info.estado=="orden de servicio cancelada")
+                {
+                    swal(
+                        "Cuidado!",
+                        "Orden de Servicio Cancelada",
+                        "warning"
+                    );            }
+                else{
+                        this.selection=this.campos.id_trayecto
+                        for(var x=0;x<this.trayectos.length;x++)
                         {
-                            console.log("saco el nombre");
-                            nombresel=this.trayectos[x].nombre
-                        }
-                    }
-                    var prueba =this.currentUser.detalle[this.indices].detalleslocal.infor
-                    //console.log(prueba);
-
-                    var objeto = {
-                        id_trayecto:this.selection,
-                        nombre:nombresel,
-                        campos:this.campos
-                    }; 
-                    
-                    
-                    this.$refs.table.refresh();
-
-                    //console.log(objeto);
-                /*
-                    for(var x=0;x<this.currentUser.detalle.length;x++)
-                    {  
-                        if(this.currentUser.detalle[x].id==this.consecutivo)
-                        {   
-
-                            this.currentUser.detalle[x].detalleslocal.infor.id_trayecto=this.selection
-                        }
-                        
-                    }
-                    */
-                    
-                    
-                    this.axios
-                        .post(urlservicios+"ActualizarTrayecto/"+this.currentUser._id+"/"+this.consecutivo, objeto)
-                        .then(response => {
-                        });
-                    
-                    this.$refs.table.refresh();
-                    var objeto2 = {
-                        id_trayecto:this.selection,
-                        campos:this.campos,
-                        indice:this.indices,
-                        detalle:this.currentUser.detalle[this.indices].id
-                    }; 
-                    if(this.id_trayectos.length==0)
-                    {
-                        this.id_trayectos.push(objeto2)
-
-                    }
-                    else
-                    {
-                        console.log("------------algo");
-                        console.log(this.id_trayectos);
-                        this.id_trayectos.forEach((obj,ind)=>{
-                            console.log(obj);
-                            if(obj.indice==this.indices){
-                                console.log("actualizamos");
-                                this.id_trayectos.splice(obj,1)
-                                this.id_trayectos.push(objeto2)
-                               
-                                console.log(this.id_trayectos);
-                            }
-                            else
+                            if(this.trayectos[x]._id==this.selection)
                             {
-                                console.log("se agrega");
-                                this.id_trayectos.push(objeto2)
+                                console.log("saco el nombre");
+                                nombresel=this.trayectos[x].nombre
                             }
-                        })
+                        }
+                        var prueba =this.currentUser.detalle[this.indices].detalleslocal.infor
+                        //console.log(prueba);
+
+                        var objeto = {
+                            id_trayecto:this.selection,
+                            nombre:nombresel,
+                            campos:this.campos
+                        }; 
+                        
+                        
+                        this.$refs.table.refresh();
+
+                        //console.log(objeto);
+                    /*
+                        for(var x=0;x<this.currentUser.detalle.length;x++)
+                        {  
+                            if(this.currentUser.detalle[x].id==this.consecutivo)
+                            {   
+
+                                this.currentUser.detalle[x].detalleslocal.infor.id_trayecto=this.selection
+                            }
+                            
+                        }
+                        */
+                        
+                        
+                        this.axios
+                            .post(urlservicios+"ActualizarTrayecto/"+this.currentUser._id+"/"+this.consecutivo, objeto)
+                            .then(response => {
+                            });
+                        
+                        this.$refs.table.refresh();
+                        var objeto2 = {
+                            id_trayecto:this.selection,
+                            campos:this.campos,
+                            indice:this.indices,
+                            detalle:this.currentUser.detalle[this.indices].id
+                        }; 
+                        if(this.id_trayectos.length==0)
+                        {
+                            this.id_trayectos.push(objeto2)
+
+                        }
+                        else
+                        {
+                            this.id_trayectos.forEach((obj,ind)=>{
+                                console.log(obj);
+                                if(obj.indice==this.indices){
+                                    this.id_trayectos.splice(obj,1)
+                                    this.id_trayectos.push(objeto2)
+                                
+                                    console.log(this.id_trayectos);
+                                }
+                                else
+                                {
+                                    console.log("se agrega");
+                                    this.id_trayectos.push(objeto2)
+                                }
+                            })
+                        }
+                        this.$refs.table.refresh();
+                        this.selection=''
+                        
+
+                        this.$refs.ModalAct.hide();
                     }
-                    this.$refs.table.refresh();
-                    this.selection=''
+                    
+                
+                
                     
 
-                    this.$refs.ModalAct.hide();
-                }
+            }
                 
-            
-            
-                    
         },
         asignarcurier(seleccionado)
         {
-            //console.log(seleccionado);
-            //console.log(this.currentUser._id);
-            if(seleccionado==''){
+
+            if(seleccionado==''||seleccionado=='null'||seleccionado==null){
                     seleccionado='null'
                     }
                     var obj ={
@@ -500,100 +518,117 @@ export default {
         },
         asignar(seleccionado)
         {
-            console.log("entro a asignar");
-            var banderasinT=false
-            var banderaconT=false
-            var contador=0
-            var pendi=[
-                
-            ]
-            var correcto=[]
-            //console.log(this.currentUser.detalle);
-            //console.log(this.id_trayectos);
-            if(this.id_trayectos.length==0){
-                console.log("no ingreso nda");
-                for(var x=0;x<this.currentUser.detalle.length;x++){
-                    //console.log(this.currentUser.detalle[x].detalleslocal.infor);
-                    
-                    var llavesinfor=Object.keys(this.currentUser.detalle[x].detalleslocal.infor)
-                    for(var y=0;y<llavesinfor.length;y++)
-                    {   
-                        
-                        if(typeof(eval('this.currentUser.detalle[x].detalleslocal.infor.'+llavesinfor[y]))!='object')
-                        {
-                            console.log("entrooo");
-                            //console.log(x);
-                           
-                        }
-                        else{
-                            banderasinT=true
-                            contador=contador+1
-                            console.log();
-                            correcto.push(x)
-                        } 
-                    }
-                    pendi.push(x)
-                }
-            }
-            else{
-                console.log("hay trayectos");
-                console.log(this.id_trayectos);
-                for(var x=0;x<this.currentUser.detalle.length;x++){
-                    console.log(this.currentUser.detalle[x].detalleslocal.infor);
-                    var llavesinfor=Object.keys(this.currentUser.detalle[x].detalleslocal.infor)
-                    for(var y=0;y<llavesinfor.length;y++)
-                    {   
-                        if(typeof(eval('this.currentUser.detalle[x].detalleslocal.infor.'+llavesinfor[y]))!='object')
-                        {
-                            console.log("entrooo");
-
-                        }
-                        else{
-                            banderasinT=true
-                            contador=contador+1
-                            correcto.push(x)
-                        } 
-                    }
-                    pendi.push(x)
-                }
-            }
-            for(var o=0;o<pendi.length;o++)
-            {
-                //console.log(pendi[o]);
-                //
-                
-                pendi[o]=pendi[o]++
-                for(var p=0;p<correcto.length;p++)
-                {
-                    
-                    if(pendi[o]==correcto[p]){
-                        console.log("son iguales");
-                        
-                        pendi.splice(o,1)
-                        console.log(pendi);
-                    }
-                }
-            }
-             for(var o=0;o<pendi.length;o++)
-            {
-                pendi[o]++
-            }
-            //console.log(banderasinT)
-            //console.log(banderaconT);
-            //console.log(contador);
-            console.log(pendi);
-            console.log(correcto);
-            if(contador==this.currentUser.detalle.length){
-                console.log("todos andan completos");
-                this.asignarcurier(seleccionado)
+            console.log(this.id_cliente_local);
+            if(this.id_cliente_local!=null){
+                console.log("tiene algo");
+                var ocultar=true
+                    var eliminar= this.vali
+                    setTimeout(() => {
+                        bus.$emit('ocultar', {
+                            ocultar,eliminar 
+                        })
+                        }, )
+                //this.$router.go(-1)
+                this.$router.replace('/inicio/consultar/resultado')
             }else{
-                console.log("no andan completos")
-                swal(
-                        "Falta algo por completar!",
-                        "Revisa por favor "+pendi,
-                        "error"
-                    );
+                
+                console.log("entro a asignar");
+                    var banderasinT=false
+                    var banderaconT=false
+                    var contador=0
+                    var pendi=[
+                        
+                    ]
+
+                    var correcto=[]
+                    //console.log(this.currentUser.detalle);
+                    //console.log(this.id_trayectos);
+                    if(this.id_trayectos.length==0){
+                        console.log("no ingreso nda");
+                        for(var x=0;x<this.currentUser.detalle.length;x++){
+                            //console.log(this.currentUser.detalle[x].detalleslocal.infor);
+                            
+                            var llavesinfor=Object.keys(this.currentUser.detalle[x].detalleslocal.infor)
+                            for(var y=0;y<llavesinfor.length;y++)
+                            {   
+                                
+                                if(typeof(eval('this.currentUser.detalle[x].detalleslocal.infor.'+llavesinfor[y]))!='object')
+                                {
+                                    console.log("entrooo");
+                                    //console.log(x);
+                                
+                                }
+                                else{
+                                    banderasinT=true
+                                    contador=contador+1
+                                    console.log();
+                                    correcto.push(x)
+                                } 
+                            }
+                            pendi.push(x)
+                        }
+                    }
+                    else{
+                        console.log("hay trayectos");
+                        console.log(this.id_trayectos);
+                        for(var x=0;x<this.currentUser.detalle.length;x++){
+                            console.log(this.currentUser.detalle[x].detalleslocal.infor);
+                            var llavesinfor=Object.keys(this.currentUser.detalle[x].detalleslocal.infor)
+                            for(var y=0;y<llavesinfor.length;y++)
+                            {   
+                                if(typeof(eval('this.currentUser.detalle[x].detalleslocal.infor.'+llavesinfor[y]))!='object')
+                                {
+                                    console.log("entrooo");
+
+                                }
+                                else{
+                                    banderasinT=true
+                                    contador=contador+1
+                                    correcto.push(x)
+                                } 
+                            }
+                            pendi.push(x)
+                        }
+                    }
+                    for(var o=0;o<pendi.length;o++)
+                    {
+                        //console.log(pendi[o]);
+                        //
+                        
+                        pendi[o]=pendi[o]++
+                        for(var p=0;p<correcto.length;p++)
+                        {
+                            
+                            if(pendi[o]==correcto[p]){
+                                console.log("son iguales");
+                                
+                                pendi.splice(o,1)
+                                console.log(pendi);
+                            }
+                        }
+                    }
+                    for(var o=0;o<pendi.length;o++)
+                    {
+                        pendi[o]++
+                    }
+                    //console.log(banderasinT)
+                    //console.log(banderaconT);
+                    //console.log(contador);
+                    console.log(pendi);
+                    console.log(correcto);
+                    if(contador==this.currentUser.detalle.length){
+                        console.log("todos andan completos");
+                        this.asignarcurier(seleccionado)
+                    }else{
+                        console.log("no andan completos")
+                        swal(
+                                "Falta algo por completar!",
+                                "Revisa por favor "+pendi,
+                                "error"
+                            );
+                    }
             }
+            
                 /*
                 var bandera=false
                 var pendientes,llaves
@@ -742,11 +777,26 @@ export default {
         
         this.ocultar = userObject.ocultar
       }.bind(this))
+       var login = localStorage.getItem("storedData");
+        var infologin =JSON.parse(login);
+        //console.log(infologin.id_cliente);
+        var id_cliente
+        
+        if(infologin.id_cliente==undefined||infologin.id_cliente==null){
+            //console.log("no hay cliente");
+        }
+        else{
+            //console.log("hay cliente");
+            this.selec_disable=true
+            this.id_cliente_local=infologin.id_cliente
+
+        }
     },
     created: function(){
 
     }, 
     beforeCreate: function() {
+        var vacio=  { _id: null, nombre: 'Por Favor Seleccione un Cliente' };
         var x=0
         var login = localStorage.getItem("storedData");
         var infologin = JSON.parse(login);
@@ -756,15 +806,22 @@ export default {
         )
         .then(response => {
             this.curiers = response.data;
+            this.curiers.unshift(vacio)
 
         });
 
         bus.$on('thisEvent', function (userObject) {
         this.currentUser = userObject.inde.item
+        if(this.currentUser.id_courier=="000000000000000000000000"){
+            this.selected_curier=null
+        }
+        else{
+            this.selected_curier=this.currentUser.id_courier
+        }
         this.vali=userObject.inde
         this.info=this.currentUser
         this.inputstotales=userObject.inputstotales
-      }.bind(this))
+        }.bind(this))
     }
 }
 
