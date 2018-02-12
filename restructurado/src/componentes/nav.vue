@@ -52,22 +52,30 @@
 
             </div>
         </div>
-        <div class="mCSB_draggerRail">
 
         </div>
         </div>
         </div>
-        </div>
     </nav>
-    <div class="page home-page">
+    <div id="nav-prueba" class="page home-page">
       <!-- NAVBAR-->
       <header class="header">
         <nav class="navbar">
           <div class="container-fluid">
             <div class="navbar-holder d-flex align-items-center justify-content-between">
-              <div class="navbar-header"><a id="toggle-btn" href="" class="menu-btn"><i class="icon-bars"> </i></a><a class="navbar-brand">
+              <div class="navbar-header">
+                <b-link  to="/inicio" id="toggle-btn" @click.native="menu()" class="menu-btn">
+                  <i class="icon-bars"> </i>
+                  </b-link >
+                  
+                  <a class="navbar-brand">
               <b-link to="/inicio">
-                  <div class="brand-text d-none d-md-inline-block"><span> </span><strong class="text-primary"></strong></div></b-link></a></div>
+                  <div class="brand-text d-none d-md-inline-block">
+                    <span> </span><strong class="text-primary"></strong>
+                  </div>
+              </b-link>
+              </a>
+              </div>
               <ul class="nav-menu list-unstyled d-flex flex-md-row align-items-md-center">
                 <li class="nav-item">
                   <b-link variant="link" class="nav-link logout" @click="Salir()">
@@ -111,6 +119,8 @@
 </template>
 
 <script>
+import $ from 'jquery'
+
 import Preload from "../componentes/preload.vue";
 import {bus} from '../main'
 
@@ -123,6 +133,7 @@ export default {
       rutas:'',
     };
   },
+
     updated: function () {
       //console.log("actualizamos en nav");
        bus.$on('load', function (userObject) {
@@ -133,6 +144,18 @@ export default {
       }.bind(this))
     },
   methods:{
+     menu(){
+      console.log("entro a menu");
+      $("#toggle-btn").click(function(e) {
+        e.preventDefault();
+        $("#nav-prueba").toggleClass("page home-page active");
+      });
+     
+
+
+
+
+    },
     Salir(val){
       console.log("entro a salir");
       localStorage.clear();
@@ -185,6 +208,7 @@ export default {
 </script>
 
 <style>
+@import url("/assets/vendor/malihu-custom-scrollbar-plugin/malihu-custom-scrollbar-plugin.css");
 nav.side-navbar .sidenav-header
 {
 background:white;  
