@@ -165,7 +165,8 @@ export default {
                         load 
                     })
                     }, )
-                    console.log(this.selected_state);
+                    console.log(urlservicios+"ObtenerOrdenesFiltrado/"+infologin.id_OperadorLogistico+"/"+this.filter+"/"+this.selected_state+
+            "/"+cliente+"/"+centrocosto+"/"+inicio+"/"+fin);
             this.axios.get(urlservicios+"ObtenerOrdenesFiltrado/"+infologin.id_OperadorLogistico+"/"+this.filter+"/"+this.selected_state+
             "/"+cliente+"/"+centrocosto+"/"+inicio+"/"+fin)
             .then((response) => {

@@ -8,7 +8,7 @@
         
         </b-row>
         <b-row>
-            {{currentUser}}
+           
         </b-row>
         <b-row>
             <b-col>
@@ -17,7 +17,7 @@
                         <h4>Cliente:</h4>
                     </b-col>
                     <b-col>
-                        <p>{{currentUser.remitente.nombre}}</p> 
+                        <p>{{currentUser.id_remitente.nombre}}</p> 
                     </b-col>
                 </b-row>
                 <b-row>
@@ -25,7 +25,7 @@
                         <h4>Direccion Cliente:</h4>
                     </b-col>
                     <b-col>
-                        <p>{{currentUser.remitente.direccion}}</p> 
+                        <p>{{currentUser.id_remitente.direccion}}</p> 
                     </b-col>
                 </b-row>
                 <b-row>
@@ -33,7 +33,7 @@
                         <h4>Centro de Costo:</h4>
                     </b-col>
                     <b-col>
-                        <p>{{currentUser.centro.nombre}}</p> 
+                        <p>{{currentUser.id_centro.nombre}}</p> 
                     </b-col>
                 </b-row>
                 <b-row>
@@ -41,7 +41,7 @@
                         <h4>Direccion Centro de Costo:</h4>
                     </b-col>
                     <b-col>
-                        <p>{{currentUser.centro.direccion}}</p> 
+                        <p>{{currentUser.id_centro.direccion}}</p> 
                     </b-col>
                 </b-row>
             </b-col>
@@ -115,7 +115,7 @@
                             </b-col>
                             <b-col>
                                 <b-row class=" col-form-label col-form-label-sm">
-                                    {{info.remitente.nombre}}
+                                    {{info.id_remitente.nombre}}
                                 </b-row>
                             </b-col>                           
                         </b-row>
@@ -127,7 +127,7 @@
                             </b-col>
                             <b-col>
                                 <b-row class=" col-form-label col-form-label-sm">
-                                    {{info.remitente.direccion}}
+                                    {{info.id_remitente.direccion}}
                                 </b-row>
                             </b-col>
                         </b-row>   
@@ -812,6 +812,7 @@ export default {
 
         bus.$on('thisEvent', function (userObject) {
         this.currentUser = userObject.inde.item
+        console.log(this.currentUser);
         if(this.currentUser.id_courier=="000000000000000000000000"){
             this.selected_curier=null
         }
