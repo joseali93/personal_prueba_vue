@@ -64,9 +64,9 @@
           <div class="container-fluid">
             <div class="navbar-holder d-flex align-items-center justify-content-between">
               <div class="navbar-header">
-                <b-link  to="/inicio" id="toggle-btn" @click.native="menu()" class="menu-btn">
+                <b-btn  id="toggle-btn" class="menu-btn">
                   <i class="icon-bars"> </i>
-                  </b-link >
+                </b-btn >
                   
                   <a class="navbar-brand">
               <b-link to="/inicio">
