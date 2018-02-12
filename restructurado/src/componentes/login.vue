@@ -58,6 +58,7 @@ export default {
               Se realiza la validacion de los servicios 
               usando un password y correo para el login
             */
+           //console.log(urlservicios+"/UsuarioA/"+this.password+"/"+this.correo);
             this.axios.get(urlservicios+"/UsuarioA/"+this.password+"/"+this.correo)
             .then((response) => {
               this.usuario=response.data.objeto;

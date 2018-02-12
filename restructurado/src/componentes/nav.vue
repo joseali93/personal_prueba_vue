@@ -2,18 +2,19 @@
 <!-- CONTENEDOR DE NAVBAR Y ASIDE-BAR-->
    <div>
      <preload v-show="load" ></preload>
-     <nav class="side-navbar mCustomScrollbar _mCS_1 mCS_no_scrollbar">
+     <nav id="nav-prueba" class="side-navbar mCustomScrollbar _mCS_1 mCS_no_scrollbar">
             <div id="mCSB_1" class="mCustomScrollBox mCS-light mCSB_vertical mCSB_inside" style="max-height: none;" tabindex="0">
             <div id="mCSB_1_container" class="mCSB_container mCS_y_hidden mCS_no_scrollbar_y" style="position: relative; top: 0px; left: 0px;" dir="ltr">
         <div class="side-navbar-wrapper">
             <div class="sidenav-header d-flex align-items-center justify-content-center">
             <div class="sidenav-header-inner text-center " >
-              <b-link to="/inicio" >
+              <b-btn to="/inicio" class="active">
                 <b-img :src="imagen" fluid alt="Responsive image" 
                 class="img-fluid   mCS_img_loaded"/>
-              </b-link>
+              </b-btn>
             </div>
-            <div class="sidenav-header-logo"><a  class="brand-small text-center"><b-link > <strong class="text-dark">W</strong><strong class="text-primary">L</strong></b-link></a></div>
+            <div class="sidenav-header-logo">
+              <a  class="brand-small text-center"><b-link > <strong class="text-dark">W</strong><strong class="text-primary">L</strong></b-link></a></div>
             </div>
             <div class="main-menu">
               <!-- ASIDE BAR -->
@@ -47,7 +48,11 @@
             </div>
 
         </div>
-        </div><div id="mCSB_1_scrollbar_vertical" class="mCSB_scrollTools mCSB_1_scrollbar mCS-light mCSB_scrollTools_vertical" style="display: none;"><div class="mCSB_draggerContainer">
+        </div>
+        <div id="mCSB_1_scrollbar_vertical" 
+        class="mCSB_scrollTools mCSB_1_scrollbar mCS-light mCSB_scrollTools_vertical"
+         style="display: none;">
+          <div class="mCSB_draggerContainer">
             <div id="mCSB_1_dragger_vertical" class="mCSB_dragger" style="position: absolute; min-height: 30px; height: 0px; top: 0px; display: block; max-height: 724.4px;"><div class="mCSB_dragger_bar" style="line-height: 30px;">
 
             </div>
@@ -57,16 +62,16 @@
         </div>
         </div>
     </nav>
-    <div id="nav-prueba" class="page home-page">
+    <div id="div-prueba" class="page home-page">
       <!-- NAVBAR-->
       <header class="header">
         <nav class="navbar">
           <div class="container-fluid">
             <div class="navbar-holder d-flex align-items-center justify-content-between">
               <div class="navbar-header">
-                <b-btn  id="toggle-btn" class="menu-btn">
+                <a  id="toggle-btn" class="menu-btn" @click="menu()">
                   <i class="icon-bars"> </i>
-                </b-btn >
+                </a >
                   
                   <a class="navbar-brand">
               <b-link to="/inicio">
@@ -131,6 +136,7 @@ export default {
       load:'',
       imagen:'',
       rutas:'',
+      estado: true
     };
   },
 
@@ -144,18 +150,27 @@ export default {
       }.bind(this))
     },
   methods:{
-     menu(){
-      console.log("entro a menu");
-      $("#toggle-btn").click(function(e) {
+    
+    menu(){
+      if(this.estado==true){
+        $("#toggle-btn").click(function(e) {
         e.preventDefault();
-        $("#nav-prueba").toggleClass("page home-page active");
-      });
-     
-
-
-
-
+        $("#div-prueba").addClass("page home-page active");
+        $("#nav-prueba").addClass("side-navbar mCustomScrollbar _mCS_1 shrink");
+        });
+        this.estado=false
+      }
+      else{
+        this.estado=true
+        $("#toggle-btn").click(function(e) {
+        e.preventDefault();
+        $("#div-prueba").removeClass("page home-page active").addClass("page home-page")
+        $("#nav-prueba").removeClass("side-navbar mCustomScrollbar _mCS_1 shrink").addClass("side-navbar mCustomScrollbar _mCS_1")
+        
+        });
+      }
     },
+    
     Salir(val){
       console.log("entro a salir");
       localStorage.clear();

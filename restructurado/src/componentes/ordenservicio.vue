@@ -779,7 +779,8 @@ export default {
         .then(response => {
           this.Documento = response.data.ducumento;
           console.log(response);
-          console.log(objeto);
+          console.log("-------");
+          console.log(JSON.stringify(objeto));
           swal(
             "Excelente!",
             "La Orden de Servicio Generada es: " + this.Documento,
