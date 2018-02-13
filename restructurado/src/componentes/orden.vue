@@ -97,6 +97,8 @@ import Orden from '../componentes/orden.vue'
 import Preload from '../componentes/preload.vue'
 import {bus} from '../main'
 import {urlservicios} from '../main'
+        import axios from 'axios'
+
 
 export default {
       components :{
@@ -231,7 +233,8 @@ export default {
             localStorage.setItem("orden",JSON.stringify(seleccionados))
             localStorage.setItem("infoorden",JSON.stringify(selecciones))
             this.$router.replace('/inicio/ordenservicio')
-        }
+        },
+
         },
     
         mounted: function () {
@@ -269,20 +272,68 @@ export default {
             
         }
     },
-    beforeCreate: function () {
+    created: function(){
+        var _this=this
         var vacio=  { _id: null, nombre: 'Por Favor Seleccione un Cliente' };
         var test2 = localStorage.getItem("storedData");
         var test =JSON.parse(test2);
-        console.log(test.id_cliente);
+        //console.log(test.id_cliente);
         var id_cliente
         if(test.id_cliente==undefined||test.id_cliente==null){
             id_cliente='null'
+            var bandera=true
+            var load=true
+            setTimeout(() => {
+                bus.$emit('load', {
+                    load 
+                })
+                }, )
+                
                 this.axios.get(urlservicios+"clientesOperador/"+test.id_OperadorLogistico+'/'+id_cliente)
                 .then((response) => {
+                    //console.log(response);
                     this.clientes=response.data
                                 this.clientes.unshift(vacio)
-
-                })
+                                var load=false
+                    setTimeout(() => {
+                        bus.$emit('load', {
+                            load 
+                        })
+                }, )
+                }).catch(function(error){
+                    bandera=false
+                    var load=false
+                    setTimeout(() => {
+                        bus.$emit('load', {
+                            load 
+                        })
+                }, )
+                    //onsole.log(JSON.stringify(error));
+                    //this.$router.replace('/inicio')
+                    if(bandera==false){
+                        swal({
+                        title: 'No hay Internet',
+                        text: "Revise su conexion",
+                        type: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Ok, Entiendo'
+                        }).then((result) => {
+                        if (result.value) {
+                            
+                            swal(
+                            'Se Redireccionara a la pagina de inicio',
+                            'Buen Rato',
+                            'warning'
+                            )
+                            _this.$router.replace('/inicio')
+                        }
+                        })
+                        
+                    }
+            })
+            
         }
         else{
             console.log("tengo cliente");
@@ -299,11 +350,49 @@ export default {
                 this.ClientesSelect(id_cliente)
                 
 
-                })
+                }).catch(function(error){
+                    bandera=false
+                    var load=false
+                    setTimeout(() => {
+                        bus.$emit('load', {
+                            load 
+                        })
+                }, )
+                    //onsole.log(JSON.stringify(error));
+                    //this.$router.replace('/inicio')
+                    if(bandera==false){
+                        swal({
+                        title: 'No hay Internet',
+                        text: "Revise su conexion",
+                        type: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Ok, Entiendo'
+                        }).then((result) => {
+                        if (result.value) {
+                            
+                            swal(
+                            'Se Redireccionara a la pagina de inicio',
+                            'Buen Rato',
+                            'warning'
+                            )
+                            _this.$router.replace('/inicio')
+                        }
+                        })
+                        
+                    }
+            })
         }
+        
         
         this.nombreusu;
         bus.$emit('remitente')
+    },
+    beforeCreate: function () {
+        
+        
+        
     }, 
 }
 </script>

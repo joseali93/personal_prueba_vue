@@ -68,7 +68,7 @@ export default {
     data(){
         return{
             ocultar:true,
-            consulta:[{id:'123'}],
+            consulta:[],
             nmanifiestoestado:null,
             nmanifiesto:'',
             procelogistica:null,
@@ -171,18 +171,61 @@ export default {
         var vacio=  { _id: null, nombre: 'Por Favor Seleccione un Proceso logistico' };
         var login = localStorage.getItem("storedData");
         var infologin = JSON.parse(login);
-        
+        var load=true
+                    setTimeout(() => {
+                        bus.$emit('load', {
+                            load 
+                        })
+                }, )
         this.axios
         .get(
             urlservicios+"Procesos/" +
             infologin.id_OperadorLogistico
         )
         .then(response => {
+            var load=false
+                    setTimeout(() => {
+                        bus.$emit('load', {
+                            load 
+                        })
+                }, )
             this.procesosLog = response.data;
             this.procesosLog.unshift(vacio)
             console.log(this.procesosLog);
 
-        });
+        }).catch(function(error){
+                    bandera=false
+                    var load=false
+                    setTimeout(() => {
+                        bus.$emit('load', {
+                            load 
+                        })
+                }, )
+                    //onsole.log(JSON.stringify(error));
+                    //this.$router.replace('/inicio')
+                    if(bandera==false){
+                        swal({
+                        title: 'No hay Internet',
+                        text: "Revise su conexion",
+                        type: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Ok, Entiendo'
+                        }).then((result) => {
+                        if (result.value) {
+                            
+                            swal(
+                            'Se Redireccionara a la pagina de inicio',
+                            'Buen Rato',
+                            'warning'
+                            )
+                            _this.$router.replace('/inicio')
+                        }
+                        })
+                        
+                    }
+            })
         
     }
 

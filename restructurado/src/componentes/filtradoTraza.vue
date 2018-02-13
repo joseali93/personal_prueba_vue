@@ -464,6 +464,8 @@ methods:{
     },
 },
     mounted: function () {
+        var bandera=true
+        var _this=this
         var vacio=  { _id: null, nombre: 'Por Favor Seleccione un Cliente' };
         var vacio2= { nombre: 'Por Favor Seleccione un Cliente' };
         console.log("montado")
@@ -472,23 +474,111 @@ methods:{
         //console.log(infologin.id_OperadorLogistico)
         if(infologin.id_cliente==undefined||infologin.id_cliente==null){
             var id_cliente='null'
+            var load=true
+            setTimeout(() => {
+                bus.$emit('load', {
+                    load 
+                })
+                }, )
             this.axios.get(urlservicios+"clientesOperador/"+infologin.id_OperadorLogistico+'/'+id_cliente)
             .then((response) => {
+                var load=false
+                setTimeout(() => {
+                    bus.$emit('load', {
+                        load 
+                    })
+                    }, )
                 this.clientes=response.data
                 this.clientes.unshift(vacio)
                 //console.log(this.clientes)
+            }).catch(function(error){
+                    bandera=false
+                    var load=false
+                    setTimeout(() => {
+                        bus.$emit('load', {
+                            load 
+                        })
+                }, )
+                    //onsole.log(JSON.stringify(error));
+                    //this.$router.replace('/inicio')
+                    if(bandera==false){
+                        swal({
+                        title: 'No hay Internet',
+                        text: "Revise su conexion",
+                        type: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Ok, Entiendo'
+                        }).then((result) => {
+                        if (result.value) {
+                            
+                            swal(
+                            'Se Redireccionara a la pagina de inicio',
+                            'Buen Rato',
+                            'warning'
+                            )
+                            _this.$router.replace('/inicio')
+                        }
+                        })
+                        
+                    }
             })
         }
         else
         {
+            var load=true
+                    setTimeout(() => {
+                        bus.$emit('load', {
+                            load 
+                        })
+                }, )
             id_cliente=infologin.id_cliente
             this.axios.get(urlservicios+"clientesOperador/"+infologin.id_OperadorLogistico+'/'+id_cliente)
             .then((response) => {
                 this.clientes=response.data
                 this.clientes.unshift(vacio)
                 this.disabled_selectedCL=true
+                var load=false
+                    setTimeout(() => {
+                        bus.$emit('load', {
+                            load 
+                        })
+                }, )
                 //console.log(this.clientes)
                 this.SelectCC(id_cliente)
+            }).catch(function(error){
+                    bandera=false
+                    var load=false
+                    setTimeout(() => {
+                        bus.$emit('load', {
+                            load 
+                        })
+                }, )
+                    //onsole.log(JSON.stringify(error));
+                    //this.$router.replace('/inicio')
+                    if(bandera==false){
+                        swal({
+                        title: 'No hay Internet',
+                        text: "Revise su conexion",
+                        type: 'warning',
+                        showCancelButton: true,
+                        confirmButtonColor: '#3085d6',
+                        cancelButtonColor: '#d33',
+                        confirmButtonText: 'Ok, Entiendo'
+                        }).then((result) => {
+                        if (result.value) {
+                            
+                            swal(
+                            'Se Redireccionara a la pagina de inicio',
+                            'Buen Rato',
+                            'warning'
+                            )
+                            _this.$router.replace('/inicio')
+                        }
+                        })
+                        
+                    }
             })
         }
          

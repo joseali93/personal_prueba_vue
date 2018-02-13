@@ -8,10 +8,10 @@
         <div class="side-navbar-wrapper">
             <div class="sidenav-header d-flex align-items-center justify-content-center">
             <div class="sidenav-header-inner text-center " >
-              <b-btn to="/inicio" class="active">
+              <b-link to="/inicio" class="active">
                 <b-img :src="imagen" fluid alt="Responsive image" 
                 class="img-fluid   mCS_img_loaded"/>
-              </b-btn>
+              </b-link>
             </div>
             <div class="sidenav-header-logo">
               <a  class="brand-small text-center"><b-link > <strong class="text-dark">W</strong><strong class="text-primary">L</strong></b-link></a></div>
@@ -21,27 +21,27 @@
             <ul id="side-main-menu" class="side-menu list-unstyled">                
                 <li v-for="(ruta,indice) in rutas">
                     <b-link :to="ruta" v-if="indice=='ruta_uno'">
-                        <i class="fa fa-plus-square-o"></i><span> Generacion Orden de Servicio </span>
+                        <i class="fa fa-plus-square-o"></i><span class="spans"> Generacion Orden de Servicio </span>
                     </b-link>
                 </li>
                 <li v-for="(ruta,indice) in rutas"> 
                     <b-link :to="ruta" v-if="indice=='ruta_dos'" >
-                        <i class="fa fa-briefcase"></i><span> Consultar Ordenes de Servicio </span>
+                        <i class="fa fa-briefcase"></i><span class="spans"> Consultar Ordenes de Servicio </span>
                     </b-link>
                 </li>
                 <li  v-for="(ruta,indice) in rutas"> 
                     <b-link :to="ruta" v-if="indice=='ruta_tres'">
-                        <i class="fa fa-info"></i><span>Consulta Trazabilidad</span>
+                        <i class="fa fa-info"></i><span class="spans">Consulta Trazabilidad</span>
                     </b-link>
                 </li>
                 <li  v-for="(ruta,indice) in rutas"> 
                     <b-link :to="ruta" v-if="indice=='ruta_cuatro'">
-                        <i class="fa fa-rebel"></i><span>Entradas y Salidas</span>
+                        <i class="fa fa-rebel"></i><span class="spans">Entradas y Salidas</span>
                     </b-link>
                 </li>
                 <li  v-for="(ruta,indice) in rutas"> 
                     <b-link :to="ruta" v-if="indice=='ruta_cinco'">
-                        <i class="fa fa-empire"></i><span> Manifiestos </span>
+                        <i class="fa fa-empire"></i><span class="spans"> Manifiestos </span>
                     </b-link>
                 </li>
             </ul>
@@ -141,12 +141,10 @@ export default {
   },
 
     updated: function () {
-      //console.log("actualizamos en nav");
        bus.$on('load', function (userObject) {
      
         this.load = userObject.load
 
-        //console.log(this.load);
       }.bind(this))
     },
   methods:{
@@ -186,6 +184,7 @@ export default {
     var test = JSON.parse(test2);
     this.nombreusu = test.nombre;
     this.imagen = test.url_logo
+
     if(test.id_rol.nombre=="courier"){
       console.log("hay courier");
       swal({
@@ -212,9 +211,9 @@ export default {
       this.rutas = test.id_rol.rutas
     }
     
-    console.log(test)
-    console.log(this.imagen);
-    console.log(this.rutas);
+    //console.log(test)
+    //console.log(this.imagen);
+    //console.log(this.rutas);
   },
   beforeCreate: function() {
     console.log("antes");
@@ -223,7 +222,11 @@ export default {
 </script>
 
 <style>
-@import url("/assets/vendor/malihu-custom-scrollbar-plugin/malihu-custom-scrollbar-plugin.css");
+nav.side-navbar span{
+   display: initial;
+}
+ 
+
 nav.side-navbar .sidenav-header
 {
 background:white;  
