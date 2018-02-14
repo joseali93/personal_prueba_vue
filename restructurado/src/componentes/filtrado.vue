@@ -1,6 +1,5 @@
 <template>
     <b-container>
-    
         <b-card class="car" v-show="ocultar">
             <header class="content-heading" slot="header">
                 <h3>Consultar Ordenes de Servicio</h3>
@@ -28,7 +27,8 @@
             <b-row>
                 <b-col>
                     <b-form-group label="Rango de Fechas" class="mb-3">
-                    <date-picker width=400  v-model="time1" range lang="en"></date-picker>
+                    <date-picker width=400  v-model="time1" range lang="en" 
+                    :shortcuts="shortcuts" :confirm="true"></date-picker>
                     </b-form-group>
                 </b-col>
                 <b-col md="6" class="my-1">
@@ -84,6 +84,23 @@ export default {
   },
     data() {
         return {
+             shortcuts: [
+                {
+                text: 'Hoy',
+                start: new Date(),
+                end: new Date()
+                },
+                {
+                text: 'Semana',
+                start: new Date(),
+                end: new Date()
+                },
+                {
+                text: 'Mes',
+                start: new Date(),
+                end: new Date()
+                },
+            ],
             disabled_selectedCL: false,
             ocultar: true,
             items: [{
@@ -95,7 +112,9 @@ export default {
             consulta: [],
             estados: {},
             selected_state: null,
-            time1: '',
+            time1: [
+               
+            ],
             selectedCL: null,
             clientes: null,
             selectedCC: null,
@@ -258,13 +277,48 @@ export default {
       }.bind(this))
     },
     mounted: function () {
+        var fecha=new Date();
+        var _this=this
+        var d =new Date()
+        var year = d.getFullYear()
+        var month = d.getMonth()
+        var day = d.getDate()
+        var ant = new Date()
+        var monthante = ant.getMonth()-1
+        var dayante =ant.getDate()
+        d.setFullYear(year,month,day)
+        ant.setFullYear(year,monthante,dayante)
+       
+        var HaceUnaSemana=new Date(fecha.getTime() - (24*60*60*1000)*7);
+        var HaceUnaSemanaDia = HaceUnaSemana.getDate()
+        var HaceUnaSemanaMes = HaceUnaSemana.getMonth()
+        var HaceUnaSemanaYear = HaceUnaSemana.getFullYear()
+        HaceUnaSemana.setFullYear(HaceUnaSemanaYear,HaceUnaSemanaMes,HaceUnaSemanaDia)
+        for(var p=0;p<this.shortcuts.length;p++){
+            if(p==1)
+            {
+                this.shortcuts[p].start=HaceUnaSemana
+                this.shortcuts[p].end=d
+            }
+            if(p==2)
+            {
+                this.shortcuts[p].start=ant
+                this.shortcuts[p].end=d
+            }
+        }
+        //this.shortcuts[3].start=ant
+        //this.shortcuts[3].end=d
+        
+        this.time1[1]= d
+        this.time1[0] =ant
+        var concatday
         var bandera=true
-         var _this=this
+         
         var vacio=  { _id: null, nombre: 'Por Favor Seleccione un Cliente' };
         var vacio2= { nombre: 'Por Favor Seleccione un Cliente' };
         var login = localStorage.getItem("storedData");
         var infologin =JSON.parse(login);
-        console.log(infologin.id_cliente);
+        //console.log(infologin.id_cliente);
         var id_cliente
         if(infologin.id_cliente==undefined||infologin.id_cliente==null){
             console.log("no hay cliente");
@@ -321,7 +375,7 @@ export default {
                     }
             })
         }else{
-            console.log("hay cliente");
+            //console.log("hay cliente");
             id_cliente=infologin.id_cliente
             this.axios.get(urlservicios+"clientesOperador/"+infologin.id_OperadorLogistico
             +'/'+id_cliente)
@@ -369,7 +423,7 @@ export default {
         this.axios.get(urlservicios+"estados/")
         .then((response) => {
             this.estados=response.data
-            console.log(this.estados);
+            //console.log(this.estados);
         })
             
         
