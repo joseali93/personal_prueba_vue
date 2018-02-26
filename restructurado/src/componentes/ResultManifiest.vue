@@ -57,6 +57,7 @@
                     </b-col>
                 </b-row>
                 <b-row>
+                    {{detalle.listaMovilizados}}
                     <b-col>
                         <b-table bordered fixed hover
                         :items="detalle.listaMovilizados"  :fields="fields2">
@@ -79,6 +80,7 @@
 <script>
 import moment from 'moment'
 import {bus} from "../main"
+import {urlservicios} from '../main'
 import Preload from '../componentes/preload.vue'
 export default {
     data(){
@@ -113,7 +115,7 @@ export default {
     },
     methods:{
         imprimir(value){
-             //.log("entro a imprimir");
+            console.log("entro a imprimir");
             var items=value.listaMovilizados
             var inforvaria=[
                 {
@@ -125,25 +127,25 @@ export default {
                     apellido:value.apellido_courier
                 }
             ]
-             //.log(items.length);
-            // //.log(items);
+            console.log(items.length);
+            //console.log(items);
             var normalizado
             var itemsmodal=[]
             for(var x=0;x<items.length;x++){
-                 //.log(items[x]);
+                console.log(items[x]);
                 normalizado={
                     id:items[x].id_movilizado,
                     nombre:items[x].nombre_cliente,
                     nombre_centro:items[x].nombre_centro,
-                    direccion:items[x].direccion_destinatario,
-                    referencia:items[x].referencia,
+                    direccion_entrega:items[x].direccion_entrega,
+                    referencia:items[x].UnidadesObjeto,
                     numeroOrden:items[x].id_orden,
                     peso:items[x].peso,
                     unidades:items[x].unidades
                 }
                 itemsmodal.push(normalizado)
             }
-             //.log(itemsmodal);
+            console.log(itemsmodal);
             
              setTimeout(() => {
                         bus.$emit('modalinfo', {
@@ -155,8 +157,8 @@ export default {
                   
         },
         actualizar(value){
-             //.log("entro a actualizar");
-             //.log(value);
+            console.log("entro a actualizar");
+            console.log(value);
             var detalles=value
             this.detalle=value
             var ocultar=false

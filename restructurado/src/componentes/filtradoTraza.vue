@@ -98,6 +98,7 @@
 
 <script>
 import {bus} from "../main"
+import {urlservicios} from '../main'
 import Preload from '../componentes/preload.vue'
 import DatePicker from "vue2-datepicker";
 
@@ -142,7 +143,7 @@ data(){
     },
 methods:{
    limpiarfiltro(){
-        //.log("entro a limpiar filtro");
+       console.log("entro a limpiar filtro");
        this.time1='',
        this.referencia='',
        this.nmovilizado='',
@@ -157,8 +158,10 @@ methods:{
 
    },
     consultar(){
+        console.log("entro a consultar");
         var inicio,fin
-        if(this.selectedCL==''||this.selectedCC=='')
+        if(this.selectedCL==''||this.selectedCC==''
+        ||this.selectedCL==null||this.selectedCC==null)
         {  
             this.validatecampo= {
                 border: '2px solid red'
@@ -179,13 +182,13 @@ methods:{
                 }
             }
             if(this.prueba=='first'){
-                 //.log("tengo tiempo");
+                console.log("tengo tiempo");
                 this.orden=''
                 this.referencia=''
                 this.nmovilizado=''
                 if(this.time1[0]==''||this.time1[0]==undefined||this.time1[0]==null||this.time1[1]==''||this.time1[1]==undefined||this.time1[1]==null)
                 {
-                     //.log("es vacio fecha");
+                    console.log("es vacio fecha");
                     swal("Oops...", "Falto algun seleccionar el rango de fechas", "error");
                 }
                 else{
@@ -199,7 +202,8 @@ methods:{
                             load 
                         })
                         }, )
-                    this.axios.get("/api/ObtenerOrdenesFiltradoDetalle/"+this.selectedCC+"/"+this.selectedCL+'/null/null/null/'+inicio+'/'+fin+'')
+                    console.log(urlservicios+"/ObtenerOrdenesFiltradoDetalle/"+this.selectedCC+"/"+this.selectedCL+'/null/null/null/'+inicio+'/'+fin+'');
+                    this.axios.get(urlservicios+"/ObtenerOrdenesFiltradoDetalle/"+this.selectedCC+"/"+this.selectedCL+'/null/null/null/'+inicio+'/'+fin+'')
                         .then((response) => {
                             this.consulta=response.data
                             if(this.consulta==''){
@@ -216,7 +220,7 @@ methods:{
                                     load
                                 })
                                 }, )
-                             //.log(this.consulta);
+                            console.log(this.consulta);
                             })
 
                     this.$router.replace('/inicio/trazabilidad/listado')
@@ -236,7 +240,7 @@ methods:{
                 else{
                     if(this.orden==null||this.orden=='')
                     {
-                         //.log("entro orden vacio");
+                        console.log("entro orden vacio");
                     }
                     else
                     {
@@ -247,7 +251,7 @@ methods:{
                             load
                         })
                         }, )
-                        this.axios.get("/api/ObtenerOrdenesFiltradoDetalle/"+this.selectedCC+"/"+this.selectedCL+'/'+this.orden+'/null/null/null/null')
+                        this.axios.get(urlservicios+"/ObtenerOrdenesFiltradoDetalle/"+this.selectedCC+"/"+this.selectedCL+'/'+this.orden+'/null/null/null/null')
                             .then((response) => {
                                 this.consulta=response.data
                                 if(this.consulta==''){
@@ -271,17 +275,16 @@ methods:{
                             load
                         })
                         }, )
-                                 //.log(this.consulta);
-                                })
-
+                        //console.log(this.consulta);
+                        })
                         this.$router.replace('/inicio/trazabilidad/listado')
                     }
                     if(this.referencia==''||this.referencia==null){
-                         //.log("referencia vacio");
+                        //console.log("referencia vacio");
                     } 
                     else
                     {
-                         //.log("tiene algo");
+                        console.log("tiene algo");
                             this.load = true;
                             var load=true
                     setTimeout(() => {
@@ -289,7 +292,7 @@ methods:{
                             load
                         })
                         }, )
-                            this.axios.get("/api/ObtenerOrdenesFiltradoDetalle/"+this.selectedCC+"/"+this.selectedCL+'/null/null/'+this.referencia+'/null/null')
+                            this.axios.get(urlservicios+"/ObtenerOrdenesFiltradoDetalle/"+this.selectedCC+"/"+this.selectedCL+'/null/null/'+this.referencia+'/null/null')
                             .then((response) => {
                                 this.consulta=response.data
                                 
@@ -307,7 +310,7 @@ methods:{
                         })
                         }, )
                                 }
-                                 //.log(this.consulta);
+                                console.log(this.consulta);
                                 this.load = false;
                                 var load=false
                     setTimeout(() => {
@@ -331,8 +334,9 @@ methods:{
                             load
                         })
                         }, )
-                        
-                        this.axios.get("/api/ObtenerOrdenesFiltradoDetalle/"+this.selectedCC+"/"+this.selectedCL+'/null/'+this.nmovilizado+'/null/null/null')
+                        console.log("movilizado");
+                        console.log(this.nmovilizado);
+                        this.axios.get(urlservicios+"ObtenerOrdenesFiltradoDetalle/"+this.selectedCC+"/"+this.selectedCL+'/null/'+this.nmovilizado+'/null/null/null')
                             .then((response) => {
                                 this.consulta=response.data
                                 if(this.consulta==''){
@@ -366,7 +370,7 @@ methods:{
     SelectCC(value){
         var vacio=  { _id: null, nombre: 'Por Favor Seleccione un Centro de Costo' };
         if(this.disabled_selectedCL==true){
-             //.log(value);
+            console.log(value);
             this.selectedCL=value
              var load=true
                     setTimeout(() => {
@@ -374,7 +378,7 @@ methods:{
                             load
                         })
                         }, )
-            this.axios.get("/api/CentrosPorCliente/"+this.selectedCL)            
+            this.axios.get(urlservicios+"CentrosPorCliente/"+this.selectedCL)            
             .then((response) => {
                 this.centros=response.data
                 this.centros.unshift(vacio)
@@ -398,12 +402,13 @@ methods:{
                                 load
                             })
                             }, )
-                this.axios.get("/api/CentrosPorCliente/"+value.target.value)            
+                this.axios.get(urlservicios+"CentrosPorCliente/"+value.target.value)            
+                //this.axios.get(urlservicios+"centros/")
                 .then((response) => {
                 this.centros=response.data
                 this.centros.unshift(vacio)
 
-                // //.log(this.centros)
+                //console.log(this.centros)
                 this.load=false
                 var load=false
                         setTimeout(() => {
@@ -464,10 +469,10 @@ methods:{
         var _this=this
         var vacio=  { _id: null, nombre: 'Por Favor Seleccione un Cliente' };
         var vacio2= { nombre: 'Por Favor Seleccione un Cliente' };
-         //.log("montado")
+        console.log("montado")
         var login = localStorage.getItem("storedData");
         var infologin =JSON.parse(login);
-        // //.log(infologin.id_OperadorLogistico)
+        //console.log(infologin.id_OperadorLogistico)
         if(infologin.id_cliente==undefined||infologin.id_cliente==null){
             var id_cliente='null'
             var load=true
@@ -476,7 +481,7 @@ methods:{
                     load 
                 })
                 }, )
-            this.axios.get("/api/clientesOperador/"+infologin.id_OperadorLogistico+'/'+id_cliente)
+            this.axios.get(urlservicios+"clientesOperador/"+infologin.id_OperadorLogistico+'/'+id_cliente)
             .then((response) => {
                 var load=false
                 setTimeout(() => {
@@ -486,7 +491,7 @@ methods:{
                     }, )
                 this.clientes=response.data
                 this.clientes.unshift(vacio)
-                // //.log(this.clientes)
+                //console.log(this.clientes)
             }).catch(function(error){
                     bandera=false
                     var load=false
@@ -530,7 +535,7 @@ methods:{
                         })
                 }, )
             id_cliente=infologin.id_cliente
-            this.axios.get("/api/clientesOperador/"+infologin.id_OperadorLogistico+'/'+id_cliente)
+            this.axios.get(urlservicios+"clientesOperador/"+infologin.id_OperadorLogistico+'/'+id_cliente)
             .then((response) => {
                 this.clientes=response.data
                 this.clientes.unshift(vacio)
@@ -541,7 +546,7 @@ methods:{
                             load 
                         })
                 }, )
-                // //.log(this.clientes)
+                //console.log(this.clientes)
                 this.SelectCC(id_cliente)
             }).catch(function(error){
                     bandera=false

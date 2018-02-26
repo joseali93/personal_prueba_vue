@@ -60,14 +60,14 @@ export default {
               usando un password y correo para el login
             */
             //urlservicios
-            var algo='../routes/usuario/'
-            //.log('/api/UsuarioA/'+this.password+"/"+this.correo);
-              this.axios.get('/api/UsuarioA/'+this.password+"/"+this.correo) 
-                         .then((response) => {
+            var algo='/routes/usuario/'
+           //console.log(+"/UsuarioA/"+this.password+"/"+this.correo);
+            this.axios.get(urlservicios+"UsuarioA/"+this.password+"/"+this.correo)
+            .then((response) => {
               this.usuario=response.data.objeto;
-              // //.log(' this.usuario: ',  this.usuario);
+              //console.log(' this.usuario: ',  this.usuario);
               this.estado= response.data.estado;
-              // //.log('this.estado: ', this.estado);
+              //console.log('this.estado: ', this.estado);
               if(this.estado){
                 localStorage.setItem('storedData', JSON.stringify(this.usuario))
                 //bus.$emit('login',this.usuario)
@@ -108,7 +108,7 @@ export default {
                     'error'
                   )                 
               }
-              // //.log("error de config"+JSON.stringify(error.config));
+              //console.log("error de config"+JSON.stringify(error.config));
   
             })
 

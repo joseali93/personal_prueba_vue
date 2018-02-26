@@ -53,7 +53,16 @@
                 </b-row>
                 <b-row class="my-5">
                 <b-col class="my-5">
-                <b-table id="mitablita" responsive="sm" bordered	outlined :items="itemsmodal" :fields="fields2" class="juana"></b-table>
+                <b-table id="mitablita" responsive="sm" bordered	outlined :items="itemsmodal"
+                 :fields="fields2" class="juana">
+                    <template slot="referencia" slot-scope="data">
+                        <!--
+                        {{data.item.referencia}}
+                        -->
+                        {{referencias(data.item)}}
+                    </template>
+                 
+                 </b-table>
                 </b-col>
                 </b-row>
                 <b-row>
@@ -96,6 +105,7 @@
 
 <script>
 import $ from 'jquery'
+import {urlservicios} from '../main'
 import {bus} from '../main'
 import moment from 'moment'
         moment.locale('es');
@@ -118,7 +128,7 @@ export default {
            fields2: [
               { key: 'id', label: 'N° Movilizado' },
               { key: 'nombre', label: 'Cliente' },
-              { key: 'direccion', label: 'Dirección' },
+              { key: 'direccion_entrega', label: 'Dirección de Entrega' },
               { key: 'referencia', label: 'Referencia' },
               { key: 'numeroOrden', label: 'N° Orden' },
               { key: 'peso', label: 'Peso' },
@@ -127,6 +137,19 @@ export default {
         }   
     },
     methods:{
+        referencias(value){
+        console.log("entro a prueba");
+        console.log(value);
+        var valoresretornar=[]
+        var prue=''
+        for(var x=0;x<value.referencia.length;x++){
+          //console.log(value.referencia[x].referencia);
+          valoresretornar.push(value.referencia[x].referencia)
+          prue=''+value.referencia[x].referencia+'--'+prue
+        }
+        console.log(prue);
+        return prue
+      },
         infoimpresion(){
             var login = localStorage.getItem("storedData");
             var infologin = JSON.parse(login);
@@ -134,7 +157,7 @@ export default {
         },
         Tunidades(){
             var retornar=0
-            // //.log("entro a Total unidades");
+            //console.log("entro a Total unidades");
 
             for(var x=0;x<this.itemsmodal.length;x++){
                 retornar=retornar+parseInt(this.itemsmodal[x].unidades)
@@ -142,12 +165,12 @@ export default {
             return retornar
         },
       volver(){
-           //.log("entro a volver");
+          console.log("entro a volver");
           this.$router.go(-1)
        //this.$router.replace('/inicio/entradasalida')
       },
       imprimir(){
-           //.log("entro aimprimir");
+          console.log("entro aimprimir");
         if($("#print").length == 0)
         {
             var print =null
@@ -169,6 +192,7 @@ export default {
        bus.$on('modalinfo', function (userObject) {
      
         this.itemsmodal = userObject.itemsmodal
+        console.log(this.itemsmodal);
         this.otrainfo= userObject.inforvaria
         
       }.bind(this))

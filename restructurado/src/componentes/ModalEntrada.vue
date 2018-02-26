@@ -51,7 +51,14 @@
         <b-row class="my-5">
           <b-col class="my-5">
           <b-table id="mitablita" responsive="sm" bordered :fixed="true"	
-          outlined :items="itemsmodal" :fields="fields" class="juana"></b-table>
+          outlined :items="itemsmodal" :fields="fields" class="juana">
+           <template slot="referencia" slot-scope="data">
+                    <!--                     
+                      {{data.item.referencia}}
+                      -->
+                      {{referencias(data.item)}}
+                    </template>
+          </b-table>
 
           </b-col>
           </b-row>
@@ -86,6 +93,7 @@
 <script>
 import $ from 'jquery'
 
+import {urlservicios} from '../main'
 import {bus} from '../main'
 import moment from 'moment'
 
@@ -115,9 +123,22 @@ export default {
         }   
     },
     methods:{
+      referencias(value){
+        console.log("entro a prueba");
+        //console.log(value);
+        var valoresretornar=[]
+        var prue=''
+        for(var x=0;x<value.referencia.length;x++){
+          //console.log(value.referencia[x].referencia);
+          valoresretornar.push(value.referencia[x].referencia)
+          prue=''+value.referencia[x].referencia+'--'+prue
+        }
+        console.log(prue);
+        return prue
+      },
       Tunidades(){
           var retornar=0
-           //.log("entro a Total unidades");
+          console.log("entro a Total unidades");
          
           for(var x=0;x<this.itemsmodal.length;x++){
               retornar=retornar+parseInt(this.itemsmodal[x].unidades)
@@ -125,7 +146,7 @@ export default {
           return retornar
       },
       volver(){
-           //.log("entro a volver");
+          console.log("entro a volver");
           this.$router.go(-1)
         //this.$router.replace('/inicio/entradasalida')
       },

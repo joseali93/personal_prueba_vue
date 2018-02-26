@@ -294,6 +294,7 @@
 import {bus} from '../main'
 import moment from 'moment'
 import Preload from '../componentes/preload.vue'
+import {urlservicios} from '../main'
 
 
 export default {
@@ -312,7 +313,7 @@ export default {
     },
     methods:{
         algo(){
-             //.log("entr a algo");
+            console.log("entr a algo");
         },
         validacorreo(value){
            if(value.length==0){
@@ -347,7 +348,7 @@ export default {
                     )
             }
             if(this.emailvalido==true){
-                 //.log("email ok");
+                console.log("email ok");
                 
                 var load=true
                     setTimeout(() => {
@@ -368,11 +369,11 @@ export default {
                     
                 }
                 
-                this.axios.post("/api/EnviarCorreoImagen", objeto)
+                this.axios.post(urlservicios+"EnviarCorreoImagen", objeto)
                 .then(response => {
                 this.respuesta = response.data;
-                 //.log(response);
-                 //.log(objeto);
+                console.log(response);
+                console.log(objeto);
                 var load=false
                     setTimeout(() => {
                         bus.$emit('load', {
@@ -386,7 +387,7 @@ export default {
                     "success"
                 );
                 });
-                 //.log(objeto);
+                console.log(objeto);
 
             }
             
@@ -408,8 +409,8 @@ export default {
                 return (this.estadoT=false)
         },
         enviarcorreoT(value){
-             //.log("entro a envio todo");
-             //.log(value);
+            console.log("entro a envio todo");
+            console.log(value);
             if(this.emailvalidoT==null||this.emailT==''){
                 swal(
                     'Falta Completar el Email',
@@ -432,11 +433,11 @@ export default {
                             load
                         })
                         }, )
-                 //.log("email ok");
+                console.log("email ok");
                 var objeto
                 var objetoimanes=[]
                 value.trazabilidad[0].imagenes.map((obj,ind)=>{
-                     //.log(obj);
+                    console.log(obj);
                     objeto={
                         ruta:obj.ruta,
                         id:obj.id
@@ -450,11 +451,11 @@ export default {
                         nomproceso:this.modalima.nombre_proceso,
                         imagenes:objetoimanes
                 }
-                 //.log(objeT);
-                this.axios.post("/api/EnviarCorreoImagen", objeT)
+                console.log(objeT);
+                this.axios.post(urlservicios+"EnviarCorreoImagen", objeT)
                     .then(response => {
                     this.respuesta = response.data;
-                     //.log(response);
+                    console.log(response);
                     //this.load=false
                     var load=false
                     setTimeout(() => {
@@ -477,8 +478,8 @@ export default {
             this.$refs.ModalImagenes.hide()            
         },
         cerrar(value){
-             //.log(value);
-             //.log("entro a cerrar");
+            console.log(value);
+            console.log("entro a cerrar");
             this.$refs.myModalRef.hide();
         },
         imagenmodal(data){
@@ -524,7 +525,7 @@ export default {
             var llav2cc,detallecc,llav2cl,detallecl
             var nomcliente,dircliente
             var nomcentro,dircentro
-             //.log(this.consulta);
+            console.log(this.consulta);
             for(var i=0;i<this.consulta.length;i++){
                 llaveslv1=Object.keys(this.consulta[i])
                 for(var a=0;a<llaveslv1.length;a++){
@@ -586,20 +587,20 @@ export default {
                                 llaveslv3=Object.keys(this.consulta[i].detalleslocal.infor);
                                 if(llaveslv3[c]=='trayectoobj')
                                 {
-                                    // //.log("no saco ");
+                                    //console.log("no saco ");
                                 }
                                 else
                                 {
-                                    // //.log("saco");
+                                    //console.log("saco");
                                 }
                                 for(var c=0;c<llaveslv3.length;c++){
                                     if(llaveslv3[c]=='trayectoobj')
                                 {
-                                    // //.log("no saco ");
+                                    //console.log("no saco ");
                                 }
                                 else
                                 {
-                                    // //.log("saco");
+                                    //console.log("saco");
                                      variable[c]=llaveslv3[c]
                                 }
                                 }
@@ -609,8 +610,8 @@ export default {
                     }
                 }
             }
-             //.log(nomcliente);
-             //.log(nomcentro);
+            console.log(nomcliente);
+            console.log(nomcentro);
             var consultclient=''
 
             var consult='';
@@ -666,7 +667,7 @@ export default {
             }
             //this.$refs.myModalRef.show()
             //openModal();
-            this.axios.get("/api/estructuraf/" +this.consultaactualizar.productoslocal._id +
+            this.axios.get(urlservicios+"estructuraf/" +this.consultaactualizar.productoslocal._id +
             "/" +this.consultaactualizar.servicioslocal._id)   
             .then(response => {
             this.inputs = response.data;

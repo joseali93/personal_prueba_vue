@@ -140,6 +140,7 @@
 
 <script>
 import { bus } from "../main";
+import {urlservicios} from '../main'
 import Preload from '../componentes/preload.vue'
 
 export default {
@@ -186,8 +187,8 @@ export default {
     },
     methods:{
         valores(valores,inputs){
-            // //.log("entro a valores");
-            // //.log(valores);
+            //console.log("entro a valores");
+            //console.log(valores);
             var guardadoManifiesto = localStorage.getItem("Manifiesto");
             var infoguardadoManifiesto =JSON.parse(guardadoManifiesto);
             //this.objeto=infoguardadoManifiesto.inputs
@@ -197,7 +198,7 @@ export default {
             }
             else
             {
-                // //.log(infoguardadoManifiesto.inputs);
+                //console.log(infoguardadoManifiesto.inputs);
                 var llaves =Object.keys(infoguardadoManifiesto.inputs)
                 if(this.bandera==0||this.bandera==1){
                     this.bandera=this.bandera+1
@@ -211,14 +212,14 @@ export default {
         },
         MostrarModal(){
             var bandera
-             //.log("entro a mostar modal");
+            console.log("entro a mostar modal");
             if(this.objeto==undefined||this.objeto=='')
             {
                 if(this.inputs==''){
-                     //.log("no tiene items");
-                     //.log(this.curier);
+                    console.log("no tiene items");
+                    console.log(this.curier);
                     if(this.curier=='null'||this.curier==null){
-                         //.log("hay curier vacio");
+                        console.log("hay curier vacio");
                         swal("Debe completarse", 
                         "Seleccione los campos previos",
                         "error",{
@@ -226,7 +227,7 @@ export default {
                         });
                     }
                     else{
-                         //.log("curier tiene valores");
+                        console.log("curier tiene valores");
                         this.$refs.myModalRef.show()
                     }
                 }else{
@@ -244,14 +245,14 @@ export default {
                 for(var x=0;x<llaves.length;x++){
                     if(eval('this.objeto.'+llaves[x])=='null'||
                     eval('this.objeto.'+llaves[x])==null){
-                         //.log("andavacio");
+                        console.log("andavacio");
                         bandera=true
                     }
                     
                 }
                 if(bandera==true)
                 {
-                     //.log("no muesto 2");
+                    console.log("no muesto 2");
                     swal("Debe completarse", 
                         "Algun Campo esta pendiente de Seleccionar",
                         "error",{
@@ -272,7 +273,7 @@ export default {
                 return 0
             }
             else{
-                // //.log(this.itemsmovilizados);
+                //console.log(this.itemsmovilizados);
                 for(var x=0; x<this.itemsmovilizados.length;x++)
                 {
                     if(this.itemsmovilizados[x].unidades==0||
@@ -290,17 +291,17 @@ export default {
             }
         },
         borrar(value){
-             //.log("entro a borrar");
-             //.log(value)
+            console.log("entro a borrar");
+            console.log(value)
             this.itemsmovilizados.splice(value.index,1)
         },
         generarManifiesto(){
-             //.log("entro a generar");
+            console.log("entro a generar");
             this.Scurier=null
     
             
             if(this.objeto==undefined){
-                // //.log("no hago nada");
+                //console.log("no hago nada");
             }
             else{
                 var llaves=Object.keys(this.objeto)
@@ -323,22 +324,22 @@ export default {
                     }
 
                 }
-                // //.log(this.objeto);
+                //console.log(this.objeto);
                 if(bandera==true)
                 {
-                    // //.log("no hacemos peticion");
+                    //console.log("no hacemos peticion");
 
                 }
                 else
                 {
-                    // //.log("hacemos peticion");
-                    // //.log(this.itemsmovilizados);
+                    //console.log("hacemos peticion");
+                    //console.log(this.itemsmovilizados);
                 }
             }
             var inforinputs=[]    
-            // //.log(this.objeto);
+            //console.log(this.objeto);
             if(this.objeto==undefined){
-                // //.log("no me llegan inputs variables");
+                //console.log("no me llegan inputs variables");
             }else{
                 for(var x=0;x<this.opciones.length;x++){
 
@@ -347,14 +348,14 @@ export default {
                 {
                     if(this.opciones[x][y]._id==eval('this.objeto.'+llaves[x]))
                     {
-                        // //.log("obtengo la info");
+                        //console.log("obtengo la info");
                         inforinputs[x]=this.opciones[x][y]
                     }
                 }
                 }
             }
            
-                            // //.log(inforinputs);
+                            //console.log(inforinputs);
             var inforvaria=inforinputs
             var itemsmodal=this.itemsmovilizados
             var varios=[]
@@ -362,11 +363,11 @@ export default {
 
             }
             for(var x=0;x<this.itemsmovilizados.length;x++){
-                // //.log(x);
+                //console.log(x);
                 if(this.itemsmovilizados[x].concepto._id==null||
                 this.itemsmovilizados[x].concepto._id==undefined)
                 {
-                    // //.log(this.itemsmovilizados[x].id)
+                    //console.log(this.itemsmovilizados[x].id)
                      var listMovilizados={
 
                      numeroMovilizado:this.itemsmovilizados[x].id
@@ -383,7 +384,7 @@ export default {
                                      varios.push(listMovilizados)
 
                 }
-                // //.log(listMovilizados);
+                //console.log(listMovilizados);
             }
             
             if(this.proceSeleccionado.atencion_courier==true){
@@ -415,8 +416,8 @@ export default {
                 id_procesoLogistico:this.processSelected._id
             }
             }
-            // //.log(this.processSelected.modal)
-             //.log(envio);
+            //console.log(this.processSelected.modal)
+            console.log(envio);
 
             /*
                 setTimeout(() => {
@@ -429,16 +430,16 @@ export default {
                     this.$router.push(this.processSelected.modal)
             */
             this.axios
-            .post("/api/GenerarManifiestoWeb", envio)
+            .post(urlservicios+"GenerarManifiestoWeb", envio)
             .then(response => {
-                 //.log(response);
+                console.log(response);
                 this.validacionModal=response.validacionModal
                 if(this.validacionModal=true)
                 {
                     localStorage.removeItem('Manifiesto');
-                     //.log("mostramos modal");
-                     //.log(itemsmodal);
-                     //.log(inforvaria);
+                    console.log("mostramos modal");
+                    console.log(itemsmodal);
+                    console.log(inforvaria);
                     setTimeout(() => {
                         bus.$emit('modalinfo', {
                             itemsmodal,inforvaria
@@ -450,7 +451,7 @@ export default {
                 }
                 else
                 {
-                     //.log("no mostramos modal");
+                    console.log("no mostramos modal");
                     swal("Debe completarse", 
                         "No se puede Generar el Manifiesto en este momento",
                         "error",{
@@ -464,7 +465,7 @@ export default {
         digitar(value){
             setTimeout(
             function() {
-             //.log("entro a digitar");
+            console.log("entro a digitar");
             var x = document.getElementById(value.id).value
             if(x==''||x==null||x==""){
                 eval('this.objeto.'+value.vmodel+'='+value.min)
@@ -479,15 +480,15 @@ export default {
                 }
             }
             }.bind(this))
-             //.log(this.objeto);
+            console.log(this.objeto);
         },
         seleccionado(value){
-             //.log("entro a seleccionado");
+            console.log("entro a seleccionado");
             
             var x = document.getElementById(value.id).value
-             //.log(x);
+            console.log(x);
             eval('this.objeto.'+value.vmodel+'='+'x')
-             //.log(this.objeto);
+            console.log(this.objeto);
         },
         adicionar(value){
             
@@ -496,7 +497,7 @@ export default {
             var algo
             
             if(this.concepto==null){
-                 //.log("hay concepto nulo");
+                console.log("hay concepto nulo");
                 infoconcepto={}
             }
             else{
@@ -510,7 +511,7 @@ export default {
             }
             if(value==null||value=='')
             {
-                 //.log("va vacio");
+                console.log("va vacio");
 
                 swal({
                 title: 'Error!',
@@ -532,9 +533,9 @@ export default {
                             load 
                         })
                         }, )
-                       
-                
-                this.axios.get("/api/MovilizadoProcesosLogistico/" +
+                        console.log(urlservicios+"MovilizadoProcesosLogistico/" +
+                value+'/'+this.selected);
+                this.axios.get(urlservicios+"MovilizadoProcesosLogistico/" +
                 value+'/'+this.selected)
                 .then(response => {
                     var load=false
@@ -543,7 +544,7 @@ export default {
                                     load
                                 })
                                 }, )
-                    // //.log(response);
+                    console.log(response);
                     this.mensaje=response.data
                     if(this.mensaje.message)
                     {
@@ -576,9 +577,9 @@ export default {
                             this.text1=''
                             this.mensaje.concepto=infoconcepto
                             this.itemsmovilizados.push(this.mensaje)
-                             //.log(this.itemsmovilizados);
-                             //.log(this.objeto);
-                             //.log(this.curier);
+                            console.log(this.itemsmovilizados);
+                            console.log(this.objeto);
+                            console.log(this.curier);
                             var guardado={
                                         itemsmovilizados:this.itemsmovilizados,
                                         inputs:this.objeto,
@@ -617,9 +618,9 @@ export default {
                                     this.mensaje.concepto=infoconcepto
                                     this.itemsmovilizados.push(this.mensaje)
                                     this.text1=''
-                                     //.log(this.itemsmovilizados);
-                                     //.log(this.objeto);
-                                     //.log(this.curier);
+                                    console.log(this.itemsmovilizados);
+                                    console.log(this.objeto);
+                                    console.log(this.curier);
                                     var guardado={
                                         itemsmovilizados:this.itemsmovilizados,
                                         inputs:this.objeto,
@@ -656,15 +657,15 @@ export default {
             var guardadoManifiesto = localStorage.getItem("Manifiesto");
             var infoguardadoManifiesto =JSON.parse(guardadoManifiesto);
 
-             //.log("cambio");
+            console.log("cambio");
             if(infoguardadoManifiesto==null||
             infoguardadoManifiesto=='null'){
-                 //.log("no hay items paa cargar");
+                console.log("no hay items paa cargar");
                 var nvacio ={ _id: null, nombre: 'Por Favor Seleccione un Concepto' };
                 this.selected=value 
                 this.itemsmovilizados=[]
                 this.listadoconcepto=[]
-                //  //.log(this.procesosLog);
+                // console.log(this.procesosLog);
                 if(this.selected==null){
                 }else{
                     for(var x=0;x<this.procesosLog.length;x++)
@@ -676,7 +677,7 @@ export default {
                         if(this.procesosLog[x].conceptos==null||
                         this.procesosLog[x].conceptos==undefined)
                         {
-                            // //.log(this.procesosLog[x].conceptos);
+                            //console.log(this.procesosLog[x].conceptos);
                             this.listadoconcepto.unshift(nvacio)
                         }
                         else{
@@ -687,12 +688,12 @@ export default {
                     }
                 }
             }else{
-                 //.log("hay itempara cargar");
+                console.log("hay itempara cargar");
                 this.itemsmovilizados=infoguardadoManifiesto.itemsmovilizados
                 var nvacio ={ _id: null, nombre: 'Por Favor Seleccione un Concepto' };
             this.selected=value 
             this.listadoconcepto=[]
-            //  //.log(this.procesosLog);
+            // console.log(this.procesosLog);
             if(this.selected==null){
             }else{
                 for(var x=0;x<this.procesosLog.length;x++)
@@ -704,7 +705,7 @@ export default {
                     if(this.procesosLog[x].conceptos==null||
                     this.procesosLog[x].conceptos==undefined)
                     {
-                        // //.log(this.procesosLog[x].conceptos);
+                        //console.log(this.procesosLog[x].conceptos);
                         this.listadoconcepto.unshift(nvacio)
                     }
                     else{
@@ -720,14 +721,14 @@ export default {
             
             var login = localStorage.getItem("storedData");
             var infologin = JSON.parse(login);
-            // //.log(infologin.id_OperadorLogistico);
+            //console.log(infologin.id_OperadorLogistico);
             var load=true
                     setTimeout(() => {
                         bus.$emit('load', {
                             load 
                         })
                         }, )
-            this.axios.get("/api/CamposProcesoLogisticosOperadores/" +
+            this.axios.get(urlservicios+"CamposProcesoLogisticosOperadores/" +
                 infologin.id_OperadorLogistico+'/'+this.selected)
                 .then(response => {
                     var load=false
@@ -738,22 +739,22 @@ export default {
                         }, )
                 this.inputs = response.data;
                 this.objeto=this.inputs.objeto
-                // //.log(this.inputs);
-                // //.log(this.objeto);
+                //console.log(this.inputs);
+                //console.log(this.objeto);
                 if(this.objeto==undefined||this.objeto=='undefined')
                 {
 
             }
                 else
                 {
-                    // //.log("hago peticiones");
+                    //console.log("hago peticiones");
                     var llaves = Object.keys(this.objeto);
                     //llaves.forEach(ele=>{
 
                     this.inputs.campos.forEach((element,indice) => {
                         
                     if(element.urlobjeto==undefined){
-                         //.log("no se hace peticion de url");       
+                        console.log("no se hace peticion de url");       
                     }
                     else{
                         this.axios.get(element.urlobjeto+
@@ -785,7 +786,7 @@ export default {
                         var login = localStorage.getItem("storedData");
                         var infologin = JSON.parse(login);
                         this.axios.get(
-                            "/api/UsuariosCurier/"+infologin.id_OperadorLogistico)
+                            urlservicios+"UsuariosCurier/"+infologin.id_OperadorLogistico)
                             .then(response => {
                                 this.curiers2 = response.data;
                                 var vacio=  { _id: "null", nombre: 'Por Favor Seleccione un Curier' };
@@ -806,12 +807,12 @@ export default {
         var infologin = JSON.parse(login);
         var guardadoManifiesto = localStorage.getItem("Manifiesto");
         var infoguardadoManifiesto =JSON.parse(guardadoManifiesto);
-         //.log(infoguardadoManifiesto);
+        console.log(infoguardadoManifiesto);
         
         
         if(infoguardadoManifiesto==null||infoguardadoManifiesto=='null')
         {
-             //.log("no hay previo");
+            console.log("no hay previo");
             var load=true
             setTimeout(() => {
                 bus.$emit('load', {
@@ -820,7 +821,7 @@ export default {
                 }, )
             this.axios
         .get(
-            "/api/Procesos/" +
+            urlservicios+"Procesos/" +
             infologin.id_OperadorLogistico
         )
         .then(response => {
@@ -832,7 +833,7 @@ export default {
                 }, )
             this.procesosLog = response.data;
             this.procesosLog.unshift(vacio)
-             //.log(this.procesosLog);
+            console.log(this.procesosLog);
 
         }).catch(function(error){
                     bandera=false

@@ -10,14 +10,20 @@
         <b-row>
            
         </b-row>
-        <b-row>
+          <b-card >
+          
+        <b-card-body>
+            <b-row>
+                <h3>INFORMACION DE CLIENTE </h3>
+            </b-row>
+           <b-row class="mb-2">
             <b-col>
                 <b-row>
                     <b-col>
                         <h4>Cliente:</h4>
                     </b-col>
                     <b-col>
-                        <p>{{currentUser.id_remitente.nombre}}</p> 
+                        <p>{{currentUser.id_cliente.nombre}}</p> 
                     </b-col>
                 </b-row>
                 <b-row>
@@ -25,7 +31,7 @@
                         <h4>Direccion Cliente:</h4>
                     </b-col>
                     <b-col>
-                        <p>{{currentUser.id_remitente.direccion}}</p> 
+                        <p>{{currentUser.id_cliente.direccion}}</p> 
                     </b-col>
                 </b-row>
                 <b-row>
@@ -33,7 +39,7 @@
                         <h4>Centro de Costo:</h4>
                     </b-col>
                     <b-col>
-                        <p>{{currentUser.id_centro.nombre}}</p> 
+                        <p>{{currentUser.id_centro_costo.nombre}}</p> 
                     </b-col>
                 </b-row>
                 <b-row>
@@ -41,7 +47,7 @@
                         <h4>Direccion Centro de Costo:</h4>
                     </b-col>
                     <b-col>
-                        <p>{{currentUser.id_centro.direccion}}</p> 
+                        <p>{{currentUser.id_centro_costo.direccion}}</p> 
                     </b-col>
                 </b-row>
             </b-col>
@@ -64,8 +70,38 @@
                 </b-row>
             </b-col>
         </b-row>
+        <b-row class="mb-2">
+            <b-col>
+                <b-row>
+                    <h4>INFORMACION DE RECOLECCION</h4>
+                </b-row>
+                <b-row>
+                    <b-col>
+                        <h4>Direccion Recoleccion</h4>
+                    </b-col>
+                    <b-col>
+                        <p>{{currentUser.remitente.direccion_recogida}}</p>
+                    </b-col>
+                </b-row>
+                 <b-row>
+                    <b-col>
+                        <h4>Nombre Contacto Recoleccion</h4>
+                    </b-col>
+                    <b-col>
+                        <p>{{currentUser.remitente.nombre_contacto}}</p>
+                    </b-col>
+                </b-row>
+                <b-row>
+                    <b-col>
+                        <h4>Telefono Contacto Recoleccion</h4>
+                    </b-col>
+                    <b-col>
+                        <p>{{currentUser.remitente.telefono_contacto}}</p>
+                    </b-col>
+                </b-row>
+            </b-col>
 
-              
+        </b-row>
         <b-row>
             <b-table :fields="fields" ref="table" :per-page="5" :current-page="currentPage" :items="this.currentUser.detalle">
                 <template slot="consecutivo" slot-scope="data">
@@ -94,6 +130,12 @@
         <b-row>
             <b-btn size="lg" variant="success" @click="asignar(selected_curier)">Aceptar</b-btn>
         </b-row>
+        </b-card-body>
+    </b-card>
+        
+        
+              
+        
         <!-- Modal para Trayectos-->
         <b-modal id="modalactualizar" ref="ModalAct" title="Editar Registro" size="lg">
             <div slot="modal-header" class="w-100">
@@ -115,7 +157,7 @@
                             </b-col>
                             <b-col>
                                 <b-row class=" col-form-label col-form-label-sm">
-                                    {{info.id_remitente.nombre}}
+                                    {{info.id_cliente.nombre}}
                                 </b-row>
                             </b-col>                           
                         </b-row>
@@ -127,7 +169,7 @@
                             </b-col>
                             <b-col>
                                 <b-row class=" col-form-label col-form-label-sm">
-                                    {{info.id_remitente.direccion}}
+                                    {{info.id_centro_costo.direccion}}
                                 </b-row>
                             </b-col>
                         </b-row>   
@@ -214,6 +256,7 @@
 
 <script>
 import {bus} from '../main'
+import {urlservicios} from '../main'
 import moment from 'moment'
 
 
@@ -257,23 +300,23 @@ export default {
     },
     methods: {
         desabilitar(value){
-             //.log(value);
+            //console.log(value);
             if(this.selec_disable==true){
-                 //.log("desabilito todo");
+                console.log("desabilito todo");
                 return true
             }
             else
             {
-                  //.log("no desabilito  todo");
+                 console.log("no desabilito  todo");
                  return value.requerido_edi
             }
         },
         valueseleccion(datos,indices){
-            // //.log(this.currentUser.detalle[0].detalleslocal.infor.trayectoobj.id_trayecto);
+            //console.log(this.currentUser.detalle[0].detalleslocal.infor.trayectoobj.id_trayecto);
             for(var x=0;x<this.currentUser.detalle.length;x++)
             {
                 if(this.currentUser.detalle[this.indices].detalleslocal.infor.trayectoobj==undefined){
-                     //.log("no tiene trayectos");
+                    console.log("no tiene trayectos");
                     return null
                 }
                 else{
@@ -285,11 +328,11 @@ export default {
             
         },
         seleccionar(value){
-             //.log("entro a algo");
+            console.log("entro a algo");
             var trayecto
             var trayectoobj={}
             var x = document.getElementById(value.id).value
-            // //.log(this.indices);
+            //console.log(this.indices);
             eval('this.campos.'+value.vmodel+'='+'x')
                     for(var x=0;x<this.trayectos.length;x++)
                     {
@@ -300,14 +343,14 @@ export default {
                                 id_trayecto:eval('this.campos.'+value.vmodel),
                                 nombre:this.trayectos[x].nombre
                             }
-                             //.log(this.indices);
-                            // //.log(typeof(this.currentUser.detalle[this.indices].detalleslocal.infor.trayectoobj));
-                             //.log("----------------------");
-                             //.log(this.currentUser.detalle[this.indices].detalleslocal.infor);
+                            console.log(this.indices);
+                            //console.log(typeof(this.currentUser.detalle[this.indices].detalleslocal.infor.trayectoobj));
+                            console.log("----------------------");
+                            console.log(this.currentUser.detalle[this.indices].detalleslocal.infor);
                             if(this.currentUser.detalle[this.indices].detalleslocal.infor.trayecto==undefined
                             ||this.currentUser.detalle[this.indices].detalleslocal.infor.trayecto==null)
                             {
-                                 //.log("no tiene trayecto ");
+                                console.log("no tiene trayecto ");
                                 this.currentUser.detalle[this.indices].detalleslocal.infor.trayectoobj={}
                                 this.currentUser.detalle[this.indices].detalleslocal.infor.trayectoobj=trayectoobj
                                 this.currentUser.detalle[this.indices].detalleslocal.infor.trayecto=this.trayectos[x].nombre
@@ -316,9 +359,9 @@ export default {
 
                             }
                            else{
-                                //.log(" tiene trayecto ");
+                               console.log(" tiene trayecto ");
                                this.currentUser.detalle[this.indices].detalleslocal.infor.trayectoobj=trayectoobj
-                                //.log(this.currentUser.detalle[this.indices].detalleslocal.infor);
+                               console.log(this.currentUser.detalle[this.indices].detalleslocal.infor);
                                  this.currentUser.detalle[this.indices].detalleslocal.infor.trayecto=this.trayectos[x].nombre
                                 trayecto=this.trayectos[x].nombre
                                                     this.$refs.table.refresh();
@@ -346,7 +389,7 @@ export default {
             this.selected_curier=value.target.value
         },
         Presiono(indi,dato){
-             //.log("entro a presionar");
+            console.log("entro a presionar");
             if(document.getElementById(this.inputs.campos[indi].id).value==null||document.getElementById(this.inputs.campos[indi].id).value==''){
                 swal(
                     'Oops...',
@@ -369,7 +412,7 @@ export default {
                 }
                 
             }
-            // //.log(this.campos);
+            //console.log(this.campos);
 
         },
         values(dato){
@@ -386,11 +429,11 @@ export default {
             if(this.id_cliente_local!=null){
                 this.$refs.ModalAct.hide();
             }else{
-                // //.log(this.campos);
+                //console.log(this.campos);
                 this.$refs.table.refresh();
-                // //.log(this.selection);  
+                //console.log(this.selection);  
                 var nombresel
-                // //.log(this.currentUser.detalle[this.indices].detalleslocal.infor);
+                //console.log(this.currentUser.detalle[this.indices].detalleslocal.infor);
                 if(this.info.estado=="orden de servicio cancelada")
                 {
                     swal(
@@ -404,12 +447,12 @@ export default {
                         {
                             if(this.trayectos[x]._id==this.selection)
                             {
-                                 //.log("saco el nombre");
+                                console.log("saco el nombre");
                                 nombresel=this.trayectos[x].nombre
                             }
                         }
                         var prueba =this.currentUser.detalle[this.indices].detalleslocal.infor
-                        // //.log(prueba);
+                        //console.log(prueba);
 
                         var objeto = {
                             id_trayecto:this.selection,
@@ -420,7 +463,7 @@ export default {
                         
                         this.$refs.table.refresh();
 
-                        // //.log(objeto);
+                        //console.log(objeto);
                     /*
                         for(var x=0;x<this.currentUser.detalle.length;x++)
                         {  
@@ -435,7 +478,7 @@ export default {
                         
                         
                         this.axios
-                            .post("/api/ActualizarTrayecto/"+this.currentUser._id+"/"+this.consecutivo, objeto)
+                            .post(urlservicios+"ActualizarTrayecto/"+this.currentUser._id+"/"+this.consecutivo, objeto)
                             .then(response => {
                             });
                         
@@ -454,16 +497,16 @@ export default {
                         else
                         {
                             this.id_trayectos.forEach((obj,ind)=>{
-                                 //.log(obj);
+                                console.log(obj);
                                 if(obj.indice==this.indices){
                                     this.id_trayectos.splice(obj,1)
                                     this.id_trayectos.push(objeto2)
                                 
-                                     //.log(this.id_trayectos);
+                                    console.log(this.id_trayectos);
                                 }
                                 else
                                 {
-                                     //.log("se agrega");
+                                    console.log("se agrega");
                                     this.id_trayectos.push(objeto2)
                                 }
                             })
@@ -495,7 +538,7 @@ export default {
 
                     
                     this.axios
-                        .post("/api/AsignarOrdenCurrier/",obj)
+                        .post(urlservicios+"AsignarOrdenCurrier/",obj)
                         .then(response => {
                         this.Documento = response.data;
                         if(this.Documento.validacion==false){
@@ -517,9 +560,10 @@ export default {
         },
         asignar(seleccionado)
         {
-             //.log(this.id_cliente_local);
+             
+            //console.log(this.id_cliente_local);
             if(this.id_cliente_local!=null){
-                 //.log("tiene algo");
+                console.log("tiene algo");
                 var ocultar=true
                     var eliminar= this.vali
                     setTimeout(() => {
@@ -529,57 +573,122 @@ export default {
                         }, )
                 //this.$router.go(-1)
                 this.$router.replace('/inicio/consultar/resultado')
-            }else{
+            }
+            /*
+            else{
+                var llavesinfor
+                var totales=[]
+                var pendientes=[]
+                var completo=false
+                 if(this.id_trayectos.length==0){
+                    
+                     for(var x=0;x<this.currentUser.detalle.length;x++)
+                     {
+                         totales.push(x)
+                        //console.log(this.currentUser.detalle[x].detalleslocal.infor);
+                        llavesinfor=Object.keys(this.currentUser.detalle[x].detalleslocal.infor) 
+                        console.log(llavesinfor);
+                        for(var y=0;y<llavesinfor.length;y++)
+                        {
+                            if(llavesinfor[y]=='trayectoobj')
+                            {
+                                //console.log("hay trayectoasignado");
+                                completo=true
+                            }
+
+                        }
+                        if(completo==true)
+                        {
+                            completo=false
+                        }else{
+                            pendientes.push(x)
+
+                        }
+                        
+                     }
+                     console.log(totales);
+                     console.log(pendientes);
+                     if(totales.length==pendientes.length){
+                         console.log("andan completos");
+                        this.asignarcurier(seleccionado)
+
+                     }
+                     else{
+                         console.log("no anda completo");
+                        swal(
+                            "Falta algo por completar!",
+                            "Revisa por favor los detalles",
+                            "error"
+                        );
+                     }
+                 }
+                 else
+                 {
+                    console.log(this.id_trayectos);
+                 }
+            }
+            */
+            
+            else{
                 
-                 //.log("entro a asignar");
+                console.log("entro a asignar");
                     var banderasinT=false
                     var banderaconT=false
                     var contador=0
-                    var pendi=[
-                        
+                    var pendi=[    
                     ]
-
                     var correcto=[]
-                    // //.log(this.currentUser.detalle);
-                    // //.log(this.id_trayectos);
+
                     if(this.id_trayectos.length==0){
-                         //.log("no ingreso nda");
+                        console.log("no ingreso nda");
                         for(var x=0;x<this.currentUser.detalle.length;x++){
-                            // //.log(this.currentUser.detalle[x].detalleslocal.infor);
+                            console.log(this.currentUser.detalle[x].detalleslocal.infor);
                             
                             var llavesinfor=Object.keys(this.currentUser.detalle[x].detalleslocal.infor)
                             for(var y=0;y<llavesinfor.length;y++)
                             {   
                                 
+                                if(llavesinfor[y]!='trayectoobj'){
+                                    console.log("entrooo");
+
+                                }
+                                /*
                                 if(typeof(eval('this.currentUser.detalle[x].detalleslocal.infor.'+llavesinfor[y]))!='object')
                                 {
-                                     //.log("entrooo");
-                                    // //.log(x);
+                                    //console.log(x);
                                 
                                 }
+                                */
                                 else{
                                     banderasinT=true
                                     contador=contador+1
-                                     //.log();
                                     correcto.push(x)
+                                    console.log(correcto);
+
                                 } 
                             }
                             pendi.push(x)
                         }
                     }
                     else{
-                         //.log("hay trayectos");
-                         //.log(this.id_trayectos);
+                        console.log("hay trayectos");
+                        console.log(this.id_trayectos);
                         for(var x=0;x<this.currentUser.detalle.length;x++){
-                             //.log(this.currentUser.detalle[x].detalleslocal.infor);
+                            console.log(this.currentUser.detalle[x].detalleslocal.infor);
                             var llavesinfor=Object.keys(this.currentUser.detalle[x].detalleslocal.infor)
                             for(var y=0;y<llavesinfor.length;y++)
                             {   
+                                console.log(eval('this.currentUser.detalle[x].detalleslocal.infor.'+llavesinfor[y]))
+                                if(llavesinfor[y]!='trayectoobj'){
+                                    console.log("entrooo");
+                                }
+                                /*
                                 if(typeof(eval('this.currentUser.detalle[x].detalleslocal.infor.'+llavesinfor[y]))!='object')
                                 {
-                                     //.log("entrooo");
+                                    console.log("entrooo");
 
                                 }
+                                */
                                 else{
                                     banderasinT=true
                                     contador=contador+1
@@ -591,7 +700,7 @@ export default {
                     }
                     for(var o=0;o<pendi.length;o++)
                     {
-                        // //.log(pendi[o]);
+                        //console.log(pendi[o]);
                         //
                         
                         pendi[o]=pendi[o]++
@@ -599,10 +708,10 @@ export default {
                         {
                             
                             if(pendi[o]==correcto[p]){
-                                 //.log("son iguales");
+                                console.log("son iguales");
                                 
                                 pendi.splice(o,1)
-                                 //.log(pendi);
+                                console.log(pendi);
                             }
                         }
                     }
@@ -610,16 +719,16 @@ export default {
                     {
                         pendi[o]++
                     }
-                    // //.log(banderasinT)
-                    // //.log(banderaconT);
-                    // //.log(contador);
-                     //.log(pendi);
-                     //.log(correcto);
+                    //console.log(banderasinT)
+                    //console.log(banderaconT);
+                    //console.log(contador);
+                    console.log(pendi);
+                    console.log(correcto);
                     if(contador==this.currentUser.detalle.length){
-                         //.log("todos andan completos");
+                        console.log("todos andan completos");
                         this.asignarcurier(seleccionado)
                     }else{
-                         //.log("no andan completos")
+                        console.log("no andan completos")
                         swal(
                                 "Falta algo por completar!",
                                 "Revisa por favor "+pendi,
@@ -628,88 +737,19 @@ export default {
                     }
             }
             
-                /*
-                var bandera=false
-                var pendientes,llaves
-                this.currentUser.detalle.map((obj,ind)=>{
-                    
-                    this.inputstotales[ind].campos.map((objinput,indi)=>{
-                        // //.log(Object.keys(eval('obj.detalleslocal.infor')));
-                        
-                        if(objinput.requerido_edi==true)
-                        {
-                            if(eval('obj.detalleslocal.infor.'+objinput.vmodel)==''||
-                                eval('obj.detalleslocal.infor.'+objinput.vmodel)==null||
-                                eval('obj.detalleslocal.infor.'+objinput.vmodel)==undefined)
-
-                            {
-                                bandera=false
-                                pendientes=ind+1
-
-                            }
-                            else
-                            {
-                                // //.log("anda completo todo");
-                                bandera=true
-                            }
-                        }
-                        else
-                        {
-                            // //.log("no se exige");
-                        }
-                        
-                    })
-                }) 
-                var bandera2=false
-                var bandera3=false
-                this.currentUser.detalle.some((obj,ind)=>{
-                     //.log(obj.detalleslocal.infor);
-                    llaves=Object.keys(eval('obj.detalleslocal.infor'))
-                        // //.log(obj);
-                        llaves.map((objlla,ind)=>{
-                            // //.log("---------------");
-                            // //.log(objlla);
-                            if(typeof(eval('obj.detalleslocal.infor.'+objlla))=='object')
-                            {
-                                 //.log("hay un ojeto");
-
-                                bandera2=true
-                            }
-                            else{
-                                 //.log("no hay un objeto");
-                            }
-
-                        })
-            
-            })
-
-                if(bandera==true&&bandera2==false)
-                {
-                     //.log("hacemos peticion");
-                    this.asignarcurier(seleccionado)
-                }
-                else
-                {
-                     //.log("no hacemos peticion");
-                    swal(
-                        "Falta algo por completar!",
-                        "Revisa el detalle "+pendientes,
-                        "error"
-                    );
-                }*/
         },
         actualizar(indice,consecutivo){
             this.indemodal=indice
             this.consecutivo=consecutivo
             var vacio=  { _id: null, nombre: 'Por Favor Seleccione un Trayecto' };
-            // //.log(this.info.estado);
+            //console.log(this.info.estado);
             if(this.info.estado=='orden de servicio cancelada'||this.info.estado=='Orden De Servicio Recogida'||this.info.estado=='Orden de servicio cerrada')
             {
                 this.indices=indice
                 this.detallesactualizar= this.currentUser.detalle[indice].detalleslocal
                 var produc= this.currentUser.detalle[indice].productoslocal._id
                 var serv = this.currentUser.detalle[indice].servicioslocal._id
-                this.axios.get("/api/estructuraf/" +produc +
+                this.axios.get(urlservicios+"estructuraf/" +produc +
                 "/" +serv)   
                 .then(response => {
                 this.inputs = response.data;
@@ -720,6 +760,7 @@ export default {
                         var login = localStorage.getItem("storedData");
                         var infologin = JSON.parse(login);
                         document.getElementById(this.inputs.campos[i].id).value=null
+                        console.log(this.inputs.campos[i].urlobjeto);
                         this.axios.get(this.inputs.campos[i].urlobjeto+infologin.id_OperadorLogistico)   
                         .then(response => {
                         this.trayectos = response.data;
@@ -738,15 +779,17 @@ export default {
                 this.detallesactualizar= this.currentUser.detalle[indice].detalleslocal
                 var produc= this.currentUser.detalle[indice].productoslocal._id
                 var serv = this.currentUser.detalle[indice].servicioslocal._id
-                this.axios.get("/api/estructuraf/" +produc +
+                this.axios.get(urlservicios+"estructuraf/" +produc +
                 "/" +serv)   
                 .then(response => {
+                    console.log(this.inputs);
                 this.inputs = response.data;
                 this.campos= response.data.objeto
                 for(var i=0;i<this.inputs.campos.length;i++){
                     if(this.inputs.campos[i].type=='select'){
                         var login = localStorage.getItem("storedData");
                         var infologin = JSON.parse(login);
+                        console.log(this.inputs.campos[i].urlobjeto+infologin.id_OperadorLogistico)
                         this.axios.get(this.inputs.campos[i].urlobjeto+infologin.id_OperadorLogistico)   
                         .then(response => {
                         this.trayectos = response.data;
@@ -758,7 +801,7 @@ export default {
                 }).catch(function(error){
                 })
             }
-            // //.log(this.currentUser.detalle[indice].detalleslocal.infor.trayectoobj)
+            //console.log(this.currentUser.detalle[indice].detalleslocal.infor.trayectoobj)
 
         }
     },
@@ -771,21 +814,21 @@ export default {
 
   },
       mounted: function () {
-           //.log("montado");
+          console.log("montado");
        bus.$on('ocultar', function (userObject) {
         
         this.ocultar = userObject.ocultar
       }.bind(this))
        var login = localStorage.getItem("storedData");
         var infologin =JSON.parse(login);
-        // //.log(infologin.id_cliente);
+        //console.log(infologin.id_cliente);
         var id_cliente
         
         if(infologin.id_cliente==undefined||infologin.id_cliente==null){
-            // //.log("no hay cliente");
+            //console.log("no hay cliente");
         }
         else{
-            // //.log("hay cliente");
+            //console.log("hay cliente");
             this.selec_disable=true
             this.id_cliente_local=infologin.id_cliente
 
@@ -801,7 +844,7 @@ export default {
         var infologin = JSON.parse(login);
         this.axios
         .get(
-            "/api/UsuariosCurier/"+infologin.id_OperadorLogistico 
+            urlservicios+"UsuariosCurier/"+infologin.id_OperadorLogistico 
         )
         .then(response => {
             this.curiers = response.data;
@@ -811,7 +854,7 @@ export default {
 
         bus.$on('thisEvent', function (userObject) {
         this.currentUser = userObject.inde.item
-         //.log(this.currentUser);
+        //console.log(this.currentUser);
         if(this.currentUser.id_courier=="000000000000000000000000"){
             this.selected_curier=null
         }

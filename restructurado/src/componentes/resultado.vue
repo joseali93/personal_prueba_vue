@@ -33,6 +33,7 @@
 
 <script>
 import {bus} from '../main'
+import {urlservicios} from '../main'
 import moment from 'moment'
 import Preload from '../componentes/preload.vue'
 
@@ -40,7 +41,7 @@ export default {
     components :{
     Preload
   },
-    props:['consulta'],
+    props:['consulta','peticion'],
     filters: {
         formatdate: function(value) {
         if (value) {
@@ -50,10 +51,10 @@ export default {
     },
     data(){
         return{
+            cantidades:0,
             algo:'',
             currentPage: 1,
             fields: [
-                'index',
                 'Cancelar',
                 { key: 'id', sortable: true },
                 { key: 'fecha_creacion',label:'Fecha Creacion Orden', sortable: false },
@@ -64,12 +65,13 @@ export default {
         }
     },
     methods: {
+        
         cancelarOrden(value){
-             //.log(value);
+            console.log(value);
             var login = localStorage.getItem("storedData");
             var infologin =JSON.parse(login);
-             //.log(infologin.id_cliente);  
-             //.log(this.consulta);
+            console.log(infologin.id_cliente);  
+            console.log(this.consulta);
             if(infologin.id_cliente==undefined||
             infologin.id_cliente==null){
                 swal({
@@ -83,15 +85,15 @@ export default {
                 confirmButtonText: 'Confirmar'
                 }).then((result) => {
                     if (result.value) {
-                         //.log("elimino");
+                        console.log("elimino");
                         this.consulta.map((obj,ind)=>{
                     if(obj.id==value.item.id)
                         {
                             if(obj.estado=="Orden De Servicio Creada"||obj.estado=="Orden De Servicio Asignada")
                             {
-                                this.axios.get("/api/CancelarOrden/"+value.item._id)
+                                this.axios.get(urlservicios+"CancelarOrden/"+value.item._id)
                                     .then((response) => {
-                                         //.log(response.data);
+                                        console.log(response.data);
                                         if(response.data.message=="orden de servicio actualizada")
                                         {
                                             swal("Orden Eliminada!", "Orden de Servicio Cancelada!", "success");
@@ -112,12 +114,12 @@ export default {
                         })
                     }
                     else{
-                         //.log("no elimino");
+                        console.log("no elimino");
                     }
                     })
             }
             else{
-                 //.log("hay cliente");
+                console.log("hay cliente");
                 swal({
                 title: 'Esta seguro ?',
                 text: "Luego no se podra revertir el estado de la orden!",
@@ -129,15 +131,15 @@ export default {
                 confirmButtonText: 'Confirmar'
                 }).then((result) => {
                     if (result.value) {
-                         //.log("elimino");
+                        console.log("elimino");
                         this.consulta.map((obj,ind)=>{
                     if(obj.id==value.item.id)
                         {
                             if(obj.estado=="Orden De Servicio Creada")
                             {
-                                this.axios.get("/api/CancelarOrden/"+value.item._id)
+                                this.axios.get(urlservicios+"CancelarOrden/"+value.item._id)
                                     .then((response) => {
-                                         //.log(response.data);
+                                        console.log(response.data);
                                         if(response.data.message=="orden de servicio actualizada")
                                         {
                                             swal("Orden Eliminada!", "Orden de Servicio Cancelada!", "success");
@@ -158,7 +160,7 @@ export default {
                         })
                     }
                     else{
-                         //.log("no elimino");
+                        console.log("no elimino");
                     }
                     })
             }
@@ -172,7 +174,7 @@ export default {
             {
                 var produc= inde.item.detalle[a].productoslocal._id
                 var serv = inde.item.detalle[a].servicioslocal._id
-                this.axios.get("/api/estructuraf/" +produc +
+                this.axios.get(urlservicios+"estructuraf/" +produc +
                 "/" +serv).then(response => {
 
                         inputstotales.push(response.data)
@@ -208,7 +210,7 @@ export default {
              bus.$on('ocultar', function (userObject) {
         
             this.algo = userObject
-             //.log(this.algo);
+            console.log(this.algo);
         }.bind(this))
         
         },

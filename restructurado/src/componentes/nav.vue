@@ -87,7 +87,14 @@
                     Logout
                     <i class="fa fa-sign-out"></i>
                   </b-link>
-
+                </li>
+                <li class="nav-item">
+                  <b-dropdown id="ddown-header" text="Configuracion" variant="link" class="nav-link logout">
+                    <b-dropdown-header>Configuracion Aplicativo</b-dropdown-header>
+                    <b-dropdown-item-button @click="confiCliente">Clientes</b-dropdown-item-button>
+                    <b-dropdown-item-button @click="confiCentroC">Centros de Costo</b-dropdown-item-button>
+                    <b-dropdown-item-button @click="confiCentroL">Centros Logistico</b-dropdown-item-button>
+                  </b-dropdown>
                 </li>
                </ul>
             </div>
@@ -148,7 +155,20 @@ export default {
       }.bind(this))
     },
   methods:{
-    
+    confiCliente(){
+      console.log("entro a config cliente");
+      this.$router.replace('/inicio/configcliente')
+    },
+    confiCentroC(){
+      console.log("entro a cc");
+            this.$router.replace('/inicio/configcentroc')
+
+    },
+    confiCentroL(){
+      console.log("entro a cl");
+            this.$router.replace('/inicio/configcentrol')
+
+    },
     menu(){
       if(this.estado==true){
         $("#toggle-btn").click(function(e) {
@@ -170,7 +190,7 @@ export default {
     },
     
     Salir(val){
-       //.log("entro a salir");
+      console.log("entro a salir");
       localStorage.clear();
       this.$router.replace('/')
 
@@ -186,7 +206,7 @@ export default {
     this.imagen = test.url_logo
 
     if(test.id_rol.nombre=="courier"){
-       //.log("hay courier");
+      console.log("hay courier");
       swal({
                 title: 'Es un Courier!',
                 text: "No tiene funcionalidades en el aplicativo Web",
@@ -202,7 +222,7 @@ export default {
                         this.$router.replace('/')
                     }
                     else{
-                       //.log("se mantiene");
+                      console.log("se mantiene");
                     }
                    
                     })
@@ -211,12 +231,12 @@ export default {
       this.rutas = test.id_rol.rutas
     }
     
-    // //.log(test)
-    // //.log(this.imagen);
-    // //.log(this.rutas);
+    //console.log(test)
+    //console.log(this.imagen);
+    //console.log(this.rutas);
   },
   beforeCreate: function() {
-     //.log("antes");
+    console.log("antes");
   }
 };
 </script>

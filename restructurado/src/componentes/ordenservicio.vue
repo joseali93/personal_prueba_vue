@@ -74,16 +74,58 @@
 
                     <br>
                 </b-row>
-                <b-row  v-for="(data,indice) in inputs.campos" class="my-1"> 
-                  <template v-if="data.type!='select'">
-                    <b-col >
+                <b-row  v-for="(data,indice) in inputs.campos" class="my-1 prueba" > 
+                  <template v-if="data.type!='select'" >
+                    <template v-if="data.espieza==true" style="    display: inline-block;">
+                  <b-input-group >
+              <b-form-input ></b-form-input>
+                <b-btn variant="outline-success">Button</b-btn>
+            </b-input-group>
+                    </template>
+                    <template v-else>
+                    <b-col  >   
                         <label  class="col-sm-2 col-form-label col-form-label-sm text-capitalize" :style="[data.style]" >{{data.placeholder}}: </label>
                     </b-col>
-                    <b-col>
+                    <b-col >
                         <input class="form-control form-control-sm" :type="data.type" :id="data.id" :style="[data.style,validatecampo]" :max="data.max" :placeholder="data.placeholder" @keyup="Presiono(indice)"   required>
                     </b-col>
+                    </template>
+
+                    
                   </template>
+                  
                 </b-row>
+                
+                <!--
+                <b-row  v-for="(data,indice) in inputs.campos" class="my-1" >
+                  <template v-if="data.espieza==true">
+                  <b-input-group class="mb-3">
+                    <b-form-input 
+                    type="text"
+                    :id="data.id"
+                    :placeholder="'Ingrese la '+data.placeholder">
+                    </b-form-input>
+                    <b-btn variant="outline-success" @click="adicionarRef">
+                    <i class="fa fa-plus"></i>
+                    </b-btn>
+                  </b-input-group>  
+                    <b-table striped hover :items="itemsreferencia" :fields="fieldsprueba"
+                   :per-page="3" :current-page="currentPageRef"> 
+                      <template slot="eliminar" slot-scope="data">
+                      <i class="btn btn-danger fa fa-trash" v-on:click="eliminarRef(data.index)" ></i>
+                      </template>
+                      <template slot="referencia"  slot-scope="data">           
+                         {{data.item.referencia}}
+                      </template>
+                    </b-table>
+                 <b-pagination size="md" :total-rows="itemsreferencia.length" v-model="currentPageRef" 
+                 :per-page="3">
+                 </b-pagination>
+
+                  </template> 
+                 
+                </b-row>
+                -->
                   <b-form-row  v-show="selectservice">
                     <b-col>
                         <label  class="col-sm-2 col-form-label col-form-label-sm">Referencia: </label>
@@ -98,7 +140,20 @@
                 <b-row v-show="selectservice">
                     <h2>Destinatario: </h2>
                 </b-row>
-                <b-form-row v-show="selectservice" class="my-1">
+                 <b-form-row v-show="selectservice" class="my-1">
+                    <b-col>
+                        <label  class="col-sm-2 col-form-label col-form-label-sm"> Identificacion: </label>
+                    </b-col>
+                    <b-col>
+                        <b-form-input type="number" class="form-control form-control-sm"  placeholder="Indentidicacion"
+                         v-model="identificacion"
+                         @keyup.enter.native="buscar()"
+                         :state="true"  v-b-popover.hover="'Se debe diligenciar sin puntos, en caso de NIT sin numero de validacion, ni guion'" title="Num. Identificacion"></b-form-input>
+                        <!--<input type="text" class="form-control form-control-sm"  placeholder="Nombre" v-model="detalles.destinatario.nombre">
+                        -->
+                    </b-col>
+                </b-form-row>
+                <b-form-row v-show="selectservice&&mostrardestinatario" class="my-1">
                     <b-col>
                         <label  class="col-sm-2 col-form-label col-form-label-sm">Nombre: </label>
                     </b-col>
@@ -109,7 +164,7 @@
                         -->
                     </b-col>
                 </b-form-row>
-                <b-form-row v-show="selectservice" class="my-1">
+                <b-form-row v-show="selectservice&&mostrardestinatario" class="my-1">
                     <b-col>
                         <label  class="col-sm-2 col-form-label col-form-label-sm">Direccion: </label>
                     </b-col>
@@ -119,7 +174,7 @@
                         -->
                     </b-col>
                 </b-form-row>
-                <b-form-row v-show="selectservice" class="my-1">
+                <b-form-row v-show="selectservice&&mostrardestinatario" class="my-1">
                     <b-col>
                         <label  class="col-sm-2 col-form-label col-form-label-sm">Telefono: </label>
                     </b-col>
@@ -133,7 +188,7 @@
                         
                     </b-col>
                 </b-form-row>
-                <b-form-row v-show="selectservice">
+                <b-form-row v-show="selectservice&&mostrardestinatario">
                   <b-col>
                     <b-form-textarea id="textarea1"
                         v-model="detalles.observaciones"
@@ -259,6 +314,7 @@
 
 <script>
 import { bus } from "../main";
+import {urlservicios} from '../main'
 import Preload from '../componentes/preload.vue'
 export default {
   components :{
@@ -266,6 +322,18 @@ export default {
   },
   data() {
     return {
+      currentPageRef:1,
+      itemsreferencia:[
+      ],
+      fieldsprueba:[
+         { key: "referencia", label: "Referencia" },
+         { key: "eliminar", label: "Referencia" },
+
+      ],
+      prueba:'',
+      mostrardestinatario:false,
+      creaciondestinatarios:'',
+      identificacion:'',
       estado:{
         direccion:null,
         nombre:null,
@@ -299,6 +367,8 @@ export default {
       detallesc: "",
       detalles: {
         destinatario: {
+          identificacion:'',
+          _id:"",
           nombre: "",
           direccion: "",
           telefono: ""
@@ -310,6 +380,8 @@ export default {
       },
       detalleseditar: {
         destinatario: {
+          identificacion:'',
+          _id:"",
           nombre: "",
           direccion: "",
           telefono: ""
@@ -328,10 +400,95 @@ export default {
     }
   },
   methods: {
+    ActualizarRef(value){
+      console.log("entro a cambiar")
+      console.log(value)
+       setTimeout(
+        function() {
+          if (document.getElementById(this.inputs.campos[value].id).value == "")
+           {
+            eval("this.objeto." + this.inputs.campos[value].vmodel + "= null");
+            eval(
+                "this.objeto." +
+                  this.inputs.campos[value].vmodel +
+                  "=" +
+                  this.inputs.campos[value].min)
+          } else {
+            if (document.getElementById(this.inputs.campos[value].id).value >this.inputs.campos[value].max)
+             {
+              eval(
+                "this.objeto." +
+                  this.inputs.campos[value].vmodel +
+                  "=" +
+                  this.inputs.campos[value].min
+              );
+              document.getElementById(
+                this.inputs.campos[value].id
+              ).value = eval(
+                "this.objeto." +
+                  this.inputs.campos[value].vmodel +
+                  "=" +
+                  this.inputs.campos[value].min
+              );
+            } else {
+              eval(
+                "this.objeto." +
+                  this.inputs.campos[value].vmodel +
+                  "=" +
+                  document.getElementById(this.inputs.campos[value].id).value
+              );
+            }
+          }
+        }.bind(this)
+      );
+      console.log(this.objeto)
+    },
+    eliminarRef(value){
+      console.log("entro a eliminar");
+      console.log(value);
+      this.itemsreferencia.splice(value, 1);
 
+
+    },
+    adicionarRef(){
+      console.log("ntro a prueba");
+      console.log(this.prueba);
+      var obj ={
+        referencia:this.prueba,
+      }
+      this.itemsreferencia.push(obj)
+      console.log(this.itemsreferencia);
+    },
+    buscar(){
+      console.log("entro a buscar");
+      console.log(this.identificacion);
+       this.axios.get(urlservicios+"obtenerDestinatario"+'/'+this.identificacion)
+        .then(response => {
+          console.log(response.data);
+          var destinatario=response.data.destinatarios
+          this.creaciondestinatarios=response.data.validar
+          if(response.data.validar==true){
+            this.detalles.destinatario.numero_identificacion=destinatario.numero_identificacion
+            this.detalles.destinatario._id=destinatario._id
+            this.detalles.destinatario.nombre=destinatario.nombre
+            this.detalles.destinatario.direccion=destinatario.direccion
+            this.detalles.destinatario.telefono=destinatario.telefono
+          }
+          else{
+            this.detalles.destinatario.numero_identificacion=this.identificacion
+            this.detalles.destinatario._id=''
+            this.detalles.destinatario.nombre=''
+            this.detalles.destinatario.direccion=''
+            this.detalles.destinatario.telefono=''
+          }
+          this.mostrardestinatario=true
+          
+          
+        })
+    },
     numeroseditar(valor) {
-      // //.log("entro a numeros editar");
-      // //.log(document.getElementById("telefonoedit").value)
+      //console.log("entro a numeros editar");
+      //console.log(document.getElementById("telefonoedit").value)
       var a = document.getElementById("telefonoedit").value;
       //var x=check.which;
       //var x = a.charCode;
@@ -352,8 +509,8 @@ export default {
       }
     },
     numeros(valor) {
-       //.log("entro a numeros");
-      // //.log(document.getElementById("telefono").value)
+      console.log("entro a numeros");
+      //console.log(document.getElementById("telefono").value)
       var a = document.getElementById("telefono").value;
       //var x=check.which;
       //var x = a.charCode;
@@ -374,7 +531,7 @@ export default {
       }
     },
     PresionoED(index) {
-       //.log("entro al presionar editar");
+      console.log("entro al presionar editar");
       this.validatecampo= ''
       setTimeout(
         function() {
@@ -396,16 +553,16 @@ export default {
           }
         }.bind(this)
       );
-      // //.log(this.detalleseditar)
+      //console.log(this.detalleseditar)
     },
     valores(dato) {
-      // //.log(this.detalleseditar)
-      // //.log(dato)
-      // //.log(eval("this.detalleseditar.infor." + dato));
+      //console.log(this.detalleseditar)
+      //console.log(dato)
+      //console.log(eval("this.detalleseditar.infor." + dato));
       return eval("this.detalleseditar.infor." + dato);
     },
     actualizar() {
-       //.log("actualizar");
+      console.log("actualizar");
             this.validatecampoTel=''
       var pivoteedi=false
       this.estado.nombre=null
@@ -423,7 +580,7 @@ export default {
             }
        }
      }
-       //.log(pivoteedi);
+      console.log(pivoteedi);
       if (
         this.detalleseditar.destinatario.nombre == "" ||
         this.detalleseditar.destinatario.direccion == "" ||
@@ -462,7 +619,7 @@ export default {
           productoslocal: productoslocal,
           detalleslocal: detalleslocal
         };
-        // //.log(JSON.stringify(detalles));
+        //console.log(JSON.stringify(detalles));
         this.DetalleServicio.splice(this.indices, 1);
         this.DetalleServicio.splice(this.indices, 0, detalles);
         (this.objeto = ""),
@@ -494,15 +651,16 @@ export default {
       this.estado.direccion=null
       this.estado.referencia=null
       this.indices = index;
-       //.log("entro al editar");
+      console.log("entro al editar");
       this.detalleseditar = this.DetalleServicio[index].detalleslocal;
       this.selectproduct = this.DetalleServicio[index].productoslocal._id;
       this.selectservice = this.DetalleServicio[index].servicioslocal._id;
-       //.log(this.selectservice);
+      console.log(this.selectservice);
+      console.log(this.detalleseditar);
 
       this.axios
         .get(
-        "/api/estructuraf/" +
+        urlservicios+"estructuraf/" +
             this.selectproduct +
             "/" +
             this.selectservice
@@ -534,39 +692,83 @@ export default {
       this.estado.nombre=null
       this.estado.direccion=null
       this.estado.referencia=null
-       //.log("ingreso orden");
+      console.log("ingreso orden");
       var pivote=false
+      console.log("---------------");
+      console.log(this.detalles.destinatario);
+
+      console.log("---------------");
+      var inforemitente =localStorage.getItem("orden");
+      var inforemi=JSON.parse(inforemitente)
+
+      console.log(this.identificacion);
+      if(this.creaciondestinatarios==false){
+        var objeto={
+        numero_identificacion:this.identificacion,
+        direccion:this.detalles.destinatario.direccion,
+        nombre:this.detalles.destinatario.nombre,
+        telefono:this.detalles.destinatario.telefono,
+        id_cliente:inforemi.selected_client
+        
+      }
+      console.log(objeto);
+      this.axios.post(urlservicios+"CrearDestinatario", objeto)
+        .then(response => {
+          console.log(response);
+
+        })
+      }
+      else{
+        console.log("actualiza destinatario");
+        console.log(this.detalles.destinatario);
+        var objeto={
+        numero_identificacion:this.identificacion,
+        direccion:this.detalles.destinatario.direccion,
+        nombre:this.detalles.destinatario.nombre,
+        telefono:this.detalles.destinatario.telefono,
+        id_cliente:inforemi.selected_client
+        
+      }
+      console.log(objeto);
+      this.axios.post(urlservicios+"ActualizarDestinatario"+'/'+this.detalles.destinatario._id, objeto)
+        .then(response => {
+          console.log(response);
+
+        })
+      }
+      
       if(this.objeto==undefined)
       {
-         //.log("no hay que evaluar");
       }
       else
       {
-         //.log("evaluamos");
         var llaves=''
         llaves=Object.keys(this.objeto)
         for(var x=0;x<llaves.length;x++){          
           if(eval('this.objeto.'+llaves[x])==''||eval('this.objeto.'+llaves[x]=='null')||eval('this.objeto.'+llaves[x]==null))
           {
-             //.log("");
-             //.log("pivote tru");
-             //.log(eval('this.objeto.'+llaves[x]));
+            console.log("");
+            console.log("pivote tru");
+            console.log(eval('this.objeto.'+llaves[x]));
             this.validatecampo= {
                 border: '1px solid  #ff8080'
             }
             pivote=true
           }
         }
+        if(pivote==false){
+          this.validatecampo=''
+        }
       }
-       //.log(pivote);
+      console.log(pivote);
       if (
         this.selectproduct == "" ||
         this.selectservice == "" ||
         this.detalles.destinatario.nombre == "" ||
         this.detalles.destinatario.telefono == "" ||
         this.detalles.destinatario.direccion == "" ||
-        pivote==true||
-        this.detalles.referencia==''
+        pivote==true//  ||
+       //this.detalles.referencia==''
         ) {
           if(this.detalles.destinatario.telefono == ""){
             this.validatecampoTel= {
@@ -582,7 +784,6 @@ export default {
           if(this.detalles.referencia==''){
             this.estado.referencia=false
           }
-         //.log("alerta");
         
           swal("Oops...", "Falto completar algun campo", "error");                    
         
@@ -590,6 +791,7 @@ export default {
 
 
       } else {
+        this.objeto.objetoUnidades=this.itemsreferencia
         var servicioslocal = this.selectservicio;
         this.detallesc = this.detalles;
         this.detallesc.infor = this.objeto;
@@ -604,11 +806,15 @@ export default {
         };
         this.DetalleServicio.push(detalles);
         /*        this.DetalleServicio.map((obj,indc)=>{
-           //.log(obj);
+          console.log(obj);
         })*/
-         //.log((this.DetalleServicio));
+        console.log((this.DetalleServicio));
         //blanquear datos
+        this.itemsreferencia=[]
+        this.identificacion=''
         this.habilitar=true,
+                  this.mostrardestinatario=false,
+
         (this.objeto = ""),
           (this.inputs = ""),
           toastr.success("Se agrego exitosamente");
@@ -628,7 +834,7 @@ export default {
       }
     },
     Presiono(index) {
-       //.log("entro al presionar");
+      console.log("entro al presionar");
       setTimeout(
         function() {
           if (document.getElementById(this.inputs.campos[index].id).value == "")
@@ -667,11 +873,11 @@ export default {
           }
         }.bind(this)
       );
-      // //.log(this.detalleseditar)
+      //console.log(this.detalleseditar)
     },
     service(value) {
           var vacio=  { _id: null, nombre: 'Por Favor Seleccione un Servicio' };
-       //.log("entro a seleccion");
+      console.log("entro a seleccion");
       //this.load = true;
        var load=true
             setTimeout(() => {
@@ -685,8 +891,7 @@ export default {
           this.selectproducto =this.productosurl[i]
         }
       }
-       //.log("/api/servicios/"+this.selectproducto._id);
-        this.axios.get("/api/servicios/"+this.selectproducto._id)
+        this.axios.get(urlservicios+"servicios/"+this.selectproducto._id)
         .then(response => {
             this.serviciosurl = response.data;
             //this.load=false
@@ -697,7 +902,7 @@ export default {
                 })
                 }, )
             this.habilitar= false
-            // //.log(this.serviciosurl);
+            //console.log(this.serviciosurl);
             this.serviciosurl.unshift(vacio)
 
         });
@@ -705,7 +910,7 @@ export default {
             
     },
     campos(value) {
-       //.log("inputs");
+      console.log("inputs");
             //this.load = true;
             var load=true
             setTimeout(() => {
@@ -720,16 +925,16 @@ export default {
         }
       }
          this.axios.get(
-          "/api/estructuraf/" +
+          urlservicios+"estructuraf/" +
             this.selectproducto._id +
             "/" +
             this.selectservicio._id)   
             .then(response => {
             this.inputs = response.data;
             
-             //.log(this.inputs);
+            console.log(this.inputs);
             this.objeto = this.inputs.objeto;
-             //.log(this.objeto)
+            console.log(this.objeto)
             //this.load=false
             var load2=false
             setTimeout(() => {
@@ -739,14 +944,14 @@ export default {
                 }, )
 
             }).catch(function(error){
-              // //.log("error estruc -> "+JSON.stringify(error));
+              //console.log("error estruc -> "+JSON.stringify(error));
             })
 
     },
     envioServicio() {
       if(this.DetalleServicio==''||this.DetalleServicio==null||this.DetalleServicio==undefined)
       {
-         //.log("no se envia");
+        console.log("no se envia");
         swal(
             "Atencion!",
             "La Orden debe tener minimo un detalle ",
@@ -755,32 +960,40 @@ export default {
 
       }
       else{
-       //.log(this.DetalleServicio);
+      console.log(this.DetalleServicio);
       var login = localStorage.getItem("storedData");
       var infologin = JSON.parse(login);
 
       var selec = localStorage.getItem("orden");
       var selecc = JSON.parse(selec);
+      var inforemitente =localStorage.getItem("infoorden");
+      var inforemi=JSON.parse(inforemitente)
+
       var objeto = {
         id_OperadorLogistico: infologin.id_OperadorLogistico,
         id_usuario: infologin._id,
-        id_centro: selecc.selected_center,
+        id_centro_costo: selecc.selected_center,
         estados: [
           {
             id_usuario:infologin._id
           }
           
             ],
-        id_remitente: selecc.selected_client,
+        id_cliente: selecc.selected_client,
+        remitente :{
+          direccion_recogida :inforemi.infocentro.direccion,
+          telefono_contacto :inforemi.infocliente.telefono,
+          nombre_contacto :inforemi.infocliente.nombre
+        },
         detalle: this.DetalleServicio
       };
       this.axios
-        .post("/api/GuardarOrden", objeto)
+        .post(urlservicios+"GuardarOrden", objeto)
         .then(response => {
           this.Documento = response.data.ducumento;
-           //.log(response);
-           //.log("-------");
-           //.log(JSON.stringify(objeto));
+          console.log(response);
+          console.log("-------");
+          //console.log(JSON.stringify(objeto));
           swal(
             "Excelente!",
             "La Orden de Servicio Generada es: " + this.Documento,
@@ -800,7 +1013,7 @@ export default {
     var infologin = JSON.parse(login);
     this.axios
       .get(
-        "/api/productos/" +
+        urlservicios+"productos/" +
           infologin.id_OperadorLogistico
       )
       .then(response => {
@@ -813,6 +1026,9 @@ export default {
 </script>
 
 <style>
+.prueba{
+  display:inline-block;
+}
 .card{
     margin-top: 2%;
 }

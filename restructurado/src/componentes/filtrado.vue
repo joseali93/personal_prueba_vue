@@ -27,8 +27,9 @@
             <b-row>
                 <b-col>
                     <b-form-group label="Rango de Fechas" class="mb-3">
-                    <date-picker width=400  v-model="time1" range lang="en" 
-                    :shortcuts="shortcuts" :confirm="true"></date-picker>
+                    <date-picker width=400  v-model="time1" range lang="es" 
+                    :shortcuts="shortcuts" :confirm="true"
+                    ></date-picker>
                     </b-form-group>
                 </b-col>
                 <b-col md="6" class="my-1">
@@ -63,7 +64,7 @@
             </b-row>
         </b-card>
             <b-row>
-                <router-view :consulta="consulta">
+                <router-view :consulta="consulta" :peticion="peticion">
 
                 </router-view>
             </b-row>
@@ -73,7 +74,9 @@
 <script>
 import DatePicker from "vue2-datepicker";
 import {bus} from "../main"
+import {urlservicios} from '../main'
 import Preload from '../componentes/preload.vue'
+import moment from 'moment'
 
 export default {
 
@@ -83,6 +86,7 @@ export default {
   },
     data() {
         return {
+                peticion:'',
              shortcuts: [
                 {
                 text: 'Hoy',
@@ -110,7 +114,7 @@ export default {
             load: false,
             consulta: [],
             estados: {},
-            selected_state: 'Por Favor Seleccione un Cliente',
+            selected_state: null,
             time1: [
                
             ],
@@ -147,6 +151,7 @@ export default {
             var centrocosto
             var inicio
             var fin
+            console.log(this.time1);
             if(this.time1[0]===''||this.time1[0]===undefined){
                 inicio="null"
                 }else{
@@ -160,9 +165,7 @@ export default {
             if(this.filter===''){
                 this.filter="null"
                 }
-            if(this.selected_state===''||
-            this.selected_state==='Por Favor Seleccione un Cliente'){
-                
+            if(this.selected_state===''){
                 this.selected_state="null"
                 }
             if(this.selectedCL===''){
@@ -185,9 +188,13 @@ export default {
                         load 
                     })
                     }, )
-                     //.log("/api/ObtenerOrdenesFiltrado/"+infologin.id_OperadorLogistico+"/"+this.filter+"/"+this.selected_state+
+            var peticiones= "ObtenerOrdenesFiltrado/"+infologin.id_OperadorLogistico+"/"+this.filter+"/"+this.selected_state+
+            "/"+cliente+"/"+centrocosto+"/"+inicio+"/"+fin;
+            console.log(peticiones);
+            //this.peticion=peticiones
+                    //console.log(urlservicios+"ObtenerOrdenesFiltrado/"+infologin.id_OperadorLogistico+"/"+this.filter+"/"+this.selected_state+
             //"/"+cliente+"/"+centrocosto+"/"+inicio+"/"+fin);
-            this.axios.get("/api/ObtenerOrdenesFiltrado/"+infologin.id_OperadorLogistico+"/"+this.filter+"/"+this.selected_state+
+            this.axios.get(urlservicios+"ObtenerOrdenesFiltrado/"+infologin.id_OperadorLogistico+"/"+this.filter+"/"+this.selected_state+
             "/"+cliente+"/"+centrocosto+"/"+inicio+"/"+fin)
             .then((response) => {
                 this.consulta=response.data
@@ -206,6 +213,7 @@ export default {
                         
                 }
                 else{
+                    console.log(this.consulta);
                     var load=false
             setTimeout(() => {
                 bus.$emit('load', {
@@ -215,7 +223,6 @@ export default {
                            this.$router.replace('/inicio/consultar/resultado')
                 }
             })
-             //this.selected_state='Por Favor Seleccione un Cliente'
         },
         SelectCC(value){
             var vacio=  { _id: null, nombre: 'Por Favor Seleccione un Centro de Costo' };
@@ -228,7 +235,7 @@ export default {
                         load 
                     })
                     }, )
-                this.axios.get("/api/CentrosPorCliente/"+this.selectedCL)            
+                this.axios.get(urlservicios+"CentrosPorCliente/"+this.selectedCL)            
                 //this.axios.get(urlservicios+"centros/")
                 .then((response) => {
                     this.centros=response.data
@@ -251,7 +258,7 @@ export default {
                         load 
                     })
                     }, )
-                this.axios.get("/api/CentrosPorCliente/"+value.target.value)            
+                this.axios.get(urlservicios+"CentrosPorCliente/"+value.target.value)            
                 //this.axios.get(urlservicios+"centros/")
                 .then((response) => {
                     this.centros=response.data
@@ -291,6 +298,9 @@ export default {
         d.setFullYear(year,month,day)
         ant.setFullYear(year,monthante,dayante)
        
+       var mana=new Date(fecha.getTime() + 24*60*60*1000);
+       
+       
         var HaceUnaSemana=new Date(fecha.getTime() - (24*60*60*1000)*7);
         var HaceUnaSemanaDia = HaceUnaSemana.getDate()
         var HaceUnaSemanaMes = HaceUnaSemana.getMonth()
@@ -311,19 +321,19 @@ export default {
         //this.shortcuts[3].start=ant
         //this.shortcuts[3].end=d
         
-        this.time1[1]= d
+        this.time1[1]= mana
         this.time1[0] =ant
         var concatday
         var bandera=true
-         var vacio3=  { nombre: 'Por Favor Seleccione un Cliente' };
+         
         var vacio=  { _id: null, nombre: 'Por Favor Seleccione un Cliente' };
         var vacio2= { nombre: 'Por Favor Seleccione un Cliente' };
         var login = localStorage.getItem("storedData");
         var infologin =JSON.parse(login);
-        // //.log(infologin.id_cliente);
+        //console.log(infologin.id_cliente);
         var id_cliente
         if(infologin.id_cliente==undefined||infologin.id_cliente==null){
-             //.log("no hay cliente");
+            console.log("no hay cliente");
             id_cliente='null'
             var load=true
             setTimeout(() => {
@@ -331,7 +341,7 @@ export default {
                     load 
                 })
                 }, )
-            this.axios.get("/api/clientesOperador/"+infologin.id_OperadorLogistico
+            this.axios.get(urlservicios+"clientesOperador/"+infologin.id_OperadorLogistico
             +'/'+id_cliente)
             .then((response) => {
                 var load=false
@@ -377,9 +387,9 @@ export default {
                     }
             })
         }else{
-            // //.log("hay cliente");
+            //console.log("hay cliente");
             id_cliente=infologin.id_cliente
-            this.axios.get("/api/clientesOperador/"+infologin.id_OperadorLogistico
+            this.axios.get(urlservicios+"clientesOperador/"+infologin.id_OperadorLogistico
             +'/'+id_cliente)
             .then((response) => {
                 this.clientes=response.data
@@ -422,11 +432,10 @@ export default {
             this.SelectCC(id_cliente)
         }
             
-        this.axios.get("/api/estados/")
+        this.axios.get(urlservicios+"estados/")
         .then((response) => {
             this.estados=response.data
-            this.estados.unshift(vacio3)
-             //.log(this.estados);
+            //console.log(this.estados);
         })
             
         
