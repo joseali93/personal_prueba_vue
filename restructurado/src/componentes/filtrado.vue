@@ -73,7 +73,6 @@
 <script>
 import DatePicker from "vue2-datepicker";
 import {bus} from "../main"
-import {urlservicios} from '../main'
 import Preload from '../componentes/preload.vue'
 
 export default {
@@ -111,7 +110,7 @@ export default {
             load: false,
             consulta: [],
             estados: {},
-            selected_state: null,
+            selected_state: 'Por Favor Seleccione un Cliente',
             time1: [
                
             ],
@@ -161,7 +160,9 @@ export default {
             if(this.filter===''){
                 this.filter="null"
                 }
-            if(this.selected_state===''){
+            if(this.selected_state===''||
+            this.selected_state==='Por Favor Seleccione un Cliente'){
+                
                 this.selected_state="null"
                 }
             if(this.selectedCL===''){
@@ -184,9 +185,9 @@ export default {
                         load 
                     })
                     }, )
-                    console.log(urlservicios+"ObtenerOrdenesFiltrado/"+infologin.id_OperadorLogistico+"/"+this.filter+"/"+this.selected_state+
-            "/"+cliente+"/"+centrocosto+"/"+inicio+"/"+fin);
-            this.axios.get(urlservicios+"ObtenerOrdenesFiltrado/"+infologin.id_OperadorLogistico+"/"+this.filter+"/"+this.selected_state+
+                     //.log("/api/ObtenerOrdenesFiltrado/"+infologin.id_OperadorLogistico+"/"+this.filter+"/"+this.selected_state+
+            //"/"+cliente+"/"+centrocosto+"/"+inicio+"/"+fin);
+            this.axios.get("/api/ObtenerOrdenesFiltrado/"+infologin.id_OperadorLogistico+"/"+this.filter+"/"+this.selected_state+
             "/"+cliente+"/"+centrocosto+"/"+inicio+"/"+fin)
             .then((response) => {
                 this.consulta=response.data
@@ -214,6 +215,7 @@ export default {
                            this.$router.replace('/inicio/consultar/resultado')
                 }
             })
+             //this.selected_state='Por Favor Seleccione un Cliente'
         },
         SelectCC(value){
             var vacio=  { _id: null, nombre: 'Por Favor Seleccione un Centro de Costo' };
@@ -226,7 +228,7 @@ export default {
                         load 
                     })
                     }, )
-                this.axios.get(urlservicios+"CentrosPorCliente/"+this.selectedCL)            
+                this.axios.get("/api/CentrosPorCliente/"+this.selectedCL)            
                 //this.axios.get(urlservicios+"centros/")
                 .then((response) => {
                     this.centros=response.data
@@ -249,7 +251,7 @@ export default {
                         load 
                     })
                     }, )
-                this.axios.get(urlservicios+"CentrosPorCliente/"+value.target.value)            
+                this.axios.get("/api/CentrosPorCliente/"+value.target.value)            
                 //this.axios.get(urlservicios+"centros/")
                 .then((response) => {
                     this.centros=response.data
@@ -313,15 +315,15 @@ export default {
         this.time1[0] =ant
         var concatday
         var bandera=true
-         
+         var vacio3=  { nombre: 'Por Favor Seleccione un Cliente' };
         var vacio=  { _id: null, nombre: 'Por Favor Seleccione un Cliente' };
         var vacio2= { nombre: 'Por Favor Seleccione un Cliente' };
         var login = localStorage.getItem("storedData");
         var infologin =JSON.parse(login);
-        //console.log(infologin.id_cliente);
+        // //.log(infologin.id_cliente);
         var id_cliente
         if(infologin.id_cliente==undefined||infologin.id_cliente==null){
-            console.log("no hay cliente");
+             //.log("no hay cliente");
             id_cliente='null'
             var load=true
             setTimeout(() => {
@@ -329,7 +331,7 @@ export default {
                     load 
                 })
                 }, )
-            this.axios.get(urlservicios+"clientesOperador/"+infologin.id_OperadorLogistico
+            this.axios.get("/api/clientesOperador/"+infologin.id_OperadorLogistico
             +'/'+id_cliente)
             .then((response) => {
                 var load=false
@@ -375,9 +377,9 @@ export default {
                     }
             })
         }else{
-            //console.log("hay cliente");
+            // //.log("hay cliente");
             id_cliente=infologin.id_cliente
-            this.axios.get(urlservicios+"clientesOperador/"+infologin.id_OperadorLogistico
+            this.axios.get("/api/clientesOperador/"+infologin.id_OperadorLogistico
             +'/'+id_cliente)
             .then((response) => {
                 this.clientes=response.data
@@ -420,10 +422,11 @@ export default {
             this.SelectCC(id_cliente)
         }
             
-        this.axios.get(urlservicios+"estados/")
+        this.axios.get("/api/estados/")
         .then((response) => {
             this.estados=response.data
-            //console.log(this.estados);
+            this.estados.unshift(vacio3)
+             //.log(this.estados);
         })
             
         

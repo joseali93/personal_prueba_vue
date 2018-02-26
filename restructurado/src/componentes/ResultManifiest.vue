@@ -79,7 +79,6 @@
 <script>
 import moment from 'moment'
 import {bus} from "../main"
-import {urlservicios} from '../main'
 import Preload from '../componentes/preload.vue'
 export default {
     data(){
@@ -114,7 +113,7 @@ export default {
     },
     methods:{
         imprimir(value){
-            console.log("entro a imprimir");
+             //.log("entro a imprimir");
             var items=value.listaMovilizados
             var inforvaria=[
                 {
@@ -126,12 +125,12 @@ export default {
                     apellido:value.apellido_courier
                 }
             ]
-            console.log(items.length);
-            //console.log(items);
+             //.log(items.length);
+            // //.log(items);
             var normalizado
             var itemsmodal=[]
             for(var x=0;x<items.length;x++){
-                console.log(items[x]);
+                 //.log(items[x]);
                 normalizado={
                     id:items[x].id_movilizado,
                     nombre:items[x].nombre_cliente,
@@ -144,7 +143,7 @@ export default {
                 }
                 itemsmodal.push(normalizado)
             }
-            console.log(itemsmodal);
+             //.log(itemsmodal);
             
              setTimeout(() => {
                         bus.$emit('modalinfo', {
@@ -156,8 +155,8 @@ export default {
                   
         },
         actualizar(value){
-            console.log("entro a actualizar");
-            console.log(value);
+             //.log("entro a actualizar");
+             //.log(value);
             var detalles=value
             this.detalle=value
             var ocultar=false

@@ -170,7 +170,7 @@ export default {
     },
     
     Salir(val){
-      console.log("entro a salir");
+       //.log("entro a salir");
       localStorage.clear();
       this.$router.replace('/')
 
@@ -186,7 +186,7 @@ export default {
     this.imagen = test.url_logo
 
     if(test.id_rol.nombre=="courier"){
-      console.log("hay courier");
+       //.log("hay courier");
       swal({
                 title: 'Es un Courier!',
                 text: "No tiene funcionalidades en el aplicativo Web",
@@ -202,7 +202,7 @@ export default {
                         this.$router.replace('/')
                     }
                     else{
-                      console.log("se mantiene");
+                       //.log("se mantiene");
                     }
                    
                     })
@@ -211,12 +211,12 @@ export default {
       this.rutas = test.id_rol.rutas
     }
     
-    //console.log(test)
-    //console.log(this.imagen);
-    //console.log(this.rutas);
+    // //.log(test)
+    // //.log(this.imagen);
+    // //.log(this.rutas);
   },
   beforeCreate: function() {
-    console.log("antes");
+     //.log("antes");
   }
 };
 </script>

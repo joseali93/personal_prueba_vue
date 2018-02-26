@@ -259,7 +259,6 @@
 
 <script>
 import { bus } from "../main";
-import {urlservicios} from '../main'
 import Preload from '../componentes/preload.vue'
 export default {
   components :{
@@ -331,8 +330,8 @@ export default {
   methods: {
 
     numeroseditar(valor) {
-      //console.log("entro a numeros editar");
-      //console.log(document.getElementById("telefonoedit").value)
+      // //.log("entro a numeros editar");
+      // //.log(document.getElementById("telefonoedit").value)
       var a = document.getElementById("telefonoedit").value;
       //var x=check.which;
       //var x = a.charCode;
@@ -353,8 +352,8 @@ export default {
       }
     },
     numeros(valor) {
-      console.log("entro a numeros");
-      //console.log(document.getElementById("telefono").value)
+       //.log("entro a numeros");
+      // //.log(document.getElementById("telefono").value)
       var a = document.getElementById("telefono").value;
       //var x=check.which;
       //var x = a.charCode;
@@ -375,7 +374,7 @@ export default {
       }
     },
     PresionoED(index) {
-      console.log("entro al presionar editar");
+       //.log("entro al presionar editar");
       this.validatecampo= ''
       setTimeout(
         function() {
@@ -397,16 +396,16 @@ export default {
           }
         }.bind(this)
       );
-      //console.log(this.detalleseditar)
+      // //.log(this.detalleseditar)
     },
     valores(dato) {
-      //console.log(this.detalleseditar)
-      //console.log(dato)
-      //console.log(eval("this.detalleseditar.infor." + dato));
+      // //.log(this.detalleseditar)
+      // //.log(dato)
+      // //.log(eval("this.detalleseditar.infor." + dato));
       return eval("this.detalleseditar.infor." + dato);
     },
     actualizar() {
-      console.log("actualizar");
+       //.log("actualizar");
             this.validatecampoTel=''
       var pivoteedi=false
       this.estado.nombre=null
@@ -424,7 +423,7 @@ export default {
             }
        }
      }
-      console.log(pivoteedi);
+       //.log(pivoteedi);
       if (
         this.detalleseditar.destinatario.nombre == "" ||
         this.detalleseditar.destinatario.direccion == "" ||
@@ -463,7 +462,7 @@ export default {
           productoslocal: productoslocal,
           detalleslocal: detalleslocal
         };
-        //console.log(JSON.stringify(detalles));
+        // //.log(JSON.stringify(detalles));
         this.DetalleServicio.splice(this.indices, 1);
         this.DetalleServicio.splice(this.indices, 0, detalles);
         (this.objeto = ""),
@@ -495,15 +494,15 @@ export default {
       this.estado.direccion=null
       this.estado.referencia=null
       this.indices = index;
-      console.log("entro al editar");
+       //.log("entro al editar");
       this.detalleseditar = this.DetalleServicio[index].detalleslocal;
       this.selectproduct = this.DetalleServicio[index].productoslocal._id;
       this.selectservice = this.DetalleServicio[index].servicioslocal._id;
-      console.log(this.selectservice);
+       //.log(this.selectservice);
 
       this.axios
         .get(
-        urlservicios+"estructuraf/" +
+        "/api/estructuraf/" +
             this.selectproduct +
             "/" +
             this.selectservice
@@ -535,23 +534,23 @@ export default {
       this.estado.nombre=null
       this.estado.direccion=null
       this.estado.referencia=null
-      console.log("ingreso orden");
+       //.log("ingreso orden");
       var pivote=false
       if(this.objeto==undefined)
       {
-        console.log("no hay que evaluar");
+         //.log("no hay que evaluar");
       }
       else
       {
-        console.log("evaluamos");
+         //.log("evaluamos");
         var llaves=''
         llaves=Object.keys(this.objeto)
         for(var x=0;x<llaves.length;x++){          
           if(eval('this.objeto.'+llaves[x])==''||eval('this.objeto.'+llaves[x]=='null')||eval('this.objeto.'+llaves[x]==null))
           {
-            console.log("");
-            console.log("pivote tru");
-            console.log(eval('this.objeto.'+llaves[x]));
+             //.log("");
+             //.log("pivote tru");
+             //.log(eval('this.objeto.'+llaves[x]));
             this.validatecampo= {
                 border: '1px solid  #ff8080'
             }
@@ -559,7 +558,7 @@ export default {
           }
         }
       }
-      console.log(pivote);
+       //.log(pivote);
       if (
         this.selectproduct == "" ||
         this.selectservice == "" ||
@@ -583,7 +582,7 @@ export default {
           if(this.detalles.referencia==''){
             this.estado.referencia=false
           }
-        console.log("alerta");
+         //.log("alerta");
         
           swal("Oops...", "Falto completar algun campo", "error");                    
         
@@ -605,9 +604,9 @@ export default {
         };
         this.DetalleServicio.push(detalles);
         /*        this.DetalleServicio.map((obj,indc)=>{
-          console.log(obj);
+           //.log(obj);
         })*/
-        console.log((this.DetalleServicio));
+         //.log((this.DetalleServicio));
         //blanquear datos
         this.habilitar=true,
         (this.objeto = ""),
@@ -629,7 +628,7 @@ export default {
       }
     },
     Presiono(index) {
-      console.log("entro al presionar");
+       //.log("entro al presionar");
       setTimeout(
         function() {
           if (document.getElementById(this.inputs.campos[index].id).value == "")
@@ -668,11 +667,11 @@ export default {
           }
         }.bind(this)
       );
-      //console.log(this.detalleseditar)
+      // //.log(this.detalleseditar)
     },
     service(value) {
           var vacio=  { _id: null, nombre: 'Por Favor Seleccione un Servicio' };
-      console.log("entro a seleccion");
+       //.log("entro a seleccion");
       //this.load = true;
        var load=true
             setTimeout(() => {
@@ -686,7 +685,8 @@ export default {
           this.selectproducto =this.productosurl[i]
         }
       }
-        this.axios.get(urlservicios+"servicios/"+this.selectproducto._id)
+       //.log("/api/servicios/"+this.selectproducto._id);
+        this.axios.get("/api/servicios/"+this.selectproducto._id)
         .then(response => {
             this.serviciosurl = response.data;
             //this.load=false
@@ -697,7 +697,7 @@ export default {
                 })
                 }, )
             this.habilitar= false
-            //console.log(this.serviciosurl);
+            // //.log(this.serviciosurl);
             this.serviciosurl.unshift(vacio)
 
         });
@@ -705,7 +705,7 @@ export default {
             
     },
     campos(value) {
-      console.log("inputs");
+       //.log("inputs");
             //this.load = true;
             var load=true
             setTimeout(() => {
@@ -720,16 +720,16 @@ export default {
         }
       }
          this.axios.get(
-          urlservicios+"estructuraf/" +
+          "/api/estructuraf/" +
             this.selectproducto._id +
             "/" +
             this.selectservicio._id)   
             .then(response => {
             this.inputs = response.data;
             
-            console.log(this.inputs);
+             //.log(this.inputs);
             this.objeto = this.inputs.objeto;
-            console.log(this.objeto)
+             //.log(this.objeto)
             //this.load=false
             var load2=false
             setTimeout(() => {
@@ -739,14 +739,14 @@ export default {
                 }, )
 
             }).catch(function(error){
-              //console.log("error estruc -> "+JSON.stringify(error));
+              // //.log("error estruc -> "+JSON.stringify(error));
             })
 
     },
     envioServicio() {
       if(this.DetalleServicio==''||this.DetalleServicio==null||this.DetalleServicio==undefined)
       {
-        console.log("no se envia");
+         //.log("no se envia");
         swal(
             "Atencion!",
             "La Orden debe tener minimo un detalle ",
@@ -755,7 +755,7 @@ export default {
 
       }
       else{
-      console.log(this.DetalleServicio);
+       //.log(this.DetalleServicio);
       var login = localStorage.getItem("storedData");
       var infologin = JSON.parse(login);
 
@@ -775,12 +775,12 @@ export default {
         detalle: this.DetalleServicio
       };
       this.axios
-        .post(urlservicios+"GuardarOrden", objeto)
+        .post("/api/GuardarOrden", objeto)
         .then(response => {
           this.Documento = response.data.ducumento;
-          console.log(response);
-          console.log("-------");
-          console.log(JSON.stringify(objeto));
+           //.log(response);
+           //.log("-------");
+           //.log(JSON.stringify(objeto));
           swal(
             "Excelente!",
             "La Orden de Servicio Generada es: " + this.Documento,
@@ -800,7 +800,7 @@ export default {
     var infologin = JSON.parse(login);
     this.axios
       .get(
-        urlservicios+"productos/" +
+        "/api/productos/" +
           infologin.id_OperadorLogistico
       )
       .then(response => {

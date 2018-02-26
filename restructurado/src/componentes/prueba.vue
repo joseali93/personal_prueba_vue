@@ -221,7 +221,7 @@ export default {
         this.$router.push('/inicio/entradasalida')
       },
       imprimir(){
-        console.log("entro a imprimir")
+         //.log("entro a imprimir")
       
           //document.getElementById('app').appendChild(imprimible);
           document.getElementById("print-content");
@@ -233,7 +233,7 @@ export default {
      
         this.algo = userObject.itemsmodal
 
-        console.log(this.algo);
+         //.log(this.algo);
       }.bind(this))
     },
     updated: function(){

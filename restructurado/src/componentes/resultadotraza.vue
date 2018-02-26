@@ -228,7 +228,6 @@
 import {bus} from '../main'
 import moment from 'moment'
 import Preload from '../componentes/preload.vue'
-import {urlservicios} from '../main'
 export default {
     data () {
         return {
@@ -285,7 +284,7 @@ export default {
                 return (this.estadoT=false)
         },
         enviarcorreoT(value){
-            console.log("entro a envio todo");
+             //.log("entro a envio todo");
             if(this.emailvalidoT==null||this.emailT==''){
                 swal(
                     'Falta Completar el Email',
@@ -303,7 +302,7 @@ export default {
             if(this.emailvalidoT==true){
                 var load=true
                     setTimeout(() => {
-                        console.log("emite");
+                         //.log("emite");
                         bus.$emit('load', {
                             load
                         })
@@ -312,7 +311,7 @@ export default {
                 var objeto
                 var objetoimanes=[]
                 value.imagenes.map((obj,ind)=>{
-                    //console.log(obj);
+                    // //.log(obj);
                     objeto={
                         ruta:obj.ruta,
                         id:obj.id
@@ -326,11 +325,11 @@ export default {
                         nomproceso:this.info.nombre_proceso,
                         imagenes:objetoimanes
                     }
-                console.log(objeT);
-                this.axios.post(urlservicios+"EnviarCorreoImagen", objeT)
+                 //.log(objeT);
+                this.axios.post("/api/EnviarCorreoImagen", objeT)
                     .then(response => {
                     this.respuesta = response.data;
-                    console.log(response);
+                     //.log(response);
                     var load=false
                     setTimeout(() => {
                         bus.$emit('load', {
@@ -382,15 +381,15 @@ export default {
                     )
             }
             if(this.emailvalido==true){
-                console.log("email ok");
+                 //.log("email ok");
                 var load=true
                     setTimeout(() => {
                         bus.$emit('load', {
                             load
                         })
                         }, )
-                console.log(this.info);
-                console.log(value);
+                 //.log(this.info);
+                 //.log(value);
                 objeto={
                     correo:this.email,
                     norden:this.info.consec,
@@ -402,12 +401,12 @@ export default {
                     }]
                     
                 }
-                console.log(objeto);
-                this.axios.post(urlservicios+"EnviarCorreoImagen", objeto)
+                 //.log(objeto);
+                this.axios.post("/api/EnviarCorreoImagen", objeto)
                 .then(response => {
                 this.respuesta = response.data;
-                console.log(response);
-                console.log(objeto);
+                 //.log(response);
+                 //.log(objeto);
                 var load=false
                     setTimeout(() => {
                         bus.$emit('load', {
@@ -425,7 +424,7 @@ export default {
 
         },
         imagenmodal(data){
-            console.log("entro a el modal");
+             //.log("entro a el modal");
             if(data.imagenes.length==1)
             {
                 this.imgmodal=data
@@ -452,7 +451,7 @@ export default {
     },
     beforeCreate: function() {
         bus.$on('resultado', function (userObject) {
-            //console.log(userObject);
+            // //.log(userObject);
         this.info=userObject.value
         this.otro=userObject.personal
         this.inputs=userObject.personal.inputs

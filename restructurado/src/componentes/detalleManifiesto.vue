@@ -75,7 +75,7 @@ export default {
     methods:{
         volver()
         {
-            console.log("entro a volver");
+             //.log("entro a volver");
             
             var ocultar=true
             setTimeout(() => {
@@ -89,7 +89,7 @@ export default {
     },
     beforeCreate: function() {
         bus.$on('detallemanifiesto', function (userObject) {
-            //console.log(userObject);
+            // //.log(userObject);
         this.valores=userObject.detalles
          for(var x=0;x<this.valores.listaMovilizados.length;x++){
              this.valores.listaMovilizados[x].id_manifiesto=this.valores.id

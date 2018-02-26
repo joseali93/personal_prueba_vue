@@ -96,7 +96,6 @@ DE LA ORDEN DE SERVICIO -->
 import Orden from '../componentes/orden.vue'
 import Preload from '../componentes/preload.vue'
 import {bus} from '../main'
-import {urlservicios} from '../main'
         import axios from 'axios'
 
 
@@ -134,7 +133,7 @@ export default {
             /*
                 FUNCION DEL CUAL OBTENEMOS EL CLIENTE QUE FUE SELECCIONADO 
             */
-           console.log("entro a seleccion clientes");
+            //.log("entro a seleccion clientes");
            if(this.disable_selected_client==true){
                var id_cliente
                id_cliente=seleccion
@@ -151,8 +150,8 @@ export default {
                     })
                     }, )
                     if(seleccion!==undefined){
-
-                    this.axios.get(urlservicios+"CentrosPorCliente/"+id_cliente)
+                     //.log("/api/CentrosPorCliente/"+id_cliente);
+                    this.axios.get("/api/CentrosPorCliente/"+id_cliente)
                         .then((response) => {
                             this.centros=response.data
                             this.centros.unshift(vacio)
@@ -183,8 +182,8 @@ export default {
                     })
                     }, )
                     if(seleccion!==undefined){
-
-                    this.axios.get(urlservicios+"CentrosPorCliente/"+seleccion.target.value)
+                     //.log("/api/CentrosPorCliente/"+seleccion.target.value);
+                    this.axios.get('/api/CentrosPorCliente/'+seleccion.target.value)
                         .then((response) => {
                             this.centros=response.data
                             this.centros.unshift(vacio)
@@ -247,7 +246,7 @@ export default {
         {
             this.selected_client=ordenjson.selected_client
             this.selected_center=ordenjson.selected_center
-            this.axios.get(urlservicios+"CentrosPorCliente/"+this.selected_client)
+            this.axios.get("/api/CentrosPorCliente/"+this.selected_client)
                     .then((response) => {
                         this.centros=response.data
                         this.habilitar= false
@@ -260,7 +259,7 @@ export default {
                     })
             var test2 = localStorage.getItem("storedData");
             var test =JSON.parse(test2);
-            this.axios.get(urlservicios+"clientesOperador/"+test.id_OperadorLogistico)
+            this.axios.get("/api/clientesOperador/"+test.id_OperadorLogistico)
             .then((response) => {
                 this.clientes=response.data
                 for(var i=0;i<this.clientes.length;i++){
@@ -277,7 +276,7 @@ export default {
         var vacio=  { _id: null, nombre: 'Por Favor Seleccione un Cliente' };
         var test2 = localStorage.getItem("storedData");
         var test =JSON.parse(test2);
-        //console.log(test.id_cliente);
+        // //.log(test.id_cliente);
         var id_cliente
         if(test.id_cliente==undefined||test.id_cliente==null){
             id_cliente='null'
@@ -289,9 +288,9 @@ export default {
                 })
                 }, )
                 
-                this.axios.get(urlservicios+"clientesOperador/"+test.id_OperadorLogistico+'/'+id_cliente)
+                this.axios.get("/api/clientesOperador/"+test.id_OperadorLogistico+'/'+id_cliente)
                 .then((response) => {
-                    //console.log(response);
+                    // //.log(response);
                     this.clientes=response.data
                                 this.clientes.unshift(vacio)
                                 var load=false
@@ -336,10 +335,10 @@ export default {
             
         }
         else{
-            console.log("tengo cliente");
+             //.log("tengo cliente");
             id_cliente=test.id_cliente
-            console.log(urlservicios+"clientesOperador/"+test.id_OperadorLogistico+'/'+id_cliente);
-            this.axios.get(urlservicios+"clientesOperador/"+test.id_OperadorLogistico+'/'+id_cliente)
+             //.log("/api/clientesOperador/"+test.id_OperadorLogistico+'/'+id_cliente);
+            this.axios.get("/api/clientesOperador/"+test.id_OperadorLogistico+'/'+id_cliente)
                 .then((response) => {
                     this.clientes=response.data
                     this.selected_cliente.nombre=this.clientes[0].nombre

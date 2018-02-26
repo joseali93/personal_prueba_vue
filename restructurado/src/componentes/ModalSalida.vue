@@ -96,7 +96,6 @@
 
 <script>
 import $ from 'jquery'
-import {urlservicios} from '../main'
 import {bus} from '../main'
 import moment from 'moment'
         moment.locale('es');
@@ -135,7 +134,7 @@ export default {
         },
         Tunidades(){
             var retornar=0
-            //console.log("entro a Total unidades");
+            // //.log("entro a Total unidades");
 
             for(var x=0;x<this.itemsmodal.length;x++){
                 retornar=retornar+parseInt(this.itemsmodal[x].unidades)
@@ -143,12 +142,12 @@ export default {
             return retornar
         },
       volver(){
-          console.log("entro a volver");
+           //.log("entro a volver");
           this.$router.go(-1)
        //this.$router.replace('/inicio/entradasalida')
       },
       imprimir(){
-          console.log("entro aimprimir");
+           //.log("entro aimprimir");
         if($("#print").length == 0)
         {
             var print =null

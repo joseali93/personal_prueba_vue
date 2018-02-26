@@ -57,7 +57,6 @@
 
 <script>
 import {bus} from "../main"
-import {urlservicios} from '../main'
 import Preload from '../componentes/preload.vue'
 import DatePicker from "vue2-datepicker";
 export default {
@@ -83,11 +82,11 @@ export default {
             var nmanifiesto
             var idproce
             var fecha=[]
-            console.log("entro a consultar");
+             //.log("entro a consultar");
             if(this.nmanifiesto==''&&
             this.time1==''&&
             this.procelogistica==null){
-                console.log("todo va vacio");
+                 //.log("todo va vacio");
                 swal(
                 'Error!',
                 'Debe Seleccionar al menos un filtro',
@@ -123,8 +122,7 @@ export default {
                             load 
                         })
                         }, )
-                //console.log(urlservicios+"ConsultaManifiestos/"+nmanifiesto+'/'+idproce+'/'+fecha[0]+'/'+fecha[1]);
-                this.axios.get(urlservicios+"ConsultaManifiestos/"+nmanifiesto+'/'+idproce+'/'+fecha[0]+'/'+fecha[1])
+                this.axios.get("/api/ConsultaManifiestos/"+nmanifiesto+'/'+idproce+'/'+fecha[0]+'/'+fecha[1])
                         .then((response) => {
                              var load=false
                             setTimeout(() => {
@@ -132,10 +130,10 @@ export default {
                                     load
                                 })
                                 }, )
-                            console.log(response);
+                             //.log(response);
                             this.consulta=response.data
                             if(this.consulta==''){
-                                console.log("no llega nada");
+                                 //.log("no llega nada");
                             }else{
                                 this.$router.replace('/inicio/manifiestos/resultado')
                             }
@@ -146,7 +144,7 @@ export default {
             
         },
         limpiar(){
-            console.log("entro a limpiar");
+             //.log("entro a limpiar");
             this.nmanifiesto=''
             this.procelogistica=null
             this.time1=''
@@ -154,8 +152,8 @@ export default {
 
         },
         procesoseleccionado(value){
-            console.log("entro");
-            console.log(value);
+             //.log("entro");
+             //.log(value);
         }
     },
     updated: function () {
@@ -179,7 +177,7 @@ export default {
                 }, )
         this.axios
         .get(
-            urlservicios+"Procesos/" +
+            "/api/Procesos/" +
             infologin.id_OperadorLogistico
         )
         .then(response => {
@@ -191,7 +189,7 @@ export default {
                 }, )
             this.procesosLog = response.data;
             this.procesosLog.unshift(vacio)
-            console.log(this.procesosLog);
+             //.log(this.procesosLog);
 
         }).catch(function(error){
                     bandera=false

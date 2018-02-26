@@ -33,7 +33,6 @@
 
 <script>
 import {bus} from '../main'
-import {urlservicios} from '../main'
 import moment from 'moment'
 import Preload from '../componentes/preload.vue'
 
@@ -66,11 +65,11 @@ export default {
     },
     methods: {
         cancelarOrden(value){
-            console.log(value);
+             //.log(value);
             var login = localStorage.getItem("storedData");
             var infologin =JSON.parse(login);
-            console.log(infologin.id_cliente);  
-            console.log(this.consulta);
+             //.log(infologin.id_cliente);  
+             //.log(this.consulta);
             if(infologin.id_cliente==undefined||
             infologin.id_cliente==null){
                 swal({
@@ -84,15 +83,15 @@ export default {
                 confirmButtonText: 'Confirmar'
                 }).then((result) => {
                     if (result.value) {
-                        console.log("elimino");
+                         //.log("elimino");
                         this.consulta.map((obj,ind)=>{
                     if(obj.id==value.item.id)
                         {
                             if(obj.estado=="Orden De Servicio Creada"||obj.estado=="Orden De Servicio Asignada")
                             {
-                                this.axios.get(urlservicios+"CancelarOrden/"+value.item._id)
+                                this.axios.get("/api/CancelarOrden/"+value.item._id)
                                     .then((response) => {
-                                        console.log(response.data);
+                                         //.log(response.data);
                                         if(response.data.message=="orden de servicio actualizada")
                                         {
                                             swal("Orden Eliminada!", "Orden de Servicio Cancelada!", "success");
@@ -113,12 +112,12 @@ export default {
                         })
                     }
                     else{
-                        console.log("no elimino");
+                         //.log("no elimino");
                     }
                     })
             }
             else{
-                console.log("hay cliente");
+                 //.log("hay cliente");
                 swal({
                 title: 'Esta seguro ?',
                 text: "Luego no se podra revertir el estado de la orden!",
@@ -130,15 +129,15 @@ export default {
                 confirmButtonText: 'Confirmar'
                 }).then((result) => {
                     if (result.value) {
-                        console.log("elimino");
+                         //.log("elimino");
                         this.consulta.map((obj,ind)=>{
                     if(obj.id==value.item.id)
                         {
                             if(obj.estado=="Orden De Servicio Creada")
                             {
-                                this.axios.get(urlservicios+"CancelarOrden/"+value.item._id)
+                                this.axios.get("/api/CancelarOrden/"+value.item._id)
                                     .then((response) => {
-                                        console.log(response.data);
+                                         //.log(response.data);
                                         if(response.data.message=="orden de servicio actualizada")
                                         {
                                             swal("Orden Eliminada!", "Orden de Servicio Cancelada!", "success");
@@ -159,7 +158,7 @@ export default {
                         })
                     }
                     else{
-                        console.log("no elimino");
+                         //.log("no elimino");
                     }
                     })
             }
@@ -173,7 +172,7 @@ export default {
             {
                 var produc= inde.item.detalle[a].productoslocal._id
                 var serv = inde.item.detalle[a].servicioslocal._id
-                this.axios.get(urlservicios+"estructuraf/" +produc +
+                this.axios.get("/api/estructuraf/" +produc +
                 "/" +serv).then(response => {
 
                         inputstotales.push(response.data)
@@ -209,7 +208,7 @@ export default {
              bus.$on('ocultar', function (userObject) {
         
             this.algo = userObject
-            console.log(this.algo);
+             //.log(this.algo);
         }.bind(this))
         
         },

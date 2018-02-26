@@ -214,7 +214,6 @@
 
 <script>
 import {bus} from '../main'
-import {urlservicios} from '../main'
 import moment from 'moment'
 
 
@@ -258,23 +257,23 @@ export default {
     },
     methods: {
         desabilitar(value){
-            console.log(value);
+             //.log(value);
             if(this.selec_disable==true){
-                console.log("desabilito todo");
+                 //.log("desabilito todo");
                 return true
             }
             else
             {
-                 console.log("no desabilito  todo");
+                  //.log("no desabilito  todo");
                  return value.requerido_edi
             }
         },
         valueseleccion(datos,indices){
-            //console.log(this.currentUser.detalle[0].detalleslocal.infor.trayectoobj.id_trayecto);
+            // //.log(this.currentUser.detalle[0].detalleslocal.infor.trayectoobj.id_trayecto);
             for(var x=0;x<this.currentUser.detalle.length;x++)
             {
                 if(this.currentUser.detalle[this.indices].detalleslocal.infor.trayectoobj==undefined){
-                    console.log("no tiene trayectos");
+                     //.log("no tiene trayectos");
                     return null
                 }
                 else{
@@ -286,11 +285,11 @@ export default {
             
         },
         seleccionar(value){
-            console.log("entro a algo");
+             //.log("entro a algo");
             var trayecto
             var trayectoobj={}
             var x = document.getElementById(value.id).value
-            //console.log(this.indices);
+            // //.log(this.indices);
             eval('this.campos.'+value.vmodel+'='+'x')
                     for(var x=0;x<this.trayectos.length;x++)
                     {
@@ -301,14 +300,14 @@ export default {
                                 id_trayecto:eval('this.campos.'+value.vmodel),
                                 nombre:this.trayectos[x].nombre
                             }
-                            console.log(this.indices);
-                            //console.log(typeof(this.currentUser.detalle[this.indices].detalleslocal.infor.trayectoobj));
-                            console.log("----------------------");
-                            console.log(this.currentUser.detalle[this.indices].detalleslocal.infor);
+                             //.log(this.indices);
+                            // //.log(typeof(this.currentUser.detalle[this.indices].detalleslocal.infor.trayectoobj));
+                             //.log("----------------------");
+                             //.log(this.currentUser.detalle[this.indices].detalleslocal.infor);
                             if(this.currentUser.detalle[this.indices].detalleslocal.infor.trayecto==undefined
                             ||this.currentUser.detalle[this.indices].detalleslocal.infor.trayecto==null)
                             {
-                                console.log("no tiene trayecto ");
+                                 //.log("no tiene trayecto ");
                                 this.currentUser.detalle[this.indices].detalleslocal.infor.trayectoobj={}
                                 this.currentUser.detalle[this.indices].detalleslocal.infor.trayectoobj=trayectoobj
                                 this.currentUser.detalle[this.indices].detalleslocal.infor.trayecto=this.trayectos[x].nombre
@@ -317,9 +316,9 @@ export default {
 
                             }
                            else{
-                               console.log(" tiene trayecto ");
+                                //.log(" tiene trayecto ");
                                this.currentUser.detalle[this.indices].detalleslocal.infor.trayectoobj=trayectoobj
-                               console.log(this.currentUser.detalle[this.indices].detalleslocal.infor);
+                                //.log(this.currentUser.detalle[this.indices].detalleslocal.infor);
                                  this.currentUser.detalle[this.indices].detalleslocal.infor.trayecto=this.trayectos[x].nombre
                                 trayecto=this.trayectos[x].nombre
                                                     this.$refs.table.refresh();
@@ -347,7 +346,7 @@ export default {
             this.selected_curier=value.target.value
         },
         Presiono(indi,dato){
-            console.log("entro a presionar");
+             //.log("entro a presionar");
             if(document.getElementById(this.inputs.campos[indi].id).value==null||document.getElementById(this.inputs.campos[indi].id).value==''){
                 swal(
                     'Oops...',
@@ -370,7 +369,7 @@ export default {
                 }
                 
             }
-            //console.log(this.campos);
+            // //.log(this.campos);
 
         },
         values(dato){
@@ -387,11 +386,11 @@ export default {
             if(this.id_cliente_local!=null){
                 this.$refs.ModalAct.hide();
             }else{
-                //console.log(this.campos);
+                // //.log(this.campos);
                 this.$refs.table.refresh();
-                //console.log(this.selection);  
+                // //.log(this.selection);  
                 var nombresel
-                //console.log(this.currentUser.detalle[this.indices].detalleslocal.infor);
+                // //.log(this.currentUser.detalle[this.indices].detalleslocal.infor);
                 if(this.info.estado=="orden de servicio cancelada")
                 {
                     swal(
@@ -405,12 +404,12 @@ export default {
                         {
                             if(this.trayectos[x]._id==this.selection)
                             {
-                                console.log("saco el nombre");
+                                 //.log("saco el nombre");
                                 nombresel=this.trayectos[x].nombre
                             }
                         }
                         var prueba =this.currentUser.detalle[this.indices].detalleslocal.infor
-                        //console.log(prueba);
+                        // //.log(prueba);
 
                         var objeto = {
                             id_trayecto:this.selection,
@@ -421,7 +420,7 @@ export default {
                         
                         this.$refs.table.refresh();
 
-                        //console.log(objeto);
+                        // //.log(objeto);
                     /*
                         for(var x=0;x<this.currentUser.detalle.length;x++)
                         {  
@@ -436,7 +435,7 @@ export default {
                         
                         
                         this.axios
-                            .post(urlservicios+"ActualizarTrayecto/"+this.currentUser._id+"/"+this.consecutivo, objeto)
+                            .post("/api/ActualizarTrayecto/"+this.currentUser._id+"/"+this.consecutivo, objeto)
                             .then(response => {
                             });
                         
@@ -455,16 +454,16 @@ export default {
                         else
                         {
                             this.id_trayectos.forEach((obj,ind)=>{
-                                console.log(obj);
+                                 //.log(obj);
                                 if(obj.indice==this.indices){
                                     this.id_trayectos.splice(obj,1)
                                     this.id_trayectos.push(objeto2)
                                 
-                                    console.log(this.id_trayectos);
+                                     //.log(this.id_trayectos);
                                 }
                                 else
                                 {
-                                    console.log("se agrega");
+                                     //.log("se agrega");
                                     this.id_trayectos.push(objeto2)
                                 }
                             })
@@ -496,7 +495,7 @@ export default {
 
                     
                     this.axios
-                        .post(urlservicios+"AsignarOrdenCurrier/",obj)
+                        .post("/api/AsignarOrdenCurrier/",obj)
                         .then(response => {
                         this.Documento = response.data;
                         if(this.Documento.validacion==false){
@@ -518,9 +517,9 @@ export default {
         },
         asignar(seleccionado)
         {
-            console.log(this.id_cliente_local);
+             //.log(this.id_cliente_local);
             if(this.id_cliente_local!=null){
-                console.log("tiene algo");
+                 //.log("tiene algo");
                 var ocultar=true
                     var eliminar= this.vali
                     setTimeout(() => {
@@ -532,7 +531,7 @@ export default {
                 this.$router.replace('/inicio/consultar/resultado')
             }else{
                 
-                console.log("entro a asignar");
+                 //.log("entro a asignar");
                     var banderasinT=false
                     var banderaconT=false
                     var contador=0
@@ -541,12 +540,12 @@ export default {
                     ]
 
                     var correcto=[]
-                    //console.log(this.currentUser.detalle);
-                    //console.log(this.id_trayectos);
+                    // //.log(this.currentUser.detalle);
+                    // //.log(this.id_trayectos);
                     if(this.id_trayectos.length==0){
-                        console.log("no ingreso nda");
+                         //.log("no ingreso nda");
                         for(var x=0;x<this.currentUser.detalle.length;x++){
-                            //console.log(this.currentUser.detalle[x].detalleslocal.infor);
+                            // //.log(this.currentUser.detalle[x].detalleslocal.infor);
                             
                             var llavesinfor=Object.keys(this.currentUser.detalle[x].detalleslocal.infor)
                             for(var y=0;y<llavesinfor.length;y++)
@@ -554,14 +553,14 @@ export default {
                                 
                                 if(typeof(eval('this.currentUser.detalle[x].detalleslocal.infor.'+llavesinfor[y]))!='object')
                                 {
-                                    console.log("entrooo");
-                                    //console.log(x);
+                                     //.log("entrooo");
+                                    // //.log(x);
                                 
                                 }
                                 else{
                                     banderasinT=true
                                     contador=contador+1
-                                    console.log();
+                                     //.log();
                                     correcto.push(x)
                                 } 
                             }
@@ -569,16 +568,16 @@ export default {
                         }
                     }
                     else{
-                        console.log("hay trayectos");
-                        console.log(this.id_trayectos);
+                         //.log("hay trayectos");
+                         //.log(this.id_trayectos);
                         for(var x=0;x<this.currentUser.detalle.length;x++){
-                            console.log(this.currentUser.detalle[x].detalleslocal.infor);
+                             //.log(this.currentUser.detalle[x].detalleslocal.infor);
                             var llavesinfor=Object.keys(this.currentUser.detalle[x].detalleslocal.infor)
                             for(var y=0;y<llavesinfor.length;y++)
                             {   
                                 if(typeof(eval('this.currentUser.detalle[x].detalleslocal.infor.'+llavesinfor[y]))!='object')
                                 {
-                                    console.log("entrooo");
+                                     //.log("entrooo");
 
                                 }
                                 else{
@@ -592,7 +591,7 @@ export default {
                     }
                     for(var o=0;o<pendi.length;o++)
                     {
-                        //console.log(pendi[o]);
+                        // //.log(pendi[o]);
                         //
                         
                         pendi[o]=pendi[o]++
@@ -600,10 +599,10 @@ export default {
                         {
                             
                             if(pendi[o]==correcto[p]){
-                                console.log("son iguales");
+                                 //.log("son iguales");
                                 
                                 pendi.splice(o,1)
-                                console.log(pendi);
+                                 //.log(pendi);
                             }
                         }
                     }
@@ -611,16 +610,16 @@ export default {
                     {
                         pendi[o]++
                     }
-                    //console.log(banderasinT)
-                    //console.log(banderaconT);
-                    //console.log(contador);
-                    console.log(pendi);
-                    console.log(correcto);
+                    // //.log(banderasinT)
+                    // //.log(banderaconT);
+                    // //.log(contador);
+                     //.log(pendi);
+                     //.log(correcto);
                     if(contador==this.currentUser.detalle.length){
-                        console.log("todos andan completos");
+                         //.log("todos andan completos");
                         this.asignarcurier(seleccionado)
                     }else{
-                        console.log("no andan completos")
+                         //.log("no andan completos")
                         swal(
                                 "Falta algo por completar!",
                                 "Revisa por favor "+pendi,
@@ -635,7 +634,7 @@ export default {
                 this.currentUser.detalle.map((obj,ind)=>{
                     
                     this.inputstotales[ind].campos.map((objinput,indi)=>{
-                        //console.log(Object.keys(eval('obj.detalleslocal.infor')));
+                        // //.log(Object.keys(eval('obj.detalleslocal.infor')));
                         
                         if(objinput.requerido_edi==true)
                         {
@@ -650,13 +649,13 @@ export default {
                             }
                             else
                             {
-                                //console.log("anda completo todo");
+                                // //.log("anda completo todo");
                                 bandera=true
                             }
                         }
                         else
                         {
-                            //console.log("no se exige");
+                            // //.log("no se exige");
                         }
                         
                     })
@@ -664,20 +663,20 @@ export default {
                 var bandera2=false
                 var bandera3=false
                 this.currentUser.detalle.some((obj,ind)=>{
-                    console.log(obj.detalleslocal.infor);
+                     //.log(obj.detalleslocal.infor);
                     llaves=Object.keys(eval('obj.detalleslocal.infor'))
-                        //console.log(obj);
+                        // //.log(obj);
                         llaves.map((objlla,ind)=>{
-                            //console.log("---------------");
-                            //console.log(objlla);
+                            // //.log("---------------");
+                            // //.log(objlla);
                             if(typeof(eval('obj.detalleslocal.infor.'+objlla))=='object')
                             {
-                                console.log("hay un ojeto");
+                                 //.log("hay un ojeto");
 
                                 bandera2=true
                             }
                             else{
-                                console.log("no hay un objeto");
+                                 //.log("no hay un objeto");
                             }
 
                         })
@@ -686,12 +685,12 @@ export default {
 
                 if(bandera==true&&bandera2==false)
                 {
-                    console.log("hacemos peticion");
+                     //.log("hacemos peticion");
                     this.asignarcurier(seleccionado)
                 }
                 else
                 {
-                    console.log("no hacemos peticion");
+                     //.log("no hacemos peticion");
                     swal(
                         "Falta algo por completar!",
                         "Revisa el detalle "+pendientes,
@@ -703,14 +702,14 @@ export default {
             this.indemodal=indice
             this.consecutivo=consecutivo
             var vacio=  { _id: null, nombre: 'Por Favor Seleccione un Trayecto' };
-            //console.log(this.info.estado);
+            // //.log(this.info.estado);
             if(this.info.estado=='orden de servicio cancelada'||this.info.estado=='Orden De Servicio Recogida'||this.info.estado=='Orden de servicio cerrada')
             {
                 this.indices=indice
                 this.detallesactualizar= this.currentUser.detalle[indice].detalleslocal
                 var produc= this.currentUser.detalle[indice].productoslocal._id
                 var serv = this.currentUser.detalle[indice].servicioslocal._id
-                this.axios.get(urlservicios+"estructuraf/" +produc +
+                this.axios.get("/api/estructuraf/" +produc +
                 "/" +serv)   
                 .then(response => {
                 this.inputs = response.data;
@@ -739,7 +738,7 @@ export default {
                 this.detallesactualizar= this.currentUser.detalle[indice].detalleslocal
                 var produc= this.currentUser.detalle[indice].productoslocal._id
                 var serv = this.currentUser.detalle[indice].servicioslocal._id
-                this.axios.get(urlservicios+"estructuraf/" +produc +
+                this.axios.get("/api/estructuraf/" +produc +
                 "/" +serv)   
                 .then(response => {
                 this.inputs = response.data;
@@ -759,7 +758,7 @@ export default {
                 }).catch(function(error){
                 })
             }
-            //console.log(this.currentUser.detalle[indice].detalleslocal.infor.trayectoobj)
+            // //.log(this.currentUser.detalle[indice].detalleslocal.infor.trayectoobj)
 
         }
     },
@@ -772,21 +771,21 @@ export default {
 
   },
       mounted: function () {
-          console.log("montado");
+           //.log("montado");
        bus.$on('ocultar', function (userObject) {
         
         this.ocultar = userObject.ocultar
       }.bind(this))
        var login = localStorage.getItem("storedData");
         var infologin =JSON.parse(login);
-        //console.log(infologin.id_cliente);
+        // //.log(infologin.id_cliente);
         var id_cliente
         
         if(infologin.id_cliente==undefined||infologin.id_cliente==null){
-            //console.log("no hay cliente");
+            // //.log("no hay cliente");
         }
         else{
-            //console.log("hay cliente");
+            // //.log("hay cliente");
             this.selec_disable=true
             this.id_cliente_local=infologin.id_cliente
 
@@ -802,7 +801,7 @@ export default {
         var infologin = JSON.parse(login);
         this.axios
         .get(
-            urlservicios+"UsuariosCurier/"+infologin.id_OperadorLogistico 
+            "/api/UsuariosCurier/"+infologin.id_OperadorLogistico 
         )
         .then(response => {
             this.curiers = response.data;
@@ -812,7 +811,7 @@ export default {
 
         bus.$on('thisEvent', function (userObject) {
         this.currentUser = userObject.inde.item
-        console.log(this.currentUser);
+         //.log(this.currentUser);
         if(this.currentUser.id_courier=="000000000000000000000000"){
             this.selected_curier=null
         }
