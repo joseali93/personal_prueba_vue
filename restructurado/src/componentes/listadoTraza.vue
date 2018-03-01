@@ -525,10 +525,23 @@ export default {
             var llav2cc,detallecc,llav2cl,detallecl
             var nomcliente,dircliente
             var nomcentro,dircentro
+            var detallecurier,llaveslvl2curier,nomcurier
             console.log(this.consulta);
+            var desti,llaveslv2desti,direcciondesti,destllavelvl3
             for(var i=0;i<this.consulta.length;i++){
                 llaveslv1=Object.keys(this.consulta[i])
                 for(var a=0;a<llaveslv1.length;a++){
+                    
+                    if(llaveslv1[a]=='courier'){
+                        detallecurier=llaveslv1[a]
+                        llaveslvl2curier=Object.keys(this.consulta[i].courier);
+                        for(var b=0; b<llaveslvl2curier.length;b++){
+                            if(llaveslvl2curier[b]=='nombre'){
+                                nomcurier=llaveslvl2curier[b]
+                                
+                            }
+                        }
+                    }
                     if(llaveslv1[a]=='centro_costos')
                     {
                         detallecc=llaveslv1[a]
@@ -576,45 +589,56 @@ export default {
                     }
                     if(llaveslv1[a]=='detalleslocal'){
                         detalles= llaveslv1[a]
+                        
                         llaveslv2= Object.keys(this.consulta[i].detalleslocal);
                         for(var b=0; b<llaveslv2.length;b++){
                         if(llaveslv2[b]=='referencia')
                             {
                                 refe=llaveslv2[b]
                             }
-                            if(llaveslv2[b]=='infor'){
+                        if(llaveslv2[b]=='destinatario')
+                            {
+                                desti=llaveslv2[b]
+                                destllavelvl3=Object.keys(this.consulta[i].detalleslocal.destinatario)
+                                console.log(destllavelvl3);
+                                
+                                for(var c=0; c<destllavelvl3.length;c++){
+                                    if(destllavelvl3[c]=='direccion'){
+                                        direcciondesti=destllavelvl3[c]
+                                    }
+                                }
+                                
+                            }  
+                        if(llaveslv2[b]=='infor'){
                                 infor= llaveslv2[b]
                                 llaveslv3=Object.keys(this.consulta[i].detalleslocal.infor);
-                                if(llaveslv3[c]=='trayectoobj')
-                                {
-                                    //console.log("no saco ");
-                                }
-                                else
-                                {
-                                    //console.log("saco");
-                                }
+                                
                                 for(var c=0;c<llaveslv3.length;c++){
                                     if(llaveslv3[c]=='trayectoobj')
-                                {
-                                    //console.log("no saco ");
+                                    {
+                                        //console.log("no saco ");
+                                    }
+                                    if(llaveslv3[c]=="objetoUnidades")
+                                    {
+                                        //console.log("no saco ");
+                                    }
+                                    else
+                                    {
+                                        //console.log("saco");
+                                        variable[c]=llaveslv3[c]
+                                    }
                                 }
-                                else
-                                {
-                                    //console.log("saco");
-                                     variable[c]=llaveslv3[c]
-                                }
-                                }
-                            }
+                        }
 
                         }
                     }
                 }
             }
-            console.log(nomcliente);
-            console.log(nomcentro);
+            
             var consultclient=''
 
             var consult='';
+            console.log(variable);
                 for(var d=0;d<variable.length;d++){
                     if(d==(variable.length-1))
                     {
@@ -625,21 +649,26 @@ export default {
                     }
                  }
                 var algo = 'SELECT '+
+                    producto+ '->nombre as Producto, '+
+                    servicio+'->nombre as Servicio, '+
+                    consecutivo+' as NumOrden, '+
+                    id+' as NumMovilizado,'+
+                    detallecurier+'->'+nomcurier+' as Operador,'+
                     detallecl+'->'+nomcliente+' as Cliente,'+
                     detallecl+'->'+dircliente+' as Direccion_Cliente,'+
                     detallecc+'->'+nomcentro+' as Centro_Costo,'+
                     detallecc+'->'+dircentro+' as Direccion_CentroCosto,'+
-                    consecutivo+' as NumOrden, '+
-                    id+' as NumMovilizado,'+
+
                     estado+' as Estado, '+
                     fechaT+' as Fecha, '+
-                    producto+ '->nombre as Producto, '+
-                    servicio+'->nombre as Servicio, '+
+                    
                     detalles+'->'+refe+' as Referencia, '+
+                    detalles+'->'+desti+'->'+direcciondesti+' as Destino, '+
                     consult+
-                    //detalles+ '->'+infor+'->'+variable[2]+'as '+variable[2]+' '+
                     'INTO XLS("Data.xls",{headers:true}) FROM ?'
-                    alasql(algo,[this.consulta])
+                    console.log(algo);
+
+                    //alasql(algo,[this.consulta])
                    
                    
         },

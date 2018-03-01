@@ -246,38 +246,38 @@ methods:{
                     {
                         this.load = true;
                         var load=true
-                    setTimeout(() => {
-                        bus.$emit('load', {
-                            load
-                        })
-                        }, )
-                        this.axios.get(urlservicios+"/ObtenerOrdenesFiltradoDetalle/"+this.selectedCC+"/"+this.selectedCL+'/'+this.orden+'/null/null/null/null')
-                            .then((response) => {
-                                this.consulta=response.data
-                                if(this.consulta==''){
-                                    swal(
-                                        'Oops...',
-                                        'No se encontro ninguna Orden!',
-                                        'error'
-                                        )
-                                        this.load = false;
-                                        var load=false
-                    setTimeout(() => {
-                        bus.$emit('load', {
-                            load
-                        })
-                        }, )
-                                }
-                                this.load = false;
-                                var load=false
-                    setTimeout(() => {
-                        bus.$emit('load', {
-                            load
-                        })
-                        }, )
-                        //console.log(this.consulta);
-                        })
-                        this.$router.replace('/inicio/trazabilidad/listado')
+                        setTimeout(() => {
+                            bus.$emit('load', {
+                                load
+                            })
+                            }, )
+                            this.axios.get(urlservicios+"/ObtenerOrdenesFiltradoDetalle/"+this.selectedCC+"/"+this.selectedCL+'/'+this.orden+'/null/null/null/null')
+                                .then((response) => {
+                                    this.consulta=response.data
+                                    if(this.consulta==''){
+                                        swal(
+                                            'Oops...',
+                                            'No se encontro ninguna Orden!',
+                                            'error'
+                                            )
+                                            this.load = false;
+                                            var load=false
+                        setTimeout(() => {
+                            bus.$emit('load', {
+                                load
+                            })
+                            }, )
+                                    }
+                                    this.load = false;
+                                    var load=false
+                        setTimeout(() => {
+                            bus.$emit('load', {
+                                load
+                            })
+                            }, )
+                            //console.log(this.consulta);
+                            })
+                            this.$router.replace('/inicio/trazabilidad/listado')
                     }
                     if(this.referencia==''||this.referencia==null){
                         //console.log("referencia vacio");
@@ -287,7 +287,7 @@ methods:{
                         console.log("tiene algo");
                             this.load = true;
                             var load=true
-                    setTimeout(() => {
+                        setTimeout(() => {
                         bus.$emit('load', {
                             load
                         })
@@ -304,23 +304,23 @@ methods:{
                                         )
                                         this.load = false;
                                         var load=false
-                    setTimeout(() => {
+                        setTimeout(() => {
                         bus.$emit('load', {
                             load
                         })
                         }, )
                                 }
-                                console.log(this.consulta);
+                                //console.log(this.consulta);
                                 this.load = false;
                                 var load=false
-                    setTimeout(() => {
-                        bus.$emit('load', {
-                            load
-                        })
-                        }, )
-                                })
+                        setTimeout(() => {
+                            bus.$emit('load', {
+                                load
+                            })
+                            }, )
+                                    })
 
-                        this.$router.replace('/inicio/trazabilidad/listado')
+                            this.$router.replace('/inicio/trazabilidad/listado')
                     }
                     if(this.nmovilizado==''||this.nmovilizado==null){
                         
@@ -329,13 +329,13 @@ methods:{
                     {
                         this.load = true;
                         var load=true
-                    setTimeout(() => {
+                        setTimeout(() => {
                         bus.$emit('load', {
                             load
                         })
                         }, )
-                        console.log("movilizado");
-                        console.log(this.nmovilizado);
+                        //console.log("movilizado");
+                        //console.log(this.nmovilizado);
                         this.axios.get(urlservicios+"ObtenerOrdenesFiltradoDetalle/"+this.selectedCC+"/"+this.selectedCL+'/null/'+this.nmovilizado+'/null/null/null')
                             .then((response) => {
                                 this.consulta=response.data
@@ -360,7 +360,7 @@ methods:{
                         })
                         }, )
                                 })
-
+                            //console.log(this.consulta);
                         this.$router.replace('/inicio/trazabilidad/listado')
                     }   
                 }            

@@ -300,7 +300,7 @@ export default {
     },
     methods: {
         desabilitar(value){
-            //console.log(value);
+            console.log(value);
             if(this.selec_disable==true){
                 console.log("desabilito todo");
                 return true
@@ -416,7 +416,8 @@ export default {
 
         },
         values(dato){
-            
+            console.log(dato);
+            console.log(this.currentUser.detalle[this.indices].detalleslocal.infor);
             eval('this.campos.'+dato+'='+"this.currentUser.detalle[this.indices].detalleslocal.infor."+dato)
             return eval("this.currentUser.detalle[this.indices].detalleslocal.infor."+dato)
         },

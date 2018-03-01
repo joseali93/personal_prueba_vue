@@ -74,67 +74,73 @@
 
                     <br>
                 </b-row>
-                <b-row  v-for="(data,indice) in inputs.campos" class="my-1 prueba" > 
+                <b-row  v-for="(data,indice) in inputs.campos" class="my-2"> 
                   <template v-if="data.type!='select'" >
-                    <template v-if="data.espieza==true" style="    display: inline-block;">
-                  <b-input-group >
-              <b-form-input ></b-form-input>
-                <b-btn variant="outline-success">Button</b-btn>
-            </b-input-group>
-                    </template>
-                    <template v-else>
+                    <template v-if="data.espieza==false">
                     <b-col  >   
                         <label  class="col-sm-2 col-form-label col-form-label-sm text-capitalize" :style="[data.style]" >{{data.placeholder}}: </label>
                     </b-col>
                     <b-col >
-                        <input class="form-control form-control-sm" :type="data.type" :id="data.id" :style="[data.style,validatecampo]" :max="data.max" :placeholder="data.placeholder" @keyup="Presiono(indice)"   required>
+                        <input class="form-control form-control-sm" :type="data.type" :id="data.id" :style="[data.style,validatecampo]" :max="data.max" :min="data.min" :placeholder="data.placeholder" @keyup="Presiono(indice)"   required>
                     </b-col>
                     </template>
-
-                    
-                  </template>
-                  
+ 
+                  </template>              
                 </b-row>
-                
-                <!--
-                <b-row  v-for="(data,indice) in inputs.campos" class="my-1" >
-                  <template v-if="data.espieza==true">
-                  <b-input-group class="mb-3">
-                    <b-form-input 
-                    type="text"
-                    :id="data.id"
-                    :placeholder="'Ingrese la '+data.placeholder">
-                    </b-form-input>
-                    <b-btn variant="outline-success" @click="adicionarRef">
-                    <i class="fa fa-plus"></i>
-                    </b-btn>
-                  </b-input-group>  
-                    <b-table striped hover :items="itemsreferencia" :fields="fieldsprueba"
-                   :per-page="3" :current-page="currentPageRef"> 
-                      <template slot="eliminar" slot-scope="data">
-                      <i class="btn btn-danger fa fa-trash" v-on:click="eliminarRef(data.index)" ></i>
-                      </template>
-                      <template slot="referencia"  slot-scope="data">           
-                         {{data.item.referencia}}
-                      </template>
-                    </b-table>
-                 <b-pagination size="md" :total-rows="itemsreferencia.length" v-model="currentPageRef" 
-                 :per-page="3">
-                 </b-pagination>
-
-                  </template> 
-                 
+                <b-row class="my-1">
+                    <h2 v-show="camposdinamicos"> Informacion Especifica: </h2>
                 </b-row>
-                -->
-                  <b-form-row  v-show="selectservice">
-                    <b-col>
-                        <label  class="col-sm-2 col-form-label col-form-label-sm">Referencia: </label>
+                <b-row v-for="(data,indice) in inputs.campos" v-show="camposdinamicos">
+                <template v-if="data.type!='select'" >
+                    <template v-if="data.espieza==true">
+                    <b-col  >   
+                        <label  class="col-sm-2 col-form-label col-form-label-sm text-capitalize" :style="[data.style]" >{{data.placeholder}}: </label>
                     </b-col>
+                    <b-col >
+                        <input class="form-control form-control-sm" :type="data.type" :id="data.id" :style="[data.style,validatecampo]" :max="data.max" :min="data.min" :placeholder="data.placeholder" @keyup="Presiono(indice)"   required>
+                    </b-col>
+                    </template>
+ 
+                  </template>  
+                </b-row>   
+                <b-row v-show="ocultardicionar">
+                  <b-col class="d-flex flex-row-reverse">
+                    <b-btn variant="outline-success" active-class class="float-right" @click="adicionarRef" v-show="camposdinamicos">
+                      <i class="fa fa-plus"></i>
+                    </b-btn>
+                  </b-col>
+                </b-row> 
+                <b-row v-show="ocultareditar">
+                  <b-col class="d-flex flex-row-reverse">
+                    <b-btn variant="outline-success" active-class class="float-right" @click="UpdateDinamico" v-show="camposdinamicos">
+                      <i class="fa fa-pencil"></i>
+                    </b-btn>
+                  </b-col>
+                </b-row>    
+                <b-row>
+                  <b-table striped hover :items="itemsdinamicos"  :fields="fieldsdinamicos"
+                   :per-page="3" :current-page="currentPageRef" v-show="camposdinamicos"> 
+                      <template slot="eliminar" slot-scope="data">
+                        <i class="btn btn-danger fa fa-trash" v-on:click="eliminarRef(data)" ></i>
+                      </template>
+                      <template slot="actualizar" slot-scope="data">
+                        <i class="btn btn-primary fa fa-pencil" v-on:click="ActualizarRef(data,data.index)" ></i>
+                      </template>
+                   
+                      
+                    </b-table>
+                 <b-pagination size="md" :total-rows="itemsdinamicos.length" v-model="currentPageRef" 
+                 :per-page="3" v-show="camposdinamicos">
+                 </b-pagination>    
+                </b-row>        
+
+                <b-form-row v-show="selectservice" class="my-1">
+                    
+                        <h2  >Documento Referencia: </h2>
                     <b-col>
                       <b-form-input type="text" class="form-control form-control-sm"  placeholder="Referencia" v-model="detalles.referencia"
                          :state="estado.referencia"></b-form-input>
-                         <!--<input type="text" class="form-control form-control-sm" id="referencia"   placeholder="Referencia" v-model="detalles.referencia">
-                         -->
+                         
                     </b-col>
                 </b-form-row>
                 <b-row v-show="selectservice">
@@ -153,6 +159,8 @@
                         -->
                     </b-col>
                 </b-form-row>
+                
+                
                 <b-form-row v-show="selectservice&&mostrardestinatario" class="my-1">
                     <b-col>
                         <label  class="col-sm-2 col-form-label col-form-label-sm">Nombre: </label>
@@ -198,6 +206,16 @@
                     </b-form-textarea>
                   </b-col>
                 </b-form-row>
+                <b-form-row v-show="selectservice&&mostrardestinatario">
+                  <b-col>
+                    <b-form-textarea id="textarea1"
+                        v-model="detalles.contenido"
+                        placeholder="Ingrese el contenido de los paquetes"
+                        :rows="3"
+                        :max-rows="6">
+                    </b-form-textarea>
+                  </b-col>
+                </b-form-row>
             </b-container>
             <div slot="modal-footer" class="w-100">
                 <b-btn class="mt-3" variant="danger"  @click="hideModal">
@@ -222,27 +240,96 @@
                     <b-form-select v-model="selectservice" class="mb-3"  :options="serviciosurl" @change.native="campos" text-field="nombre" value-field="_id">
                     </b-form-select>
                 </b-row>
+                <b-row>
+                    <h2 v-show="selectservice"> Informacion Adicional: </h2>
+                    <br>
+
+                    <br>
+                </b-row>
+                <b-row  v-for="(data,indice) in inputsED.campos" class="my-2"> 
+                  <template v-if="data.type!='select'" >
+                    <template v-if="data.espieza==false">
+                    <b-col  >   
+                        <label  class="col-sm-2 col-form-label col-form-label-sm text-capitalize" :style="[data.style]" >{{data.placeholder}}: </label>
+                    </b-col>
+                    <b-col >
+                        <input class="form-control form-control-sm" 
+                        :type="data.type" :id="data.id" :style="[data.style,validatecampo]"
+                         :max="data.max" :placeholder="data.placeholder" 
+                         @keyup="PresionoED(indice)"  :value="valores(data.id)"      required>
+                    </b-col>
+                    </template>
+ 
+                  </template>              
+                </b-row>
+                <b-row class="my-1">
+                    <h2 v-show="camposdinamicos"> Informacion Especifica: </h2>
+                </b-row>
+                <b-row v-for="(data,indice) in inputsED.campos" v-show="camposdinamicos">
+                <template v-if="data.type!='select'" >
+                    <template v-if="data.espieza==true">
+                    <b-col  >   
+                        <label  class="col-sm-2 col-form-label col-form-label-sm text-capitalize" :style="[data.style]" >{{data.placeholder}}: </label>
+                    </b-col>
+                    <b-col >
+                        <input class="form-control form-control-sm" :type="data.type"
+                         :id="data.id" :style="[data.style,validatecampo]" :max="data.max" 
+                         :placeholder="data.placeholder" @keyup="PresionoED(indice)"   required>
+                    </b-col>
+                    </template>
+ 
+                  </template>  
+                </b-row>   
+               
+                <b-row v-show="ocultardicionarED">
+                  <b-col class="d-flex flex-row-reverse">
+                    <b-btn variant="outline-success" active-class class="float-right" @click="adicionarRefED" v-show="camposdinamicos">
+                      <i class="fa fa-plus"></i>
+                    </b-btn>
+                  </b-col>
+                </b-row> 
+                <b-row v-show="ocultareditarED">
+                  <b-col class="d-flex flex-row-reverse">
+                    <b-btn variant="outline-success" active-class class="float-right" @click="UpdateDinamicoED" v-show="camposdinamicos">
+                      <i class="fa fa-pencil"></i>
+                    </b-btn>
+                  </b-col>
+                </b-row>    
+
+                <b-row>
+                  <b-table striped hover :items="itemsdinamicos"  :fields="fieldsdinamicos"
+                   :per-page="3" :current-page="currentPageRef" v-show="camposdinamicos"> 
+                      <template slot="eliminar" slot-scope="data">
+                        <i class="btn btn-danger fa fa-trash" v-on:click="eliminarRef(data)" ></i>
+                      </template>
+                      <template slot="actualizar" slot-scope="data">
+                        <i class="btn btn-primary fa fa-pencil" v-on:click="ActualizarRefED(data,data.index)" ></i>
+                      </template>
+                    </b-table>
+                 <b-pagination size="md" :total-rows="itemsdinamicos.length" v-model="currentPageRef" 
+                 :per-page="3" v-show="camposdinamicos">
+                 </b-pagination>    
+                </b-row> 
+                 <!--
                 <b-row  v-if="mostrar">
                     <h2> Informacion: </h2>
                 </b-row>
+                
+               
                 <b-row v-for="(data,indice) in inputsED.campos" class="my-1"> 
                   <template v-if="data.type!='select'">
                     <b-col >
                         <label  class="col-sm-2 col-form-label col-form-label-sm text-capitalize" :style="[data.style]" >{{data.placeholder}}: </label>
                     </b-col>
                     <b-col>
-                        <input class="form-control form-control-sm" :type="data.type" :id="data.id" :style="[data.style,validatecampo]" :max="data.max" :placeholder="data.placeholder" @keyup="PresionoED(indice)"  :value="valores(data.id)"   required>
+                        <input class="form-control form-control-sm" 
+                        :type="data.type" :id="data.id" :style="[data.style,validatecampo]" 
+                        :max="data.max" :placeholder="data.placeholder" @keyup="PresionoED(indice)"  :value="valores(data.id)"   required>
                     </b-col>
                   </template>
-              <!--
-                    <b-col>
-                        <label  class="col-sm-2 col-form-label col-form-label-sm text-capitalize" :style="data.style">{{data.placeholder}}: </label>
-                    </b-col>
-                    <b-col>
-                        <input class="form-control form-control-sm" :type="data.type" :id="data.id" :max="data.max" :style="data.style" :placeholder="data.placeholder" @keyup="PresionoED(indice)"  :value="valores(data.id)" required>
-                    </b-col>
-                    -->
+
                 </b-row>
+            
                  <b-form-row>
                     <b-col>
                         <label  class="col-sm-2 col-form-label col-form-label-sm">Referencia: </label>
@@ -252,9 +339,8 @@
                          :state="estado.referencia"></b-form-input>
                          <!--
                         <input type="text" class="form-control form-control-sm" id="referenciaedit"   placeholder="Referencia" v-model="detalleseditar.referencia">
-                        -->
                     </b-col>
-                </b-form-row>
+                </b-form-row>-->
                 <b-row>
                     <h2>Destinatario: </h2>
                 </b-row>
@@ -298,6 +384,14 @@
                         :max-rows="6">
                     </b-form-textarea>
                 </b-row>
+                <b-row>
+                    <b-form-textarea id="textarea1"
+                        v-model="detalleseditar.contenido"
+                        placeholder="Enter something"
+                        :rows="3"
+                        :max-rows="6">
+                    </b-form-textarea>
+                </b-row>
             </b-container>
             <div slot="modal-footer" class="w-100">
                 <b-btn class="mt-3" variant="danger"  @click="hideModal">
@@ -322,13 +416,16 @@ export default {
   },
   data() {
     return {
+      ocultardicionarED: true,
+      ocultareditarED:false,
+      ocultardicionar: true,
+      ocultareditar:false,
+      indicedinamico:'',
+      camposdinamicos:false,
       currentPageRef:1,
-      itemsreferencia:[
+      itemsdinamicos:[
       ],
-      fieldsprueba:[
-         { key: "referencia", label: "Referencia" },
-         { key: "eliminar", label: "Referencia" },
-
+      fieldsdinamicos:[
       ],
       prueba:'',
       mostrardestinatario:false,
@@ -376,7 +473,8 @@ export default {
         infor: {
         },
         referencia: '',
-        observaciones: ""
+        observaciones: "",
+        contenido:""
       },
       detalleseditar: {
         destinatario: {
@@ -388,7 +486,9 @@ export default {
         },
         infor: {},
         referencia:'',
-        observaciones: ""
+        observaciones: "",
+        contenido:""
+
       },
       inputsED: ""
     };
@@ -400,64 +500,285 @@ export default {
     }
   },
   methods: {
-    ActualizarRef(value){
-      console.log("entro a cambiar")
-      console.log(value)
-       setTimeout(
-        function() {
-          if (document.getElementById(this.inputs.campos[value].id).value == "")
-           {
-            eval("this.objeto." + this.inputs.campos[value].vmodel + "= null");
-            eval(
-                "this.objeto." +
-                  this.inputs.campos[value].vmodel +
-                  "=" +
-                  this.inputs.campos[value].min)
-          } else {
-            if (document.getElementById(this.inputs.campos[value].id).value >this.inputs.campos[value].max)
-             {
-              eval(
-                "this.objeto." +
-                  this.inputs.campos[value].vmodel +
-                  "=" +
-                  this.inputs.campos[value].min
-              );
-              document.getElementById(
-                this.inputs.campos[value].id
-              ).value = eval(
-                "this.objeto." +
-                  this.inputs.campos[value].vmodel +
-                  "=" +
-                  this.inputs.campos[value].min
-              );
-            } else {
-              eval(
-                "this.objeto." +
-                  this.inputs.campos[value].vmodel +
-                  "=" +
-                  document.getElementById(this.inputs.campos[value].id).value
-              );
+    UpdateDinamico(value){
+      console.log("entro a update");
+      console.log(this.indicedinamico);
+      console.log(this.currentPageRef);
+      var objellaves=Object.keys(this.itemsdinamicos[0])
+      console.log(objellaves);
+      var tituloopciones={}
+
+      for(var x=0;x<this.inputs.campos.length;x++){
+        if(this.inputs.campos[x].espieza==true){
+          for(var y=0;y<objellaves.length;y++){
+            if(this.inputs.campos[x].vmodel==objellaves[y]){
+                console.log(document.getElementById(this.inputs.campos[x].id).value);
+                eval('this.objeto.'+this.inputs.campos[x].vmodel+'='+document.getElementById(this.inputs.campos[x].id).value)
+                tituloopciones[objellaves[y]]=eval('this.objeto.'+objellaves[y])
+                document.getElementById(this.inputs.campos[x].id).value=''
             }
           }
-        }.bind(this)
-      );
-      console.log(this.objeto)
+        }
+      }
+      //this.DetalleServicio.splice(this.indices, 1);
+      //this.DetalleServicio.splice(this.indices, 0, detalles);
+      console.log(this.itemsdinamicos);
+      console.log(this.currentPageRef);
+      console.log(tituloopciones);
+      if(this.indicedinamico==0&&this.currentPageRef==1){
+        this.itemsdinamicos.splice(this.indicedinamico, 1);
+        this.itemsdinamicos.splice(this.indicedinamico, 0, tituloopciones);
+      }
+      else{
+        if(this.currentPageRef==1)
+        {
+          this.itemsdinamicos.splice(this.indicedinamico, 1);
+          this.itemsdinamicos.splice(this.indicedinamico, 0, tituloopciones);
+        }
+        else
+        {
+          this.itemsdinamicos.splice(this.indicedinamico+3, 1);
+          this.itemsdinamicos.splice(this.indicedinamico+3, 0, tituloopciones);
+        }
+      }
+      this.ocultardicionar= true
+      this.ocultareditar=false
+    },
+    UpdateDinamicoED(value){
+      console.log("entro a update edi");
+      //console.log(this.DetalleServicio[this.indices].detalleslocal.infor);
+      var objellaves=Object.keys(this.DetalleServicio[this.indices].detalleslocal.infor)
+      var indiceobjdina
+      if(this.currentPageRef==1)
+      {
+        indiceobjdina=this.indicedinamico
+      }
+      else
+      {
+        indiceobjdina=3+this.indicedinamico
+      }
+      for(var x=0;x<this.inputsED.campos.length;x++){
+        if(this.inputsED.campos[x].espieza==true){
+          for(var y=0;y<objellaves.length;y++){
+            if(this.inputsED.campos[x].vmodel==objellaves[y]){
+               eval('this.DetalleServicio[this.indices].detalleslocal.infor.objetoUnidades[indiceobjdina].'+objellaves[y]+'='+document.getElementById(this.inputsED.campos[x].id).value)
+              document.getElementById(this.inputsED.campos[x].id).value=''
+            }
+          }
+        }
+      }
+      console.log(this.DetalleServicio[this.indices].detalleslocal.infor);
+       this.ocultardicionarED= true
+      this.ocultareditarED=false
+      /*
+      console.log(this.indicedinamico);
+      console.log(this.currentPageRef);
+      var objellaves=Object.keys(this.itemsdinamicos[0])
+      console.log(objellaves);
+      var tituloopciones={}
+
+      for(var x=0;x<this.inputs.campos.length;x++){
+        if(this.inputs.campos[x].espieza==true){
+          for(var y=0;y<objellaves.length;y++){
+            if(this.inputs.campos[x].vmodel==objellaves[y]){
+                console.log(document.getElementById(this.inputs.campos[x].id).value);
+                eval('this.objeto.'+this.inputs.campos[x].vmodel+'='+document.getElementById(this.inputs.campos[x].id).value)
+                tituloopciones[objellaves[y]]=eval('this.objeto.'+objellaves[y])
+                document.getElementById(this.inputs.campos[x].id).value=''
+            }
+          }
+        }
+      }
+      //this.DetalleServicio.splice(this.indices, 1);
+      //this.DetalleServicio.splice(this.indices, 0, detalles);
+      console.log(this.itemsdinamicos);
+      console.log(this.currentPageRef);
+      console.log(tituloopciones);
+      if(this.indicedinamico==0&&this.currentPageRef==1){
+        this.itemsdinamicos.splice(this.indicedinamico, 1);
+        this.itemsdinamicos.splice(this.indicedinamico, 0, tituloopciones);
+      }
+      else{
+        if(this.currentPageRef==1)
+        {
+          this.itemsdinamicos.splice(this.indicedinamico, 1);
+          this.itemsdinamicos.splice(this.indicedinamico, 0, tituloopciones);
+        }
+        else
+        {
+          this.itemsdinamicos.splice(this.indicedinamico+3, 1);
+          this.itemsdinamicos.splice(this.indicedinamico+3, 0, tituloopciones);
+        }
+      }
+
+      this.ocultardicionar= true
+      this.ocultareditar=false
+      */
+    },
+    ActualizarRefED(value,value2){
+      console.log("entro a cambiar ref")
+      console.log(value)
+      this.indicedinamico=value2
+      //console.log(this.currentPageRef)
+      var objellaves=Object.keys(value.item)
+       this.ocultardicionarED= false
+      this.ocultareditarED=true
+      for(var x=0;x<this.inputsED.campos.length;x++){
+        if(this.inputsED.campos[x].espieza==true){
+          for(var y=0;y<objellaves.length;y++){
+            if(this.inputsED.campos[x].vmodel==objellaves[y]){
+              document.getElementById(this.inputsED.campos[x].id).value=eval('value.item.'+objellaves[y])
+              
+            }
+          }
+        }
+      }
+    },
+    ActualizarRef(value,value2){
+      console.log("entro a cambiar ref")
+      //console.log(value2)
+      this.indicedinamico=value2
+      //console.log(this.currentPageRef)
+      var objellaves=Object.keys(value.item)
+       this.ocultardicionar= false
+      this.ocultareditar=true
+      for(var x=0;x<this.inputs.campos.length;x++){
+        if(this.inputs.campos[x].espieza==true){
+          for(var y=0;y<objellaves.length;y++){
+            if(this.inputs.campos[x].vmodel==objellaves[y]){
+              document.getElementById(this.inputs.campos[x].id).value=eval('value.item.'+objellaves[y])
+              
+            }
+          }
+        }
+      }
+     
     },
     eliminarRef(value){
       console.log("entro a eliminar");
       console.log(value);
-      this.itemsreferencia.splice(value, 1);
+      this.itemsdinamicos.splice(value, 1);
 
 
     },
-    adicionarRef(){
-      console.log("ntro a prueba");
-      console.log(this.prueba);
-      var obj ={
-        referencia:this.prueba,
+    adicionarRefED(){
+      console.log("ntro a adicionareditar");
+      //console.log(this.inputs);
+      //console.log(this.DetalleServicio[this.indices].detalleslocal.infor.objetoUnidades);
+      var objetollaves=Object.keys(this.inputsED.objeto)
+      var tituloopciones={}
+      var bandera=true
+      var resumen =this.DetalleServicio[this.indices].detalleslocal.infor.objetoUnidades
+      console.log(this.DetalleServicio[this.indices].detalleslocal.infor);
+      for(var x=0; x<this.inputsED.campos.length;x++){
+        if(this.inputsED.campos[x].espieza==true){
+          for(var y=0;y<objetollaves.length;y++){
+             if(this.inputsED.campos[x].vmodel==objetollaves[y]){
+
+              if(document.getElementById(this.inputsED.campos[x].id).value==""||
+                document.getElementById(this.inputsED.campos[x].id).value==null){
+                  bandera=false
+              }
+              else{
+                 tituloopciones[objetollaves[y]]=eval('this.DetalleServicio[this.indices].detalleslocal.infor.'+objetollaves[y])
+                document.getElementById(this.inputsED.campos[x].id).value=''
+              }
+
+              
+             }
+          }
+        }
       }
-      this.itemsreferencia.push(obj)
-      console.log(this.itemsreferencia);
+      console.log(bandera)
+      if(bandera==false){
+        swal(
+              'Good job!',
+              'Revise los campos',
+              'error'
+            )
+      }
+      else{
+        bandera=true
+        console.log(tituloopciones);
+      this.itemsdinamicos.push(tituloopciones)
+       console.log(this.itemsdinamicos);
+      }
+      
+
+
+      
+      
+
+    },
+    adicionarRef(){
+      console.log("ntro a adicionar");
+      console.log(this.inputs);
+      var objetollaves=Object.keys(this.inputs.objeto)
+      var tituloopciones={}
+      var opciones=[]
+      var bandera=true
+      console.log(this.objeto);
+      for(var x=0; x<this.inputs.campos.length;x++){
+        if(this.inputs.campos[x].espieza==true){
+          for(var y=0;y<objetollaves.length;y++){
+            if(this.inputs.campos[x].vmodel==objetollaves[y]){
+              //aca creamos la llave y le asignamos el valor correspondiente
+               tituloopciones[objetollaves[y]]=eval('this.objeto.'+objetollaves[y])
+               console.log(document.getElementById(this.inputs.campos[x].id).value);
+                if(document.getElementById(this.inputs.campos[x].id).value==""||
+                document.getElementById(this.inputs.campos[x].id).value==null)
+                {
+                  bandera=false
+                  
+                }else{
+                  document.getElementById(this.inputs.campos[x].id).value=""
+                  eval('this.objeto.'+this.inputs.campos[x].vmodel+'=""')
+                  console.log("------------")
+                  console.log(this.objeto)
+                  /*
+              
+                  if(this.inputs.campos[x].vmodel=='unidades'){
+                  //console.log(this.itemsdinamicos.length);
+                  if(this.itemsdinamicos.length==0)
+                  {
+                    eval('this.objeto.'+objetollaves[y]+'='+1)
+                  }
+                  else{
+                    eval('this.objeto.'+objetollaves[y]+'='+this.itemsdinamicos.length+ eval('this.objeto.'+objetollaves[y]))
+                  }
+                  
+                  //console.log(this.objeto.unidades);
+                }
+                */
+                }
+                
+            }
+           
+        }
+        }
+        
+
+      }
+      console.log(bandera)
+      if(bandera==false){
+        swal(
+              'Good job!',
+              'Revise los campos',
+              'error'
+            )
+      }
+      else{
+        bandera=true
+        var fields=Object.keys(tituloopciones)
+        fields.push('eliminar')
+        fields.push('actualizar')
+
+        this.fieldsdinamicos=fields
+        //console.log(this.fieldsdinamicos);
+        this.itemsdinamicos.push(tituloopciones)
+      console.log(this.itemsdinamicos);
+      }
+      
     },
     buscar(){
       console.log("entro a buscar");
@@ -532,6 +853,7 @@ export default {
     },
     PresionoED(index) {
       console.log("entro al presionar editar");
+      console.log(index);
       this.validatecampo= ''
       setTimeout(
         function() {
@@ -568,9 +890,37 @@ export default {
       this.estado.nombre=null
       this.estado.direccion=null
       this.estado.referencia=null
-
-     for(var x=0;x<Object.keys(this.detalleseditar.infor).length;x++){
-       if(eval('this.detalleseditar.infor.'+this.inputsED.campos[x].vmodel)==''||
+      console.log(this.detalleseditar.infor);
+      var objetollaves=Object.keys(this.detalleseditar.infor)
+     for(var x=0;x<objetollaves.length;x++){
+        console.log(typeof(eval('this.detalleseditar.infor.'+objetollaves[x])));
+        
+        if(typeof(eval('this.detalleseditar.infor.'+objetollaves[x]))=="object")
+        {
+          console.log("hay objeto");
+        }
+        else{
+          console.log(this.inputsED);
+          console.log(this.inputsED.campos[x].vmodel);
+          if(this.inputsED.campos[x].espieza==false){
+            if(document.getElementById(this.inputsED.campos[x].id).value=='')
+            {
+               pivoteedi=true
+              this.validatecampo= {
+                      border: '1px solid  #ff8080'
+                  }
+            }
+          }
+          }
+      /*
+       console.log(eval('this.detalleseditar.infor.'+this.inputsED.campos[x].vmodel));
+       console.log(typeof(eval('this.detalleseditar.infor.'+this.inputsED.campos[x].vmodel)))
+       if(typeof(this.detalleseditar.infor)){
+         //console.log("objeto");
+       }
+       else{
+         /*
+         if(eval('this.detalleseditar.infor.'+this.inputsED.campos[x].vmodel)==''||
        eval('this.detalleseditar.infor.'+this.inputsED.campos[x].vmodel)==null||
        eval('this.detalleseditar.infor.'+this.inputsED.campos[x].vmodel)=='null')
        {
@@ -579,12 +929,15 @@ export default {
                 border: '1px solid  #ff8080'
             }
        }
+       
+     }*/
+       
      }
       console.log(pivoteedi);
       if (
         this.detalleseditar.destinatario.nombre == "" ||
         this.detalleseditar.destinatario.direccion == "" ||
-        this.detalleseditar.referencia==""||
+        //this.detalleseditar.referencia==""||
         pivoteedi==true||
         this.detalleseditar.destinatario.telefono==''
         
@@ -604,11 +957,12 @@ export default {
           this.estado.direccion=false
           swal("Oops...", "Falto algun campo por completar!", "error");
         }
+        /*
         if(        this.detalleseditar.referencia==""  ){
           this.estado.referencia=false
           swal("Oops...", "Falto algun campo por completar!", "error");
         }
-        
+        */
       } else {
         var detalleslocal = this.detalleseditar;
         var productoslocal = this.selectproducto;
@@ -619,7 +973,7 @@ export default {
           productoslocal: productoslocal,
           detalleslocal: detalleslocal
         };
-        //console.log(JSON.stringify(detalles));
+        console.log((detalles));
         this.DetalleServicio.splice(this.indices, 1);
         this.DetalleServicio.splice(this.indices, 0, detalles);
         (this.objeto = ""),
@@ -645,6 +999,7 @@ export default {
       toastr.error("Se elmino exitosamente");
     },
     editar(index) {
+      console.log(index);
       this.validatecampo=''
       this.validatecampoTel=''
       this.estado.nombre=null
@@ -657,7 +1012,12 @@ export default {
       this.selectservice = this.DetalleServicio[index].servicioslocal._id;
       console.log(this.selectservice);
       console.log(this.detalleseditar);
-
+      this.itemsdinamicos=this.DetalleServicio[index].detalleslocal.infor.objetoUnidades
+      var fields=Object.keys(this.DetalleServicio[index].detalleslocal.infor.objetoUnidades[0])
+      fields.push('eliminar')
+      fields.push('actualizar')
+      console.log(fields);
+      this.fieldsdinamicos=fields
       this.axios
         .get(
         urlservicios+"estructuraf/" +
@@ -667,9 +1027,23 @@ export default {
         )
         .then(response => {
           this.inputsED = response.data;
+                          
+          for(var x=0;x<this.inputsED.campos.length;x++){
+              console.log(this.inputsED.campos[x]);
+              if(this.inputsED.campos[x].espieza==true){
+                console.log("algo dinamico");
+                this.camposdinamicos=true
+              }
+            }
         });
     },
     hideModal() {
+       (this.habilitar=true),
+      (this.mostrardestinatario=false),
+            (this.camposdinamicos=false),
+        (this.fieldsdinamicos=[]),
+        (this.itemsdinamicos=[]),
+        (this.identificacion= null),
       (this.objeto = ""),
         (this.inputs = ""),
         this.selectservice = null;
@@ -692,16 +1066,11 @@ export default {
       this.estado.nombre=null
       this.estado.direccion=null
       this.estado.referencia=null
-      console.log("ingreso orden");
       var pivote=false
-      console.log("---------------");
-      console.log(this.detalles.destinatario);
-
-      console.log("---------------");
+      
       var inforemitente =localStorage.getItem("orden");
       var inforemi=JSON.parse(inforemitente)
 
-      console.log(this.identificacion);
       if(this.creaciondestinatarios==false){
         var objeto={
         numero_identificacion:this.identificacion,
@@ -743,8 +1112,33 @@ export default {
       else
       {
         var llaves=''
+        var objllaves
         llaves=Object.keys(this.objeto)
-        for(var x=0;x<llaves.length;x++){          
+        console.log(this.itemsdinamicos);
+        objllaves=Object.keys(this.itemsdinamicos[0])
+        console.log(objllaves);
+        
+        for(var x=0;x<this.inputs.campos.length;x++)
+        {
+          if(this.inputs.campos[x].espieza==false){
+            if(eval('this.objeto.'+this.inputs.campos[x].vmodel)==''||
+            eval('this.objeto.'+this.inputs.campos[x].vmodel=='null')||
+            eval('this.objeto.'+this.inputs.campos[x].vmodel==null))
+            {
+              console.log("");
+              console.log("pivote tru");
+              console.log(eval('this.objeto.'+llaves[x]));
+              this.validatecampo= {
+                  border: '1px solid  #ff8080'
+              }
+              pivote=true
+            }
+          }
+          
+        }
+        /*
+        for(var x=0;x<llaves.length;x++){   
+
           if(eval('this.objeto.'+llaves[x])==''||eval('this.objeto.'+llaves[x]=='null')||eval('this.objeto.'+llaves[x]==null))
           {
             console.log("");
@@ -756,6 +1150,8 @@ export default {
             pivote=true
           }
         }
+        */
+      
         if(pivote==false){
           this.validatecampo=''
         }
@@ -791,7 +1187,9 @@ export default {
 
 
       } else {
-        this.objeto.objetoUnidades=this.itemsreferencia
+        console.log(this.objeto);
+        this.objeto.objetoUnidades
+        this.objeto.objetoUnidades=this.itemsdinamicos
         var servicioslocal = this.selectservicio;
         this.detallesc = this.detalles;
         this.detallesc.infor = this.objeto;
@@ -805,12 +1203,11 @@ export default {
           detalleslocal: detalleslocal
         };
         this.DetalleServicio.push(detalles);
-        /*        this.DetalleServicio.map((obj,indc)=>{
-          console.log(obj);
-        })*/
         console.log((this.DetalleServicio));
-        //blanquear datos
-        this.itemsreferencia=[]
+        //BLANQUEAR DATOS
+        this.camposdinamicos=false
+        this.fieldsdinamicos=[]
+        this.itemsdinamicos=[]
         this.identificacion=''
         this.habilitar=true,
                   this.mostrardestinatario=false,
@@ -935,6 +1332,13 @@ export default {
             console.log(this.inputs);
             this.objeto = this.inputs.objeto;
             console.log(this.objeto)
+            for(var x=0;x<this.inputs.campos.length;x++){
+              console.log(this.inputs.campos[x]);
+              if(this.inputs.campos[x].espieza==true){
+                console.log("algo dinamico");
+                this.camposdinamicos=true
+              }
+            }
             //this.load=false
             var load2=false
             setTimeout(() => {
@@ -960,7 +1364,6 @@ export default {
 
       }
       else{
-      console.log(this.DetalleServicio);
       var login = localStorage.getItem("storedData");
       var infologin = JSON.parse(login);
 
@@ -986,7 +1389,9 @@ export default {
           nombre_contacto :inforemi.infocliente.nombre
         },
         detalle: this.DetalleServicio
+
       };
+      console.log(this.DetalleServicio);
       this.axios
         .post(urlservicios+"GuardarOrden", objeto)
         .then(response => {
@@ -1027,7 +1432,8 @@ export default {
 
 <style>
 .prueba{
-  display:inline-block;
+  display:inline-table;
+  margin-left: 15px;
 }
 .card{
     margin-top: 2%;
