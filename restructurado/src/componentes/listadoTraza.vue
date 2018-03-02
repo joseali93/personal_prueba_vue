@@ -528,6 +528,21 @@ export default {
             var detallecurier,llaveslvl2curier,nomcurier
             console.log(this.consulta);
             var desti,llaveslv2desti,direcciondesti,destllavelvl3
+            for(var a=0;a<this.consulta.length;a++){
+                console.log(this.consulta[a]);
+                var objtraza=Object.keys(this.consulta[a].trazabilidad[0])
+                for(var x=0;x<objtraza.length;x++){
+                    //console.log(objtraza[x]);
+                    if(objtraza[x]=="EsCierre"){
+console.log("es cierre");
+                    }
+                    if(eval('this.consulta[a].trazabilidad.'+objtraza[x])=="EsCierre"){
+                        console.log("es cierre");
+                    }
+                    
+                }
+            }
+
             for(var i=0;i<this.consulta.length;i++){
                 llaveslv1=Object.keys(this.consulta[i])
                 for(var a=0;a<llaveslv1.length;a++){
@@ -600,7 +615,7 @@ export default {
                             {
                                 desti=llaveslv2[b]
                                 destllavelvl3=Object.keys(this.consulta[i].detalleslocal.destinatario)
-                                console.log(destllavelvl3);
+                                //console.log(destllavelvl3);
                                 
                                 for(var c=0; c<destllavelvl3.length;c++){
                                     if(destllavelvl3[c]=='direccion'){
@@ -638,7 +653,7 @@ export default {
             var consultclient=''
 
             var consult='';
-            console.log(variable);
+            //console.log(variable);
                 for(var d=0;d<variable.length;d++){
                     if(d==(variable.length-1))
                     {

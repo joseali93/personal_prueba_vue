@@ -692,7 +692,7 @@ export default {
       console.log(bandera)
       if(bandera==false){
         swal(
-              'Good job!',
+              'Error!',
               'Revise los campos',
               'error'
             )
@@ -853,29 +853,41 @@ export default {
     },
     PresionoED(index) {
       console.log("entro al presionar editar");
-      console.log(index);
       this.validatecampo= ''
       setTimeout(
         function() {
           if (
             document.getElementById(this.inputsED.campos[index].id).value == ""
           ) {
+                        console.log(this.inputsED.campos[index].vmodel);
+
             eval(
               "this.detalleseditar.infor." +
                 this.inputsED.campos[index].vmodel +
                 "= null"
             );
+             console.log( eval(
+              "this.detalleseditar.infor." +
+                this.inputsED.campos[index].vmodel));
+            console.log(this.detalleseditar)
           } else {
+            
             eval(
               "this.detalleseditar.infor." +
                 this.inputsED.campos[index].vmodel +
                 "=" +
                 document.getElementById(this.inputsED.campos[index].id).value
             );
+            console.log(document.getElementById(this.inputsED.campos[index].id).value);
+            console.log( eval(
+              "this.detalleseditar.infor." +
+                this.inputsED.campos[index].vmodel));
+                            console.log(this.detalleseditar)
+
           }
         }.bind(this)
       );
-      //console.log(this.detalleseditar)
+     
     },
     valores(dato) {
       //console.log(this.detalleseditar)
@@ -885,23 +897,60 @@ export default {
     },
     actualizar() {
       console.log("actualizar");
-            this.validatecampoTel=''
+      this.validatecampoTel=''
       var pivoteedi=false
       this.estado.nombre=null
       this.estado.direccion=null
       this.estado.referencia=null
-      console.log(this.detalleseditar.infor);
+      
       var objetollaves=Object.keys(this.detalleseditar.infor)
+
+      var objdinamico=Object.keys(this.detalleseditar.infor.objetoUnidades[0])
+      var totales={}
+      var algo=0
+
+      console.log(this.itemsdinamicos);
+        for(var y=0;y<this.itemsdinamicos.length;y++){
+          console.log(this.itemsdinamicos[y]);
+          for(var x=0;x<this.inputsED.campos.length;x++){
+            if(this.inputsED.campos[x].espieza==true&&this.inputsED.campos[x].type=="number")
+            {
+              algo=algo+eval('this.itemsdinamicos[y].'+this.inputsED.campos[x].acumulaen)
+              //console.log(algo);
+              totales[this.inputsED.campos[x].acumulaen]=algo
+              //console.log(eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen));
+              //totales[this.inputs.campos[x].acumulaen]=eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen)+totales[this.inputs.campos[x].acumulaen]
+            }
+            if(this.inputsED.campos[x].espieza==true&&this.inputsED.campos[x].type=="text")
+            {
+              //algo=algo+eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen)
+              //console.log(algo);
+              totales[this.inputsED.campos[x].acumulaen]=this.itemsdinamicos.length
+              //console.log(eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen));
+              //totales[this.inputs.campos[x].acumulaen]=eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen)+totales[this.inputs.campos[x].acumulaen]
+            }
+          }
+        }
+
+     
+      console.log(totales);
+      var objtotal=Object.keys(totales)
+
+        for(var x=0;x<objtotal.length;x++){
+          eval('this.detalleseditar.infor.'+objtotal[x]+'='+totales[objtotal[x]])
+        }
+    console.log(this.detalleseditar.infor);
      for(var x=0;x<objetollaves.length;x++){
-        console.log(typeof(eval('this.detalleseditar.infor.'+objetollaves[x])));
+        //console.log(typeof(eval('this.detalleseditar.infor.'+objetollaves[x])));
         
         if(typeof(eval('this.detalleseditar.infor.'+objetollaves[x]))=="object")
         {
-          console.log("hay objeto");
+          //console.log("hay objeto");
         }
         else{
-          console.log(this.inputsED);
-          console.log(this.inputsED.campos[x].vmodel);
+          //console.log(this.inputsED);
+          /*
+          console.log(this.inputsED.campos[x]);
           if(this.inputsED.campos[x].espieza==false){
             if(document.getElementById(this.inputsED.campos[x].id).value=='')
             {
@@ -911,29 +960,11 @@ export default {
                   }
             }
           }
+          */
           }
-      /*
-       console.log(eval('this.detalleseditar.infor.'+this.inputsED.campos[x].vmodel));
-       console.log(typeof(eval('this.detalleseditar.infor.'+this.inputsED.campos[x].vmodel)))
-       if(typeof(this.detalleseditar.infor)){
-         //console.log("objeto");
-       }
-       else{
-         /*
-         if(eval('this.detalleseditar.infor.'+this.inputsED.campos[x].vmodel)==''||
-       eval('this.detalleseditar.infor.'+this.inputsED.campos[x].vmodel)==null||
-       eval('this.detalleseditar.infor.'+this.inputsED.campos[x].vmodel)=='null')
-       {
-         pivoteedi=true
-         this.validatecampo= {
-                border: '1px solid  #ff8080'
-            }
-       }
-       
-     }*/
-       
+
      }
-      console.log(pivoteedi);
+      //console.log(pivoteedi);
       if (
         this.detalleseditar.destinatario.nombre == "" ||
         this.detalleseditar.destinatario.direccion == "" ||
@@ -957,12 +988,7 @@ export default {
           this.estado.direccion=false
           swal("Oops...", "Falto algun campo por completar!", "error");
         }
-        /*
-        if(        this.detalleseditar.referencia==""  ){
-          this.estado.referencia=false
-          swal("Oops...", "Falto algun campo por completar!", "error");
-        }
-        */
+
       } else {
         var detalleslocal = this.detalleseditar;
         var productoslocal = this.selectproducto;
@@ -973,7 +999,7 @@ export default {
           productoslocal: productoslocal,
           detalleslocal: detalleslocal
         };
-        console.log((detalles));
+        //console.log((detalles));
         this.DetalleServicio.splice(this.indices, 1);
         this.DetalleServicio.splice(this.indices, 0, detalles);
         (this.objeto = ""),
@@ -999,7 +1025,7 @@ export default {
       toastr.error("Se elmino exitosamente");
     },
     editar(index) {
-      console.log(index);
+      //console.log(index);
       this.validatecampo=''
       this.validatecampoTel=''
       this.estado.nombre=null
@@ -1010,7 +1036,7 @@ export default {
       this.detalleseditar = this.DetalleServicio[index].detalleslocal;
       this.selectproduct = this.DetalleServicio[index].productoslocal._id;
       this.selectservice = this.DetalleServicio[index].servicioslocal._id;
-      console.log(this.selectservice);
+      //console.log(this.selectservice);
       console.log(this.detalleseditar);
       this.itemsdinamicos=this.DetalleServicio[index].detalleslocal.infor.objetoUnidades
       var fields=Object.keys(this.DetalleServicio[index].detalleslocal.infor.objetoUnidades[0])
@@ -1029,9 +1055,9 @@ export default {
           this.inputsED = response.data;
                           
           for(var x=0;x<this.inputsED.campos.length;x++){
-              console.log(this.inputsED.campos[x]);
+              //console.log(this.inputsED.campos[x]);
               if(this.inputsED.campos[x].espieza==true){
-                console.log("algo dinamico");
+                //console.log("algo dinamico");
                 this.camposdinamicos=true
               }
             }
@@ -1080,7 +1106,7 @@ export default {
         id_cliente:inforemi.selected_client
         
       }
-      console.log(objeto);
+      //console.log(objeto);
       this.axios.post(urlservicios+"CrearDestinatario", objeto)
         .then(response => {
           console.log(response);
@@ -1088,8 +1114,8 @@ export default {
         })
       }
       else{
-        console.log("actualiza destinatario");
-        console.log(this.detalles.destinatario);
+        //console.log("actualiza destinatario");
+        //console.log(this.detalles.destinatario);
         var objeto={
         numero_identificacion:this.identificacion,
         direccion:this.detalles.destinatario.direccion,
@@ -1098,10 +1124,10 @@ export default {
         id_cliente:inforemi.selected_client
         
       }
-      console.log(objeto);
+      //console.log(objeto);
       this.axios.post(urlservicios+"ActualizarDestinatario"+'/'+this.detalles.destinatario._id, objeto)
         .then(response => {
-          console.log(response);
+          //console.log(response);
 
         })
       }
@@ -1114,10 +1140,39 @@ export default {
         var llaves=''
         var objllaves
         llaves=Object.keys(this.objeto)
-        console.log(this.itemsdinamicos);
+        //console.log(this.itemsdinamicos);
         objllaves=Object.keys(this.itemsdinamicos[0])
-        console.log(objllaves);
-        
+        //console.log(objllaves);
+        var totales={}
+        var algo=0
+
+        for(var y=0;y<this.itemsdinamicos.length;y++){
+          console.log(this.itemsdinamicos[y]);
+          for(var x=0;x<this.inputs.campos.length;x++){
+            if(this.inputs.campos[x].espieza==true&&this.inputs.campos[x].type=="number")
+            {
+              algo=algo+eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen)
+              //console.log(algo);
+              totales[this.inputs.campos[x].acumulaen]=algo
+              //console.log(eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen));
+              //totales[this.inputs.campos[x].acumulaen]=eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen)+totales[this.inputs.campos[x].acumulaen]
+            }
+            if(this.inputs.campos[x].espieza==true&&this.inputs.campos[x].type=="text")
+            {
+              //algo=algo+eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen)
+              //console.log(algo);
+              totales[this.inputs.campos[x].acumulaen]=this.itemsdinamicos.length
+              //console.log(eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen));
+              //totales[this.inputs.campos[x].acumulaen]=eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen)+totales[this.inputs.campos[x].acumulaen]
+            }
+          }
+        }
+        console.log(totales);
+        var objtotales=Object.keys(totales)
+        for(var x=0;x<objtotales.length;x++){
+          eval('this.objeto.'+objtotales[x]+'='+totales[objtotales[x]])
+        }
+
         for(var x=0;x<this.inputs.campos.length;x++)
         {
           if(this.inputs.campos[x].espieza==false){
@@ -1125,17 +1180,19 @@ export default {
             eval('this.objeto.'+this.inputs.campos[x].vmodel=='null')||
             eval('this.objeto.'+this.inputs.campos[x].vmodel==null))
             {
-              console.log("");
-              console.log("pivote tru");
-              console.log(eval('this.objeto.'+llaves[x]));
+              //console.log("");
+              //console.log("pivote tru");
+              //console.log(eval('this.objeto.'+llaves[x]));
               this.validatecampo= {
                   border: '1px solid  #ff8080'
               }
               pivote=true
             }
           }
+
           
         }
+        console.log(this.objeto);
         /*
         for(var x=0;x<llaves.length;x++){   
 
@@ -1156,7 +1213,7 @@ export default {
           this.validatecampo=''
         }
       }
-      console.log(pivote);
+      //console.log(pivote);
       if (
         this.selectproduct == "" ||
         this.selectservice == "" ||
@@ -1187,7 +1244,7 @@ export default {
 
 
       } else {
-        console.log(this.objeto);
+        //console.log(this.objeto);
         this.objeto.objetoUnidades
         this.objeto.objetoUnidades=this.itemsdinamicos
         var servicioslocal = this.selectservicio;
@@ -1203,14 +1260,14 @@ export default {
           detalleslocal: detalleslocal
         };
         this.DetalleServicio.push(detalles);
-        console.log((this.DetalleServicio));
+        //console.log((this.DetalleServicio));
         //BLANQUEAR DATOS
         this.camposdinamicos=false
         this.fieldsdinamicos=[]
         this.itemsdinamicos=[]
         this.identificacion=''
         this.habilitar=true,
-                  this.mostrardestinatario=false,
+        this.mostrardestinatario=false,
 
         (this.objeto = ""),
           (this.inputs = ""),

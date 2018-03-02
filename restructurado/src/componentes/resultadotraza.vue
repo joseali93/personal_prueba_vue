@@ -102,7 +102,14 @@
                             </b-col>
                         </template>
                 </b-row>
+                <hr>
+                <b-row>
+                    <b-col>
+                     <b-table striped hover :items="info.detalleslocal.infor.objetoUnidades" ></b-table>
+
                     </b-col>
+                </b-row>
+    </b-col>
 
         <b-row>
             <h3>

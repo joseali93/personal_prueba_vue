@@ -240,6 +240,9 @@
                     </template>
 
                 </b-row>
+                <b-row>
+                    <b-table striped hover :items="itemsvariables"></b-table>
+                </b-row>
             </b-container>
             <div slot="modal-footer" class="w-100">
                     <b-btn class="mt-3" variant="danger"  @click="hideModal">
@@ -263,6 +266,8 @@ import moment from 'moment'
 export default {
     data(){
         return{
+            itemsvariables:[],
+            
             id_cliente_local:null,
             selec_disable: false,
             indemodal:0,
@@ -300,14 +305,14 @@ export default {
     },
     methods: {
         desabilitar(value){
-            console.log(value);
+            //console.log(value);
             if(this.selec_disable==true){
-                console.log("desabilito todo");
+                //console.log("desabilito todo");
                 return true
             }
             else
             {
-                 console.log("no desabilito  todo");
+                 //console.log("no desabilito  todo");
                  return value.requerido_edi
             }
         },
@@ -575,60 +580,7 @@ export default {
                 //this.$router.go(-1)
                 this.$router.replace('/inicio/consultar/resultado')
             }
-            /*
-            else{
-                var llavesinfor
-                var totales=[]
-                var pendientes=[]
-                var completo=false
-                 if(this.id_trayectos.length==0){
-                    
-                     for(var x=0;x<this.currentUser.detalle.length;x++)
-                     {
-                         totales.push(x)
-                        //console.log(this.currentUser.detalle[x].detalleslocal.infor);
-                        llavesinfor=Object.keys(this.currentUser.detalle[x].detalleslocal.infor) 
-                        console.log(llavesinfor);
-                        for(var y=0;y<llavesinfor.length;y++)
-                        {
-                            if(llavesinfor[y]=='trayectoobj')
-                            {
-                                //console.log("hay trayectoasignado");
-                                completo=true
-                            }
 
-                        }
-                        if(completo==true)
-                        {
-                            completo=false
-                        }else{
-                            pendientes.push(x)
-
-                        }
-                        
-                     }
-                     console.log(totales);
-                     console.log(pendientes);
-                     if(totales.length==pendientes.length){
-                         console.log("andan completos");
-                        this.asignarcurier(seleccionado)
-
-                     }
-                     else{
-                         console.log("no anda completo");
-                        swal(
-                            "Falta algo por completar!",
-                            "Revisa por favor los detalles",
-                            "error"
-                        );
-                     }
-                 }
-                 else
-                 {
-                    console.log(this.id_trayectos);
-                 }
-            }
-            */
             
             else{
                 
@@ -720,9 +672,7 @@ export default {
                     {
                         pendi[o]++
                     }
-                    //console.log(banderasinT)
-                    //console.log(banderaconT);
-                    //console.log(contador);
+
                     console.log(pendi);
                     console.log(correcto);
                     if(contador==this.currentUser.detalle.length){
@@ -748,6 +698,7 @@ export default {
             {
                 this.indices=indice
                 this.detallesactualizar= this.currentUser.detalle[indice].detalleslocal
+                this.itemsvariables=this.currentUser.detalle[indice].detalleslocal.infor.objetoUnidades
                 var produc= this.currentUser.detalle[indice].productoslocal._id
                 var serv = this.currentUser.detalle[indice].servicioslocal._id
                 this.axios.get(urlservicios+"estructuraf/" +produc +
@@ -778,6 +729,8 @@ export default {
             {
                 this.indices=indice
                 this.detallesactualizar= this.currentUser.detalle[indice].detalleslocal
+                this.itemsvariables=this.currentUser.detalle[indice].detalleslocal.infor.objetoUnidades
+
                 var produc= this.currentUser.detalle[indice].productoslocal._id
                 var serv = this.currentUser.detalle[indice].servicioslocal._id
                 this.axios.get(urlservicios+"estructuraf/" +produc +
