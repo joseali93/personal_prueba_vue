@@ -528,21 +528,47 @@ export default {
             var detallecurier,llaveslvl2curier,nomcurier
             console.log(this.consulta);
             var desti,llaveslv2desti,direcciondesti,destllavelvl3
+            var novedades=[]
+            var bandera=true
+            var fechaC 
             for(var a=0;a<this.consulta.length;a++){
-                console.log(this.consulta[a]);
                 var objtraza=Object.keys(this.consulta[a].trazabilidad[0])
-                for(var x=0;x<objtraza.length;x++){
-                    //console.log(objtraza[x]);
-                    if(objtraza[x]=="EsCierre"){
-console.log("es cierre");
+                for(var x=0;x<this.consulta[a].trazabilidad.length;x++){
+                    if(x==0){
+                        for(var y=0;y<objtraza.length;y++){
+                            //console.log(objtraza[y]);
+                            if(objtraza[y]=="EsCierre"){
+                                //console.log("tengo cierre");
+                                //console.log(eval('this.consulta[a].trazabilidad[x].conceptos'));
+                                //console.log(this.consulta[a]);
+                                if(this.consulta[a].trazabilidad[x].EsCierre=="true"){
+                                    //console.log("hay cierre");
+                                    novedades[a]=eval('this.consulta[a].trazabilidad[x].conceptos.nombre')
+                                    this.consulta[a].novedades=novedades[a]
+                                }
+                                
+                                
+                            }
+                            else{
+                                bandera=false
+                            }
+
+                        }
                     }
-                    if(eval('this.consulta[a].trazabilidad.'+objtraza[x])=="EsCierre"){
-                        console.log("es cierre");
-                    }
+                }
+                //console.log(novedades[a]);
+                if(novedades[a]==undefined){
                     
+                    novedades[a]=''
+                    this.consulta[a].novedades=novedades[a]
+
                 }
             }
+            
+            //console.log(novedades);
 
+            
+            var nov
             for(var i=0;i<this.consulta.length;i++){
                 llaveslv1=Object.keys(this.consulta[i])
                 for(var a=0;a<llaveslv1.length;a++){
@@ -590,12 +616,19 @@ console.log("es cierre");
                     if(llaveslv1[a]=='id'){
                         id=llaveslv1[a]
                     }
+                    if(llaveslv1[a]=='novedades'){
+                        nov=llaveslv1[a]
+                    }
                     if(llaveslv1[a]=='nombre_proceso'){
                         estado=llaveslv1[a]
                     }
                     if(llaveslv1[a]=='fecha_estado'){
                         fechaT=llaveslv1[a]
                     }
+                    if(llaveslv1[a]=='fecha_creacion'){
+                        fechaC=llaveslv1[a]
+                    }
+                    
                     if(llaveslv1[a]=='productoslocal'){
                         producto= llaveslv1[a]
                     }
@@ -629,11 +662,14 @@ console.log("es cierre");
                                 llaveslv3=Object.keys(this.consulta[i].detalleslocal.infor);
                                 
                                 for(var c=0;c<llaveslv3.length;c++){
-                                    if(llaveslv3[c]=='trayectoobj')
+                                    //console.log(llaveslv3[c]);
+                                   /*
+                                   if(llaveslv3[c]==='trayectoobj')
                                     {
-                                        //console.log("no saco ");
+                                        console.log("no saco ");
                                     }
-                                    if(llaveslv3[c]=="objetoUnidades")
+                                    */
+                                    if(llaveslv3[c]==="objetoUnidades"||llaveslv3[c]==='trayectoobj')
                                     {
                                         //console.log("no saco ");
                                     }
@@ -651,7 +687,7 @@ console.log("es cierre");
             }
             
             var consultclient=''
-
+         
             var consult='';
             //console.log(variable);
                 for(var d=0;d<variable.length;d++){
@@ -664,6 +700,7 @@ console.log("es cierre");
                     }
                  }
                 var algo = 'SELECT '+
+                    fechaC+' as Fecha_Creacion, '+
                     producto+ '->nombre as Producto, '+
                     servicio+'->nombre as Servicio, '+
                     consecutivo+' as NumOrden, '+
@@ -673,17 +710,17 @@ console.log("es cierre");
                     detallecl+'->'+dircliente+' as Direccion_Cliente,'+
                     detallecc+'->'+nomcentro+' as Centro_Costo,'+
                     detallecc+'->'+dircentro+' as Direccion_CentroCosto,'+
-
                     estado+' as Estado, '+
                     fechaT+' as Fecha, '+
-                    
                     detalles+'->'+refe+' as Referencia, '+
                     detalles+'->'+desti+'->'+direcciondesti+' as Destino, '+
+                    nov+' as Novedades, '+
                     consult+
                     'INTO XLS("Data.xls",{headers:true}) FROM ?'
-                    console.log(algo);
+                    //console.log(algo);
+                    alasql(algo,[this.consulta])
 
-                    //alasql(algo,[this.consulta])
+                   
                    
                    
         },
