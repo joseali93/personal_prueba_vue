@@ -158,7 +158,7 @@ methods:{
 
    },
     consultar(){
-        console.log("entro a consultar");
+        //console.log("entro a consultar");
         var inicio,fin
         if(this.selectedCL==''||this.selectedCC==''
         ||this.selectedCL==null||this.selectedCC==null)
@@ -206,6 +206,7 @@ methods:{
                     this.axios.get(urlservicios+"/ObtenerOrdenesFiltradoDetalle/"+this.selectedCC+"/"+this.selectedCL+'/null/null/null/'+inicio+'/'+fin+'')
                         .then((response) => {
                             this.consulta=response.data
+                            console.log(this.consulta);
                             if(this.consulta==''){
                                 swal(
                                     'Oops...',
@@ -222,7 +223,7 @@ methods:{
                                 }, )
                             console.log(this.consulta);
                             })
-
+                    console.log(this.consulta);
                     this.$router.replace('/inicio/trazabilidad/listado')
                 }
             }

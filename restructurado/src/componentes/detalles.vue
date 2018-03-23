@@ -137,7 +137,10 @@
               
         
         <!-- Modal para Trayectos-->
-        <b-modal id="modalactualizar" ref="ModalAct" title="Editar Registro" size="lg">
+        <b-modal id="modalactualizar" ref="ModalAct" title="Editar Registro"
+            no-close-on-esc
+            no-close-on-backdrop
+         size="lg">
             <div slot="modal-header" class="w-100">
                 <p class="float-left">Editar Registro - Numero de Movilizado {{info.detalle[indemodal].id}}</p>
             </div>
@@ -227,12 +230,23 @@
                               :value="values(data.id)"  required>
                         </b-col>
                     </template>
+                    <template v-if="data.type=='text'" >
+                        <b-col cols="5">
+                            <label  class="col-form-label col-form-label-sm text-capitalize" :style="data.style" >{{data.placeholder}}: </label>
+                        </b-col>
+                        <b-col cols="6">
+                            <input class="form-control form-control-sm"  :type="data.type" :id="data.id" :style="data.style" :max="data.max"
+                             @keyup="Presiono(indice,data)" :placeholder="data.placeholder" :disabled="desabilitar(data)"
+                              :value="values(data.id)"  required>
+                        </b-col>
+                    </template>
                     <template v-if="data.type=='select'" class="my-1 card-text">
                         <b-col cols="5">
                             <label class="col-form-label col-form-label-sm text-capitalize">Seleccione el {{data.placeholder}}</label>
                         </b-col>
                         <b-col cols="6">
-                            <b-form-select class="col-form-label col-form-label-sm " :id="data.id" :options="trayectos" text-field="nombre" value-field="_id" 
+                            <b-form-select class="col-form-label col-form-label-sm " :id="data.id" :options="trayectos" 
+                                text-field="nombre" value-field="_id" 
                              @input="seleccionar(data)" :value="valueseleccion(data,indice)" 
                              :disabled="selec_disable">
                             </b-form-select>
@@ -317,6 +331,7 @@ export default {
             }
         },
         valueseleccion(datos,indices){
+            //console.log(document.getElementById(datos.id).value);
             //console.log(this.currentUser.detalle[0].detalleslocal.infor.trayectoobj.id_trayecto);
             for(var x=0;x<this.currentUser.detalle.length;x++)
             {
@@ -326,7 +341,7 @@ export default {
                 }
                 else{
                     var llaves =Object.keys(this.campos)
-                   
+                    console.log(eval('this.currentUser.detalle[this.indices].detalleslocal.infor.trayectoobj.'+llaves[indices]));
                     return eval('this.currentUser.detalle[this.indices].detalleslocal.infor.trayectoobj.'+llaves[indices])
                 }
             }
@@ -337,7 +352,11 @@ export default {
             var trayecto
             var trayectoobj={}
             var x = document.getElementById(value.id).value
-            //console.log(this.indices);
+            //console.log(x);
+            if(x==''||x==null||x==undefined||x=='000000000000000000000000'){
+                console.log("no cambio");
+            }
+            else{
             eval('this.campos.'+value.vmodel+'='+'x')
                     for(var x=0;x<this.trayectos.length;x++)
                     {
@@ -375,8 +394,9 @@ export default {
                            
                         }
                     }
+                    document.getElementById(value.id).value='null'
                             this.$refs.table.refresh();
-
+            }
         },
         volver(){
             var ocultar=true
@@ -427,7 +447,12 @@ export default {
             return eval("this.currentUser.detalle[this.indices].detalleslocal.infor."+dato)
         },
         hideModal(){
-            
+            this.detallesactualizar=''
+            this.itemsvariables=''
+             this.inputs = ''
+                this.campos=''
+                this.indices=''
+                this.consecutivo=''
             this.selection=''
             this.$refs.ModalAct.hide();
         },
@@ -449,7 +474,18 @@ export default {
                     );            }
                 else{
                         this.selection=this.campos.id_trayecto
-                        for(var x=0;x<this.trayectos.length;x++)
+                        if(this.selection==''||this.selection=='000000000000000000000000'){
+                            console.log("no tiene nada no cambio");
+                                this.detallesactualizar=''
+                                this.itemsvariables=''
+                                this.inputs = ''
+                                this.campos=''
+                                this.indices=''
+                                this.consecutivo=''
+                                this.selection=''
+                        }
+                        else{
+                            for(var x=0;x<this.trayectos.length;x++)
                         {
                             if(this.trayectos[x]._id==this.selection)
                             {
@@ -482,7 +518,7 @@ export default {
                         }
                         */
                         
-                        
+                        console.log(objeto);
                         this.axios
                             .post(urlservicios+"ActualizarTrayecto/"+this.currentUser._id+"/"+this.consecutivo, objeto)
                             .then(response => {
@@ -495,6 +531,7 @@ export default {
                             indice:this.indices,
                             detalle:this.currentUser.detalle[this.indices].id
                         }; 
+                        console.log(objeto2);
                         if(this.id_trayectos.length==0)
                         {
                             this.id_trayectos.push(objeto2)
@@ -507,7 +544,7 @@ export default {
                                 if(obj.indice==this.indices){
                                     this.id_trayectos.splice(obj,1)
                                     this.id_trayectos.push(objeto2)
-                                
+
                                     console.log(this.id_trayectos);
                                 }
                                 else
@@ -517,6 +554,8 @@ export default {
                                 }
                             })
                         }
+                        }
+                        
                         this.$refs.table.refresh();
                         this.selection=''
                         
@@ -529,7 +568,13 @@ export default {
                     
 
             }
-                
+                this.detallesactualizar=''
+            this.itemsvariables=''
+             this.inputs = ''
+                this.campos=''
+                this.indices=''
+                this.consecutivo=''
+            this.selection=''
         },
         asignarcurier(seleccionado)
         {
@@ -730,7 +775,7 @@ export default {
                 this.indices=indice
                 this.detallesactualizar= this.currentUser.detalle[indice].detalleslocal
                 this.itemsvariables=this.currentUser.detalle[indice].detalleslocal.infor.objetoUnidades
-
+                console.log(this.currentUser.detalle[indice].detalleslocal.infor);
                 var produc= this.currentUser.detalle[indice].productoslocal._id
                 var serv = this.currentUser.detalle[indice].servicioslocal._id
                 this.axios.get(urlservicios+"estructuraf/" +produc +
@@ -739,6 +784,7 @@ export default {
                     console.log(this.inputs);
                 this.inputs = response.data;
                 this.campos= response.data.objeto
+                this.campos.objetoUnidades=this.itemsvariables
                 for(var i=0;i<this.inputs.campos.length;i++){
                     if(this.inputs.campos[i].type=='select'){
                         var login = localStorage.getItem("storedData");

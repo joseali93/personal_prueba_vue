@@ -21,27 +21,29 @@
             <ul id="side-main-menu" class="side-menu list-unstyled">                
                 <li v-for="(ruta,indice) in rutas">
                     <b-link :to="ruta" v-if="indice=='ruta_uno'">
-                        <i class="fa fa-plus-square-o"></i><span class="spans"> Generacion Orden de Servicio </span>
+                      
+                        <i class="fa fa-plus-square-o "></i>
+                        <span > Generacion Orden de Servicio </span>
                     </b-link>
                 </li>
                 <li v-for="(ruta,indice) in rutas"> 
                     <b-link :to="ruta" v-if="indice=='ruta_dos'" >
-                        <i class="fa fa-briefcase"></i><span class="spans"> Consultar Ordenes de Servicio </span>
+                        <i class="fa fa-briefcase" ></i><span > Consultar Ordenes de Servicio </span>
                     </b-link>
                 </li>
                 <li  v-for="(ruta,indice) in rutas"> 
                     <b-link :to="ruta" v-if="indice=='ruta_tres'">
-                        <i class="fa fa-info"></i><span class="spans">Consulta Trazabilidad</span>
+                        <i class="fa fa-info" ></i><span >Consulta Trazabilidad</span>
                     </b-link>
                 </li>
                 <li  v-for="(ruta,indice) in rutas"> 
                     <b-link :to="ruta" v-if="indice=='ruta_cuatro'">
-                        <i class="fa fa-rebel"></i><span class="spans">Entradas y Salidas</span>
+                        <i class="fa fa-rebel"></i><span >Entradas y Salidas</span>
                     </b-link>
                 </li>
                 <li  v-for="(ruta,indice) in rutas"> 
                     <b-link :to="ruta" v-if="indice=='ruta_cinco'">
-                        <i class="fa fa-empire"></i><span class="spans"> Manifiestos </span>
+                        <i class="fa fa-empire"></i><span > Manifiestos </span>
                     </b-link>
                 </li>
             </ul>
@@ -84,7 +86,7 @@
               <ul class="nav-menu list-unstyled d-flex flex-md-row align-items-md-center">
                 <li class="nav-item">
                   <b-link variant="link" class="nav-link logout" @click="Salir()">
-                    Logout
+                    Cerrar
                     <i class="fa fa-sign-out"></i>
                   </b-link>
                 </li>
@@ -242,10 +244,12 @@ export default {
 </script>
 
 <style>
+
 nav.side-navbar span{
-   display: initial;
+  display: initial;
+  
 }
- 
+
 
 nav.side-navbar .sidenav-header
 {
@@ -292,4 +296,5 @@ ul>li>a:hover{
   width: 15%;
   height: 15%;
 }
+
 </style>

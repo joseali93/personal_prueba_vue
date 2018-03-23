@@ -1,7 +1,7 @@
 <template>
   <b-container>
-    <b-card title="Configuracion de Centros de Costo"
-    sub-title="Se permite la creacion y edicion de los centros de costo">
+    <b-card title="Configuración de Centros de Costo"
+    sub-title="Se permite la creación y edición de los centros de costo">
       <b-card-body>
 
         <b-form-select v-model="Cliente" class="mb-3"  
@@ -32,7 +32,7 @@
       </b-card-body>
     </b-card>
     <!-- Modal Component -->
-    <b-modal id="modalNuevo" ref="modalNuevo" size="lg" title="Bootstrap-Vue">
+    <b-modal id="modalNuevo" ref="modalNuevo" size="lg" title="Nuevo Centro de Costo">
       <b-container fluid>
         <b-form-group id="fieldsetHorizontal"
                 horizontal
@@ -48,8 +48,8 @@
                 horizontal
                 :label-cols="4"
                 breakpoint="md"
-                description="Digite direccion del Centro de Costo"
-                label="Direccion Centro de Costo"
+                description="Digite dirección del Centro de Costo"
+                label="Dirección Centro de Costo"
                 label-for="direccionCC">
                     <b-form-input id="direccionCC" v-model="ModalNew.direccion"
                     :state="statusdireccion"></b-form-input>
@@ -58,12 +58,12 @@
                 horizontal
                 :label-cols="4"
                 breakpoint="md"
-                description="Digite la descripcion del Centro de Costo"
-                label="Descripcion"
+                description="Digite la descripción del Centro de Costo"
+                label="Descripción"
                 label-for="descripcionCC">
                 <b-form-textarea id="descripcionCC"
                      v-model="ModalNew.descripcion"
-                     placeholder="Ingrese la descripcion del centro de costo"
+                     placeholder="Ingrese la descripción del centro de costo"
                      :rows="3"
                      :max-rows="6"
                      :state="statusdescripcion">
@@ -80,7 +80,7 @@
        </div>
     </b-modal>
     <!-- Modal Component -->
-    <b-modal id="modalEditar" ref="modalEditar" size="lg" title="Bootstrap-Vue">
+    <b-modal id="modalEditar" ref="modalEditar" size="lg" title="Editar Centro de Costo">
         <b-container fluid>
           <b-form-group id="fieldsetHorizontal"
                 horizontal
@@ -95,8 +95,8 @@
                 horizontal
                 :label-cols="4"
                 breakpoint="md"
-                description="Digite direccion del Centro de Costo"
-                label="Direccion Centro de Costo"
+                description="Digite dirección del Centro de Costo"
+                label="Dirección Centro de Costo"
                 label-for="direccionCC">
                     <b-form-input id="direccionCC" v-model="ModalEdit.direccion"></b-form-input>
           </b-form-group>
@@ -104,12 +104,12 @@
                 horizontal
                 :label-cols="4"
                 breakpoint="md"
-                description="Digite la descripcion del Centro de Costo"
-                label="Descripcion"
+                description="Digite la descripción del Centro de Costo"
+                label="Descripción"
                 label-for="descripcionCC">
                 <b-form-textarea id="descripcionCC"
                      v-model="ModalEdit.descripcion"
-                     placeholder="Enter something"
+                     placeholder="Digite la descripción del Centro de Costo"
                      :rows="3"
                      :max-rows="6">
                 </b-form-textarea>      
@@ -145,7 +145,7 @@ export default {
         fields:[
           { key: 'editar', label: 'Editar', sortable: false },
           { key: 'nombre', label: 'Nombre', sortable: false },
-          { key: 'direccion', label: 'Direccion', sortable: false },
+          { key: 'direccion', label: 'Dirección', sortable: false },
 
         ],
         ModalEdit:{},
@@ -245,6 +245,7 @@ export default {
 
         this.axios.post(urlservicios+"ActualizarCentroCostos/"+this.ModalEdit._id,this.ModalEdit)
                 .then((response) => {
+                  console.log(response.data);
                   if(response.data.validar==true)
                     {
                         swal({

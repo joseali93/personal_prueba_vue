@@ -495,7 +495,7 @@ export default {
             }
         },
         image(value){
-
+            console.log(value);
             this.modalima=value
             if(this.modalima.trazabilidad[0].imagenes.length==0)
             {
@@ -725,6 +725,7 @@ export default {
                    
         },
         actualizar(value){
+            console.log(value);
             this.consultaactualizar=value
             var llaves
             llaves=Object.keys(this.consultaactualizar.detalleslocal.infor)
@@ -778,6 +779,7 @@ export default {
     },
 
     beforeCreate: function() {
+        console.log(consulta);
     },
     props:['consulta','centro','cliente'],
     data () {

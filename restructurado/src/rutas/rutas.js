@@ -18,6 +18,9 @@ import MSalida from '../componentes/ModalSalida.vue'
 import ManifiestComponent from '../componentes/ConsultManifiestos.vue'
 import ResultManifiest from '../componentes/ResultManifiest.vue'
 import DetailManifiest from '../componentes/detalleManifiesto.vue'
+import ConfigCliente from '../componentes/ParamClientes.vue'
+import ConfigCentroCosto from '../componentes/ParamCentrosC.vue'
+import ConfigCentroLogistico from '../componentes/ParamCentroL.vue'
 
 
 
@@ -35,6 +38,18 @@ export const rutas = [
         path: '/inicio/',
         component: NavComponent,
         children:[
+            {
+                path: 'configcentrol',  component: ConfigCentroLogistico,    
+                
+            },
+            {
+                path: 'configcliente',  component: ConfigCliente,    
+                
+            },
+            {
+                path: 'configcentroc',  component: ConfigCentroCosto,    
+                
+            },
             {
                 path: '',  component: InicializaComponent,    
                 

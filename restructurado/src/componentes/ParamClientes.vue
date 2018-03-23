@@ -1,27 +1,33 @@
 <template>
     <b-container>
-        <b-card title="Configuracion de Clientes"
-                sub-title="Se permite la creacion y edicion de los clientes">
+        <b-card title="Configuración de Clientes"
+                sub-title="Se permite la creación y edición de los clientes">
             <b-card-body>
-                <b-btn variant="outline-success" class="mb-3 float-right" @click="ClienteNuevo()">
-                        <i class="fa fa-plus"></i>
-                        
-                </b-btn>
-                <b-btn variant="outline-success" class="mb-3 float-right" @click="refrescarClientes()">
-                    <i class="fa fa-refresh"></i>
-                        
-                </b-btn>
-                <b-input-group>
-                    <b-form-input v-model="Cliente"
-                        type="text"
-                        placeholder="Ingrese el Nombre del Cliente">
-                    </b-form-input>
-                    <!--
-                    <b-btn variant="outline-success" v-show="Cliente!=''" @click="ClienteNuevo()">
-                        <i class="fa fa-plus"></i>
-                    </b-btn>
-                    -->
-                </b-input-group>
+                <b-row>
+                    <b-col>
+                        <b-btn variant="outline-success" class="mb-3 float-right" @click="ClienteNuevo()">
+                        <i class="fa fa-plus"></i>                      
+                        </b-btn>
+                        <b-btn variant="outline-success" class="mb-3 float-right" @click="refrescarClientes()">
+                            <i class="fa fa-refresh"></i>                              
+                        </b-btn>
+                    </b-col>
+                </b-row>
+                
+                    <b-form-group id="fieldsetHorizontal"
+                                    horizontal
+                                    :label-cols="4"
+                                    breakpoint="md"
+                                    description="Filtrara del listado de clientes asociados."
+                                    label="Buscar Cliente "
+                                    label-for="inputHorizontal">
+                        <b-form-input   id="inputHorizontal" 
+                                        v-model="Cliente"
+                                        placeholder="Ingrese el Nombre del Cliente"
+                                        
+                                        ></b-form-input>
+                    </b-form-group>
+
                 <b-table responsive :items="ClientesTabla" :fields="fields"
                  :filter="Cliente"
                  class="my-2">
@@ -45,8 +51,11 @@
             </b-card-body>
         </b-card>
 
-        <!-- Modal Component -->
-        <b-modal id="modalNuevo" size="lg" ref="modalNuevo" title="Crear Clientes">
+        <!-- Modal Nuevo Cliente -->
+        <b-modal id="modalNuevo" size="lg" ref="modalNuevo" 
+            title="Crear Clientes"
+            no-close-on-esc
+            no-close-on-backdrop>
             <b-container fluid>
                 <b-form-group id="nombre"
                     horizontal
@@ -56,29 +65,35 @@
                     label="Cliente"
                     label-for="nombreCliente">
                     <b-form-input id="nombreCliente" v-model="ModalNew.nombre"
+                    maxlength="12"
+                    @input="ValidarTexto('nombreCliente','nuevo')"
                     :state="statusnombre"></b-form-input>
                 </b-form-group>
-                <b-form-group id="direccion"
+                <b-form-group id="direccionlabel"
                     horizontal
                     :label-cols="4"
                     breakpoint="md"
-                    description="Digite direccion del Cliente"
-                    label="Direccion Cliente"
+                    description="Digite dirección del Cliente"
+                    label="Dirección Cliente"
                     label-for="direccionCliente">
                     <b-form-input id="direccionCliente" v-model="ModalNew.direccion"
+                    maxlength="100"
+                    @input="ValidarTexto('direccionCliente','nuevo')"
                     :state="statusdireccion"></b-form-input>
                 </b-form-group>
-                <b-form-group id="telefono"
+                <b-form-group id="telefonolabel"
                     horizontal
                     :label-cols="4"
                     breakpoint="md"
-                    description="Digite telefono del Cliente"
-                    label="Telefono"
+                    description="Digite teléfono del Cliente"
+                    label="Teléfono"
                     label-for="telefono">
+
                     <b-form-input id="telefono" v-model="ModalNew.telefono"
-                    :state="statusdireccion"></b-form-input>
+                    @input="ValidarTelefono('telefono')"
+                    :state="statustelefono"></b-form-input>
                 </b-form-group>
-                <b-form-group id="empresa"
+                <b-form-group id="empresalabel"
                     horizontal
                     :label-cols="4"
                     breakpoint="md"
@@ -86,16 +101,20 @@
                     label="Empresa"
                     label-for="empresa">
                     <b-form-input id="empresa" v-model="ModalNew.empresa"
+                    maxlength="100"
+                    @input="ValidarTexto('empresa','nuevo')"
                     :state="statusempresa"></b-form-input>
                 </b-form-group>
                 <b-form-group id="nit"
                     horizontal
                     :label-cols="4"
                     breakpoint="md"
-                    description="Digite el NIT de la compañia"
+                    description="Digite el NIT de la empresa"
                     label="NIT"
                     label-for="nitEmpresa">
                     <b-form-input id="nitEmpresa" v-model="ModalNew.nit"
+                    maxlength="12"
+                    @input="ValidarTelefono('nitEmpresa')"
                     :state="statusnit"></b-form-input>
                 </b-form-group>
                 <b-form-group id="email"
@@ -106,6 +125,7 @@
                     label="Correo Electronico"
                     label-for="emailContacto">
                     <b-form-input id="emailContacto" v-model="ModalNew.correo"
+                    maxlength="100"
                     @input="validacorreo" :state="statusCorreo"></b-form-input>
                 </b-form-group>
            </b-container>
@@ -117,27 +137,39 @@
                 Cerrar
                 </b-btn>
             </div>
+            <div slot="modal-header" class="w-100">
+                <strong >Crear Cliente</strong>
+                <b-btn size="sm" class="float-right" variant="outline-danger" @click="cerrarModal()">
+                X
+                </b-btn>
+            </div>
         </b-modal>
-        <!-- Modal Component -->
+        <!-- Modal Editar Cliente -->
         <b-modal id="modalEditar" size="lg" ref="modalEditar" title="Editar Clientes">
            <b-container fluid>
-               <b-form-group id="fieldsetHorizontal"
-                horizontal
-                :label-cols="4"
-                breakpoint="md"
-                description="Digite nombre Cliente"
-                label="Cliente"
-                label-for="nombreCliente">
-                    <b-form-input id="nombreCliente" v-model="ModalEdit.nombre"></b-form-input>
+                <b-form-group id="fieldsetHorizontal"
+                    horizontal
+                    :label-cols="4"
+                    breakpoint="md"
+                    description="Digite nombre Cliente"
+                    label="Cliente"
+                    label-for="nombreCliente">
+                    <b-form-input id="nombreClienteED" v-model="ModalEdit.nombre"
+                     maxlength="12"
+                    @input="ValidarTexto('nombreClienteED','editar')"
+                    :state="statusnombre"></b-form-input>
                 </b-form-group>
                 <b-form-group id="fieldsetHorizontal"
-                horizontal
-                :label-cols="4"
-                breakpoint="md"
-                description="Digite direccion del Cliente"
-                label="Direccion Cliente"
-                label-for="direccionCliente">
-                    <b-form-input id="direccionCliente" v-model="ModalEdit.direccion"></b-form-input>
+                    horizontal
+                    :label-cols="4"
+                    breakpoint="md"
+                    description="Digite dirección del Cliente"
+                    label="Direccion Cliente"
+                    label-for="direccionCliente">
+                        <b-form-input id="direccionClienteED" v-model="ModalEdit.direccion"
+                        maxlength="100"
+                        @input="ValidarTexto('direccionClienteED','editar')"
+                        :state="statusdireccion"></b-form-input>
                 </b-form-group>
                 <b-form-group id="telefono"
                     horizontal
@@ -146,27 +178,30 @@
                     description="Digite telefono del Cliente"
                     label="Telefono"
                     label-for="telefono">
-                    <b-form-input id="telefono" v-model="ModalEdit.telefono"
-                    :state="statusdireccion"></b-form-input>
+                    <b-form-input id="telefonoED" v-model="ModalEdit.telefono"
+                    :state="statustelefono"></b-form-input>
                 </b-form-group>
                 <b-form-group id="fieldsetHorizontal"
-                horizontal
-                :label-cols="4"
-                breakpoint="md"
-                description="Digite nombre de la Empresa a la que pertenece"
-                label="Empresa"
-                label-for="empresa">
-                    <b-form-input id="empresa" v-model="ModalEdit.empresa"></b-form-input>
+                    horizontal
+                    :label-cols="4"
+                    breakpoint="md"
+                    description="Digite nombre de la Empresa a la que pertenece"
+                    label="Empresa"
+                    label-for="empresa">
+                    <b-form-input id="empresaED" v-model="ModalEdit.empresa"
+                    maxlength="100"
+                    @input="ValidarTexto('empresaED','editar')"
+                    :state="statusempresa"></b-form-input>
                 </b-form-group>
                 <b-form-group id="fieldsetHorizontal"
-                horizontal
-                :label-cols="4"
-                breakpoint="md"
-                description="Digite el NIT de la compañia"
-                label="NIT"
-                label-for="nitEmpresa">
-                    <b-form-input id="nitEmpresa" v-model="ModalEdit.nit"></b-form-input>
-                </b-form-group>
+                    horizontal
+                    :label-cols="4"
+                    breakpoint="md"
+                    description="Digite el NIT de la compañia"
+                    label="NIT"
+                    label-for="nitEmpresa">
+                    <b-form-input id="nitEmpresaED" v-model="ModalEdit.nit"></b-form-input>
+            </b-form-group>
                 <b-form-group id="fieldsetHorizontal"
                 horizontal
                 :label-cols="4"
@@ -174,9 +209,18 @@
                 description="Digite el correo de contacto"
                 label="Correo Electronico"
                 label-for="emailContacto">
-                    <b-form-input id="emailContacto" v-model="ModalEdit.correo"></b-form-input>
+                    <b-form-input id="emailContactoED" v-model="ModalEdit.correo"
+                    maxlength="100"
+                    @input="validacorreo" :state="statusCorreo"></b-form-input>
                 </b-form-group>
            </b-container>
+           <div slot="modal-header" class="w-100">
+                <strong >Crear Cliente</strong>
+                <b-btn size="sm" class="float-right" variant="outline-danger" @click="cerrarModal()">
+                X
+                </b-btn>
+            </div>
+           
            <div slot="modal-footer" class="w-100">
                 <b-btn size="sm" class="float-right" variant="primary" @click="actualizarCliente()">
                 Guardar
@@ -198,6 +242,7 @@ export default {
      data () {
 
     return {
+        statustelefono:null,
         statusnombre:null,
         statusdireccion:null,
         statusempresa:null,
@@ -208,12 +253,13 @@ export default {
         fields: [
           { key: 'editar', label: 'Editar', sortable: false },
             { key: 'nombre', label: 'Nombre Cliente', sortable: true },
-            { key: 'direccion', label: 'Direccion Cliente', sortable: false },
+            { key: 'direccion', label: 'Dirección Cliente', sortable: false },
             { key: 'nit', label: 'NIT', sortable: false },
-            { key: 'telefono', label: 'Telefono Contacto', sortable: false },
+            { key: 'telefono', label: 'Teléfono Contacto', sortable: false },
             { key: 'empresa', label: 'Empresa', sortable: false },
             { key: 'correo', label: 'Correo Contacto', sortable: false },    
         ],
+        ModalEditOriginal:{},
         ModalEdit:{},
         ModalNew:{
             nombre:'',
@@ -226,6 +272,173 @@ export default {
     }    
     },
     methods:{
+        ValidarTexto(id,accion){
+            var key,tecla,tecla_especial,letras,especiales
+            var e = document.getElementById(eval('id')).value;
+            console.log(id);
+           
+            if(accion=='nuevo')
+            {
+                    if(id=='direccionCliente')
+                {
+                    if(e.match(/^[0-9a-zA-Z\s\#\-]+$/)){
+                        
+                        if(e.length>=100){
+                            this.statusdireccion=false
+                        }
+                        else{
+                            this.statusdireccion=null
+                        }
+                    }
+                    else{
+                        this.statusdireccion=false
+                    }
+                }
+                if(e.match(/^[0-9a-zA-Z\s\-]*$/)){
+                    if(id=='nombreCliente')
+                    {
+                        if(e.length>99){
+                            this.statusnombre=false
+                        }
+                        else{
+                            this.statusnombre=null
+                        }
+                    }
+                
+                    if(id=='empresa'||id=='empresaED')
+                    {
+                        if(e.length>100){
+                            this.statusempresa=false
+                        }
+                        else{
+                            this.statusempresa=null
+                        }
+                    }
+                }
+                else{
+                    if(id=='nombreCliente')
+                    {
+                        this.statusnombre=false
+                    }
+                
+                    if(id=='empresa')
+                    {
+                        this.statusempresa=false
+                    }
+
+                }
+            }
+            if(accion=='editar')
+            {
+                if(id=='nombreClienteED'){
+                    if(this.ModalEdit.nombre.match(/^[0-9a-zA-Z\s\-]*$/)){
+                        if(this.ModalEdit.nombre.length>=100){
+                            this.statusnombre=false
+                        }
+                        else{
+                            this.statusnombre=null
+                        }
+                    }
+                    else{
+                        if(id=='nombreClienteED')
+                        {
+                            this.statusnombre=false
+                        }
+                    }
+                }
+                if(id=='direccionClienteED'){
+
+                    if(this.ModalEdit.direccion.match(/^[0-9a-zA-Z\s\#\-]+$/)){
+                        console.log("coincide");
+                        if(this.ModalEdit.direccion.length>=100){
+                            this.statusdireccion=false
+                        }
+                        else{
+                            this.statusdireccion=null
+                        }
+                    }
+                    else{
+                        this.statusdireccion=false
+                    }
+                }
+                else{
+
+                }
+                if(id=='empresaED'){
+                    if(this.ModalEdit.empresa.match(/^[0-9a-zA-Z\s\-]*$/)){
+                        if(this.ModalEdit.empresa.length>=100){
+                            this.statusempresa=false
+                        }
+                        else{
+                            this.statusempresa=null
+                        }
+                    }
+                    else{
+                        if(id=='empresaED')
+                        {
+                            this.statusempresa=false
+                        }
+                    }
+                }
+                else{
+
+                }
+
+            }
+            
+            
+        },
+        ValidarTelefono(id){
+            console.log("entro a validar tel");
+            if(id=='nitEmpresa'){
+                var a = document.getElementById(id).value;
+                var vacio=''
+                //var x=check.which;
+                //var x = a.charCode;
+                var x = a.keyCode;
+                if (!(a >= 48 || a <= 57)) {
+                    swal("Oops...", "Solo deben ser numeros !", "error");
+                    this.statusnit=false
+                    return document.getElementById(id).value = ""
+                } else if (a.length >= 12) {
+                    // if no is more then the value
+                    swal("Oops...", "Maximo 12 digitos!", "error");
+                    this.statusnit=false
+                    return (document.getElementById(id).value = "");
+                }
+                else{
+                    this.statusnit=null
+                }
+            }
+            else{
+                this.statusnit=null
+            }
+            if(id=='telefono'){
+                console.log("telefono");
+                var a = document.getElementById(id).value;
+                var vacio=''
+                //var x=check.which;
+                //var x = a.charCode;
+                var x = a.keyCode;
+                if (!(a >= 48 || a <= 57)) {
+                    swal("Oops...", "Solo deben ser numeros !", "error");
+                    this.statustelefono=false
+                    return document.getElementById("telefono").value = ""
+                } else if (a.length >= 12) {
+                    // if no is more then the value
+                    swal("Oops...", "Maximo 12 digitos!", "error");
+                    this.statustelefono=false
+                    return (document.getElementById("telefono").value = "");
+                }
+                else{
+                    this.statustelefono=null
+                }
+            }
+            else{
+                this.statustelefono=null
+            }
+            
+        },
         refrescarClientes(){
            var test2 = localStorage.getItem("storedData");
             var test =JSON.parse(test2);
@@ -238,35 +451,84 @@ export default {
                     }) 
         },
         actualizarCliente(){
-            //console.log("entro a actualizar cliente");
-            console.log(this.ModalEdit);
-            var objeto ={
+            console.log("entro a actualizar cliente");
+            if(this.ModalEdit.nombre==''||
+                this.ModalEdit.direccion==''||
+                this.ModalEdit.nit==''||
+                this.ModalEdit.telefono==''||
+                this.ModalEdit.empresa==''||
+                this.ModalEdit.correo==''){
+                    if(this.ModalEdit.nombre==''){
+                        this.statusnombre=false
+                    }
+                    if(this.ModalEdit.direccion==''){
+                        this.statusdireccion=false
+                    }
+                    if(this.ModalEdit.nit==''){
+                        this.statusnit=false
+                    }
+                    if( this.ModalEdit.telefono==''){
+                        this.statustelefono=false
+                    }
+                    if(this.ModalEdit.empresa==''){
+                        this.statusempresa=false
+                    }
+                    if(this.ModalEdit.correo==''){
+                        this.statusCorreo=false
+                    }
+                    swal(
+                    'Error!',
+                    'Para Actualizar deben estar completos todos los campos',
+                    'error'
+                    )
+            }
+            if(this.statusnombre==false||
+            this.statusdireccion==false||
+            this.statusnit==false||
+            this.statustelefono==false||
+            this.statusempresa==false||
+            this.statusCorreo==false){
+                console.log("alguno no cumple formato");
+                 swal(
+                    'Error!',
+                    'Para Actualizar debe cumplirse el formato establecido',
+                    'error'
+                    )
+            }
+            else
+            {
+                var objeto ={
                 nombre:this.ModalEdit.nombre,
                 direccion:this.ModalEdit.direccion,
                 nit:this.ModalEdit.nit,
                 telefono:this.ModalEdit.telefono,
                 empresa:this.ModalEdit.empresa,
                 correo:this.ModalEdit.correo
-            }
-             this.axios.post(urlservicios+"ActulizarCliente/"+this.ModalEdit._id,objeto)
-                .then((response) => {
-                    console.log(response);
-                    if(response.data.validar==true)
-                    {
-                        swal({
-                        title: 'Actualizado Exitosamente',
-                        timer: 1500,
-                        type:'success'})
-                        this.$refs.modalEditar.hide()
-
-                    }else{
-                         swal({
-                        title: 'No se pudo actualizar',
-                        timer: 1000,
-                        type:'error'})
-                    }
+                }
+                this.axios.post(urlservicios+"ActulizarCliente/"+this.ModalEdit._id,objeto)
+                    .then((response) => {
                     
-                })
+                        console.log(response);
+
+                        if(response.data.validar==true)
+                        {
+                            swal({
+                            title: 'Actualizado Exitosamente',
+                            timer: 1500,
+                            type:'success'})
+                            this.$refs.modalEditar.hide()
+
+                        }else{
+                            swal({
+                            title: 'No se pudo actualizar',
+                            timer: 1000,
+                            type:'error'})
+                        }
+                        
+                    })
+            }
+            //console.log(this.ModalEdit);
+            
             
         },
         validacorreo(value){
@@ -275,15 +537,15 @@ export default {
            }
            if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value))
             {   
-                return (this.statusCorreo=true)
+                return (this.statusCorreo=null)
             }
                 return (this.statusCorreo=false)
             
 
-       },
-        adicionarCliente(){
+        },
+        adicionarCliente(){ 
             var bandera=true
-            if(this.ModalNew.nombre==''){
+            if(this.ModalNew.nombre==''||this.statusnombre==false){
                 this.statusnombre=false
                 bandera=false
             }
@@ -291,35 +553,42 @@ export default {
                 this.statusnombre=null
    
             }
-            if(this.ModalNew.direccion==''){
+            if(this.ModalNew.direccion==''||this.statusdireccion==false){
                 this.statusdireccion=false
                 bandera=false
             }
             else{
                 this.statusdireccion=null
             }
-            if(this.ModalNew.empresa==''){
+            if(this.ModalNew.empresa==''||this.statusempresa==false){
                 this.statusempresa=false
                 bandera=false
             }
             else{
                 this.statusempresa=null
             }
-            if(this.ModalNew.nit==''){
+            if(this.ModalNew.nit==''||this.statusnit==false){
                 this.statusnit=false
                 bandera=false
             }
             else{
                 this.statusnit=null
             }
-            if(this.ModalNew.correo==''){
+            if(this.ModalNew.telefono==''||this.statustelefono==false){
+                this.statustelefono=false
+                bandera=false
+            }
+            else{
+                this.statustelefono=null
+            }
+            if(this.ModalNew.correo==''||this.statusCorreo==false){
                 this.statusCorreo=false
                 bandera=false
             }
             if(bandera==false){
                 swal(
                 'Upps!',
-                'Debe completar todos los campos',
+                'Algun campo no cumple con las caracteristicas establecidas',
                 'error'
                 )
             }
@@ -339,8 +608,8 @@ export default {
                 }
                 this.axios.post(urlservicios+"GuardarCliente", objeto)
                         .then(response => {
-                           
-                            if(response.data.creado===true)
+                            console.log(response);
+                            if(response.data.creado==true)
                             {
                                 this.ClientesTabla.push(response.data.orden)
                                 swal(
@@ -355,7 +624,7 @@ export default {
                             {
                                 swal(
                                 'Upps!',
-                                'Ya existe un cliente con esas caracteristicas',
+                                'Ya existe un cliente con esas caracteristicas , revise el correo',
                                 'error'
                                 )                             
                             }
@@ -368,18 +637,21 @@ export default {
             this.$refs.modalNuevo.show()
         },
         cerrarModal(){
+            console.log("entro a cerra");
             this.statusnombre=null,
             this.statusdireccion=null,
             this.statusempresa=null,
             this.statusnit=null,
             this.statusCorreo= null,
+            this.statustelefono=null 
             this.ModalNew.nombre=''
             this.ModalNew.direccion=''
+            this.ModalNew.telefono=''
             this.ModalNew.empresa=''
             this.ModalNew.nit=''
             this.ModalNew.correo=''
-
-            
+            this.ModalEdit=''
+            this.ModalEditOriginal=''
             this.$refs.modalEditar.hide()
             this.$refs.modalNuevo.hide()
         
@@ -388,6 +660,7 @@ export default {
             console.log("entro a editar");
             console.log(value.item);
             this.ModalEdit=value.item
+            this.ModalEditOriginal=this.ModalEdit
             this.$refs.modalEditar.show()
         }
     },
@@ -399,7 +672,7 @@ export default {
         
         this.axios.get(urlservicios+"clientesOperador/"+test.id_OperadorLogistico+'/'+id_cliente)
                 .then((response) => {
-                    //console.log(response);
+                    console.log(response);
                     this.ClientesTabla=response.data
                 })
     }

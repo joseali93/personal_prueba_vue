@@ -8,12 +8,27 @@
             <p>Aplicativo para el manejo de procesos logisticos</p>
             <form id="login-form" method="post">
               <div class="form-group">
-                <label for="login-username" class="label-custom">User Name</label>
-                <input id="login-username" v-model="correo" type="text" name="loginUsername" required="">
+                <label for="login-username">Correo Electronico</label>
+                <b-form-input v-model="correo"
+                  autocomplete
+                  id="login-username"
+                  :state="estadoT"
+                  type="text"
+                  @input="ValidarCorreo"
+                  placeholder="Ingrese su Correo Electronico"></b-form-input>                
               </div>
               <div class="form-group">
-                <label for="login-password" class="label-custom">Password</label>
-                <input id="login-password" v-model="password" type="password" name="loginPassword" required="">
+                <label for="login-password">Contraseña</label>
+                 <b-form-input v-model="password"
+                  id="login-password"
+                  type="password"
+                  autocomplete
+                  
+                  placeholder="Ingrese su contraseña"
+                  :state="estadoClave"
+                  @input="ValidarClave"
+                  v-b-popover.hover="'Debe contener letras o numeros unicamente'" title="Estructura Valida"
+                  ></b-form-input> 
               </div>
               <a  v-on:click="autenticar" class="btn btn-lg btn-success btn-block"> <span class="boton">Ingresar</span> </a>
             </form>
@@ -34,6 +49,8 @@ import {urlservicios} from '../main'
 export default {
   data(){
       return{
+        estadoClave:null,
+        estadoT:null,
         usuario: '',
         correo: '',
         password: '',
@@ -44,17 +61,57 @@ export default {
       },
       }
   },
-  methods:{   
+  methods:{  
+    ValidarCorreo: function(value){
+      if(value.length==0){
+               return(this.estadoT=null)
+           }
+           if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value))
+            {   
+                return (this.estadoT=true)
+            }
+                return (this.estadoT=false)
+        
+    }, 
+     ValidarClave: function(value){
+      if(value.length==0){
+               return(this.estadoClave=null)
+           }
+           if (/^[-_\w\.]+$/i.test(value))
+            {   
+                return (this.estadoClave=true)
+            }
+                return (this.estadoClave=false)
+        
+    }, 
       autenticar: function(){
        
-        if(this.password==''||this.correo==''){
-            swal(
+        if(this.password==''||this.correo=='' ||this.estadoT==false
+          ||this.estadoClave==false){
+            if(this.estadoClave==false){
+              swal(
+              'Oops...',
+              'La clave no cumple los formatos establecidos!',
+              'error'
+              )
+            }
+            if(this.estadoT==false){
+              swal(
+              'Oops...',
+              'El correo no cumple los formatos establecidos!',
+              'error'
+              )
+            }
+            else{
+              swal(
               'Oops...',
               'Falto algun campo por completar!',
               'error'
             )
+            }
+            
           }else{
-        
+            
             /*
               Se realiza la validacion de los servicios 
               usando un password y correo para el login

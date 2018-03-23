@@ -310,37 +310,7 @@
                  :per-page="3" v-show="camposdinamicos">
                  </b-pagination>    
                 </b-row> 
-                 <!--
-                <b-row  v-if="mostrar">
-                    <h2> Informacion: </h2>
-                </b-row>
-                
-               
-                <b-row v-for="(data,indice) in inputsED.campos" class="my-1"> 
-                  <template v-if="data.type!='select'">
-                    <b-col >
-                        <label  class="col-sm-2 col-form-label col-form-label-sm text-capitalize" :style="[data.style]" >{{data.placeholder}}: </label>
-                    </b-col>
-                    <b-col>
-                        <input class="form-control form-control-sm" 
-                        :type="data.type" :id="data.id" :style="[data.style,validatecampo]" 
-                        :max="data.max" :placeholder="data.placeholder" @keyup="PresionoED(indice)"  :value="valores(data.id)"   required>
-                    </b-col>
-                  </template>
 
-                </b-row>
-            
-                 <b-form-row>
-                    <b-col>
-                        <label  class="col-sm-2 col-form-label col-form-label-sm">Referencia: </label>
-                    </b-col>
-                    <b-col>
-                      <b-form-input type="text" class="form-control form-control-sm"  placeholder="Referencia" v-model="detalleseditar.referencia"
-                         :state="estado.referencia"></b-form-input>
-                         <!--
-                        <input type="text" class="form-control form-control-sm" id="referenciaedit"   placeholder="Referencia" v-model="detalleseditar.referencia">
-                    </b-col>
-                </b-form-row>-->
                 <b-row>
                     <h2>Destinatario: </h2>
                 </b-row>
@@ -854,40 +824,57 @@ export default {
     PresionoED(index) {
       console.log("entro al presionar editar");
       this.validatecampo= ''
+      var cero=''
       setTimeout(
         function() {
-          if (
-            document.getElementById(this.inputsED.campos[index].id).value == ""
-          ) {
-                        console.log(this.inputsED.campos[index].vmodel);
-
-            eval(
-              "this.detalleseditar.infor." +
-                this.inputsED.campos[index].vmodel +
-                "= null"
-            );
-             console.log( eval(
-              "this.detalleseditar.infor." +
-                this.inputsED.campos[index].vmodel));
-            console.log(this.detalleseditar)
-          } else {
-            
-            eval(
-              "this.detalleseditar.infor." +
-                this.inputsED.campos[index].vmodel +
-                "=" +
-                document.getElementById(this.inputsED.campos[index].id).value
-            );
-            console.log(document.getElementById(this.inputsED.campos[index].id).value);
-            console.log( eval(
-              "this.detalleseditar.infor." +
-                this.inputsED.campos[index].vmodel));
-                            console.log(this.detalleseditar)
+          if(this.inputsED.campos[index].type=='text'){
+            console.log("es");
+            if (document.getElementById(this.inputsED.campos[index].id).value == "")
+              {
+                //eval("this.objeto." + this.inputs.campos[index].vmodel + "= null");
+                 eval(
+                "this.detalleseditar.infor." +
+                  this.inputsED.campos[index].vmodel +
+                  "= null"
+              );
+              } else {
+                  eval(
+                "this.detalleseditar.infor." +
+                  this.inputsED.campos[index].vmodel +
+                  "=" +
+                  'document.getElementById(this.inputsED.campos[index].id).value'
+                );
+              }    
 
           }
+          else{
+            if (
+              document.getElementById(this.inputsED.campos[index].id).value == ""
+            ) {
+                          console.log(this.inputsED.campos[index].vmodel);
+
+              eval(
+                "this.detalleseditar.infor." +
+                  this.inputsED.campos[index].vmodel +
+                  "= null"
+              );
+              
+            } else {
+              
+              eval(
+                "this.detalleseditar.infor." +
+                  this.inputsED.campos[index].vmodel +
+                  "=" +
+                  document.getElementById(this.inputsED.campos[index].id).value
+              );
+              
+
+            }
+          }
+          
         }.bind(this)
       );
-     
+      console.log(this.detalleseditar);
     },
     valores(dato) {
       //console.log(this.detalleseditar)
@@ -902,68 +889,52 @@ export default {
       this.estado.nombre=null
       this.estado.direccion=null
       this.estado.referencia=null
+      console.log(this.detalleseditar.infor);
+      if(this.detalleseditar.infor.objetoUnidades.length==0){
+        console.log("no hay dinamicos");
+      }
+      else{
+        var objetollaves=Object.keys(this.detalleseditar.infor)
+
+        var objdinamico=Object.keys(this.detalleseditar.infor.objetoUnidades[0])
+        var totales={}
+        var algo=0
+
+        console.log(this.itemsdinamicos);
+          for(var y=0;y<this.itemsdinamicos.length;y++){
+            console.log(this.itemsdinamicos[y]);
+            for(var x=0;x<this.inputsED.campos.length;x++){
+              if(this.inputsED.campos[x].espieza==true&&this.inputsED.campos[x].type=="number")
+              {
+                algo=algo+eval('this.itemsdinamicos[y].'+this.inputsED.campos[x].acumulaen)
+                //console.log(algo);
+                totales[this.inputsED.campos[x].acumulaen]=algo
+                //console.log(eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen));
+                //totales[this.inputs.campos[x].acumulaen]=eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen)+totales[this.inputs.campos[x].acumulaen]
+              }
+              if(this.inputsED.campos[x].espieza==true&&this.inputsED.campos[x].type=="text")
+              {
+                //algo=algo+eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen)
+                //console.log(algo);
+                totales[this.inputsED.campos[x].acumulaen]=this.itemsdinamicos.length
+                //console.log(eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen));
+                //totales[this.inputs.campos[x].acumulaen]=eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen)+totales[this.inputs.campos[x].acumulaen]
+              }
+            }
+          }
+          console.log(totales);
+        var objtotal=Object.keys(totales)
+
+          for(var x=0;x<objtotal.length;x++){
+            eval('this.detalleseditar.infor.'+objtotal[x]+'='+totales[objtotal[x]])
+          }
+      }
+
       
-      var objetollaves=Object.keys(this.detalleseditar.infor)
-
-      var objdinamico=Object.keys(this.detalleseditar.infor.objetoUnidades[0])
-      var totales={}
-      var algo=0
-
-      console.log(this.itemsdinamicos);
-        for(var y=0;y<this.itemsdinamicos.length;y++){
-          console.log(this.itemsdinamicos[y]);
-          for(var x=0;x<this.inputsED.campos.length;x++){
-            if(this.inputsED.campos[x].espieza==true&&this.inputsED.campos[x].type=="number")
-            {
-              algo=algo+eval('this.itemsdinamicos[y].'+this.inputsED.campos[x].acumulaen)
-              //console.log(algo);
-              totales[this.inputsED.campos[x].acumulaen]=algo
-              //console.log(eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen));
-              //totales[this.inputs.campos[x].acumulaen]=eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen)+totales[this.inputs.campos[x].acumulaen]
-            }
-            if(this.inputsED.campos[x].espieza==true&&this.inputsED.campos[x].type=="text")
-            {
-              //algo=algo+eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen)
-              //console.log(algo);
-              totales[this.inputsED.campos[x].acumulaen]=this.itemsdinamicos.length
-              //console.log(eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen));
-              //totales[this.inputs.campos[x].acumulaen]=eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen)+totales[this.inputs.campos[x].acumulaen]
-            }
-          }
-        }
-
      
-      console.log(totales);
-      var objtotal=Object.keys(totales)
-
-        for(var x=0;x<objtotal.length;x++){
-          eval('this.detalleseditar.infor.'+objtotal[x]+'='+totales[objtotal[x]])
-        }
-    console.log(this.detalleseditar.infor);
-     for(var x=0;x<objetollaves.length;x++){
-        //console.log(typeof(eval('this.detalleseditar.infor.'+objetollaves[x])));
-        
-        if(typeof(eval('this.detalleseditar.infor.'+objetollaves[x]))=="object")
-        {
-          //console.log("hay objeto");
-        }
-        else{
-          //console.log(this.inputsED);
-          /*
-          console.log(this.inputsED.campos[x]);
-          if(this.inputsED.campos[x].espieza==false){
-            if(document.getElementById(this.inputsED.campos[x].id).value=='')
-            {
-               pivoteedi=true
-              this.validatecampo= {
-                      border: '1px solid  #ff8080'
-                  }
-            }
-          }
-          */
-          }
-
-     }
+      
+      console.log(this.detalleseditar.infor);
+     
       //console.log(pivoteedi);
       if (
         this.detalleseditar.destinatario.nombre == "" ||
@@ -1038,12 +1009,22 @@ export default {
       this.selectservice = this.DetalleServicio[index].servicioslocal._id;
       //console.log(this.selectservice);
       console.log(this.detalleseditar);
+
       this.itemsdinamicos=this.DetalleServicio[index].detalleslocal.infor.objetoUnidades
-      var fields=Object.keys(this.DetalleServicio[index].detalleslocal.infor.objetoUnidades[0])
-      fields.push('eliminar')
-      fields.push('actualizar')
-      console.log(fields);
-      this.fieldsdinamicos=fields
+      console.log(this.itemsdinamicos);
+      if(this.itemsdinamicos.length==0)
+      {
+        console.log("no tiene dinamicos");
+      }
+      else{
+        var fields=Object.keys(this.DetalleServicio[index].detalleslocal.infor.objetoUnidades[0])
+        fields.push('eliminar')
+        fields.push('actualizar')
+        console.log(fields);
+        this.fieldsdinamicos=fields
+      }
+      
+      
       this.axios
         .get(
         urlservicios+"estructuraf/" +
@@ -1140,7 +1121,62 @@ export default {
         var llaves=''
         var objllaves
         llaves=Object.keys(this.objeto)
-        //console.log(this.itemsdinamicos);
+        console.log(this.objeto);
+        console.log(this.itemsdinamicos);
+        if(this.itemsdinamicos.length>0){
+          objllaves=Object.keys(this.itemsdinamicos[0])
+        //console.log(objllaves);
+        var totales={}
+        var algo=0
+
+        for(var y=0;y<this.itemsdinamicos.length;y++){
+          console.log(this.itemsdinamicos[y]);
+          for(var x=0;x<this.inputs.campos.length;x++){
+            if(this.inputs.campos[x].espieza==true&&this.inputs.campos[x].type=="number")
+            {
+              algo=algo+eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen)
+              //console.log(algo);
+              totales[this.inputs.campos[x].acumulaen]=algo
+              //console.log(eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen));
+              //totales[this.inputs.campos[x].acumulaen]=eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen)+totales[this.inputs.campos[x].acumulaen]
+            }
+            if(this.inputs.campos[x].espieza==true&&this.inputs.campos[x].type=="text")
+            {
+              //algo=algo+eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen)
+              //console.log(algo);
+              totales[this.inputs.campos[x].acumulaen]=this.itemsdinamicos.length
+              //console.log(eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen));
+              //totales[this.inputs.campos[x].acumulaen]=eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen)+totales[this.inputs.campos[x].acumulaen]
+            }
+          }
+        }
+        console.log(totales);
+        var objtotales=Object.keys(totales)
+        for(var x=0;x<objtotales.length;x++){
+          eval('this.objeto.'+objtotales[x]+'='+totales[objtotales[x]])
+        }
+
+        for(var x=0;x<this.inputs.campos.length;x++)
+        {
+          if(this.inputs.campos[x].espieza==false){
+            if(eval('this.objeto.'+this.inputs.campos[x].vmodel)==''||
+            eval('this.objeto.'+this.inputs.campos[x].vmodel=='null')||
+            eval('this.objeto.'+this.inputs.campos[x].vmodel==null))
+            {
+              //console.log("");
+              //console.log("pivote tru");
+              //console.log(eval('this.objeto.'+llaves[x]));
+              this.validatecampo= {
+                  border: '1px solid  #ff8080'
+              }
+              pivote=true
+            }
+          }
+
+          
+          }
+        }
+        /*
         objllaves=Object.keys(this.itemsdinamicos[0])
         //console.log(objllaves);
         var totales={}
@@ -1192,22 +1228,9 @@ export default {
 
           
         }
-        console.log(this.objeto);
-        /*
-        for(var x=0;x<llaves.length;x++){   
-
-          if(eval('this.objeto.'+llaves[x])==''||eval('this.objeto.'+llaves[x]=='null')||eval('this.objeto.'+llaves[x]==null))
-          {
-            console.log("");
-            console.log("pivote tru");
-            console.log(eval('this.objeto.'+llaves[x]));
-            this.validatecampo= {
-                border: '1px solid  #ff8080'
-            }
-            pivote=true
-          }
-        }
         */
+        console.log(this.objeto);
+
       
         if(pivote==false){
           this.validatecampo=''
@@ -1239,8 +1262,6 @@ export default {
           }
         
           swal("Oops...", "Falto completar algun campo", "error");                    
-        
-
 
 
       } else {
@@ -1289,45 +1310,67 @@ export default {
     },
     Presiono(index) {
       console.log("entro al presionar");
+      var cero=''
       setTimeout(
         function() {
-          if (document.getElementById(this.inputs.campos[index].id).value == "")
-           {
-            eval("this.objeto." + this.inputs.campos[index].vmodel + "= null");
-            eval(
-                "this.objeto." +
-                  this.inputs.campos[index].vmodel +
-                  "=" +
-                  this.inputs.campos[index].min)
-          } else {
-            if (document.getElementById(this.inputs.campos[index].id).value >this.inputs.campos[index].max)
-             {
+          
+          if(this.inputs.campos[index].type=='text'){
+            
+            if (document.getElementById(this.inputs.campos[index].id).value == "")
+              {
+                //eval("this.objeto." + this.inputs.campos[index].vmodel + "= null");
+                eval(
+                    "this.objeto." +
+                      this.inputs.campos[index].vmodel +
+                      "=" +cero)
+              } else {
+                  eval(
+                    "this.objeto." +
+                      this.inputs.campos[index].vmodel +
+                      "=" +
+                     'document.getElementById(this.inputs.campos[index].id).value');
+              }           
+          }
+          else{
+            if (document.getElementById(this.inputs.campos[index].id).value == "")
+            {
+              eval("this.objeto." + this.inputs.campos[index].vmodel + "= null");
               eval(
-                "this.objeto." +
-                  this.inputs.campos[index].vmodel +
-                  "=" +
-                  this.inputs.campos[index].min
-              );
-              document.getElementById(
-                this.inputs.campos[index].id
-              ).value = eval(
-                "this.objeto." +
-                  this.inputs.campos[index].vmodel +
-                  "=" +
-                  this.inputs.campos[index].min
-              );
+                  "this.objeto." +
+                    this.inputs.campos[index].vmodel +
+                    "=" +
+                    this.inputs.campos[index].min)
             } else {
-              eval(
-                "this.objeto." +
-                  this.inputs.campos[index].vmodel +
-                  "=" +
-                  document.getElementById(this.inputs.campos[index].id).value
-              );
+              if (document.getElementById(this.inputs.campos[index].id).value >this.inputs.campos[index].max)
+              {
+                eval(
+                  "this.objeto." +
+                    this.inputs.campos[index].vmodel +
+                    "=" +
+                    this.inputs.campos[index].min
+                );
+                document.getElementById(
+                  this.inputs.campos[index].id
+                ).value = eval(
+                  "this.objeto." +
+                    this.inputs.campos[index].vmodel +
+                    "=" +
+                    this.inputs.campos[index].min
+                );
+              } else {
+                eval(
+                  "this.objeto." +
+                    this.inputs.campos[index].vmodel +
+                    "=" +
+                    document.getElementById(this.inputs.campos[index].id).value
+                );
+              }
             }
           }
+          
         }.bind(this)
       );
-      //console.log(this.detalleseditar)
+      //console.log(this.objeto)
     },
     service(value) {
           var vacio=  { _id: null, nombre: 'Por Favor Seleccione un Servicio' };
