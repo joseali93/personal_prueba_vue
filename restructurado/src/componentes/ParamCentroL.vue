@@ -146,7 +146,7 @@ methods:{
         direccion:objeto.direccion,
         ciudad:objeto.ciudad,
         pais:objeto.pais,
-        id_operadorlogistico:test.id_OperadorLogistico
+        id_operadorlogistico:test.id_OperadorLogistico._id
       }
             console.log(objenvio);
 
@@ -166,7 +166,7 @@ created: function(){
         var id_cliente
         id_cliente='null'
         
-        this.axios.get(urlservicios+"centroslogisticos/"+test.id_OperadorLogistico)
+        this.axios.get(urlservicios+"centroslogisticos/"+test.id_OperadorLogistico._id)
                 .then((response) => {
                     console.log(response.data);
                     this.centrosLogisticos=response.data

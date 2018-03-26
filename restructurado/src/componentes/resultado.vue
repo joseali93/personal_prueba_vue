@@ -75,13 +75,13 @@ export default {
             if(infologin.id_cliente==undefined||
             infologin.id_cliente==null){
                 swal({
-                title: 'Esta seguro ?',
-                text: "Luego no se podra revertir el estado de la orden!",
+                title: 'Esta seguro que desea Cancelar la orden de servicio? ',
+                text: "Luego no se podrá revertir el estado de la orden",
                 type: 'warning',
                 showCancelButton: true,
                 confirmButtonColor: '#3085d6',
                 cancelButtonColor: '#d33',
-                cancelButtonText:'Cancelar',
+                cancelButtonText:'Salir',
                 confirmButtonText: 'Confirmar'
                 }).then((result) => {
                     if (result.value) {
@@ -96,7 +96,7 @@ export default {
                                         console.log(response.data);
                                         if(response.data.message=="orden de servicio actualizada")
                                         {
-                                            swal("Orden Eliminada!", "Orden de Servicio Cancelada!", "success");
+                                            swal("Orden de servicio Cancelada!",'', "success");
 
                                         }
                                     })

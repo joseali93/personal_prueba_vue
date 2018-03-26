@@ -444,7 +444,7 @@ export default {
             var test =JSON.parse(test2);
             var id_cliente
             id_cliente='null'
-            this.axios.get(urlservicios+"clientesOperador/"+test.id_OperadorLogistico+'/'+id_cliente)
+            this.axios.get(urlservicios+"clientesOperador/"+test.id_OperadorLogistico._id+'/'+id_cliente)
                     .then((response) => {
                         //console.log(response);
                         this.ClientesTabla=response.data
@@ -603,7 +603,7 @@ export default {
                     direccion:this.ModalNew.direccion,
                     telefono:this.ModalNew.telefono,
                     nit:this.ModalNew.nit,
-                    id_OperadorLogistico:test.id_OperadorLogistico
+                    id_OperadorLogistico:test.id_OperadorLogistico._id
 
                 }
                 this.axios.post(urlservicios+"GuardarCliente", objeto)
@@ -670,7 +670,7 @@ export default {
         var id_cliente
         id_cliente='null'
         
-        this.axios.get(urlservicios+"clientesOperador/"+test.id_OperadorLogistico+'/'+id_cliente)
+        this.axios.get(urlservicios+"clientesOperador/"+test.id_OperadorLogistico._id+'/'+id_cliente)
                 .then((response) => {
                     console.log(response);
                     this.ClientesTabla=response.data

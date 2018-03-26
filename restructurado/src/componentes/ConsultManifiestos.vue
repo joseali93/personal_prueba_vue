@@ -181,7 +181,7 @@ export default {
         this.axios
         .get(
             urlservicios+"Procesos/" +
-            infologin.id_OperadorLogistico
+            infologin.id_OperadorLogistico._id
         )
         .then(response => {
             var load=false

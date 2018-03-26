@@ -89,20 +89,29 @@
             </b-col>
         </b-row>
         <b-row v-for="(data,indice) in inputs" class="my-1">
-
+          
                         <b-col cols="5">
                             <label  class="col-sm-2 col-form-label col-form-label-sm">{{data.nombre}}: </label>
                         </b-col>
+                    
                         <template >
                             <b-col cols="6">
                                 <b-form-input  :value="data.valores"
                                     type="text"
-                                    :disabled="true">
+                                    :readonly="true">
                             </b-form-input>
                             </b-col>
                         </template>
-                </b-row>
+        </b-row>
                 <hr>
+                <b-row>
+                     <b-col>
+                    <h3>Courier:</h3>
+                    </b-col>
+                    <b-col>
+                        {{info.courier.nombre}} {{info.courier.apellido}}
+                    </b-col>
+                </b-row>
                 <b-row>
                     <b-col>
                      <b-table striped hover :items="info.detalleslocal.infor.objetoUnidades" ></b-table>

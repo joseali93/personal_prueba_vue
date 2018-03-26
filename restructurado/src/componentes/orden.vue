@@ -3,14 +3,14 @@
 DE LA ORDEN DE SERVICIO -->
     <b-container class="prueba" >
         <header  class="content-heading text-capitalize text-center">
-          <h2>Generacion Orden de Servicio</h2>
+          <h2>Generación Orden de Servicio</h2>
           <small></small>
         </header>
         
         <b-card class="cards">
         <header slot="header" class="content-heading ">
-            <h3>INFORMACION DE RECOGIDA</h3>
-                <small>Se visualiza la seleccion de cliente y centro de costo</small>
+            <h3>INFORMACIÓN DE RECOGIDA</h3>
+                <small>Se visualiza la selección de cliente y centro de costo</small>
         </header>
             <b-row>
                 <b-col>
@@ -34,13 +34,15 @@ DE LA ORDEN DE SERVICIO -->
                 <b-row>
                     <b-col>
                     <b-form-group id="exampleInputGroup1"
-                        label="Direccion: ">
+                    horizontal
+                        label="Dirección: ">
                             <b-form-input id="direccion"
                                 size="lg"
                                 type="text"
                                 v-model="selected_centro.direccion"
                                 required
-                                placeholder="Direccion">
+                                placeholder="Dirección"
+                                maxlength="100">
                             </b-form-input>
                     </b-form-group>
                     </b-col>
@@ -48,13 +50,15 @@ DE LA ORDEN DE SERVICIO -->
                 <b-row>
                     <b-col>
                     <b-form-group id="exampleInputGroup2"
+                    horizontal
                         label="Contacto: ">
                             <b-form-input id="direccion"
                                 size="lg"
                                 type="text"
                                 v-model="selected_cliente.nombre"
                                 required
-                                placeholder="Nombre">
+                                placeholder="Nombre"
+                                maxlength="100">
                             </b-form-input>
                     </b-form-group>
                     </b-col>
@@ -62,13 +66,15 @@ DE LA ORDEN DE SERVICIO -->
                 <b-row>
                     <b-col>
                     <b-form-group id="exampleInputGroup3"
-                        label="Telefono: " >
-                            <b-form-input id="direccion"
+                    horizontal
+                        label="Teléfono: " >
+                            <b-form-input id="telefono"
                             size="lg"
                                 type="text"
                                 v-model="selected_cliente.telefono"
                                 required
-                                placeholder="Telefono">
+                                placeholder="Teléfono"
+                                maxlength="20">
                             </b-form-input>
                     </b-form-group>
                     </b-col>
@@ -270,7 +276,7 @@ export default {
             var test2 = localStorage.getItem("storedData");
             var test =JSON.parse(test2);
             console.log("errr");
-            this.axios.get(urlservicios+"clientesOperador/"+test.id_OperadorLogistico+'/'+this.selected_client)
+            this.axios.get(urlservicios+"clientesOperador/"+test.id_OperadorLogistico._id+'/'+this.selected_client)
             .then((response) => {
                 this.clientes=response.data
                 for(var i=0;i<this.clientes.length;i++){
@@ -299,7 +305,7 @@ export default {
                 })
                 }, )
                 
-                this.axios.get(urlservicios+"clientesOperador/"+test.id_OperadorLogistico+'/'+id_cliente)
+                this.axios.get(urlservicios+"clientesOperador/"+test.id_OperadorLogistico._id+'/'+id_cliente)
                 .then((response) => {
                     //console.log(response);
                     this.clientes=response.data
@@ -348,8 +354,8 @@ export default {
         else{
             console.log("tengo cliente");
             id_cliente=test.id_cliente
-            console.log(urlservicios+"clientesOperador/"+test.id_OperadorLogistico+'/'+id_cliente);
-            this.axios.get(urlservicios+"clientesOperador/"+test.id_OperadorLogistico+'/'+id_cliente)
+            //console.log(urlservicios+"clientesOperador/"+test.id_OperadorLogistico+'/'+id_cliente);
+            this.axios.get(urlservicios+"clientesOperador/"+test.id_OperadorLogistico._id+'/'+id_cliente)
                 .then((response) => {
                     this.clientes=response.data
                     this.selected_cliente.nombre=this.clientes[0].nombre

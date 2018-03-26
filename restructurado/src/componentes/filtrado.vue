@@ -188,13 +188,13 @@ export default {
                         load 
                     })
                     }, )
-            var peticiones= "ObtenerOrdenesFiltrado/"+infologin.id_OperadorLogistico+"/"+this.filter+"/"+this.selected_state+
+            var peticiones= "ObtenerOrdenesFiltrado/"+infologin.id_OperadorLogistico._id+"/"+this.filter+"/"+this.selected_state+
             "/"+cliente+"/"+centrocosto+"/"+inicio+"/"+fin;
             console.log(peticiones);
             //this.peticion=peticiones
                     //console.log(urlservicios+"ObtenerOrdenesFiltrado/"+infologin.id_OperadorLogistico+"/"+this.filter+"/"+this.selected_state+
             //"/"+cliente+"/"+centrocosto+"/"+inicio+"/"+fin);
-            this.axios.get(urlservicios+"ObtenerOrdenesFiltrado/"+infologin.id_OperadorLogistico+"/"+this.filter+"/"+this.selected_state+
+            this.axios.get(urlservicios+"ObtenerOrdenesFiltrado/"+infologin.id_OperadorLogistico._id+"/"+this.filter+"/"+this.selected_state+
             "/"+cliente+"/"+centrocosto+"/"+inicio+"/"+fin)
             .then((response) => {
                 this.consulta=response.data
@@ -341,7 +341,7 @@ export default {
                     load 
                 })
                 }, )
-            this.axios.get(urlservicios+"clientesOperador/"+infologin.id_OperadorLogistico
+            this.axios.get(urlservicios+"clientesOperador/"+infologin.id_OperadorLogistico._id
             +'/'+id_cliente)
             .then((response) => {
                 var load=false
@@ -389,7 +389,7 @@ export default {
         }else{
             //console.log("hay cliente");
             id_cliente=infologin.id_cliente
-            this.axios.get(urlservicios+"clientesOperador/"+infologin.id_OperadorLogistico
+            this.axios.get(urlservicios+"clientesOperador/"+infologin.id_OperadorLogistico._id
             +'/'+id_cliente)
             .then((response) => {
                 this.clientes=response.data

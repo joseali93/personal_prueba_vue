@@ -2,13 +2,13 @@
 <!-- EN ESTE SE PERMITE LA GENERACION DE LOS DETALLES ASOCIADOS A UN CLIENTE Y CENTOR DE COSTO -->
     <b-container>
        <header  class="content-heading text-capitalize text-center">
-          <h2>Generacion Orden de Servicio</h2>
+          <h2>Generación Orden de Servicio</h2>
           <small></small>
         </header>
       <b-card>
         <header slot="header" class="content-heading text-capitalize">
           <h2>Detalle de Orden de Servicio</h2>
-          <small>Permite de la creacion y edicion de los envios que tendra asociado la orden de servicio</small>
+          <small>Permite de la creación y edición de los envios que tendra asociada la orden de servicio</small>
         </header>
           <b-row>
               <b-col md="3" offset-md="11">
@@ -50,29 +50,38 @@
           </b-row>
       </b-card>
       <!-- Modal Adicionar -->
-      <b-modal id="modalcrear" ref="Modal" title="Adicionar Registro" size="lg">
+      <b-modal id="modalcrear" ref="Modal" title="Adicionar Registro" 
+        no-close-on-backdrop
+        no-close-on-esc
+        size="lg">
+         <div slot="modal-header" class="w-100">
+                <b-btn class=" float-right" variant="outline-danger"  @click="hideModal">
+                  <i class="fa fa-times" aria-hidden="true">  </i>
+                  </b-btn>
+            </div>
             <b-container fluid>
-              
-                <b-row>
-                    <label >Seleccione el Producto:</label>
-                    <b-form-select v-model="selectproduct" class="mb-3"  id="produ" 
-                    :options="productosurl" text-field="nombre" value-field="_id"  @change.native="service">
-                    </b-form-select>
-                        
-                </b-row>
-                <preload v-show="load"></preload>
-                <b-row >
-                    <label >Seleccione el Servicio:</label>
-                    <b-form-select v-model="selectservice" class="mb-3" :options="serviciosurl"
-                     @change.native="campos"
-                     text-field="nombre" value-field="_id"  :disabled="habilitar" >
-                    </b-form-select>
-                </b-row>
+
+                  <b-form-group id="exampleInputGroup1"
+                      horizontal
+                        label="Producto: ">
+                            <b-form-select v-model="selectproduct"   id="produ" 
+                            :options="productosurl" text-field="nombre" value-field="_id"  @change.native="service">
+                            </b-form-select>
+                    </b-form-group>
+
+                  <b-form-group id="exampleInputGroup1"
+                      horizontal
+                        label="Servicio: ">
+                            <b-form-select v-model="selectservice"  :options="serviciosurl"
+                            @change.native="campos"
+                            text-field="nombre" value-field="_id"  :disabled="habilitar" >
+                          </b-form-select>
+                    </b-form-group>
+                  
+                    
+                
                 <b-row>
                     <h2 v-show="selectservice"> Informacion Adicional: </h2>
-                    <br>
-
-                    <br>
                 </b-row>
                 <b-row  v-for="(data,indice) in inputs.campos" class="my-2"> 
                   <template v-if="data.type!='select'" >
@@ -81,14 +90,16 @@
                         <label  class="col-sm-2 col-form-label col-form-label-sm text-capitalize" :style="[data.style]" >{{data.placeholder}}: </label>
                     </b-col>
                     <b-col >
+                      
                         <input class="form-control form-control-sm" :type="data.type" :id="data.id" :style="[data.style,validatecampo]" :max="data.max" :min="data.min" :placeholder="data.placeholder" @keyup="Presiono(indice)"   required>
                     </b-col>
+                   
                     </template>
  
                   </template>              
                 </b-row>
                 <b-row class="my-1">
-                    <h2 v-show="camposdinamicos"> Informacion Especifica: </h2>
+                    <label v-show="camposdinamicos"> Informacion Especifica: </label>
                 </b-row>
                 <b-row v-for="(data,indice) in inputs.campos" v-show="camposdinamicos">
                 <template v-if="data.type!='select'" >
@@ -97,7 +108,7 @@
                         <label  class="col-sm-2 col-form-label col-form-label-sm text-capitalize" :style="[data.style]" >{{data.placeholder}}: </label>
                     </b-col>
                     <b-col >
-                        <input class="form-control form-control-sm" :type="data.type" :id="data.id" :style="[data.style,validatecampo]" :max="data.max" :min="data.min" :placeholder="data.placeholder" @keyup="Presiono(indice)"   required>
+                        <input focus class="form-control form-control-sm" :type="data.type" :id="data.id" :style="[data.style,validatecampo]" :max="data.max" :min="data.min" :placeholder="data.placeholder" @keyup="Presiono(indice)"   required>
                     </b-col>
                     </template>
  
@@ -134,27 +145,38 @@
                  </b-pagination>    
                 </b-row>        
 
-                <b-form-row v-show="selectservice" class="my-1">
-                    
+                    <b-form-group id="exampleInputGroup1"
+                    horizontal
+                    v-show="selectservice"
+                        label="Documento Referencia: ">
+                            <b-form-input type="text" class="form-control form-control-sm" 
+                             placeholder="Referencia" v-model="detalles.referencia"
+                         :state="estado.referencia"></b-form-input>
+                          
+                    </b-form-group>
+                    <!--
+                        <b-form-row v-show="selectservice" class="my-1">
                         <h2  >Documento Referencia: </h2>
                     <b-col>
                       <b-form-input type="text" class="form-control form-control-sm"  placeholder="Referencia" v-model="detalles.referencia"
                          :state="estado.referencia"></b-form-input>
-                         
-                    </b-col>
-                </b-form-row>
+                                         </b-form-row>
+
+                         -->
+                   
                 <b-row v-show="selectservice">
                     <h2>Destinatario: </h2>
                 </b-row>
                  <b-form-row v-show="selectservice" class="my-1">
                     <b-col>
-                        <label  class="col-sm-2 col-form-label col-form-label-sm"> Identificacion: </label>
+                        <label  class="col-sm-2 col-form-label col-form-label-sm"> Identificación: </label>
                     </b-col>
                     <b-col>
-                        <b-form-input type="number" class="form-control form-control-sm"  placeholder="Indentidicacion"
+                        <b-form-input type="number" class="form-control form-control-sm"  placeholder="Indentidicación"
                          v-model="identificacion"
-                         @keyup.enter.native="buscar()"
-                         :state="true"  v-b-popover.hover="'Se debe diligenciar sin puntos, en caso de NIT sin numero de validacion, ni guion'" title="Num. Identificacion"></b-form-input>
+                         @keyup.enter.tab.native="buscar()"
+                         @keydown.tab.native="buscar()"
+                         :state="true"  v-b-popover.hover="'Se debe diligenciar sin puntos, en caso de NIT sin numero de validación, ni guion'" title="Num. Identificacion"></b-form-input>
                         <!--<input type="text" class="form-control form-control-sm"  placeholder="Nombre" v-model="detalles.destinatario.nombre">
                         -->
                     </b-col>
@@ -168,8 +190,7 @@
                     <b-col>
                         <b-form-input type="text" class="form-control form-control-sm"  placeholder="Nombre" v-model="detalles.destinatario.nombre"
                          :state="estado.nombre"></b-form-input>
-                        <!--<input type="text" class="form-control form-control-sm"  placeholder="Nombre" v-model="detalles.destinatario.nombre">
-                        -->
+
                     </b-col>
                 </b-form-row>
                 <b-form-row v-show="selectservice&&mostrardestinatario" class="my-1">
@@ -178,8 +199,7 @@
                     </b-col>
                     <b-col>
                       <b-form-input type="text"  class="form-control form-control-sm"  :state="estado.direccion" placeholder="Direccion" v-model="detalles.destinatario.direccion"> </b-form-input>
-                        <!--<input type="text" class="form-control form-control-sm"  placeholder="Direccion" v-model="detalles.destinatario.direccion">
-                        -->
+
                     </b-col>
                 </b-form-row>
                 <b-form-row v-show="selectservice&&mostrardestinatario" class="my-1">
@@ -187,11 +207,7 @@
                         <label  class="col-sm-2 col-form-label col-form-label-sm">Telefono: </label>
                     </b-col>
                     <b-col>
-                      <!--
-                         <b-form-input type="text"  class="form-control form-control-sm"  :state="estado.telefono" 
-                         placeholder="Telefono" v-model="detalles.destinatario.telefono" @keyup="numeros(this)"> </b-form-input>
-                         -->
-                         
+
                         <input type="text" :style="validatecampoTel"  class="form-control form-control-sm" id="telefono" @keyup="numeros(this)" placeholder="Telefono" v-model="detalles.destinatario.telefono">
                         
                     </b-col>
@@ -228,7 +244,14 @@
             </div>
       </b-modal>
       <!-- Modal Editar -->
-      <b-modal id="modaleditar" ref="ModalEdit" title="Editar Registro" size="lg">
+      <b-modal id="modaleditar" ref="ModalEdit" title="Editar Registro"
+       no-close-on-backdrop
+        no-close-on-esc size="lg">
+        <div slot="modal-header" class="w-100">
+                <b-btn class=" float-right" variant="outline-danger"  @click="hideModal">
+                  <i class="fa fa-times" aria-hidden="true">  </i>
+                  </b-btn>
+            </div>
             <b-container fluid>
                 <b-row>
                     <label >Seleccione el Producto:</label>
@@ -242,9 +265,6 @@
                 </b-row>
                 <b-row>
                     <h2 v-show="selectservice"> Informacion Adicional: </h2>
-                    <br>
-
-                    <br>
                 </b-row>
                 <b-row  v-for="(data,indice) in inputsED.campos" class="my-2"> 
                   <template v-if="data.type!='select'" >
@@ -625,9 +645,11 @@ export default {
      
     },
     eliminarRef(value){
+      
       console.log("entro a eliminar");
       console.log(value);
-      this.itemsdinamicos.splice(value, 1);
+
+      this.itemsdinamicos.splice(value.index,1);
 
 
     },
@@ -732,7 +754,7 @@ export default {
       console.log(bandera)
       if(bandera==false){
         swal(
-              'Good job!',
+              'Error !',
               'Revise los campos',
               'error'
             )
@@ -907,7 +929,7 @@ export default {
               if(this.inputsED.campos[x].espieza==true&&this.inputsED.campos[x].type=="number")
               {
                 algo=algo+eval('this.itemsdinamicos[y].'+this.inputsED.campos[x].acumulaen)
-                //console.log(algo);
+                console.log(algo);
                 totales[this.inputsED.campos[x].acumulaen]=algo
                 //console.log(eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen));
                 //totales[this.inputs.campos[x].acumulaen]=eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen)+totales[this.inputs.campos[x].acumulaen]
@@ -917,6 +939,7 @@ export default {
                 //algo=algo+eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen)
                 //console.log(algo);
                 totales[this.inputsED.campos[x].acumulaen]=this.itemsdinamicos.length
+                console.log(totales)
                 //console.log(eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen));
                 //totales[this.inputs.campos[x].acumulaen]=eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen)+totales[this.inputs.campos[x].acumulaen]
               }
@@ -992,8 +1015,26 @@ export default {
       }
     },
     eliminar: function(indice) {
-      this.DetalleServicio.splice(indice, 1);
-      toastr.error("Se elmino exitosamente");
+      swal({
+        title: 'Esta seguro ?',
+        text: "No podrá recuperarlo después de realizado",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Si'
+      }).then((result) => {
+        if (result.value) {
+          this.DetalleServicio.splice(indice, 1);
+          toastr.error("Se elmino exitosamente");
+          swal(
+            'Eliminado !',
+            'Detalle de la Orden de servicio elimado correctamente.',
+            'success'
+          )
+        }
+      })
+      
     },
     editar(index) {
       //console.log(index);
@@ -1130,12 +1171,13 @@ export default {
         var algo=0
 
         for(var y=0;y<this.itemsdinamicos.length;y++){
-          console.log(this.itemsdinamicos[y]);
           for(var x=0;x<this.inputs.campos.length;x++){
             if(this.inputs.campos[x].espieza==true&&this.inputs.campos[x].type=="number")
             {
+          console.log(this.itemsdinamicos[y]);
+          console.log(this.inputs.campos[x])
               algo=algo+eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen)
-              //console.log(algo);
+              console.log(algo);
               totales[this.inputs.campos[x].acumulaen]=algo
               //console.log(eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen));
               //totales[this.inputs.campos[x].acumulaen]=eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen)+totales[this.inputs.campos[x].acumulaen]
@@ -1473,7 +1515,7 @@ export default {
       var inforemi=JSON.parse(inforemitente)
 
       var objeto = {
-        id_OperadorLogistico: infologin.id_OperadorLogistico,
+        id_OperadorLogistico: infologin.id_OperadorLogistico._id,
         id_usuario: infologin._id,
         id_centro_costo: selecc.selected_center,
         estados: [
@@ -1519,7 +1561,7 @@ export default {
     this.axios
       .get(
         urlservicios+"productos/" +
-          infologin.id_OperadorLogistico
+          infologin.id_OperadorLogistico._id
       )
       .then(response => {
         this.productosurl = response.data;

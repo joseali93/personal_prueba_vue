@@ -482,7 +482,7 @@ methods:{
                     load 
                 })
                 }, )
-            this.axios.get(urlservicios+"clientesOperador/"+infologin.id_OperadorLogistico+'/'+id_cliente)
+            this.axios.get(urlservicios+"clientesOperador/"+infologin.id_OperadorLogistico._id+'/'+id_cliente)
             .then((response) => {
                 var load=false
                 setTimeout(() => {
@@ -536,7 +536,7 @@ methods:{
                         })
                 }, )
             id_cliente=infologin.id_cliente
-            this.axios.get(urlservicios+"clientesOperador/"+infologin.id_OperadorLogistico+'/'+id_cliente)
+            this.axios.get(urlservicios+"clientesOperador/"+infologin.id_OperadorLogistico._id+'/'+id_cliente)
             .then((response) => {
                 this.clientes=response.data
                 this.clientes.unshift(vacio)

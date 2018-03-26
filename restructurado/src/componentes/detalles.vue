@@ -5,6 +5,7 @@
                 <i class="fa fa-chevron-left" aria-hidden="true"></i>
                 Volver
             </b-btn>
+            
         
         </b-row>
         <b-row>
@@ -13,44 +14,92 @@
           <b-card >
           
         <b-card-body>
-            <b-row>
-                <h3>INFORMACION DE CLIENTE </h3>
+             <b-row>
+                <h1>Detalle de Orden de Servicio  {{info.id}}</h1>
             </b-row>
-           <b-row class="mb-2">
-            <b-col>
-                <b-row>
-                    <b-col>
-                        <h4>Cliente:</h4>
-                    </b-col>
-                    <b-col>
-                        <p>{{currentUser.id_cliente.nombre}}</p> 
-                    </b-col>
+            <b-card fluid    class="mb-2 borderF"
+              >
+            <div slot="header" class="w-100">
+                <label class="float-left">INFORMACION DE CLIENTE</label>
+            </div>
+                <b-row class="mb-2">
+                <b-col>
+                    <b-row>
+                        <b-col>
+                            <h4>Cliente:</h4>
+                        </b-col>
+                        <b-col>
+                            <p>{{currentUser.id_cliente.nombre}}</p> 
+                        </b-col>
+                    </b-row>
+                    <b-row>
+                        <b-col>
+                            <h4>Direccion Cliente:</h4>
+                        </b-col>
+                        <b-col>
+                            <p>{{currentUser.id_cliente.direccion}}</p> 
+                        </b-col>
+                    </b-row>
+                    <b-row>
+                        <b-col>
+                            <h4>Centro de Costo:</h4>
+                        </b-col>
+                        <b-col>
+                            <p>{{currentUser.id_centro_costo.nombre}}</p> 
+                        </b-col>
+                    </b-row>
+                    <b-row>
+                        <b-col>
+                            <h4>Direccion Centro de Costo:</h4>
+                        </b-col>
+                        <b-col>
+                            <p>{{currentUser.id_centro_costo.direccion}}</p> 
+                        </b-col>
+                    </b-row>
+                </b-col>
                 </b-row>
+            </b-card>
+                <!--
                 <b-row>
-                    <b-col>
-                        <h4>Direccion Cliente:</h4>
-                    </b-col>
-                    <b-col>
-                        <p>{{currentUser.id_cliente.direccion}}</p> 
-                    </b-col>
+                    <h3>INFORMACION DE CLIENTE </h3>
                 </b-row>
-                <b-row>
-                    <b-col>
-                        <h4>Centro de Costo:</h4>
-                    </b-col>
-                    <b-col>
-                        <p>{{currentUser.id_centro_costo.nombre}}</p> 
-                    </b-col>
-                </b-row>
-                <b-row>
-                    <b-col>
-                        <h4>Direccion Centro de Costo:</h4>
-                    </b-col>
-                    <b-col>
-                        <p>{{currentUser.id_centro_costo.direccion}}</p> 
-                    </b-col>
-                </b-row>
-            </b-col>
+            <b-row class="mb-2">
+                <b-col>
+                    <b-row>
+                        <b-col>
+                            <h4>Cliente:</h4>
+                        </b-col>
+                        <b-col>
+                            <p>{{currentUser.id_cliente.nombre}}</p> 
+                        </b-col>
+                    </b-row>
+                    <b-row>
+                        <b-col>
+                            <h4>Direccion Cliente:</h4>
+                        </b-col>
+                        <b-col>
+                            <p>{{currentUser.id_cliente.direccion}}</p> 
+                        </b-col>
+                    </b-row>
+                    <b-row>
+                        <b-col>
+                            <h4>Centro de Costo:</h4>
+                        </b-col>
+                        <b-col>
+                            <p>{{currentUser.id_centro_costo.nombre}}</p> 
+                        </b-col>
+                    </b-row>
+                    <b-row>
+                        <b-col>
+                            <h4>Direccion Centro de Costo:</h4>
+                        </b-col>
+                        <b-col>
+                            <p>{{currentUser.id_centro_costo.direccion}}</p> 
+                        </b-col>
+                    </b-row>
+                </b-col>
+                -->
+            <b-row>
             <b-col>
                 <b-row>
                     <b-col>
@@ -65,16 +114,20 @@
                         <h4>Estado Orden de Servicio:</h4>
                     </b-col>
                     <b-col>
-                        <p>{{currentUser.estado}}</p> 
+                        <p><strong> {{currentUser.estado}}</strong></p> 
                     </b-col>
                 </b-row>
             </b-col>
         </b-row>
-        <b-row class="mb-2">
+        <b-card 
+
+            class="mb-2 borderF">
+             <div slot="header" class="w-100">
+                <label class="float-left">INFORMACION DE RECOLECCION</label>
+            </div>
+             <b-row class="mb-2">
             <b-col>
-                <b-row>
-                    <h4>INFORMACION DE RECOLECCION</h4>
-                </b-row>
+
                 <b-row>
                     <b-col>
                         <h4>Direccion Recoleccion</h4>
@@ -101,7 +154,9 @@
                 </b-row>
             </b-col>
 
-        </b-row>
+            </b-row>
+        </b-card>
+       
         <b-row>
             <b-table :fields="fields" ref="table" :per-page="5" :current-page="currentPage" :items="this.currentUser.detalle">
                 <template slot="consecutivo" slot-scope="data">
@@ -242,7 +297,7 @@
                     </template>
                     <template v-if="data.type=='select'" class="my-1 card-text">
                         <b-col cols="5">
-                            <label class="col-form-label col-form-label-sm text-capitalize">Seleccione el {{data.placeholder}}</label>
+                            <label class="col-form-label col-form-label-sm text-capitalize">{{data.placeholder}}</label>
                         </b-col>
                         <b-col cols="6">
                             <b-form-select class="col-form-label col-form-label-sm " :id="data.id" :options="trayectos" 
@@ -262,7 +317,8 @@
                     <b-btn class="mt-3" variant="danger"  @click="hideModal">
                         <i class="fa fa-times-circle" aria-hidden="true">  </i>
                         Cancelar</b-btn>
-                    <b-btn class="mt-3 float-right " variant="success" v-on:click="ingresarTrayectos()">
+                    <b-btn class="mt-3 float-right " variant="success" v-on:click="ingresarTrayectos()"
+                    :disabled=desabilitar>
                          <i class="fa fa-floppy-o" aria-hidden="true"></i>
                     Guardar</b-btn>
 
@@ -464,6 +520,7 @@ export default {
                 this.$refs.table.refresh();
                 //console.log(this.selection);  
                 var nombresel
+                
                 //console.log(this.currentUser.detalle[this.indices].detalleslocal.infor);
                 if(this.info.estado=="orden de servicio cancelada")
                 {
@@ -594,7 +651,7 @@ export default {
                         this.Documento = response.data;
                         if(this.Documento.validacion==false){
                         swal(
-                            "Cuidado!",
+                            "Atencion!",
                             "" + this.Documento.message,
                             "warning"
                         );
@@ -758,7 +815,7 @@ export default {
                         var infologin = JSON.parse(login);
                         document.getElementById(this.inputs.campos[i].id).value=null
                         console.log(this.inputs.campos[i].urlobjeto);
-                        this.axios.get(this.inputs.campos[i].urlobjeto+infologin.id_OperadorLogistico)   
+                        this.axios.get(this.inputs.campos[i].urlobjeto+infologin.id_OperadorLogistico._id)   
                         .then(response => {
                         this.trayectos = response.data;
                         this.trayectos.unshift(vacio)
@@ -789,8 +846,8 @@ export default {
                     if(this.inputs.campos[i].type=='select'){
                         var login = localStorage.getItem("storedData");
                         var infologin = JSON.parse(login);
-                        console.log(this.inputs.campos[i].urlobjeto+infologin.id_OperadorLogistico)
-                        this.axios.get(this.inputs.campos[i].urlobjeto+infologin.id_OperadorLogistico)   
+                        console.log(this.inputs.campos[i].urlobjeto+infologin.id_OperadorLogistico._id)
+                        this.axios.get(this.inputs.campos[i].urlobjeto+infologin.id_OperadorLogistico._id)   
                         .then(response => {
                         this.trayectos = response.data;
                         this.trayectos.unshift(vacio)
@@ -844,7 +901,7 @@ export default {
         var infologin = JSON.parse(login);
         this.axios
         .get(
-            urlservicios+"UsuariosCurier/"+infologin.id_OperadorLogistico 
+            urlservicios+"UsuariosCurier/"+infologin.id_OperadorLogistico._id 
         )
         .then(response => {
             this.curiers = response.data;
@@ -873,6 +930,7 @@ export default {
 </script>
 
 <style>
+
 .conta {
     padding: 3%
 }

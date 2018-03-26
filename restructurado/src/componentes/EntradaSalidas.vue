@@ -729,7 +729,7 @@ export default {
                         })
                         }, )
             this.axios.get(urlservicios+"CamposProcesoLogisticosOperadores/" +
-                infologin.id_OperadorLogistico+'/'+this.selected)
+                infologin.id_OperadorLogistico._id+'/'+this.selected)
                 .then(response => {
                     var load=false
                     setTimeout(() => {
@@ -758,7 +758,7 @@ export default {
                     }
                     else{
                         this.axios.get(element.urlobjeto+
-                            infologin.id_OperadorLogistico)
+                            infologin.id_OperadorLogistico._id)
                             .then(resp1 => {
                                 //this.value[indice]=null
                                  var vacio=  { _id: 'null', nombre: 'Por Favor Seleccione un Campo' };
@@ -786,7 +786,7 @@ export default {
                         var login = localStorage.getItem("storedData");
                         var infologin = JSON.parse(login);
                         this.axios.get(
-                            urlservicios+"UsuariosCurier/"+infologin.id_OperadorLogistico)
+                            urlservicios+"UsuariosCurier/"+infologin.id_OperadorLogistico._id)
                             .then(response => {
                                 this.curiers2 = response.data;
                                 var vacio=  { _id: "null", nombre: 'Por Favor Seleccione un Curier' };
@@ -822,7 +822,7 @@ export default {
             this.axios
         .get(
             urlservicios+"Procesos/" +
-            infologin.id_OperadorLogistico
+            infologin.id_OperadorLogistico._id
         )
         .then(response => {
             var load=false

@@ -293,7 +293,7 @@ export default {
         var vacio=  { _id: null, nombre: 'Por Favor Seleccione un Cliente' };
 
         id_cliente='null'
-        this.axios.get(urlservicios+"clientesOperador/"+test.id_OperadorLogistico+'/'+id_cliente)
+        this.axios.get(urlservicios+"clientesOperador/"+test.id_OperadorLogistico._id+'/'+id_cliente)
                 .then((response) => {
                     this.clientes=response.data
                     this.clientes.unshift(vacio)

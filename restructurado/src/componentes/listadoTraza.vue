@@ -733,8 +733,21 @@ export default {
             {
             llaves.map((obj,ind)=>{
                 if(typeof(eval('value.detalleslocal.infor.'+obj))=='object'){
-                    
+                    console.log("objeto");
+                    console.log(eval('value.detalleslocal.infor.'+obj));
+                    console.log(obj);
+                    if(obj=='trayectoobj'){
+                      var objetogrande={
+                        nombre:'Trayecto',
+                        valores:eval('value.detalleslocal.infor.'+obj+'.nombre')
+                    }
+                    this.final.push(objetogrande)     
+                    }
+
                 }else{
+                    if(obj=='id_trayecto'){
+
+                    }else{
                     this.valores.push(eval('value.detalleslocal.infor.'+obj))
                     this.llavesv.push(obj)
                     var objetogrande={
@@ -742,11 +755,13 @@ export default {
                         valores:eval('value.detalleslocal.infor.'+obj)
                     }
                     this.final.push(objetogrande)
-
+                    }
                 }
             })
 
             }
+            console.log("---final----");
+            console.log(this.final);
             //this.$refs.myModalRef.show()
             //openModal();
             this.axios.get(urlservicios+"estructuraf/" +this.consultaactualizar.productoslocal._id +
@@ -762,7 +777,7 @@ export default {
                 centro:centro,
                 inputs:this.final
             }
-            
+            //console.log(personal);
             setTimeout(() => {
                 bus.$emit('resultado', {
                     value ,personal
