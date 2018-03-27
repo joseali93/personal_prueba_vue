@@ -31,8 +31,8 @@
 
       </b-card-body>
     </b-card>
-    <!-- Modal Component -->
-    <b-modal id="modalNuevo" ref="modalNuevo" size="lg" title="Nuevo Centro de Costo">
+    <!-- Modal Crear Centro logistico -->
+    <b-modal id="modalNuevo" ref="modalNuevo" size="lg" >
       <b-container fluid>
         <b-form-group id="fieldsetHorizontal"
                 horizontal
@@ -42,7 +42,9 @@
                 label="Nombre"
                 label-for="nombreCentroC">
                     <b-form-input id="nombreCentroC" v-model="ModalNew.nombre"
-                    :state="statusnombre"></b-form-input>
+                    :state="statusnombre"
+                    maxlength="100"
+                    @input="ValidarTexto('nombreCentroC','nuevo')"></b-form-input>
           </b-form-group>
           <b-form-group id="fieldsetHorizontal"
                 horizontal
@@ -52,7 +54,9 @@
                 label="Dirección Centro de Costo"
                 label-for="direccionCC">
                     <b-form-input id="direccionCC" v-model="ModalNew.direccion"
-                    :state="statusdireccion"></b-form-input>
+                    :state="statusdireccion"
+                    maxlength="100"
+                     @input="ValidarTexto('direccionCC','nuevo')"></b-form-input>
           </b-form-group>
           <b-form-group id="fieldsetHorizontal"
                 horizontal
@@ -66,7 +70,9 @@
                      placeholder="Ingrese la descripción del centro de costo"
                      :rows="3"
                      :max-rows="6"
-                     :state="statusdescripcion">
+                     :state="statusdescripcion"
+                     maxlength="400"
+                     @input="ValidarTexto('descripcionCC','nuevo')">
                 </b-form-textarea>      
           </b-form-group>
       </b-container>
@@ -79,8 +85,8 @@
          </b-btn>
        </div>
     </b-modal>
-    <!-- Modal Component -->
-    <b-modal id="modalEditar" ref="modalEditar" size="lg" title="Editar Centro de Costo">
+    <!-- Modal Editar Centro Costo -->
+    <b-modal id="modalEditar" ref="modalEditar" size="lg" >
         <b-container fluid>
           <b-form-group id="fieldsetHorizontal"
                 horizontal
@@ -88,8 +94,11 @@
                 breakpoint="md"
                 description="Digite nombre del Centro de Costo"
                 label="Nombre"
-                label-for="nombreCentroC">
-                    <b-form-input id="nombreCentroC" v-model="ModalEdit.nombre"></b-form-input>
+                label-for="nombreCentroCED">
+                    <b-form-input id="nombreCentroCED" v-model="ModalEdit.nombre"
+                    :state="statusnombre"
+                     maxlength="100"
+                     @input="ValidarTexto('nombreCentroCED','editar')"></b-form-input>
           </b-form-group>
           <b-form-group id="fieldsetHorizontal"
                 horizontal
@@ -97,8 +106,11 @@
                 breakpoint="md"
                 description="Digite dirección del Centro de Costo"
                 label="Dirección Centro de Costo"
-                label-for="direccionCC">
-                    <b-form-input id="direccionCC" v-model="ModalEdit.direccion"></b-form-input>
+                label-for="direccionCCED">
+                    <b-form-input id="direccionCCED" v-model="ModalEdit.direccion"
+                    :state="statusdireccion"
+                    maxlength="100"
+                     @input="ValidarTexto('direccionCCED','editar')"></b-form-input>
           </b-form-group>
           <b-form-group id="fieldsetHorizontal"
                 horizontal
@@ -106,12 +118,15 @@
                 breakpoint="md"
                 description="Digite la descripción del Centro de Costo"
                 label="Descripción"
-                label-for="descripcionCC">
-                <b-form-textarea id="descripcionCC"
+                label-for="descripcionCCED">
+                <b-form-textarea id="descripcionCCED"
                      v-model="ModalEdit.descripcion"
+                     :state="statusdescripcion"
                      placeholder="Digite la descripción del Centro de Costo"
                      :rows="3"
-                     :max-rows="6">
+                     :max-rows="6"
+                     maxlength="400"
+                     @input="ValidarTexto('descripcionCCED','editar')">
                 </b-form-textarea>      
           </b-form-group>
         </b-container>
@@ -160,6 +175,116 @@ export default {
     }    
     },
     methods:{
+      ValidarTexto(id,accion){
+            var key,tecla,tecla_especial,letras,especiales
+            var e = document.getElementById(eval('id')).value;
+            ////console.log(id);
+           
+            if(accion=='nuevo')
+            {
+                    if(id=='direccionCC')
+                {
+                    if(e.match(/^[0-9a-zA-Z\s\#\-]+$/)){
+                        
+                        if(e.length>=100){
+                            this.statusdireccion=false
+                        }
+                        else{
+                            this.statusdireccion=null
+                        }
+                    }
+                    else{
+                        this.statusdireccion=false
+                    }
+                }
+                if(e.match(/^[0-9a-zA-Z\s\-]*$/)){
+                    if(id=='nombreCentroC')
+                    {
+                        if(e.length>99){
+                            this.statusnombre=false
+                        }
+                        else{
+                            this.statusnombre=null
+                        }
+                    }
+                
+                    if(id=='descripcionCC')
+                    {
+                        if(e.length>400){
+                            this.statusdescripcion=false
+                        }
+                        else{
+                            this.statusdescripcion=null
+                        }
+                    }
+                }
+                else{
+                    if(id=='nombreCentroC')
+                    {
+                        this.statusnombre=false
+                    }
+                
+                    if(id=='descripcionCC')
+                    {
+                        this.statusdescripcion=false
+                    }
+
+                }
+            }
+            if(accion=='editar')
+            {
+                if(id=='nombreCentroCED'){
+                    if(this.ModalEdit.nombre.match(/^[0-9a-zA-Z\s\-]*$/)){
+                        if(this.ModalEdit.nombre.length>=100){
+                            this.statusnombre=false
+                        }
+                        else{
+                            this.statusnombre=null
+                        }
+                    }
+                    else{
+                        if(id=='nombreCentroCED')
+                        {
+                            this.statusnombre=false
+                        }
+                    }
+                }
+                if(id=='direccionCCED'){
+
+                    if(this.ModalEdit.direccion.match(/^[0-9a-zA-Z\s\#\-]+$/)){
+                        //console.log("coincide");
+                        if(this.ModalEdit.direccion.length>=100){
+                            this.statusdireccion=false
+                        }
+                        else{
+                            this.statusdireccion=null
+                        }
+                    }
+                    else{
+                        this.statusdireccion=false
+                    }
+                }
+                if(id=='descripcionCCED'){
+                    if(this.ModalEdit.descripcion.match(/^[0-9a-zA-Z\s\-]*$/)){
+                        if(this.ModalEdit.descripcion.length>=400){
+                            this.statusdescripcion=false
+                        }
+                        else{
+                            this.statusdescripcion=null
+                        }
+                    }
+                    else{
+                        if(id=='empresaED')
+                        {
+                            this.statusdescripcion=false
+                        }
+                    }
+                }
+
+            }
+            
+            
+      },
       nuevocc(){
         console.log("entro a nuevo cc");
         console.log();
@@ -168,34 +293,39 @@ export default {
       },
       crearcentrocosto(){
         var bandera= true
-        if(this.ModalNew.nombre=='')
-        {
-          bandera=false
-          this.statusnombre=false
-        }else{
-          this.statusnombre=null
-        }
-        if(this.ModalNew.direccion=='')
-        {
-          bandera=false
-          this.statusdireccion=false
-        }else{
-          this.statusdireccion=null
-
-        }
-        if(this.ModalNew.descripcion==''){
-          bandera=false
-          this.statusdescripcion=false
-        }else{
-          this.statusdescripcion=null
-
-        }
-        if(bandera==false){
+        if (
+          this.ModalNew.nombre == "" ||
+          this.ModalNew.direccion == "" ||
+          this.ModalNew.ciudad == "" ||
+          this.ModalNew.pais == ""
+        ) {
+          if (this.ModalNew.nombre == "") {
+            this.statusnombre = false;
+          }
+          if (this.ModalNew.direccion == "") {
+            this.statusdireccion = false;
+          }
+          if (this.ModalNew.ciudad == "") {
+            this.statusciudad = false;
+          }
+          if (this.ModalNew.pais == "") {
+            this.statuspais = false;
+          }
           swal(
-                'Upps!',
-                'Debe completar todos los campos',
-                'error'
-                )
+            "Error!",
+            "Para Actualizar deben estar completos todos los campos",
+            "error"
+          );
+        }
+        if( this.statusnombre==false||
+          this.statusdireccion==false||
+          this.statuspais==false||
+          this.statusciudad==false){
+          swal(
+            'Error!',
+            'Para la Creación debe cumplirse el formato establecido',
+            'error'
+            )
         }
         else{
         console.log(this.ModalNew);
@@ -213,7 +343,7 @@ export default {
                     if(response.data.validar==true)
                     {
                         swal({
-                        title: 'Actualizado Exitosamente',
+                        title: 'Creado Exitosamente',
                         timer: 1500,
                         type:'success'})
                         this.CentrosTabla.push(response.data.centro)
@@ -234,34 +364,68 @@ export default {
         this.ModalNew.nombre=''
         this.ModalNew.descripcion=''
         this.ModalNew.direccion=''
-        
+        this.ModalEdit={}
         this.$refs.modalEditar.hide()
         this.$refs.modalNuevo.hide()
       },
       actualizar(){
-        console.log("entro a actualizar");
-        console.log(this.ModalEdit);
-        
-
-        this.axios.post(urlservicios+"ActualizarCentroCostos/"+this.ModalEdit._id,this.ModalEdit)
-                .then((response) => {
-                  console.log(response.data);
-                  if(response.data.validar==true)
-                    {
-                        swal({
-                        title: 'Actualizado Exitosamente',
-                        timer: 1500,
-                        type:'success'})
-                        this.$refs.modalEditar.hide()
-
-                    }else{
-                         swal({
-                        title: 'No se pudo actualizar',
-                        timer: 1000,
-                        type:'error'})
+        if(this.ModalEdit.nombre==''||
+                this.ModalEdit.direccion==''||
+                this.ModalEdit.descripcion==''
+               ){
+                    if(this.ModalEdit.nombre==''){
+                        this.statusnombre=false
                     }
-                })
-        //this.$refs.modalEditar.hide()
+                    if(this.ModalEdit.direccion==''){
+                        this.statusdireccion=false
+                    }
+                    if(this.ModalEdit.descripcion==''){
+                        this.statusdescripcion=false
+                    }
+                    
+                    swal(
+                    'Error!',
+                    'Para Actualizar deben estar completos todos los campos',
+                    'error'
+                    )
+            }
+            if(this.statusnombre==false||
+            this.statusdireccion==false||
+            this.statusdescripcion==false
+           ){
+                //console.log("alguno no cumple formato");
+                 swal(
+                    'Error!',
+                    'Para Actualizar debe cumplirse el formato establecido',
+                    'error'
+                    )
+            }
+            else{
+               console.log("entro a actualizar");
+                console.log(this.ModalEdit);
+                
+
+                this.axios.post(urlservicios+"ActualizarCentroCostos/"+this.ModalEdit._id,this.ModalEdit)
+                        .then((response) => {
+                          console.log(response.data);
+                          if(response.data.validar==true)
+                            {
+                                swal({
+                                title: 'Actualizado Exitosamente',
+                                timer: 1500,
+                                type:'success'})
+                                this.$refs.modalEditar.hide()
+
+                            }else{
+                                swal({
+                                title: 'No se pudo actualizar',
+                                timer: 1000,
+                                type:'error'})
+                            }
+                        })
+                //this.$refs.modalEditar.hide()
+            }
+       
 
       },
       editar(value){
@@ -270,7 +434,7 @@ export default {
         this.ModalEdit=value.item
         this.$refs.modalEditar.show()
       },
-        SelectedClient(){
+      SelectedClient(){
           if(this.Cliente==null)
           {
             console.log("no hago peticion");
@@ -284,7 +448,7 @@ export default {
                         })
           }
            
-        }
+      }
     },
     created: function(){
         var test2 = localStorage.getItem("storedData");
