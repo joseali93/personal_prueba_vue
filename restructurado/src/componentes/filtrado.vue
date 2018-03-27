@@ -165,7 +165,7 @@ export default {
             if(this.filter===''){
                 this.filter="null"
                 }
-            if(this.selected_state===''){
+            if(this.selected_state===''|| this.selected_state=='Por Favor Seleccione un Estado'){
                 this.selected_state="null"
                 }
             if(this.selectedCL===''){
@@ -435,6 +435,9 @@ export default {
         this.axios.get(urlservicios+"estados/")
         .then((response) => {
             this.estados=response.data
+             var vacio3=  { nombre: 'Por Favor Seleccione un Estado' ,disabled:true};
+             this.selected_state='Por Favor Seleccione un Estado'
+             this.estados.unshift(vacio3)
             //console.log(this.estados);
         })
             

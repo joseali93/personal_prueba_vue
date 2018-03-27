@@ -210,8 +210,8 @@ export default {
                 ciudad:this.ModalEdit.ciudad,
                 }
         this.$refs.ModalEditar.hide()
-                /*
-        this.axios.post(urlservicios+"ActulizarCliente/"+this.ModalEdit._id,objeto)
+                
+        this.axios.post(urlservicios+"ActualizaCentrosLogisticos/"+this.ModalEdit._id,objeto)
                     .then((response) => {
                     
                         console.log(response);
@@ -222,7 +222,8 @@ export default {
                             title: 'Actualizado Exitosamente',
                             timer: 1500,
                             type:'success'})
-                            this.$refs.modalEditar.hide()
+
+                            this.$refs.ModalEditar.hide()
 
                         }else{
                             swal({
@@ -232,7 +233,7 @@ export default {
                         }
                         
                     })
-                    */
+                    
       }
     },
     editar(value) {
@@ -294,6 +295,7 @@ export default {
         }
       }
       if (accion == "editar") {
+        console.log("editar");
         if (id == "NnombreED") {
           if (this.ModalEdit.nombre.match(/^[0-9a-zA-Z\s\-]*$/)) {
             if (this.ModalEdit.nombre.length >= 100) {
@@ -307,8 +309,8 @@ export default {
             }
           }
         }
-        if (id == "Ndireccion") {
-          if (this.ModalEdit.direccion.match(/^[0-9a-zA-Z\s\#\-]+$/)) {
+        if (id == "NdireccionED") {
+          if (this.ModalEdit.direccion.match(/^[0-9a-zA-Z\s\#\-\.]+$/)) {
             if (this.ModalEdit.direccion.length >= 100) {
               this.statusdireccion = false;
             } else {
@@ -375,6 +377,13 @@ export default {
     },
     nuevocl() {
       this.ModalNew.nombre=this.CentroL
+      this.ModalNew.ciudad = "";
+      this.ModalNew.direccion = "";
+      this.ModalNew.pais = "";
+      this.statusciudad= null,
+      this.statusdireccion= null,
+      this.statusnombre= null,
+      this.statuspais= null,
       this.$refs.ModalNuevo.show();
     },
     CrearNuevoCL() {
@@ -428,11 +437,34 @@ export default {
         };
         console.log(objenvio);
 
-        this.axios
-          .post(urlservicios + "CrearCentrosLogisticos/", objenvio)
-          .then(response => {
-            console.log(response.data);
-          });
+        
+
+        this.axios.post(urlservicios+"CrearCentrosLogisticos", objenvio)
+                        .then(response => {
+                            console.log(response);
+                            if(response.data.validar==true)
+                            {
+                                this.centrosLogisticos.push(response.data.centro)
+                                swal(
+                                'Creado Correctamente!',
+                                'Centro Logistico Creado Correctamente',
+                                'success'
+                                )
+                                this.$refs.ModalNuevo.hide()
+
+                            }
+                            else
+                            {
+                                swal(
+                                'Upps!',
+                                'Ya existe un Centro Logistico con esas caracteristicas , revise la informacion diligenciada',
+                                'error'
+                                )                             
+                            }
+                        })
+          
+
+        
       }
     }
   },
