@@ -28,7 +28,7 @@
                                         ></b-form-input>
                     </b-form-group>
 
-                <b-table responsive :items="ClientesTabla" :fields="fields"
+                <b-table responsive fixed :items="ClientesTabla" :fields="fields"
                  :filter="Cliente"
                  class="my-2">
                     <template slot="editar" slot-scope="data">
@@ -65,7 +65,7 @@
                     label="Cliente"
                     label-for="nombreCliente">
                     <b-form-input id="nombreCliente" v-model="ModalNew.nombre"
-                    maxlength="12"
+                    maxlength="100"
                     @input="ValidarTexto('nombreCliente','nuevo')"
                     :state="statusnombre"></b-form-input>
                 </b-form-group>
@@ -90,6 +90,7 @@
                     label-for="telefono">
 
                     <b-form-input id="telefono" v-model="ModalNew.telefono"
+                    maxlength="20"
                     @input="ValidarTelefono('telefono','nuevo')"
                     :state="statustelefono"></b-form-input>
                 </b-form-group>
@@ -113,7 +114,7 @@
                     label="NIT"
                     label-for="nitEmpresa">
                     <b-form-input id="nitEmpresa" v-model="ModalNew.nit"
-                    maxlength="12"
+                    maxlength="20"
                     @input="ValidarTelefono('nitEmpresa','nuevo')"
                     :state="statusnit"></b-form-input>
                 </b-form-group>
@@ -155,7 +156,7 @@
                     label="Cliente"
                     label-for="nombreCliente">
                     <b-form-input id="nombreClienteED" v-model="ModalEdit.nombre"
-                     maxlength="12"
+                     maxlength="100"
                     @input="ValidarTexto('nombreClienteED','editar')"
                     :state="statusnombre"></b-form-input>
                 </b-form-group>
@@ -289,7 +290,8 @@ export default {
                     if(e.match(/^[0-9a-zA-Z\s\#\-]+$/)){
                         
                         if(e.length>=100){
-                            this.statusdireccion=false
+                            this.statusdireccion=null
+                            
                         }
                         else{
                             this.statusdireccion=null
@@ -302,8 +304,9 @@ export default {
                 if(e.match(/^[0-9a-zA-Z\s\-]*$/)){
                     if(id=='nombreCliente')
                     {
-                        if(e.length>99){
-                            this.statusnombre=false
+                        if(e.length>100){
+                            this.statusnombre=null
+                            console.log("tiene mas o 100");
                         }
                         else{
                             this.statusnombre=null
@@ -313,7 +316,7 @@ export default {
                     if(id=='empresa'||id=='empresaED')
                     {
                         if(e.length>100){
-                            this.statusempresa=false
+                            this.statusempresa=null
                         }
                         else{
                             this.statusempresa=null
@@ -356,7 +359,7 @@ export default {
                     if(this.ModalEdit.direccion.match(/^[0-9a-zA-Z\s\#\-]+$/)){
                         //console.log("coincide");
                         if(this.ModalEdit.direccion.length>=100){
-                            this.statusdireccion=false
+                            this.statusdireccion=null
                         }
                         else{
                             this.statusdireccion=null
@@ -369,7 +372,7 @@ export default {
                 if(id=='empresaED'){
                     if(this.ModalEdit.empresa.match(/^[0-9a-zA-Z\s\-]*$/)){
                         if(this.ModalEdit.empresa.length>=100){
-                            this.statusempresa=false
+                            this.statusempresa=null
                         }
                         else{
                             this.statusempresa=null
@@ -404,7 +407,7 @@ export default {
                 } else if (a.length >= 20) {
                     // if no is more then the value
                     swal("Oops...", "Maximo 20 digitos!", "error");
-                    this.statusnit=false
+                    this.statusnit=null
                     return (document.getElementById(id).value = "");
                 }
                 else{
@@ -428,7 +431,7 @@ export default {
                     } else if (a.length >= 20) {
                         // if no is more then the value
                         swal("Oops...", "Maximo 20 digitos!", "error");
-                        this.statustelefono=false
+                        this.statustelefono=null
                         return (document.getElementById("telefono").value = "");
                     }
                     else{
@@ -670,7 +673,8 @@ export default {
                                 'Cliente Creado Correctamente',
                                 'success'
                                 )
-                                this.$refs.modalNuevo.hide()
+                                this.cerrarModal()
+                                //this.$refs.modalNuevo.hide()
 
                             }
                             else
@@ -682,15 +686,18 @@ export default {
                                 )                             
                             }
                         })
+                        
+
             
             }
         },
         ClienteNuevo(){
-            //this.ModalNew.nombre=this.Cliente
+            this.ModalNew.nombre=this.Cliente
             this.$refs.modalNuevo.show()
         },
         cerrarModal(){
             //console.log("entro a cerra");
+            this.Cliente=''
             this.statusnombre=null,
             this.statusdireccion=null,
             this.statusempresa=null,

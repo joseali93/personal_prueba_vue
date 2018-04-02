@@ -56,8 +56,8 @@ export default {
             currentPage: 1,
             fields: [
                 'Cancelar',
-                { key: 'id', sortable: true },
-                { key: 'fecha_creacion',label:'Fecha Creacion Orden', sortable: false },
+                { key: 'id', label:'N. Orden de Servicio', sortable: true },
+                { key: 'fecha_creacion',label:'Fecha Creación Orden', sortable: false },
                 'estado',
                 'actualizar',
                 

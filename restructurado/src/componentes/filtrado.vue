@@ -3,7 +3,7 @@
         <b-card class="car" v-show="ocultar">
             <header class="content-heading" slot="header">
                 <h3>Consultar Ordenes de Servicio</h3>
-                    <small>Se permite la busqueda por las diferentes opciones </small>
+                    <small>Se permite la búsqueda por las diferentes opciones </small>
             </header>
             <b-row>
                 <b-col>
@@ -33,7 +33,7 @@
                     </b-form-group>
                 </b-col>
                 <b-col md="6" class="my-1">
-                    <b-form-group  label="Orden de servicios" class="mb-0">
+                    <b-form-group  label="Orden de Servicio" class="mb-0">
                         <b-input-group>
                             <b-form-input v-model="filter" type="number" @keyup="numeros(this)" placeholder="Digite numero Orden de Servicio" />
                         </b-input-group>

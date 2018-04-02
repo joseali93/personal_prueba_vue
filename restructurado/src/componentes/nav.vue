@@ -23,7 +23,7 @@
                     <b-link :to="ruta" v-if="indice=='ruta_uno'">
                       
                         <i class="fa fa-plus-square-o "></i>
-                        <span > Generacion Orden de Servicio </span>
+                        <span > Generación Orden de Servicio </span>
                     </b-link>
                 </li>
                 <li v-for="(ruta,indice) in rutas"> 
@@ -91,11 +91,11 @@
                   </b-link>
                 </li>
                 <li class="nav-item">
-                  <b-dropdown id="ddown-header" text="Configuracion" variant="link" class="nav-link logout">
-                    <b-dropdown-header>Configuracion Aplicativo</b-dropdown-header>
+                  <b-dropdown id="ddown-header" text="Configuración" variant="link" class="nav-link logout">
+                    <b-dropdown-header>Configuración Aplicativo</b-dropdown-header>
                     <b-dropdown-item-button @click="confiCliente">Clientes</b-dropdown-item-button>
                     <b-dropdown-item-button @click="confiCentroC">Centros de Costo</b-dropdown-item-button>
-                    <b-dropdown-item-button @click="confiCentroL">Centros Logistico</b-dropdown-item-button>
+                    <b-dropdown-item-button @click="confiCentroL">Centros Logísticos </b-dropdown-item-button>
                   </b-dropdown>
                 </li>
                </ul>

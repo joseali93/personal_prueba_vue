@@ -4,7 +4,7 @@
         <b-card class="car" v-show="ocultartra">
             <header slot="header" class="content-heading">
                 <h3>Consultar Trazabilidad</h3>
-                    <small>Se permite la busqueda de detalles seleccionando los siguientes filtros </small>
+                    <small>Se permite la búsqueda de detalles seleccionando los siguientes filtros </small>
             </header>
             <b-row>
                     <b-col>

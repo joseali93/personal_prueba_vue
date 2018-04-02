@@ -2,7 +2,7 @@
 <!-- SE PERMITE LA SELECCION DE LOS CLIENTE Y CENTRO DE COSTO QUE CORRESPONDA PARA LA REALIZACION 
 DE LA ORDEN DE SERVICIO -->
     <b-container class="prueba" >
-        <header  class="content-heading text-capitalize text-center">
+        <header  class="content-heading  text-center">
           <h2>Generación Orden de Servicio</h2>
           <small></small>
         </header>

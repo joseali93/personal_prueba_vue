@@ -2,23 +2,30 @@
   <b-container>
     <b-card>
       <b-card-body>
-        <b-row class="float-right">
-          <b-btn variant="outline-success" @click="nuevocl">
+        <b-row >
+          <b-col >
+            <b-btn class="float-right" variant="outline-success" @click="nuevocl">
             <i class="fa fa-plus"></i>
           </b-btn>
-          <b-btn variant="outline-success"  @click="refrescarCentrosLogisticos()">
+          <b-btn class="float-right" variant="outline-success"  @click="refrescarCentrosLogisticos()">
             <i class="fa fa-refresh"></i>                              
           </b-btn>
+          </b-col>
+          
         </b-row>
-        <b-row>
-          <b-input-group class="mb-3">
-          <b-form-input v-model="CentroL"
-          type="text"
-          placeholder="Ingrese el nombre del Centro de Logistico">
-          </b-form-input>
-         
-        </b-input-group>
-        </b-row>
+          <b-form-group id="fieldsetHorizontal"
+                                    horizontal
+                                    :label-cols="4"
+                                    breakpoint="md"
+                                    description="Filtrara del listado de centros logisticos asociados."
+                                    label="Buscar Centro Logistico "
+                                    label-for="inputHorizontal">
+                        <b-form-input   id="inputHorizontal" 
+                                        v-model="CentroL"
+                                        placeholder="Ingrese el nombre del Centro de Logistico"
+                                        
+                                        ></b-form-input>
+                    </b-form-group>
         <b-row>
           <b-table striped hover :items="centrosLogisticos" 
           :fields="fields"

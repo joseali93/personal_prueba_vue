@@ -519,9 +519,9 @@ export default {
             return eval("this.consultaactualizar.detalleslocal.infor."+value)
         },
         exportarxls(){
-            var consecutivo,id,estado,fechaT,producto,servicio,detalles,infor,refe
+            var consecutivo,id,estado,fechaT,producto,servicio,detalles,infor,refe,trayecto,nombre_trayecto
             var variable=[], constante=[]
-            var llaveslv1,llaveslv2,llaveslv3
+            var llaveslv1,llaveslv2,llaveslv3,llaveslvl4
             var llav2cc,detallecc,llav2cl,detallecl
             var nomcliente,dircliente
             var nomcentro,dircentro
@@ -669,8 +669,20 @@ export default {
                                         console.log("no saco ");
                                     }
                                     */
-                                    if(llaveslv3[c]==="objetoUnidades"||llaveslv3[c]==='trayectoobj')
+                                    if(llaveslv3[c]==="objetoUnidades"||llaveslv3[c]==='trayectoobj'||
+                                    llaveslv3[c]==='id_trayecto')
                                     {
+                                        if(llaveslv3[c]==='trayectoobj'){
+                                            trayecto=llaveslv3[c]
+                                            llaveslvl4=Object.keys(this.consulta[i].detalleslocal.infor.trayectoobj)
+                                            for(var e=0;e<llaveslvl4.length;e++)
+                                            {
+                                               
+                                                if(llaveslvl4[e]==='nombre'){
+                                                    nombre_trayecto=llaveslvl4[e]
+                                                }
+                                            }
+                                        }
                                         //console.log("no saco ");
                                     }
                                     else
@@ -715,9 +727,10 @@ export default {
                     detalles+'->'+refe+' as Referencia, '+
                     detalles+'->'+desti+'->'+direcciondesti+' as Destino, '+
                     nov+' as Novedades, '+
+                    detalles+'->'+infor+'->'+trayecto+'->'+nombre_trayecto+ ' as Trayecto, '+
                     consult+
                     'INTO XLS("Data.xls",{headers:true}) FROM ?'
-                    //console.log(algo);
+                    console.log(algo);
                     alasql(algo,[this.consulta])
 
                    
@@ -887,7 +900,7 @@ export default {
                 { key: 'id', sortable: true , label: 'N° Orden de Servicio'},
                 {key:'nmovilizado',  label: 'N° Movilizado'},
                 {key:'nombre_proceso', label: 'Estado'},
-                {key:'fecha_creacion', label: 'Fecha Ultima Actualizacion'},
+                {key:'fecha_creacion', label: 'Fecha Ultima Actualización'},
                 {key:'productoslocal', label: 'Producto'},
                 {key:'servicioslocal', label: 'Servicio'},
                 {key:'imagenes', label: 'Prueba de Entrega'},

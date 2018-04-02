@@ -6,7 +6,7 @@
     </div>
       <div class="panel panel-default" >
         <h3>
-            <strong >Way</strong><strong class="text-primary">Logistic</strong> es un aplicativo para el manejo logistico de su empresa
+            <strong >Way</strong><strong class="text-primary">Logistic</strong> es un aplicativo para el manejo logístico de su empresa
         </h3>
       </div>
     </div>

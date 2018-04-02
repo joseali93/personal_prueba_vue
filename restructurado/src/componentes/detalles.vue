@@ -17,10 +17,10 @@
              <b-row>
                 <h1>Detalle de Orden de Servicio  {{info.id}}</h1>
             </b-row>
-            <b-card fluid    class="mb-2 borderF"
+            <b-card fluid    class="mb-2 borderC"
               >
             <div slot="header" class="w-100">
-                <label class="float-left">INFORMACION DE CLIENTE</label>
+                <label class="float-left">INFORMACIÓN DE CLIENTE</label>
             </div>
                 <b-row class="mb-2">
                 <b-col>
@@ -34,7 +34,7 @@
                     </b-row>
                     <b-row>
                         <b-col>
-                            <h4>Direccion Cliente:</h4>
+                            <h4>Dirección Cliente:</h4>
                         </b-col>
                         <b-col>
                             <p>{{currentUser.id_cliente.direccion}}</p> 
@@ -50,7 +50,7 @@
                     </b-row>
                     <b-row>
                         <b-col>
-                            <h4>Direccion Centro de Costo:</h4>
+                            <h4>Dirección Centro de Costo:</h4>
                         </b-col>
                         <b-col>
                             <p>{{currentUser.id_centro_costo.direccion}}</p> 
@@ -59,46 +59,7 @@
                 </b-col>
                 </b-row>
             </b-card>
-                <!--
-                <b-row>
-                    <h3>INFORMACION DE CLIENTE </h3>
-                </b-row>
-            <b-row class="mb-2">
-                <b-col>
-                    <b-row>
-                        <b-col>
-                            <h4>Cliente:</h4>
-                        </b-col>
-                        <b-col>
-                            <p>{{currentUser.id_cliente.nombre}}</p> 
-                        </b-col>
-                    </b-row>
-                    <b-row>
-                        <b-col>
-                            <h4>Direccion Cliente:</h4>
-                        </b-col>
-                        <b-col>
-                            <p>{{currentUser.id_cliente.direccion}}</p> 
-                        </b-col>
-                    </b-row>
-                    <b-row>
-                        <b-col>
-                            <h4>Centro de Costo:</h4>
-                        </b-col>
-                        <b-col>
-                            <p>{{currentUser.id_centro_costo.nombre}}</p> 
-                        </b-col>
-                    </b-row>
-                    <b-row>
-                        <b-col>
-                            <h4>Direccion Centro de Costo:</h4>
-                        </b-col>
-                        <b-col>
-                            <p>{{currentUser.id_centro_costo.direccion}}</p> 
-                        </b-col>
-                    </b-row>
-                </b-col>
-                -->
+
             <b-row>
             <b-col>
                 <b-row>
@@ -121,16 +82,16 @@
         </b-row>
         <b-card 
 
-            class="mb-2 borderF">
+            class="mb-2 borderC">
              <div slot="header" class="w-100">
-                <label class="float-left">INFORMACION DE RECOLECCION</label>
+                <label class="float-left">INFORMACIÓN DE RECOLECCIÓN</label>
             </div>
              <b-row class="mb-2">
             <b-col>
 
                 <b-row>
                     <b-col>
-                        <h4>Direccion Recoleccion</h4>
+                        <h4>Dirección Recolección</h4>
                     </b-col>
                     <b-col>
                         <p>{{currentUser.remitente.direccion_recogida}}</p>
@@ -138,7 +99,7 @@
                 </b-row>
                  <b-row>
                     <b-col>
-                        <h4>Nombre Contacto Recoleccion</h4>
+                        <h4>Nombre Contacto Recolección</h4>
                     </b-col>
                     <b-col>
                         <p>{{currentUser.remitente.nombre_contacto}}</p>
@@ -146,7 +107,7 @@
                 </b-row>
                 <b-row>
                     <b-col>
-                        <h4>Telefono Contacto Recoleccion</h4>
+                        <h4>Telefono Contacto Recolección</h4>
                     </b-col>
                     <b-col>
                         <p>{{currentUser.remitente.telefono_contacto}}</p>
@@ -170,7 +131,7 @@
                 </template>
                 
                 <template slot="editar" slot-scope="data">
-                    <i class="btn btn-success fa fa-table" v-on:click.stop="actualizar(data.index,data.item.id)" v-b-modal.modalactualizar></i>
+                    <i class="btn btn-success fa fa-table" v-on:click.stop="actualizar(data.index,data.item.id)"></i>
                 </template>
             </b-table>
             <b-pagination size="md" :total-rows="this.currentUser.detalle.length" v-model="currentPage" :per-page="5">
@@ -178,12 +139,14 @@
             </b-row>
             <b-row>
                 <h4>Seleccione el Currier: </h4>
-                <b-form-select v-model="selected_curier" class="mb-3"  :options="curiers" text-field="nombre" value-field="_id" 
+                <b-form-select v-model="selected_curier" class="mb-3"  :options="curiers" text-field="nombre"
+                 value-field="_id" :state="statuscourier"
                 @change.native="selectcuriers" :disabled="selec_disable">
                 </b-form-select>
             </b-row>
         <b-row>
-            <b-btn size="lg" variant="success" @click="asignar(selected_curier)">Aceptar</b-btn>
+            <b-btn size="lg" variant="success" @click="asignar(selected_curier)"
+             :disabled=desabilitarguardar()>Aceptar</b-btn>
         </b-row>
         </b-card-body>
     </b-card>
@@ -222,7 +185,7 @@
                         <b-row>
                             <b-col>
                                 <label class=" col-form-label col-form-label-sm text-capitalize">
-                                Direccion Remitente:
+                                Dirección Remitente:
                                 </label>
                             </b-col>
                             <b-col>
@@ -251,7 +214,7 @@
                         <b-row>
                             <b-col>
                                  <label class=" col-form-label col-form-label-sm text-capitalize">
-                                    Direccion Destinatario:
+                                    Dirección Destinatario:
                                 </label>
                             </b-col>
                             <b-col>
@@ -274,6 +237,34 @@
                         </h2>
                     </b-col>
                 </b-row>
+                
+                <b-row >
+                    <b-col>
+                        <h2>
+                        <label class="col-form-label col-form-label-sm text-capitalize">Producto: </label>
+                        </h2>
+                    </b-col>
+                    <b-col>
+                         <label class="col-form-label col-form-label-sm text-capitalize text-muted">
+                        {{producto}}
+                         </label>
+                    </b-col>
+                    
+                </b-row>
+                <b-row >
+                    <b-col>
+                        <h2>
+                        <label class="col-form-label col-form-label-sm text-capitalize">Servicio: </label>
+                        </h2>
+                    </b-col>
+                    <b-col>
+                        <label class="col-form-label col-form-label-sm text-capitalize text-muted" >
+                        {{servicio}}
+                        </label>
+                    </b-col>
+                    
+                </b-row>
+                
                     <b-row v-for="(data,indice) in inputs.campos" class="my-1 card-text"> 
                     <template v-if="data.type=='number'" >
                         <b-col cols="5">
@@ -318,7 +309,7 @@
                         <i class="fa fa-times-circle" aria-hidden="true">  </i>
                         Cancelar</b-btn>
                     <b-btn class="mt-3 float-right " variant="success" v-on:click="ingresarTrayectos()"
-                    :disabled=desabilitar>
+                    :disabled=desabilitarguardar()>
                          <i class="fa fa-floppy-o" aria-hidden="true"></i>
                     Guardar</b-btn>
 
@@ -336,8 +327,10 @@ import moment from 'moment'
 export default {
     data(){
         return{
+            statuscourier:null,
             itemsvariables:[],
-            
+            servicio:'',
+            producto:'',
             id_cliente_local:null,
             selec_disable: false,
             indemodal:0,
@@ -374,6 +367,13 @@ export default {
         }
     },
     methods: {
+        desabilitarguardar(){
+            if(this.info.estado=="orden de servicio cancelada"){
+                return true
+            }else{
+                return false
+            }
+        },
         desabilitar(value){
             //console.log(value);
             if(this.selec_disable==true){
@@ -637,34 +637,40 @@ export default {
         {
 
             if(seleccionado==''||seleccionado=='null'||seleccionado==null){
-                    seleccionado='null'
-                    }
-                    var obj ={
-                        id_orden:this.currentUser._id,
-                        id_curier: seleccionado
-                    }
-
-                    
-                    this.axios
-                        .post(urlservicios+"AsignarOrdenCurrier/",obj)
-                        .then(response => {
-                        this.Documento = response.data;
-                        if(this.Documento.validacion==false){
-                        swal(
+                    swal(
                             "Atencion!",
-                            "" + this.Documento.message,
+                            "Seleccione un Courier",
                             "warning"
                         );
+                    seleccionado='null'
+                    this.statuscourier=false
+                    }
+                    else{
+                         var obj ={
+                        id_orden:this.currentUser._id,
+                        id_curier: seleccionado
                         }
-                        else{
-                            swal(
-                            "Excelente!",
-                            "" + this.Documento.message,
-                            "success"
-                        );
-                        }
-        
-                        });
+                        this.statuscourier=null
+
+                        
+                        this.axios
+                            .post(urlservicios+"AsignarOrdenCurrier/",obj)
+                            .then(response => {
+                            this.Documento = response.data;
+                            if(this.Documento.validacion==false){
+                          
+                            }
+                            else{
+                                swal(
+                                "Excelente!",
+                                "" + this.Documento.message,
+                                "success"
+                            );
+                            }
+            
+                            });
+                    }
+                   
         },
         asignar(seleccionado)
         {
@@ -784,7 +790,7 @@ export default {
                         console.log("no andan completos")
                         swal(
                                 "Falta algo por completar!",
-                                "Revisa por favor "+pendi,
+                                "Los servicios "+pendi+" Aún no tienen asignado un trayecto",
                                 "error"
                             );
                     }
@@ -800,6 +806,8 @@ export default {
             {
                 this.indices=indice
                 this.detallesactualizar= this.currentUser.detalle[indice].detalleslocal
+                this.servicio=this.currentUser.detalle[indice].servicioslocal.nombre
+                this.producto=this.currentUser.detalle[indice].productoslocal.nombre
                 this.itemsvariables=this.currentUser.detalle[indice].detalleslocal.infor.objetoUnidades
                 var produc= this.currentUser.detalle[indice].productoslocal._id
                 var serv = this.currentUser.detalle[indice].servicioslocal._id
@@ -832,6 +840,8 @@ export default {
                 this.indices=indice
                 this.detallesactualizar= this.currentUser.detalle[indice].detalleslocal
                 this.itemsvariables=this.currentUser.detalle[indice].detalleslocal.infor.objetoUnidades
+                this.servicio=this.currentUser.detalle[indice].servicioslocal.nombre
+                this.producto=this.currentUser.detalle[indice].productoslocal.nombre
                 console.log(this.currentUser.detalle[indice].detalleslocal.infor);
                 var produc= this.currentUser.detalle[indice].productoslocal._id
                 var serv = this.currentUser.detalle[indice].servicioslocal._id
@@ -859,7 +869,7 @@ export default {
                 })
             }
             //console.log(this.currentUser.detalle[indice].detalleslocal.infor.trayectoobj)
-
+            this.$refs.ModalAct.show()
         }
     },
     watch: {
@@ -936,6 +946,10 @@ export default {
 }
 .borderF {
     border: 1px solid #DCDCDC;
+    margin: 1%
+}
+.borderC {
+    border: 1px solid gray;
     margin: 1%
 }
 </style>

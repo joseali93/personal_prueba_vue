@@ -1,14 +1,14 @@
 <template>
 <!-- EN ESTE SE PERMITE LA GENERACION DE LOS DETALLES ASOCIADOS A UN CLIENTE Y CENTOR DE COSTO -->
     <b-container>
-       <header  class="content-heading text-capitalize text-center">
+       <header  class="content-heading text-center">
           <h2>Generación Orden de Servicio</h2>
           <small></small>
         </header>
       <b-card>
-        <header slot="header" class="content-heading text-capitalize">
+        <header slot="header" class="content-heading">
           <h2>Detalle de Orden de Servicio</h2>
-          <small>Permite de la creación y edición de los envios que tendra asociada la orden de servicio</small>
+          <small>Permite la Creación y Edición de los envíos que tendrá asociada la Orden de Servicio</small>
         </header>
           <b-row>
               <b-col md="3" offset-md="11">
@@ -81,7 +81,7 @@
                     
                 
                 <b-row>
-                    <h2 v-show="selectservice"> Informacion Adicional: </h2>
+                    <h2 v-show="selectservice"> Información Adicional: </h2>
                 </b-row>
                 <b-row  v-for="(data,indice) in inputs.campos" class="my-2"> 
                   <template v-if="data.type!='select'" >
@@ -91,7 +91,7 @@
                     </b-col>
                     <b-col >
                       
-                        <input class="form-control form-control-sm" :type="data.type" :id="data.id" :style="[data.style,validatecampo]" :max="data.max" :min="data.min" :placeholder="data.placeholder" @keyup="Presiono(indice)"   required>
+                        <input class="form-control form-control-sm"  :maxlength="data.maxlength" :type="data.type" :id="data.id" :style="[data.style,validatecampo]" :max="data.max" :min="data.min" :placeholder="data.placeholder" @keyup="Presiono(indice)"   required>
                     </b-col>
                    
                     </template>
@@ -99,7 +99,7 @@
                   </template>              
                 </b-row>
                 <b-row class="my-1">
-                    <label v-show="camposdinamicos"> Informacion Especifica: </label>
+                    <label v-show="camposdinamicos"> Información Especifica: </label>
                 </b-row>
                 <b-row v-for="(data,indice) in inputs.campos" v-show="camposdinamicos">
                 <template v-if="data.type!='select'" >
@@ -108,7 +108,7 @@
                         <label  class="col-sm-2 col-form-label col-form-label-sm text-capitalize" :style="[data.style]" >{{data.placeholder}}: </label>
                     </b-col>
                     <b-col >
-                        <input focus class="form-control form-control-sm" :type="data.type" :id="data.id" :style="[data.style,validatecampo]" :max="data.max" :min="data.min" :placeholder="data.placeholder" @keyup="Presiono(indice)"   required>
+                        <input focus class="form-control form-control-sm"  :maxlength="data.maxlength" :type="data.type" :id="data.id" :style="[data.style,validatecampo]" :max="data.max" :min="data.min" :placeholder="data.placeholder" @keyup="Presiono(indice)"   required>
                     </b-col>
                     </template>
  
@@ -132,10 +132,10 @@
                   <b-table striped hover :items="itemsdinamicos"  :fields="fieldsdinamicos"
                    :per-page="3" :current-page="currentPageRef" v-show="camposdinamicos"> 
                       <template slot="eliminar" slot-scope="data">
-                        <i class="btn btn-danger fa fa-trash" v-on:click="eliminarRef(data)" ></i>
+                        <i class="btn btn-danger fa fa-trash" v-on:click="eliminarRef(data)" v-show="ocultardicionar"></i>
                       </template>
                       <template slot="actualizar" slot-scope="data">
-                        <i class="btn btn-primary fa fa-pencil" v-on:click="ActualizarRef(data,data.index)" ></i>
+                        <i class="btn btn-primary fa fa-pencil" v-on:click="ActualizarRef(data,data.index)" v-show="ocultardicionar"></i>
                       </template>
                    
                       
@@ -195,7 +195,7 @@
                 </b-form-row>
                 <b-form-row v-show="selectservice&&mostrardestinatario" class="my-1">
                     <b-col>
-                        <label  class="col-sm-2 col-form-label col-form-label-sm">Direccion: </label>
+                        <label  class="col-sm-2 col-form-label col-form-label-sm">Dirección: </label>
                     </b-col>
                     <b-col>
                       <b-form-input type="text"  class="form-control form-control-sm"  :state="estado.direccion" placeholder="Direccion" v-model="detalles.destinatario.direccion"> </b-form-input>
@@ -264,7 +264,7 @@
                     </b-form-select>
                 </b-row>
                 <b-row>
-                    <h2 v-show="selectservice"> Informacion Adicional: </h2>
+                    <h2 v-show="selectservice"> Información Adicional: </h2>
                 </b-row>
                 <b-row  v-for="(data,indice) in inputsED.campos" class="my-2"> 
                   <template v-if="data.type!='select'" >
@@ -283,7 +283,7 @@
                   </template>              
                 </b-row>
                 <b-row class="my-1">
-                    <h2 v-show="camposdinamicos"> Informacion Especifica: </h2>
+                    <h2 v-show="camposdinamicos"> Información Especifica: </h2>
                 </b-row>
                 <b-row v-for="(data,indice) in inputsED.campos" v-show="camposdinamicos">
                 <template v-if="data.type!='select'" >
@@ -317,7 +317,7 @@
                 </b-row>    
 
                 <b-row>
-                  <b-table striped hover :items="itemsdinamicos"  :fields="fieldsdinamicos"
+                  <b-table striped  responsive hover :items="itemsdinamicos"  :fields="fieldsdinamicos"
                    :per-page="3" :current-page="currentPageRef" v-show="camposdinamicos"> 
                       <template slot="eliminar" slot-scope="data">
                         <i class="btn btn-danger fa fa-trash" v-on:click="eliminarRef(data)" ></i>
@@ -348,7 +348,7 @@
                 </b-form-row>
                 <b-form-row class="my-1">
                     <b-col>
-                        <label  class="col-sm-2 col-form-label col-form-label-sm">Direccion: </label>
+                        <label  class="col-sm-2 col-form-label col-form-label-sm">Dirección: </label>
                     </b-col>
                     <b-col>
                       <b-form-input type="text" class="form-control form-control-sm"  placeholder="Direccion" v-model="detalleseditar.destinatario.direccion"
@@ -491,18 +491,18 @@ export default {
   },
   methods: {
     UpdateDinamico(value){
-      console.log("entro a update");
-      console.log(this.indicedinamico);
-      console.log(this.currentPageRef);
+      //console.log("entro a update");
+      //console.log(this.indicedinamico);
+      //console.log(this.currentPageRef);
       var objellaves=Object.keys(this.itemsdinamicos[0])
-      console.log(objellaves);
+      //console.log(objellaves);
       var tituloopciones={}
 
       for(var x=0;x<this.inputs.campos.length;x++){
         if(this.inputs.campos[x].espieza==true){
           for(var y=0;y<objellaves.length;y++){
             if(this.inputs.campos[x].vmodel==objellaves[y]){
-                console.log(document.getElementById(this.inputs.campos[x].id).value);
+                //console.log(document.getElementById(this.inputs.campos[x].id).value);
                 eval('this.objeto.'+this.inputs.campos[x].vmodel+'='+document.getElementById(this.inputs.campos[x].id).value)
                 tituloopciones[objellaves[y]]=eval('this.objeto.'+objellaves[y])
                 document.getElementById(this.inputs.campos[x].id).value=''
@@ -512,9 +512,9 @@ export default {
       }
       //this.DetalleServicio.splice(this.indices, 1);
       //this.DetalleServicio.splice(this.indices, 0, detalles);
-      console.log(this.itemsdinamicos);
-      console.log(this.currentPageRef);
-      console.log(tituloopciones);
+      //console.log(this.itemsdinamicos);
+      //console.log(this.currentPageRef);
+      //console.log(tituloopciones);
       if(this.indicedinamico==0&&this.currentPageRef==1){
         this.itemsdinamicos.splice(this.indicedinamico, 1);
         this.itemsdinamicos.splice(this.indicedinamico, 0, tituloopciones);
@@ -535,8 +535,8 @@ export default {
       this.ocultareditar=false
     },
     UpdateDinamicoED(value){
-      console.log("entro a update edi");
-      //console.log(this.DetalleServicio[this.indices].detalleslocal.infor);
+      //console.log("entro a update edi");
+      ////console.log(this.DetalleServicio[this.indices].detalleslocal.infor);
       var objellaves=Object.keys(this.DetalleServicio[this.indices].detalleslocal.infor)
       var indiceobjdina
       if(this.currentPageRef==1)
@@ -557,21 +557,21 @@ export default {
           }
         }
       }
-      console.log(this.DetalleServicio[this.indices].detalleslocal.infor);
+      //console.log(this.DetalleServicio[this.indices].detalleslocal.infor);
        this.ocultardicionarED= true
       this.ocultareditarED=false
       /*
-      console.log(this.indicedinamico);
-      console.log(this.currentPageRef);
+      //console.log(this.indicedinamico);
+      //console.log(this.currentPageRef);
       var objellaves=Object.keys(this.itemsdinamicos[0])
-      console.log(objellaves);
+      //console.log(objellaves);
       var tituloopciones={}
 
       for(var x=0;x<this.inputs.campos.length;x++){
         if(this.inputs.campos[x].espieza==true){
           for(var y=0;y<objellaves.length;y++){
             if(this.inputs.campos[x].vmodel==objellaves[y]){
-                console.log(document.getElementById(this.inputs.campos[x].id).value);
+                //console.log(document.getElementById(this.inputs.campos[x].id).value);
                 eval('this.objeto.'+this.inputs.campos[x].vmodel+'='+document.getElementById(this.inputs.campos[x].id).value)
                 tituloopciones[objellaves[y]]=eval('this.objeto.'+objellaves[y])
                 document.getElementById(this.inputs.campos[x].id).value=''
@@ -581,9 +581,9 @@ export default {
       }
       //this.DetalleServicio.splice(this.indices, 1);
       //this.DetalleServicio.splice(this.indices, 0, detalles);
-      console.log(this.itemsdinamicos);
-      console.log(this.currentPageRef);
-      console.log(tituloopciones);
+      //console.log(this.itemsdinamicos);
+      //console.log(this.currentPageRef);
+      //console.log(tituloopciones);
       if(this.indicedinamico==0&&this.currentPageRef==1){
         this.itemsdinamicos.splice(this.indicedinamico, 1);
         this.itemsdinamicos.splice(this.indicedinamico, 0, tituloopciones);
@@ -606,10 +606,10 @@ export default {
       */
     },
     ActualizarRefED(value,value2){
-      console.log("entro a cambiar ref")
-      console.log(value)
+      //console.log("entro a cambiar ref")
+      //console.log(value)
       this.indicedinamico=value2
-      //console.log(this.currentPageRef)
+      ////console.log(this.currentPageRef)
       var objellaves=Object.keys(value.item)
        this.ocultardicionarED= false
       this.ocultareditarED=true
@@ -625,10 +625,10 @@ export default {
       }
     },
     ActualizarRef(value,value2){
-      console.log("entro a cambiar ref")
-      //console.log(value2)
+      //console.log("entro a cambiar ref")
+      ////console.log(value2)
       this.indicedinamico=value2
-      //console.log(this.currentPageRef)
+      ////console.log(this.currentPageRef)
       var objellaves=Object.keys(value.item)
        this.ocultardicionar= false
       this.ocultareditar=true
@@ -646,22 +646,22 @@ export default {
     },
     eliminarRef(value){
       
-      console.log("entro a eliminar");
-      console.log(value);
+      //console.log("entro a eliminar");
+      //console.log(value);
 
       this.itemsdinamicos.splice(value.index,1);
 
 
     },
     adicionarRefED(){
-      console.log("ntro a adicionareditar");
-      //console.log(this.inputs);
-      //console.log(this.DetalleServicio[this.indices].detalleslocal.infor.objetoUnidades);
+      //console.log("ntro a adicionareditar");
+      ////console.log(this.inputs);
+      ////console.log(this.DetalleServicio[this.indices].detalleslocal.infor.objetoUnidades);
       var objetollaves=Object.keys(this.inputsED.objeto)
       var tituloopciones={}
       var bandera=true
       var resumen =this.DetalleServicio[this.indices].detalleslocal.infor.objetoUnidades
-      console.log(this.DetalleServicio[this.indices].detalleslocal.infor);
+      //console.log(this.DetalleServicio[this.indices].detalleslocal.infor);
       for(var x=0; x<this.inputsED.campos.length;x++){
         if(this.inputsED.campos[x].espieza==true){
           for(var y=0;y<objetollaves.length;y++){
@@ -681,7 +681,7 @@ export default {
           }
         }
       }
-      console.log(bandera)
+      //console.log(bandera)
       if(bandera==false){
         swal(
               'Error!',
@@ -691,9 +691,9 @@ export default {
       }
       else{
         bandera=true
-        console.log(tituloopciones);
+        //console.log(tituloopciones);
       this.itemsdinamicos.push(tituloopciones)
-       console.log(this.itemsdinamicos);
+       //console.log(this.itemsdinamicos);
       }
       
 
@@ -703,20 +703,20 @@ export default {
 
     },
     adicionarRef(){
-      console.log("ntro a adicionar");
-      console.log(this.inputs);
+      //console.log("ntro a adicionar");
+      //console.log(this.inputs);
       var objetollaves=Object.keys(this.inputs.objeto)
       var tituloopciones={}
       var opciones=[]
       var bandera=true
-      console.log(this.objeto);
+      //console.log(this.objeto);
       for(var x=0; x<this.inputs.campos.length;x++){
         if(this.inputs.campos[x].espieza==true){
           for(var y=0;y<objetollaves.length;y++){
             if(this.inputs.campos[x].vmodel==objetollaves[y]){
               //aca creamos la llave y le asignamos el valor correspondiente
                tituloopciones[objetollaves[y]]=eval('this.objeto.'+objetollaves[y])
-               console.log(document.getElementById(this.inputs.campos[x].id).value);
+               //console.log(document.getElementById(this.inputs.campos[x].id).value);
                 if(document.getElementById(this.inputs.campos[x].id).value==""||
                 document.getElementById(this.inputs.campos[x].id).value==null)
                 {
@@ -725,12 +725,12 @@ export default {
                 }else{
                   document.getElementById(this.inputs.campos[x].id).value=""
                   eval('this.objeto.'+this.inputs.campos[x].vmodel+'=""')
-                  console.log("------------")
-                  console.log(this.objeto)
+                  //console.log("------------")
+                  //console.log(this.objeto)
                   /*
               
                   if(this.inputs.campos[x].vmodel=='unidades'){
-                  //console.log(this.itemsdinamicos.length);
+                  ////console.log(this.itemsdinamicos.length);
                   if(this.itemsdinamicos.length==0)
                   {
                     eval('this.objeto.'+objetollaves[y]+'='+1)
@@ -739,7 +739,7 @@ export default {
                     eval('this.objeto.'+objetollaves[y]+'='+this.itemsdinamicos.length+ eval('this.objeto.'+objetollaves[y]))
                   }
                   
-                  //console.log(this.objeto.unidades);
+                  ////console.log(this.objeto.unidades);
                 }
                 */
                 }
@@ -751,7 +751,7 @@ export default {
         
 
       }
-      console.log(bandera)
+      //console.log(bandera)
       if(bandera==false){
         swal(
               'Error !',
@@ -766,18 +766,18 @@ export default {
         fields.push('actualizar')
 
         this.fieldsdinamicos=fields
-        //console.log(this.fieldsdinamicos);
+        ////console.log(this.fieldsdinamicos);
         this.itemsdinamicos.push(tituloopciones)
-      console.log(this.itemsdinamicos);
+      //console.log(this.itemsdinamicos);
       }
       
     },
     buscar(){
-      console.log("entro a buscar");
-      console.log(this.identificacion);
+      //console.log("entro a buscar");
+      //console.log(this.identificacion);
        this.axios.get(urlservicios+"obtenerDestinatario"+'/'+this.identificacion)
         .then(response => {
-          console.log(response.data);
+          //console.log(response.data);
           var destinatario=response.data.destinatarios
           this.creaciondestinatarios=response.data.validar
           if(response.data.validar==true){
@@ -800,8 +800,8 @@ export default {
         })
     },
     numeroseditar(valor) {
-      //console.log("entro a numeros editar");
-      //console.log(document.getElementById("telefonoedit").value)
+      ////console.log("entro a numeros editar");
+      ////console.log(document.getElementById("telefonoedit").value)
       var a = document.getElementById("telefonoedit").value;
       //var x=check.which;
       //var x = a.charCode;
@@ -822,8 +822,8 @@ export default {
       }
     },
     numeros(valor) {
-      console.log("entro a numeros");
-      //console.log(document.getElementById("telefono").value)
+      //console.log("entro a numeros");
+      ////console.log(document.getElementById("telefono").value)
       var a = document.getElementById("telefono").value;
       //var x=check.which;
       //var x = a.charCode;
@@ -844,13 +844,13 @@ export default {
       }
     },
     PresionoED(index) {
-      console.log("entro al presionar editar");
+      //console.log("entro al presionar editar");
       this.validatecampo= ''
       var cero=''
       setTimeout(
         function() {
           if(this.inputsED.campos[index].type=='text'){
-            console.log("es");
+            //console.log("es");
             if (document.getElementById(this.inputsED.campos[index].id).value == "")
               {
                 //eval("this.objeto." + this.inputs.campos[index].vmodel + "= null");
@@ -873,7 +873,7 @@ export default {
             if (
               document.getElementById(this.inputsED.campos[index].id).value == ""
             ) {
-                          console.log(this.inputsED.campos[index].vmodel);
+                          //console.log(this.inputsED.campos[index].vmodel);
 
               eval(
                 "this.detalleseditar.infor." +
@@ -896,24 +896,25 @@ export default {
           
         }.bind(this)
       );
-      console.log(this.detalleseditar);
+      //console.log(this.detalleseditar);
     },
     valores(dato) {
-      //console.log(this.detalleseditar)
-      //console.log(dato)
-      //console.log(eval("this.detalleseditar.infor." + dato));
+      ////console.log(this.detalleseditar)
+      ////console.log(dato)
+      ////console.log(eval("this.detalleseditar.infor." + dato));
       return eval("this.detalleseditar.infor." + dato);
     },
     actualizar() {
-      console.log("actualizar");
+      //console.log("actualizar");
       this.validatecampoTel=''
       var pivoteedi=false
       this.estado.nombre=null
       this.estado.direccion=null
       this.estado.referencia=null
-      console.log(this.detalleseditar.infor);
+      //console.log("detalles editar");
+      //console.log(this.detalleseditar);
       if(this.detalleseditar.infor.objetoUnidades.length==0){
-        console.log("no hay dinamicos");
+        //console.log("no hay dinamicos");
       }
       else{
         var objetollaves=Object.keys(this.detalleseditar.infor)
@@ -922,30 +923,58 @@ export default {
         var totales={}
         var algo=0
 
-        console.log(this.itemsdinamicos);
+        //console.log(this.itemsdinamicos);
           for(var y=0;y<this.itemsdinamicos.length;y++){
-            console.log(this.itemsdinamicos[y]);
+            //console.log(this.itemsdinamicos[y]);
             for(var x=0;x<this.inputsED.campos.length;x++){
-              if(this.inputsED.campos[x].espieza==true&&this.inputsED.campos[x].type=="number")
+              for(var z=0;z<objdinamico.length;z++){
+                if(this.inputsED.campos[x].espieza==true&&this.inputsED.campos[x].type=="number")
               {
-                algo=algo+eval('this.itemsdinamicos[y].'+this.inputsED.campos[x].acumulaen)
-                console.log(algo);
-                totales[this.inputsED.campos[x].acumulaen]=algo
-                //console.log(eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen));
+                if(objdinamico[z]==this.inputsED.campos[x].vmodel){
+                   if(y==0)
+                   {
+                    
+                      algo=eval('this.itemsdinamicos[y].'+this.inputsED.campos[x].acumulaen)
+                      totales[this.inputsED.campos[x].acumulaen]=algo
+                      algo=0
+                   }
+                   else{
+                     var anterior=totales[this.inputsED.campos[x].acumulaen]
+                     
+                     anterior=anterior+eval('this.itemsdinamicos[y].'+this.inputsED.campos[x].acumulaen)
+                     
+                      totales[this.inputsED.campos[x].acumulaen]=anterior
+                     //console.log(totales[this.inputs.campos[x].acumulaen]);
+                   }
+                   
+                   
+                   
+                 }
+
+
+
+
+                //algo=algo+eval('this.itemsdinamicos[y].'+this.inputsED.campos[x].acumulaen)
+                //console.log(algo);
+                //totales[this.inputsED.campos[x].acumulaen]=algo
+                ////console.log(eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen));
                 //totales[this.inputs.campos[x].acumulaen]=eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen)+totales[this.inputs.campos[x].acumulaen]
               }
               if(this.inputsED.campos[x].espieza==true&&this.inputsED.campos[x].type=="text")
               {
                 //algo=algo+eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen)
-                //console.log(algo);
+                ////console.log(algo);
                 totales[this.inputsED.campos[x].acumulaen]=this.itemsdinamicos.length
-                console.log(totales)
-                //console.log(eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen));
+                //console.log(totales)
+                ////console.log(eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen));
                 //totales[this.inputs.campos[x].acumulaen]=eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen)+totales[this.inputs.campos[x].acumulaen]
               }
+              }
+              
+              
             }
           }
-          console.log(totales);
+          //console.log(totales);
         var objtotal=Object.keys(totales)
 
           for(var x=0;x<objtotal.length;x++){
@@ -953,12 +982,7 @@ export default {
           }
       }
 
-      
-     
-      
-      console.log(this.detalleseditar.infor);
-     
-      //console.log(pivoteedi);
+      ////console.log(pivoteedi);
       if (
         this.detalleseditar.destinatario.nombre == "" ||
         this.detalleseditar.destinatario.direccion == "" ||
@@ -984,6 +1008,7 @@ export default {
         }
 
       } else {
+        //console.log(this.selectservicio);
         var detalleslocal = this.detalleseditar;
         var productoslocal = this.selectproducto;
         var servicioslocal = this.selectservicio;
@@ -993,9 +1018,10 @@ export default {
           productoslocal: productoslocal,
           detalleslocal: detalleslocal
         };
-        //console.log((detalles));
+        ////console.log((detalles));
         this.DetalleServicio.splice(this.indices, 1);
         this.DetalleServicio.splice(this.indices, 0, detalles);
+        console.log(this.DetalleServicio);
         (this.objeto = ""),
         (this.inputs = ""),
         toastr.success("Se edito exitosamente");
@@ -1037,31 +1063,33 @@ export default {
       
     },
     editar(index) {
-      //console.log(index);
+      ////console.log(index);
       this.validatecampo=''
       this.validatecampoTel=''
       this.estado.nombre=null
       this.estado.direccion=null
       this.estado.referencia=null
       this.indices = index;
-      console.log("entro al editar");
+      //console.log("entro al editar");
       this.detalleseditar = this.DetalleServicio[index].detalleslocal;
       this.selectproduct = this.DetalleServicio[index].productoslocal._id;
+      this.selectproducto=this.DetalleServicio[index].productoslocal
       this.selectservice = this.DetalleServicio[index].servicioslocal._id;
-      //console.log(this.selectservice);
-      console.log(this.detalleseditar);
+      this.selectservicio=this.DetalleServicio[index].servicioslocal
+      ////console.log(this.selectservice);
+      //console.log(this.detalleseditar);
 
       this.itemsdinamicos=this.DetalleServicio[index].detalleslocal.infor.objetoUnidades
-      console.log(this.itemsdinamicos);
+      //console.log(this.itemsdinamicos);
       if(this.itemsdinamicos.length==0)
       {
-        console.log("no tiene dinamicos");
+        //console.log("no tiene dinamicos");
       }
       else{
         var fields=Object.keys(this.DetalleServicio[index].detalleslocal.infor.objetoUnidades[0])
         fields.push('eliminar')
         fields.push('actualizar')
-        console.log(fields);
+        //console.log(fields);
         this.fieldsdinamicos=fields
       }
       
@@ -1077,9 +1105,9 @@ export default {
           this.inputsED = response.data;
                           
           for(var x=0;x<this.inputsED.campos.length;x++){
-              //console.log(this.inputsED.campos[x]);
+              ////console.log(this.inputsED.campos[x]);
               if(this.inputsED.campos[x].espieza==true){
-                //console.log("algo dinamico");
+                ////console.log("algo dinamico");
                 this.camposdinamicos=true
               }
             }
@@ -1128,16 +1156,16 @@ export default {
         id_cliente:inforemi.selected_client
         
       }
-      //console.log(objeto);
+      ////console.log(objeto);
       this.axios.post(urlservicios+"CrearDestinatario", objeto)
         .then(response => {
-          console.log(response);
+          //console.log(response);
 
         })
       }
       else{
-        //console.log("actualiza destinatario");
-        //console.log(this.detalles.destinatario);
+        ////console.log("actualiza destinatario");
+        ////console.log(this.detalles.destinatario);
         var objeto={
         numero_identificacion:this.identificacion,
         direccion:this.detalles.destinatario.direccion,
@@ -1146,10 +1174,10 @@ export default {
         id_cliente:inforemi.selected_client
         
       }
-      //console.log(objeto);
+      ////console.log(objeto);
       this.axios.post(urlservicios+"ActualizarDestinatario"+'/'+this.detalles.destinatario._id, objeto)
         .then(response => {
-          //console.log(response);
+          ////console.log(response);
 
         })
       }
@@ -1162,33 +1190,57 @@ export default {
         var llaves=''
         var objllaves
         llaves=Object.keys(this.objeto)
-        console.log(this.objeto);
-        console.log(this.itemsdinamicos);
+        //console.log(this.objeto);
+        //console.log(this.itemsdinamicos);
         if(this.itemsdinamicos.length>0){
           objllaves=Object.keys(this.itemsdinamicos[0])
-        //console.log(objllaves);
+        console.log(objllaves);
         var totales={}
         var algo=0
+        var prsuma
 
         for(var y=0;y<this.itemsdinamicos.length;y++){
           for(var x=0;x<this.inputs.campos.length;x++){
-            if(this.inputs.campos[x].espieza==true&&this.inputs.campos[x].type=="number")
-            {
-          console.log(this.itemsdinamicos[y]);
-          console.log(this.inputs.campos[x])
-              algo=algo+eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen)
-              console.log(algo);
-              totales[this.inputs.campos[x].acumulaen]=algo
-              //console.log(eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen));
-              //totales[this.inputs.campos[x].acumulaen]=eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen)+totales[this.inputs.campos[x].acumulaen]
-            }
-            if(this.inputs.campos[x].espieza==true&&this.inputs.campos[x].type=="text")
-            {
-              //algo=algo+eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen)
-              //console.log(algo);
-              totales[this.inputs.campos[x].acumulaen]=this.itemsdinamicos.length
-              //console.log(eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen));
-              //totales[this.inputs.campos[x].acumulaen]=eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen)+totales[this.inputs.campos[x].acumulaen]
+            for(var z=0;z<objllaves.length;z++){
+              
+              
+                if(this.inputs.campos[x].espieza==true&&this.inputs.campos[x].type=="number")
+                {
+                 if(objllaves[z]==this.inputs.campos[x].vmodel){
+                   if(y==0)
+                   {
+                    
+                      algo=eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen)
+                      totales[this.inputs.campos[x].acumulaen]=algo
+                      algo=0
+                   }
+                   else{
+                     var anterior=totales[this.inputs.campos[x].acumulaen]
+                     
+                     anterior=anterior+eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen)
+                     
+                      totales[this.inputs.campos[x].acumulaen]=anterior
+                     //console.log(totales[this.inputs.campos[x].acumulaen]);
+                   }
+                   
+                   
+                   
+                 }
+
+                  ////console.log(eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen));
+                  //totales[this.inputs.campos[x].acumulaen]=eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen)+totales[this.inputs.campos[x].acumulaen]
+                }
+                if(this.inputs.campos[x].espieza==true&&this.inputs.campos[x].type=="text")
+                {
+                  //algo=algo+eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen)
+                  ////console.log(algo);
+                  totales[this.inputs.campos[x].acumulaen]=this.itemsdinamicos.length
+                  ////console.log(eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen));
+                  //totales[this.inputs.campos[x].acumulaen]=eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen)+totales[this.inputs.campos[x].acumulaen]
+                }
+
+              
+              
             }
           }
         }
@@ -1205,9 +1257,9 @@ export default {
             eval('this.objeto.'+this.inputs.campos[x].vmodel=='null')||
             eval('this.objeto.'+this.inputs.campos[x].vmodel==null))
             {
-              //console.log("");
-              //console.log("pivote tru");
-              //console.log(eval('this.objeto.'+llaves[x]));
+              ////console.log("");
+              ////console.log("pivote tru");
+              ////console.log(eval('this.objeto.'+llaves[x]));
               this.validatecampo= {
                   border: '1px solid  #ff8080'
               }
@@ -1218,67 +1270,15 @@ export default {
           
           }
         }
-        /*
-        objllaves=Object.keys(this.itemsdinamicos[0])
-        //console.log(objllaves);
-        var totales={}
-        var algo=0
 
-        for(var y=0;y<this.itemsdinamicos.length;y++){
-          console.log(this.itemsdinamicos[y]);
-          for(var x=0;x<this.inputs.campos.length;x++){
-            if(this.inputs.campos[x].espieza==true&&this.inputs.campos[x].type=="number")
-            {
-              algo=algo+eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen)
-              //console.log(algo);
-              totales[this.inputs.campos[x].acumulaen]=algo
-              //console.log(eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen));
-              //totales[this.inputs.campos[x].acumulaen]=eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen)+totales[this.inputs.campos[x].acumulaen]
-            }
-            if(this.inputs.campos[x].espieza==true&&this.inputs.campos[x].type=="text")
-            {
-              //algo=algo+eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen)
-              //console.log(algo);
-              totales[this.inputs.campos[x].acumulaen]=this.itemsdinamicos.length
-              //console.log(eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen));
-              //totales[this.inputs.campos[x].acumulaen]=eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen)+totales[this.inputs.campos[x].acumulaen]
-            }
-          }
-        }
-        console.log(totales);
-        var objtotales=Object.keys(totales)
-        for(var x=0;x<objtotales.length;x++){
-          eval('this.objeto.'+objtotales[x]+'='+totales[objtotales[x]])
-        }
-
-        for(var x=0;x<this.inputs.campos.length;x++)
-        {
-          if(this.inputs.campos[x].espieza==false){
-            if(eval('this.objeto.'+this.inputs.campos[x].vmodel)==''||
-            eval('this.objeto.'+this.inputs.campos[x].vmodel=='null')||
-            eval('this.objeto.'+this.inputs.campos[x].vmodel==null))
-            {
-              //console.log("");
-              //console.log("pivote tru");
-              //console.log(eval('this.objeto.'+llaves[x]));
-              this.validatecampo= {
-                  border: '1px solid  #ff8080'
-              }
-              pivote=true
-            }
-          }
-
-          
-        }
-        */
-        console.log(this.objeto);
+        //console.log(this.objeto);
 
       
         if(pivote==false){
           this.validatecampo=''
         }
       }
-      //console.log(pivote);
+      ////console.log(pivote);
       if (
         this.selectproduct == "" ||
         this.selectservice == "" ||
@@ -1307,7 +1307,7 @@ export default {
 
 
       } else {
-        //console.log(this.objeto);
+        ////console.log(this.objeto);
         this.objeto.objetoUnidades
         this.objeto.objetoUnidades=this.itemsdinamicos
         var servicioslocal = this.selectservicio;
@@ -1323,7 +1323,7 @@ export default {
           detalleslocal: detalleslocal
         };
         this.DetalleServicio.push(detalles);
-        //console.log((this.DetalleServicio));
+        console.log((this.DetalleServicio));
         //BLANQUEAR DATOS
         this.camposdinamicos=false
         this.fieldsdinamicos=[]
@@ -1331,7 +1331,9 @@ export default {
         this.identificacion=''
         this.habilitar=true,
         this.mostrardestinatario=false,
-
+        //pendiente para correcion error de cambio de servicio 
+        //this.selectproducto=''
+        //this.selectservicio=''
         (this.objeto = ""),
           (this.inputs = ""),
           toastr.success("Se agrego exitosamente");
@@ -1351,7 +1353,7 @@ export default {
       }
     },
     Presiono(index) {
-      console.log("entro al presionar");
+      //console.log("entro al presionar");
       var cero=''
       setTimeout(
         function() {
@@ -1412,11 +1414,11 @@ export default {
           
         }.bind(this)
       );
-      //console.log(this.objeto)
+      ////console.log(this.objeto)
     },
     service(value) {
           var vacio=  { _id: null, nombre: 'Por Favor Seleccione un Servicio' };
-      console.log("entro a seleccion");
+      //console.log("entro a seleccion");
       //this.load = true;
        var load=true
             setTimeout(() => {
@@ -1441,7 +1443,7 @@ export default {
                 })
                 }, )
             this.habilitar= false
-            //console.log(this.serviciosurl);
+            ////console.log(this.serviciosurl);
             this.serviciosurl.unshift(vacio)
 
         });
@@ -1449,7 +1451,7 @@ export default {
             
     },
     campos(value) {
-      console.log("inputs");
+      //console.log("inputs");
             //this.load = true;
             var load=true
             setTimeout(() => {
@@ -1473,11 +1475,11 @@ export default {
             
             console.log(this.inputs);
             this.objeto = this.inputs.objeto;
-            console.log(this.objeto)
+            //console.log(this.objeto)
             for(var x=0;x<this.inputs.campos.length;x++){
-              console.log(this.inputs.campos[x]);
+              //console.log(this.inputs.campos[x]);
               if(this.inputs.campos[x].espieza==true){
-                console.log("algo dinamico");
+                //console.log("algo dinamico");
                 this.camposdinamicos=true
               }
             }
@@ -1490,14 +1492,14 @@ export default {
                 }, )
 
             }).catch(function(error){
-              //console.log("error estruc -> "+JSON.stringify(error));
+              ////console.log("error estruc -> "+JSON.stringify(error));
             })
 
     },
     envioServicio() {
       if(this.DetalleServicio==''||this.DetalleServicio==null||this.DetalleServicio==undefined)
       {
-        console.log("no se envia");
+        //console.log("no se envia");
         swal(
             "Atencion!",
             "La Orden debe tener minimo un detalle ",
@@ -1533,14 +1535,14 @@ export default {
         detalle: this.DetalleServicio
 
       };
-      console.log(this.DetalleServicio);
+      //console.log(this.DetalleServicio);
       this.axios
         .post(urlservicios+"GuardarOrden", objeto)
         .then(response => {
           this.Documento = response.data.ducumento;
-          console.log(response);
-          console.log("-------");
-          //console.log(JSON.stringify(objeto));
+          //console.log(response);
+          //console.log("-------");
+          ////console.log(JSON.stringify(objeto));
           swal(
             "Excelente!",
             "La Orden de Servicio Generada es: " + this.Documento,

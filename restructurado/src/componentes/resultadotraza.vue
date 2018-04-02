@@ -7,7 +7,7 @@
                 </b-btn>
         </b-row>
     <b-card-group deck>
-        <b-card title="Informacion Remitente"
+        <b-card title="Información Remitente"
                >
             <b-card-body class="card-text">
                 <b-row>
@@ -28,7 +28,7 @@
                 </b-row>
             </b-card-body>
         </b-card>
-        <b-card title="Informacion Destinatario"
+        <b-card title="Información Destinatario"
                 >
                 <b-card-body class="card-text">
                     <b-row>
@@ -41,7 +41,7 @@
                 </b-row>
                 <b-row>
                     <b-col>
-                        <h3>Direccion:</h3>
+                        <h3>Dirección:</h3>
                     </b-col>
                     <b-col>
                         {{info.detalleslocal.destinatario.direccion}}
@@ -91,7 +91,7 @@
         <b-row v-for="(data,indice) in inputs" class="my-1">
           
                         <b-col cols="5">
-                            <label  class="col-sm-2 col-form-label col-form-label-sm">{{data.nombre}}: </label>
+                            <label  class="col-sm-2 col-form-label col-form-label-sm text-capitalize">{{data.nombre}}: </label>
                         </b-col>
                     
                         <template >
@@ -262,7 +262,7 @@ export default {
             campostra:[
                 { key: "fecha", label: "Fecha" },
                 { key: "nombre", label: "Nombre" },
-                { key: "imagen", label: "Imagenes" },
+                { key: "imagen", label: "Imágenes" },
                 
             ],
             imgmodal: {
