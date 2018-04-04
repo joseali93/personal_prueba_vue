@@ -71,6 +71,7 @@ DE LA ORDEN DE SERVICIO -->
                             <b-form-input id="telefono"
                             size="lg"
                                 type="text"
+                                
                                 v-model="selected_cliente.telefono"
                                 required
                                 placeholder="Teléfono"
@@ -211,35 +212,38 @@ export default {
 
         },
         actualizar: function(){
-            if(this.selected_client==''||this.selected_center==''){
+           
+            if(this.selected_client==''||this.selected_center==''
+            ||this.selected_client==null||this.selected_center==null||
+            this.selected_client=='null'||this.selected_center=='null'){
                 swal(
-                    'Oops...',
-                    'Falto algun campo por completar!',
+                    'Cuidado',
+                    'Se deben completar todos los campos !',
                     'error'
                 )
             }else{
-               
+               var selected_client= this.selected_client
+                var selected_center= this.selected_center
+                var seleccionados = {
+                    selected_client:selected_client,
+                    selected_center:selected_center
+                };
+                var selecciones={
+                    idcliente:selected_client,
+                    idcentro:selected_center,
+                    infocliente:this.selected_cliente,
+                    infocentro:this.selected_centro,
+                }
+                /*
+                    SE CREA UN LOCALSTORAGE EL CUAL PERMITE LA OBTENER LO QUE FUE SELECCIONADO PREVIAMENTE
+                */
+                bus.$emit('remitente',seleccionados)
+                localStorage.setItem("orden",JSON.stringify(seleccionados))
+                localStorage.setItem("infoorden",JSON.stringify(selecciones))
+                //console.log(selecciones);
+                this.$router.replace('/inicio/ordenservicio')
             }
-            var selected_client= this.selected_client
-            var selected_center= this.selected_center
-            var seleccionados = {
-                selected_client:selected_client,
-                selected_center:selected_center
-            };
-            var selecciones={
-                idcliente:selected_client,
-                idcentro:selected_center,
-                infocliente:this.selected_cliente,
-                infocentro:this.selected_centro,
-            }
-            /*
-                SE CREA UN LOCALSTORAGE EL CUAL PERMITE LA OBTENER LO QUE FUE SELECCIONADO PREVIAMENTE
-            */
-            bus.$emit('remitente',seleccionados)
-            localStorage.setItem("orden",JSON.stringify(seleccionados))
-            localStorage.setItem("infoorden",JSON.stringify(selecciones))
-            //console.log(selecciones);
-            this.$router.replace('/inicio/ordenservicio')
+            
         },
 
         },

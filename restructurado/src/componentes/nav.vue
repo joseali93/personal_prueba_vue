@@ -22,13 +22,15 @@
                 <li v-for="(ruta,indice) in rutas">
                     <b-link :to="ruta" v-if="indice=='ruta_uno'">
                       
-                        <i class="fa fa-plus-square-o "></i>
-                        <span > Generación Orden de Servicio </span>
+                        <span >
+                      
+                           <i class="fa fa-wpforms fa-5x "></i>
+                            Generación Orden de Servicio </span>
                     </b-link>
                 </li>
                 <li v-for="(ruta,indice) in rutas"> 
                     <b-link :to="ruta" v-if="indice=='ruta_dos'" >
-                        <i class="fa fa-briefcase" ></i><span > Consultar Ordenes de Servicio </span>
+                        <i class="fa fa-truck  fa fa-map-signs" ></i><span > Consultar Ordenes de Servicio </span>
                     </b-link>
                 </li>
                 <li  v-for="(ruta,indice) in rutas"> 
