@@ -248,6 +248,7 @@ export default {
      data () {
 
     return {
+        indice:null,
         statustelefono:null,
         statusnombre:null,
         statusdireccion:null,
@@ -265,7 +266,6 @@ export default {
             { key: 'empresa', label: 'Empresa', sortable: false },
             { key: 'correo', label: 'Correo Contacto', sortable: false },    
         ],
-        ModalEditOriginal:{},
         ModalEdit:{},
         ModalNew:{
             nombre:'',
@@ -279,6 +279,7 @@ export default {
     },
     methods:{
         ValidarTexto(id,accion){
+            //console.log("entro a validar");
             var key,tecla,tecla_especial,letras,especiales
             var e = document.getElementById(eval('id')).value;
             ////console.log(id);
@@ -340,7 +341,7 @@ export default {
             {
                 if(id=='nombreClienteED'){
                     if(this.ModalEdit.nombre.match(/^[0-9a-zA-Z\s\-]*$/)){
-                        if(this.ModalEdit.nombre.length>=100){
+                        if(this.ModalEdit.nombre.length>100){
                             this.statusnombre=false
                         }
                         else{
@@ -572,6 +573,8 @@ export default {
                             title: 'Actualizado Exitosamente',
                             timer: 1500,
                             type:'success'})
+                            this.ClientesTabla.splice(this.indice, 1);
+                            this.ClientesTabla.splice(this.indice, 0, objeto);
                             this.$refs.modalEditar.hide()
 
                         }else{
@@ -588,10 +591,12 @@ export default {
             
         },
         validacorreo(value){
+            //console.log(value);
            if(value.length==0){
                return(this.statusCorreo=false)
            }
-           if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value))
+           //if(value.match(/^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i))
+           if (value.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/))
             {   
                 return (this.statusCorreo=null)
             }
@@ -662,6 +667,7 @@ export default {
                     id_OperadorLogistico:test.id_OperadorLogistico._id
 
                 }
+                //console.log(objeto);
                 this.axios.post(urlservicios+"GuardarCliente", objeto)
                         .then(response => {
                             //console.log(response);
@@ -711,16 +717,15 @@ export default {
             this.ModalNew.nit=''
             this.ModalNew.correo=''
             
-            this.ModalEditOriginal=''
             this.$refs.modalEditar.hide()
             this.$refs.modalNuevo.hide()
         
         },
         editar(value){
             ////console.log("entro a editar");
-            ////console.log(value.item);
-            this.ModalEdit=value.item
-            this.ModalEditOriginal=this.ModalEdit
+            //console.log(value);
+            this.indice=value.index
+            this.ModalEdit=Object.assign({},value.item)
             this.$refs.modalEditar.show()
         }
     },

@@ -27,7 +27,7 @@
                                         ></b-form-input>
                     </b-form-group>
         <b-row>
-          <b-table striped hover :items="centrosLogisticos" 
+          <b-table  fixed :items="centrosLogisticos" 
           :fields="fields"
            :filter="CentroL">
             <template slot="editar" slot-scope="data">
@@ -151,6 +151,7 @@ import { urlservicios } from "../main";
 export default {
   data() {
     return {
+      indice:null,
       statusciudad: null,
       statusdireccion: null,
       statusnombre: null,
@@ -199,64 +200,69 @@ export default {
           "error"
         );
       }
-      if( this.statusnombre==false||
-      this.statusdireccion==false||
-      this.statuspais==false||
-      this.statusciudad==false){
+      if (
+        this.statusnombre == false ||
+        this.statusdireccion == false ||
+        this.statuspais == false ||
+        this.statusciudad == false
+      ) {
         swal(
-          'Error!',
-          'Para Actualizar debe cumplirse el formato establecido',
-          'error'
+          "Error!",
+          "Para Actualizar debe cumplirse el formato establecido",
+          "error"
+        );
+      } else {
+        var objeto = {
+          nombre: this.ModalEdit.nombre,
+          direccion: this.ModalEdit.direccion,
+          pais: this.ModalEdit.pais,
+          ciudad: this.ModalEdit.ciudad
+        };
+        this.$refs.ModalEditar.hide();
+
+        this.axios
+          .post(
+            urlservicios + "ActualizaCentrosLogisticos/" + this.ModalEdit._id,
+            objeto
           )
-      }
-      else{
-        var objeto ={
-                nombre:this.ModalEdit.nombre,
-                direccion:this.ModalEdit.direccion,
-                pais:this.ModalEdit.pais,
-                ciudad:this.ModalEdit.ciudad,
-                }
-        this.$refs.ModalEditar.hide()
-                
-        this.axios.post(urlservicios+"ActualizaCentrosLogisticos/"+this.ModalEdit._id,objeto)
-                    .then((response) => {
-                    
-                        console.log(response);
+          .then(response => {
+            console.log(response);
 
-                        if(response.data.validar==true)
-                        {
-                            swal({
-                            title: 'Actualizado Exitosamente',
-                            timer: 1500,
-                            type:'success'})
-
-                            this.$refs.ModalEditar.hide()
-
-                        }else{
-                            swal({
-                            title: 'No se pudo actualizar',
-                            timer: 1000,
-                            type:'error'})
-                        }
-                        
-                    })
-                    
+            if (response.data.validar == true) {
+              swal({
+                title: "Actualizado Exitosamente",
+                timer: 1500,
+                type: "success"
+              });
+              this.centrosLogisticos.splice(this.indice, 1);
+              this.centrosLogisticos.splice(this.indice, 0, objeto);
+              this.$refs.ModalEditar.hide();
+            } else {
+              swal({
+                title: "No se pudo actualizar",
+                timer: 1000,
+                type: "error"
+              });
+            }
+          });
       }
     },
     editar(value) {
       console.log(value);
-      this.ModalEdit = value.item;
+      this.indice=value.index
+      this.ModalEdit=Object.assign({},value.item)
+      //this.ModalEdit = value.item;
       this.$refs.ModalEditar.show();
     },
     ValidarTexto(id, accion) {
       var key, tecla, tecla_especial, letras, especiales;
       var e = document.getElementById(eval("id")).value;
-      console.log(id);
+      //console.log(id);
 
       if (accion == "nuevo") {
         if (id == "Ndireccion") {
           if (e.match(/^[0-9a-zA-Z\s\#\-]+$/)) {
-            if (e.length >= 100) {
+            if (e.length > 100) {
               this.statusdireccion = false;
             } else {
               this.statusdireccion = null;
@@ -267,7 +273,7 @@ export default {
         }
         if (e.match(/^[0-9a-zA-Z\s\-]*$/)) {
           if (id == "Nnombre") {
-            if (e.length > 99) {
+            if (e.length > 100) {
               this.statusnombre = false;
             } else {
               this.statusnombre = null;
@@ -302,10 +308,10 @@ export default {
         }
       }
       if (accion == "editar") {
-        console.log("editar");
+        //console.log("editar");
         if (id == "NnombreED") {
           if (this.ModalEdit.nombre.match(/^[0-9a-zA-Z\s\-]*$/)) {
-            if (this.ModalEdit.nombre.length >= 100) {
+            if (this.ModalEdit.nombre.length > 100) {
               this.statusnombre = false;
             } else {
               this.statusnombre = null;
@@ -318,7 +324,7 @@ export default {
         }
         if (id == "NdireccionED") {
           if (this.ModalEdit.direccion.match(/^[0-9a-zA-Z\s\#\-\.]+$/)) {
-            if (this.ModalEdit.direccion.length >= 100) {
+            if (this.ModalEdit.direccion.length > 100) {
               this.statusdireccion = false;
             } else {
               this.statusdireccion = null;
@@ -329,7 +335,7 @@ export default {
         }
         if (id == "NciudadED") {
           if (this.ModalEdit.ciudad.match(/^[0-9a-zA-Z\s\-]*$/)) {
-            if (this.ModalEdit.ciudad.length >= 100) {
+            if (this.ModalEdit.ciudad.length > 100) {
               this.statusciudad = false;
             } else {
               this.statusciudad = null;
@@ -342,7 +348,7 @@ export default {
         }
         if (id == "NpaisED") {
           if (this.ModalEdit.pais.match(/^[0-9a-zA-Z\s\-]*$/)) {
-            if (this.ModalEdit.pais.length >= 100) {
+            if (this.ModalEdit.pais.length > 100) {
               this.statuspais = false;
             } else {
               this.statuspais = null;
@@ -361,11 +367,11 @@ export default {
       this.ModalNew.direccion = "";
       this.ModalNew.nombre = "";
       this.ModalNew.pais = "";
-      this.statusciudad= null,
-      this.statusdireccion= null,
-      this.statusnombre= null,
-      this.statuspais= null,
-      this.$refs.ModalNuevo.hide();
+      (this.statusciudad = null),
+        (this.statusdireccion = null),
+        (this.statusnombre = null),
+        (this.statuspais = null),
+        this.$refs.ModalNuevo.hide();
       this.$refs.ModalEditar.hide();
     },
     refrescarCentrosLogisticos() {
@@ -383,15 +389,15 @@ export default {
         });
     },
     nuevocl() {
-      this.ModalNew.nombre=this.CentroL
+      this.ModalNew.nombre = this.CentroL;
       this.ModalNew.ciudad = "";
       this.ModalNew.direccion = "";
       this.ModalNew.pais = "";
-      this.statusciudad= null,
-      this.statusdireccion= null,
-      this.statusnombre= null,
-      this.statuspais= null,
-      this.$refs.ModalNuevo.show();
+      (this.statusciudad = null),
+        (this.statusdireccion = null),
+        (this.statusnombre = null),
+        (this.statuspais = null),
+        this.$refs.ModalNuevo.show();
     },
     CrearNuevoCL() {
       console.log("guardo");
@@ -424,17 +430,18 @@ export default {
           "error"
         );
       }
-      if( this.statusnombre==false||
-        this.statusdireccion==false||
-        this.statuspais==false||
-        this.statusciudad==false){
+      if (
+        this.statusnombre == false ||
+        this.statusdireccion == false ||
+        this.statuspais == false ||
+        this.statusciudad == false
+      ) {
         swal(
-          'Error!',
-          'Para la Creación debe cumplirse el formato establecido',
-          'error'
-          )
-      }
-      else {
+          "Error!",
+          "Para la Creación debe cumplirse el formato establecido",
+          "error"
+        );
+      } else {
         var objenvio = {
           nombre: objeto.nombre,
           direccion: objeto.direccion,
@@ -444,34 +451,26 @@ export default {
         };
         console.log(objenvio);
 
-        
-
-        this.axios.post(urlservicios+"CrearCentrosLogisticos", objenvio)
-                        .then(response => {
-                            console.log(response);
-                            if(response.data.validar==true)
-                            {
-                                this.centrosLogisticos.push(response.data.centro)
-                                swal(
-                                'Creado Correctamente!',
-                                'Centro Logistico Creado Correctamente',
-                                'success'
-                                )
-                                this.$refs.ModalNuevo.hide()
-
-                            }
-                            else
-                            {
-                                swal(
-                                'Upps!',
-                                'Ya existe un Centro Logistico con esas caracteristicas , revise la informacion diligenciada',
-                                'error'
-                                )                             
-                            }
-                        })
-          
-
-        
+        this.axios
+          .post(urlservicios + "CrearCentrosLogisticos", objenvio)
+          .then(response => {
+            console.log(response);
+            if (response.data.validar == true) {
+              this.centrosLogisticos.push(response.data.centro);
+              swal(
+                "Creado Correctamente!",
+                "Centro Logistico Creado Correctamente",
+                "success"
+              );
+              this.$refs.ModalNuevo.hide();
+            } else {
+              swal(
+                "Upps!",
+                "Ya existe un Centro Logistico con esas caracteristicas , revise la informacion diligenciada",
+                "error"
+              );
+            }
+          });
       }
     }
   },

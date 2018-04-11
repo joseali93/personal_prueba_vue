@@ -19,33 +19,55 @@
             <div class="main-menu">
               <!-- ASIDE BAR -->
             <ul id="side-main-menu" class="side-menu list-unstyled">                
-                <li v-for="(ruta,indice) in rutas">
-                    <b-link :to="ruta" v-if="indice=='ruta_uno'">
-                      
-                        <span >
-                      
-                           <i class="fa fa-wpforms fa-5x "></i>
+               <li v-for="(ruta,indice) in rutas">
+                    <b-link :to="ruta" v-if="indice=='ruta_uno'"  class="pintar">
+                         <!--<i class="fa fa-wpforms"></i> /lib/icons/generacion_orden.svg -->
+                         <b-img src="/src/assets/icons/generar_orden.svg"
+                          fluid alt="G_O" 
+                          width="25%"
+                         />
+                        <span>
                             Generación Orden de Servicio </span>
                     </b-link>
                 </li>
                 <li v-for="(ruta,indice) in rutas"> 
                     <b-link :to="ruta" v-if="indice=='ruta_dos'" >
-                        <i class="fa fa-truck  fa fa-map-signs" ></i><span > Consultar Ordenes de Servicio </span>
+                        <!--<i class="fa fa-truck " ></i>-->
+                        <b-img src="/src/assets/icons/consulta_orden.svg"
+                          fluid alt="C_O" 
+                          width="25%"
+                         />
+                        <span > Consultar Ordenes de Servicio </span>
                     </b-link>
                 </li>
                 <li  v-for="(ruta,indice) in rutas"> 
-                    <b-link :to="ruta" v-if="indice=='ruta_tres'">
-                        <i class="fa fa-info" ></i><span >Consulta Trazabilidad</span>
+                    <b-link :to="ruta" v-if="indice=='ruta_tres'">  
+                        <!--<i class="fa fa-map-signs" >-->
+                           <b-img src="/src/assets/icons/trazabilidad.svg"
+                          fluid alt="C_T" 
+                          width="25%"
+                         />
+                          <span >Consulta Trazabilidad</span>
                     </b-link>
                 </li>
                 <li  v-for="(ruta,indice) in rutas"> 
                     <b-link :to="ruta" v-if="indice=='ruta_cuatro'">
-                        <i class="fa fa-rebel"></i><span >Entradas y Salidas</span>
+                       
+                        <b-img src="/src/assets/icons/entradas_salidas.svg"
+                          fluid alt="C_T" 
+                          width="25%"
+                         />
+                        <span >Entradas y Salidas</span>
                     </b-link>
                 </li>
                 <li  v-for="(ruta,indice) in rutas"> 
                     <b-link :to="ruta" v-if="indice=='ruta_cinco'">
-                        <i class="fa fa-empire"></i><span > Manifiestos </span>
+                        
+                           <b-img src="/src/assets/icons/documento.svg"
+                          fluid alt="C_T" 
+                          width="25%"
+                         />
+                          <span > Manifiestos </span>
                     </b-link>
                 </li>
             </ul>
@@ -93,7 +115,8 @@
                   </b-link>
                 </li>
                 <li class="nav-item">
-                  <b-dropdown id="ddown-header" text="Configuración" variant="link" class="nav-link logout">
+                  <b-dropdown id="ddown-header" text="Configuración" variant="link" class="nav-link logout"
+                  v-show="config">
                     <b-dropdown-header>Configuración Aplicativo</b-dropdown-header>
                     <b-dropdown-item-button @click="confiCliente">Clientes</b-dropdown-item-button>
                     <b-dropdown-item-button @click="confiCentroC">Centros de Costo</b-dropdown-item-button>
@@ -107,7 +130,7 @@
       </header>
       <!-- SECCION DEL HEADER Y CONTENIDO DIV-->
       <section class="dashboard-header section-padding">
-        <div class="container-fluid">
+        <div class="container">
            <div class="content-wrapper">
             <!-- AQUI SE RENDERIZAN LAS VISTAS Y SE PASA PARMETROS  -->
             <router-view
@@ -135,69 +158,71 @@
 </template>
 
 <script>
-import $ from 'jquery'
+import $ from "jquery";
 
 import Preload from "../componentes/preload.vue";
-import {bus} from '../main'
+import { bus } from "../main";
 
 export default {
   data() {
     return {
       nombreusu: "",
-      load:'',
-      imagen:'',
-      rutas:'',
+      load: "",
+      imagen: "",
+      rutas: "",
       estado: true
     };
   },
 
-    updated: function () {
-       bus.$on('load', function (userObject) {
-     
-        this.load = userObject.load
-
-      }.bind(this))
-    },
-  methods:{
-    confiCliente(){
+  updated: function() {
+    bus.$on(
+      "load",
+      function(userObject) {
+        this.load = userObject.load;
+      }.bind(this)
+    );
+  },
+  methods: {
+    confiCliente() {
       console.log("entro a config cliente");
-      this.$router.replace('/inicio/configcliente')
+      this.$router.replace("/inicio/configcliente");
     },
-    confiCentroC(){
+    confiCentroC() {
       console.log("entro a cc");
-            this.$router.replace('/inicio/configcentroc')
-
+      this.$router.replace("/inicio/configcentroc");
     },
-    confiCentroL(){
+    confiCentroL() {
       console.log("entro a cl");
-            this.$router.replace('/inicio/configcentrol')
+      this.$router.replace("/inicio/configcentrol");
+    },
+    menu() {
+      if (this.estado == true) {
+        $("#toggle-btn").click(function(e) {
+          e.preventDefault();
+          $("#div-prueba").addClass("page home-page active");
+          $("#nav-prueba").addClass(
+            "side-navbar mCustomScrollbar _mCS_1 shrink"
+          );
+        });
+        this.estado = false;
+      } else {
+        this.estado = true;
+        $("#toggle-btn").click(function(e) {
+          e.preventDefault();
+          $("#div-prueba")
+            .removeClass("page home-page active")
+            .addClass("page home-page");
+          $("#nav-prueba")
+            .removeClass("side-navbar mCustomScrollbar _mCS_1 shrink")
+            .addClass("side-navbar mCustomScrollbar _mCS_1");
+        });
+      }
+    },
 
-    },
-    menu(){
-      if(this.estado==true){
-        $("#toggle-btn").click(function(e) {
-        e.preventDefault();
-        $("#div-prueba").addClass("page home-page active");
-        $("#nav-prueba").addClass("side-navbar mCustomScrollbar _mCS_1 shrink");
-        });
-        this.estado=false
-      }
-      else{
-        this.estado=true
-        $("#toggle-btn").click(function(e) {
-        e.preventDefault();
-        $("#div-prueba").removeClass("page home-page active").addClass("page home-page")
-        $("#nav-prueba").removeClass("side-navbar mCustomScrollbar _mCS_1 shrink").addClass("side-navbar mCustomScrollbar _mCS_1")
-        
-        });
-      }
-    },
-    
-    Salir(val){
+    Salir(val) {
       console.log("entro a salir");
       localStorage.clear();
-      this.$router.replace('/')
-
+      this.$router.replace("/");
     }
   },
   components: {
@@ -207,34 +232,38 @@ export default {
     var test2 = localStorage.getItem("storedData");
     var test = JSON.parse(test2);
     this.nombreusu = test.nombre;
-    this.imagen = test.url_logo
+    this.imagen = test.url_logo;
 
-    if(test.id_rol.nombre=="courier"){
+    if (test.id_rol.nombre == "courier") {
       console.log("hay courier");
+      this.config = false;
+
       swal({
-                title: 'Es un Courier!',
-                text: "No tiene funcionalidades en el aplicativo Web",
-                type: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                cancelButtonText:'Cancelar',
-                confirmButtonText: 'Salir'
-                }).then((result) => {
-                    if (result.value) {
-                        localStorage.clear();
-                        this.$router.replace('/')
-                    }
-                    else{
-                      console.log("se mantiene");
-                    }
-                   
-                    })
-    }else
-    {
-      this.rutas = test.id_rol.rutas
+        title: "Es un Courier!",
+        text: "No tiene funcionalidades en el aplicativo Web",
+        type: "warning",
+        showCancelButton: true,
+        confirmButtonColor: "#3085d6",
+        cancelButtonColor: "#d33",
+        cancelButtonText: "Cancelar",
+        confirmButtonText: "Salir"
+      }).then(result => {
+        if (result.value) {
+          localStorage.clear();
+          this.$router.replace("/");
+        } else {
+          console.log("se mantiene");
+        }
+      });
     }
-    
+    if (test.id_rol.nombre == "cliente") {
+      this.config = false;
+      this.rutas = test.id_rol.rutas;
+    } else {
+      this.rutas = test.id_rol.rutas;
+      this.config = true;
+    }
+
     //console.log(test)
     //console.log(this.imagen);
     //console.log(this.rutas);
@@ -247,27 +276,24 @@ export default {
 
 <style>
 
-nav.side-navbar span{
+nav.side-navbar span {
   display: initial;
-  
 }
 
-
-nav.side-navbar .sidenav-header
-{
-background:white;  
+nav.side-navbar .sidenav-header {
+  background: white;
 }
-nav.side-navbar .sidenav-header img{
-  width: 100%;
-  height: auto;  
+nav.side-navbar .sidenav-header img {
+  width: 39%;
+  height: auto;
 }
-imagen{
+imagen {
   width: 50px;
   height: 18.462px;
-};
-ul>li>a:hover{
+}
+ul > li > a:hover {
   text-decoration: none;
-};
+}
 .textb {
   color: white;
   font-size: 18px;
@@ -282,9 +308,11 @@ ul>li>a:hover{
 .navbar-custom {
   background-color: #024464;
 }
+/*
 .jumbotron {
   background-color: white;
 }
+*/
 .sidemenu {
   height: 900px;
 }
@@ -295,8 +323,7 @@ ul>li>a:hover{
   padding-left: 0px;
 }
 .logo {
-  width: 15%;
-  height: 15%;
+  width: 10%;
+  height: 5%;
 }
-
 </style>

@@ -1,7 +1,9 @@
 <template>
 <!-- SE PERMITE LA SELECCION DE LOS CLIENTE Y CENTRO DE COSTO QUE CORRESPONDA PARA LA REALIZACION 
 DE LA ORDEN DE SERVICIO -->
-    <b-container class="prueba" >
+
+    <b-container>
+         <b-breadcrumb :items="items"/>
         <header  class="content-heading  text-center">
           <h2>Generación Orden de Servicio</h2>
           <small></small>
@@ -58,7 +60,8 @@ DE LA ORDEN DE SERVICIO -->
                                 v-model="selected_cliente.nombre"
                                 required
                                 placeholder="Nombre"
-                                maxlength="100">
+                                maxlength="100"
+                                >
                             </b-form-input>
                     </b-form-group>
                     </b-col>
@@ -111,9 +114,27 @@ export default {
       components :{
           Preload
       },
+     watch: {
+         clientprueba(newValue, oldValue) {
+             console.log(newValue);
+             console.log("------------");
+             console.log(oldValue);
+         }
+     }, 
     data () {
 
     return {
+        items: [{
+        text: 'Admin',
+        href: '#'
+      }, {
+        text: 'Manage',
+        href: '#'
+      }, {
+        text: 'Library',
+        active: true
+      }],
+        clientprueba:{},
         disable_selected_client: false,
         selected_client: null,
         selected_center: null,
@@ -131,24 +152,34 @@ export default {
             /*
                 FUNCION DEL CUAL OBTENEMOS EL CENTRO QUE FUE SELECCIONADO SEGUN EL CLIENTE
             */
-             for(var i=0;i<this.centros.length;i++){
+            if(seleccion.target.value==''||seleccion.target.value==null){
+                this.selected_centro={}
+                this.selected_center=null
+            }
+            else{
+               for(var i=0;i<this.centros.length;i++){
                 if(this.centros[i]._id==seleccion.target.value){
                     this.selected_centro=this.centros[i]
                 }
+                }
             }
+             
         },
         ClientesSelect(seleccion){
             /*
                 FUNCION DEL CUAL OBTENEMOS EL CLIENTE QUE FUE SELECCIONADO 
             */
+
            console.log("entro a seleccion clientes");
            if(this.disable_selected_client==true){
                var id_cliente
+               this.selected_center=null
                id_cliente=seleccion
                var vacio=  { _id: null, nombre: 'Por Favor Seleccione un Centro de Costo' };
                 for(var i=0;i<this.clientes.length;i++){
                     if(this.clientes[i]._id==id_cliente){
-                        this.selected_cliente=this.clientes[i]
+                        this.selected_cliente=Object.assign({},this.clientes[i])
+                        //this.selected_cliente=this.clientes[i]
                     }
                 }
                 var load=true
@@ -163,7 +194,7 @@ export default {
                         .then((response) => {
                             this.centros=response.data
                             this.centros.unshift(vacio)
-
+                            this.selected_centro={}
                             this.habilitar= false
                             //this.load=false
                             var load=false
@@ -177,12 +208,23 @@ export default {
            }
            else
            {
-                var vacio=  { _id: null, nombre: 'Por Favor Seleccione un Centro de Costo' };
+               if(seleccion.target.value==''||seleccion.target.value==null){
+                   this.selected_cliente={}
+                   this.selected_centro={}
+                   this.selected_center=null
+                    this.habilitar= true
+               }
+               else{
+                   var vacio=  { _id: null, nombre: 'Por Favor Seleccione un Centro de Costo' };
                 for(var i=0;i<this.clientes.length;i++){
                     if(this.clientes[i]._id==seleccion.target.value){
-                        this.selected_cliente=this.clientes[i]
+                        this.selected_cliente=Object.assign({},this.clientes[i])
+                        
+
+                        //this.clientprueba=Object.assign({},this.selected_cliente)
                     }
                 }
+                this.selected_center=null
                 var load=true
                 setTimeout(() => {
                     bus.$emit('load', {
@@ -195,7 +237,7 @@ export default {
                         .then((response) => {
                             this.centros=response.data
                             this.centros.unshift(vacio)
-
+                            this.selected_centro={}
                             this.habilitar= false
                             //this.load=false
                             var load=false
@@ -206,6 +248,9 @@ export default {
                                 }, )
                         })
                     }
+
+               }
+                
            }
             
 
@@ -280,14 +325,17 @@ export default {
             var test2 = localStorage.getItem("storedData");
             var test =JSON.parse(test2);
             console.log("errr");
-            this.axios.get(urlservicios+"clientesOperador/"+test.id_OperadorLogistico._id+'/'+this.selected_client)
+             var vacio=  { _id: null, nombre: 'Por Favor Seleccione un Cliente' };
+            this.axios.get(urlservicios+"clientesOperador/"+test.id_OperadorLogistico._id+'/null')
             .then((response) => {
                 this.clientes=response.data
+
                 for(var i=0;i<this.clientes.length;i++){
                 if(this.clientes[i]._id==this.selected_client){
                     this.selected_cliente=this.clientes[i]
                 }
             }
+            this.clientes.unshift(vacio)
             })
             
         }

@@ -152,7 +152,7 @@ export default {
      data () {
 
     return {
-
+        indice:null,
         Cliente: null,
         clientes:{},
         Centro:'',
@@ -200,7 +200,7 @@ export default {
                 if(e.match(/^[0-9a-zA-Z\s\-]*$/)){
                     if(id=='nombreCentroC')
                     {
-                        if(e.length>99){
+                        if(e.length>100){
                             this.statusnombre=false
                         }
                         else{
@@ -364,7 +364,7 @@ export default {
         this.ModalNew.nombre=''
         this.ModalNew.descripcion=''
         this.ModalNew.direccion=''
-        this.ModalEdit={}
+        //this.ModalEdit={}
         this.$refs.modalEditar.hide()
         this.$refs.modalNuevo.hide()
       },
@@ -414,6 +414,8 @@ export default {
                                 title: 'Actualizado Exitosamente',
                                 timer: 1500,
                                 type:'success'})
+                                this.CentrosTabla.splice(this.indice, 1);
+                                this.CentrosTabla.splice(this.indice, 0, this.ModalEdit);
                                 this.$refs.modalEditar.hide()
 
                             }else{
@@ -431,7 +433,8 @@ export default {
       editar(value){
         console.log("entro a editar");
         console.log(value.item);
-        this.ModalEdit=value.item
+        this.indice=value.index
+        this.ModalEdit=Object.assign({},value.item)
         this.$refs.modalEditar.show()
       },
       SelectedClient(){
