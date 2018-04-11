@@ -1,20 +1,18 @@
 <template>
 <!-- EN ESTE SE PERMITE LA GENERACION DE LOS DETALLES ASOCIADOS A UN CLIENTE Y CENTOR DE COSTO -->
-    <b-container>
-       <header  class="content-heading text-center">
-          <h2>Generación Orden de Servicio</h2>
-          <small></small>
-        </header>
-      <b-card>
-        <header slot="header" class="content-heading">
-          <h2>Detalle de Orden de Servicio</h2>
-          <small>Permite la Creación y Edición de los envíos que tendrá asociada la Orden de Servicio</small>
-        </header>
-          <b-row>
-              <b-col md="3" offset-md="11">
+    <b-container fluid class="contenedor">
+         <b-breadcrumb :items="items" />
+
+      <b-card class="cards">
+         <b-row>
+              <b-col md="2" offset-md="10">
+                  <b-btn class="rounded-circle" variant="secondary " to="/inicio/orden" ><i class="fa fa-arrow-left"></i></b-btn>
+                  <b-btn class="rounded-circle" variant="success"  @click="envioServicio"><i class="fa fa-check"></i></b-btn>
                   <b-btn class="rounded-circle" variant="danger"  v-b-modal.modalcrear><i class="fa fa-plus"></i></b-btn>
-              </b-col>
+
+              </b-col>        
           </b-row>
+
           <b-row>
               <b-table :fields="fields" :per-page="5" :current-page="currentPage" :items="DetalleServicio">
 
@@ -34,6 +32,7 @@
               <b-pagination size="md" :total-rows="DetalleServicio.length" v-model="currentPage" :per-page="5">
               </b-pagination>
           </b-row>
+          <!--
           <b-row>
             <b-col class="float-left" cols="5">
               <b-btn to="/inicio/orden" variant="primary">
@@ -48,6 +47,7 @@
 
             </b-col>
           </b-row>
+          -->
       </b-card>
       <!-- Modal Adicionar -->
       <b-modal id="modalcrear" ref="Modal" title="Adicionar Registro" 
@@ -55,191 +55,208 @@
         no-close-on-esc
         size="lg">
          <div slot="modal-header" class="w-100">
-                <b-btn class=" float-right" variant="outline-danger"  @click="hideModal">
-                  <i class="fa fa-times" aria-hidden="true">  </i>
-                  </b-btn>
-            </div>
-            <b-container fluid>
-
-                  <b-form-group id="exampleInputGroup1"
-                      horizontal
-                        label="Producto: ">
-                            <b-form-select v-model="selectproduct"   id="produ" 
-                            :options="productosurl" text-field="nombre" value-field="_id"  @change.native="service">
-                            </b-form-select>
-                    </b-form-group>
-
-                  <b-form-group id="exampleInputGroup1"
-                      horizontal
-                        label="Servicio: ">
-                            <b-form-select v-model="selectservice"  :options="serviciosurl"
-                            @change.native="campos"
-                            text-field="nombre" value-field="_id"  :disabled="habilitar" >
-                          </b-form-select>
-                    </b-form-group>
-                  
-                    
-                
-                <b-row>
-                    <h2 v-show="selectservice"> Información Adicional: </h2>
-                </b-row>
-                <b-row  v-for="(data,indice) in inputs.campos" class="my-2"> 
-                  <template v-if="data.type!='select'" >
-                    <template v-if="data.espieza==false">
-                    <b-col  >   
-                        <label  class="col-sm-2 col-form-label col-form-label-sm text-capitalize" :style="[data.style]" >{{data.placeholder}}: </label>
-                    </b-col>
-                    <b-col >
-                      
-                        <input class="form-control form-control-sm"  :maxlength="data.maxlength" :type="data.type" :id="data.id" :style="[data.style,validatecampo]" :max="data.max" :min="data.min" :placeholder="data.placeholder" @keyup="Presiono(indice)"   required>
-                    </b-col>
-                   
-                    </template>
- 
-                  </template>              
-                </b-row>
-                <b-row class="my-1">
-                    <label v-show="camposdinamicos"> Información Especifica: </label>
-                </b-row>
-                <b-row v-for="(data,indice) in inputs.campos" v-show="camposdinamicos">
-                <template v-if="data.type!='select'" >
-                    <template v-if="data.espieza==true">
-                    <b-col  >   
-                        <label  class="col-sm-2 col-form-label col-form-label-sm text-capitalize" :style="[data.style]" >{{data.placeholder}}: </label>
-                    </b-col>
-                    <b-col >
-                        <input focus class="form-control form-control-sm"  :maxlength="data.maxlength" :type="data.type" :id="data.id" :style="[data.style,validatecampo]" :max="data.max" :min="data.min" :placeholder="data.placeholder" @keyup="Presiono(indice)"   required>
-                    </b-col>
-                    </template>
- 
-                  </template>  
-                </b-row>   
-                <b-row v-show="ocultardicionar">
-                  <b-col class="d-flex flex-row-reverse">
-                    <b-btn variant="outline-success" active-class class="float-right" @click="adicionarRef" v-show="camposdinamicos">
-                      <i class="fa fa-plus"></i>
-                    </b-btn>
-                  </b-col>
-                </b-row> 
-                <b-row v-show="ocultareditar">
-                  <b-col class="d-flex flex-row-reverse">
-                    <b-btn variant="outline-success" active-class class="float-right" @click="UpdateDinamico" v-show="camposdinamicos">
-                      <i class="fa fa-pencil"></i>
-                    </b-btn>
-                  </b-col>
-                </b-row>    
-                <b-row>
-                  <b-table striped hover :items="itemsdinamicos"  :fields="fieldsdinamicos"
-                   :per-page="3" :current-page="currentPageRef" v-show="camposdinamicos"> 
-                      <template slot="eliminar" slot-scope="data">
-                        <i class="btn btn-danger fa fa-trash" v-on:click="eliminarRef(data)" v-show="ocultardicionar"></i>
-                      </template>
-                      <template slot="actualizar" slot-scope="data">
-                        <i class="btn btn-primary fa fa-pencil" v-on:click="ActualizarRef(data,data.index)" v-show="ocultardicionar"></i>
-                      </template>
-                   
-                      
-                    </b-table>
-                 <b-pagination size="md" :total-rows="itemsdinamicos.length" v-model="currentPageRef" 
-                 :per-page="3" v-show="camposdinamicos">
-                 </b-pagination>    
-                </b-row>        
-
-                    <b-form-group id="exampleInputGroup1"
-                    horizontal
-                    v-show="selectservice"
-                        label="Documento Referencia: ">
-                            <b-form-input type="text" class="form-control form-control-sm" 
-                             placeholder="Referencia" v-model="detalles.referencia"
-                         :state="estado.referencia"></b-form-input>
-                          
-                    </b-form-group>
-                    <!--
-                        <b-form-row v-show="selectservice" class="my-1">
-                        <h2  >Documento Referencia: </h2>
-                    <b-col>
-                      <b-form-input type="text" class="form-control form-control-sm"  placeholder="Referencia" v-model="detalles.referencia"
-                         :state="estado.referencia"></b-form-input>
-                                         </b-form-row>
-
-                         -->
-                   
-                <b-row v-show="selectservice">
-                    <h2>Destinatario: </h2>
-                </b-row>
-                 <b-form-row v-show="selectservice" class="my-1">
-                    <b-col>
-                        <label  class="col-sm-2 col-form-label col-form-label-sm"> Identificación: </label>
-                    </b-col>
-                    <b-col>
-                        <b-form-input type="number" class="form-control form-control-sm"  placeholder="Indentidicación"
-                         v-model="identificacion"
-                         @keyup.enter.tab.native="buscar()"
-                         @keydown.tab.native="buscar()"
-                         :state="true"  v-b-popover.hover="'Se debe diligenciar sin puntos, en caso de NIT sin numero de validación, ni guion'" title="Num. Identificacion"></b-form-input>
-                        <!--<input type="text" class="form-control form-control-sm"  placeholder="Nombre" v-model="detalles.destinatario.nombre">
-                        -->
-                    </b-col>
-                </b-form-row>
-                
-                
-                <b-form-row v-show="selectservice&&mostrardestinatario" class="my-1">
-                    <b-col>
-                        <label  class="col-sm-2 col-form-label col-form-label-sm">Nombre: </label>
-                    </b-col>
-                    <b-col>
-                        <b-form-input type="text" class="form-control form-control-sm"  placeholder="Nombre" v-model="detalles.destinatario.nombre"
-                         :state="estado.nombre"></b-form-input>
-
-                    </b-col>
-                </b-form-row>
-                <b-form-row v-show="selectservice&&mostrardestinatario" class="my-1">
-                    <b-col>
-                        <label  class="col-sm-2 col-form-label col-form-label-sm">Dirección: </label>
-                    </b-col>
-                    <b-col>
-                      <b-form-input type="text"  class="form-control form-control-sm"  :state="estado.direccion" placeholder="Direccion" v-model="detalles.destinatario.direccion"> </b-form-input>
-
-                    </b-col>
-                </b-form-row>
-                <b-form-row v-show="selectservice&&mostrardestinatario" class="my-1">
-                    <b-col>
-                        <label  class="col-sm-2 col-form-label col-form-label-sm">Telefono: </label>
-                    </b-col>
-                    <b-col>
-
-                        <input type="text" :style="validatecampoTel"  class="form-control form-control-sm" id="telefono" @keyup="numeros(this)" placeholder="Telefono" v-model="detalles.destinatario.telefono">
-                        
-                    </b-col>
-                </b-form-row>
-                <b-form-row v-show="selectservice&&mostrardestinatario">
-                  <b-col>
-                    <b-form-textarea id="textarea1"
-                        v-model="detalles.observaciones"
-                        placeholder="Ingrese las observaciones necesarias"
-                        :rows="3"
-                        :max-rows="6">
-                    </b-form-textarea>
-                  </b-col>
-                </b-form-row>
-                <b-form-row v-show="selectservice&&mostrardestinatario">
-                  <b-col>
-                    <b-form-textarea id="textarea1"
-                        v-model="detalles.contenido"
-                        placeholder="Ingrese el contenido de los paquetes"
-                        :rows="3"
-                        :max-rows="6">
-                    </b-form-textarea>
-                  </b-col>
-                </b-form-row>
-            </b-container>
-            <div slot="modal-footer" class="w-100">
                 <b-btn class="mt-3" variant="danger"  @click="hideModal">
                   <i class="fa fa-times-circle" aria-hidden="true">  </i>
                   Cancelar</b-btn>
                 <b-btn class="mt-3 float-right" variant="success" v-on:click="ingresarOrden">
                   <i class="fa fa-floppy-o">  </i> Guardar
                 </b-btn>
+        </div>
+            <b-container fluid>
+              <b-row class=" my-1">
+                <b-col>
+                  
+                <b-form-select v-model="selectproduct"   id="produ" 
+                :options="productosurl" text-field="nombre" value-field="_id"  @change.native="service">
+                </b-form-select>
+                    
+                </b-col>
+                <b-col>
+                  
+                  <b-form-select v-model="selectservice"  :options="serviciosurl"
+                  @change.native="campos"
+                  text-field="nombre" value-field="_id"  :disabled="habilitar" >
+                </b-form-select>
+                </b-col>
+              </b-row>
+              
+             
+                <b-card no-body v-show="selectservice" class=" w-100 cards"
+                style="
+                padding-left: 0px;
+                padding-right: 0px;
+                padding-top: 0px;
+                padding-bottom: 0px;
+                ">
+                            
+               
+                <b-tabs card  v-show="selectservice" v-model="tabIndex">
+                        <b-tab  title="Información" >
+
+                          <b-card-body>
+                                  <b-row>
+                                  <b-col>
+                                    <label class="col col-form-label col-form-label-sm text-capitalize" >Documento Referencia:</label>
+                                  </b-col>
+                                  <b-col>
+                                    <b-form-input type="text" class="form-control form-control-sm" 
+                                                              placeholder="Referencia" v-model="detalles.referencia"
+                                                          :state="estado.referencia"></b-form-input>
+                                  </b-col>
+                                  </b-row>
+                                
+
+
+                                  <b-row  v-for="(data,indice) in inputs.campos" class="my-2"> 
+                                    <template v-if="data.type!='select'" >
+                                      <template v-if="data.espieza==false">
+                                      <b-col  >   
+                                          <label  class="col-sm col-form-label col-form-label-sm text-capitalize" :style="[data.style]" >{{data.placeholder}}: </label>
+                                      </b-col>
+                                      <b-col >
+                                        
+                                          <input class="form-control form-control-sm"  :maxlength="data.maxlength" :type="data.type" :id="data.id" :style="[data.style,validatecampo]" :max="data.max" :min="data.min" :placeholder="data.placeholder" @keyup="Presiono(indice)"   required>
+                                      </b-col>
+                                    
+                                      </template>
+                  
+                                    </template>              
+                                  </b-row>
+                                  <b-form-row v-show="selectservice" class=" my-1">
+                                <b-col>
+                                  <b-form-textarea id="textarea1"
+                                      v-model="detalles.observaciones"
+                                      placeholder="Ingrese las observaciones necesarias"
+                                      :rows="3"
+                                      :max-rows="6">
+                                  </b-form-textarea>
+                                </b-col>
+                              </b-form-row>
+                              <b-form-row v-show="selectservice" class=" my-1">
+                                <b-col>
+                                  <b-form-textarea id="textarea1"
+                                      v-model="detalles.contenido"
+                                      placeholder="Ingrese el contenido de los paquetes"
+                                      :rows="3"
+                                      :max-rows="6">
+                                  </b-form-textarea>
+                                </b-col>
+                              </b-form-row>
+                          </b-card-body>
+                        </b-tab>
+                        <b-tab title="Detalle" :disabled="tabdinamico">
+                          <b-card-body>
+                              <b-row v-for="(data,indice) in inputs.campos" v-show="camposdinamicos">
+                              <template v-if="data.type!='select'" >
+                                  <template v-if="data.espieza==true">
+                                  <b-col  >   
+                                      <label  class="col-sm col-form-label col-form-label-sm text-capitalize" :style="[data.style]" >{{data.placeholder}}: </label>
+                                  </b-col>
+                                  <b-col >
+                                      <input focus class="form-control form-control-sm"  :maxlength="data.maxlength" :type="data.type" :id="data.id" :style="[data.style,validatecampo]" 
+                                      :max="data.max" :min="data.min" :placeholder="data.placeholder" @keyup="Presiono(indice)"   required>
+                                  </b-col>
+                                  </template>
+              
+                                </template>  
+                              </b-row>   
+                              <b-row v-show="ocultardicionar">
+                                  <b-col class="d-flex flex-row-reverse">
+                                    <b-btn variant="outline-success" active-class class="float-right" @click="adicionarRef" v-show="camposdinamicos">
+                                      <i class="fa fa-plus"></i>
+                                    </b-btn>
+                                  </b-col>
+                                </b-row> 
+                                <b-row v-show="ocultareditar">
+                                  <b-col class="d-flex flex-row-reverse">
+                                    <b-btn variant="outline-success" active-class class="float-right" @click="UpdateDinamico" v-show="camposdinamicos">
+                                      <i class="fa fa-pencil"></i>
+                                    </b-btn>
+                                  </b-col>
+                                </b-row>    
+                                <b-row>
+                                  <b-table striped hover :items="itemsdinamicos"  :fields="fieldsdinamicos"
+                                  :per-page="3" :current-page="currentPageRef" v-show="camposdinamicos"> 
+                                      <template slot="eliminar" slot-scope="data">
+                                        <i class="btn btn-danger fa fa-trash" v-on:click="eliminarRef(data)" v-show="ocultardicionar"></i>
+                                      </template>
+                                      <template slot="actualizar" slot-scope="data">
+                                        <i class="btn btn-primary fa fa-pencil" v-on:click="ActualizarRef(data,data.index)" v-show="ocultardicionar"></i>
+                                      </template>
+                                  
+                                      
+                                    </b-table>
+                                <b-pagination size="md" :total-rows="itemsdinamicos.length" v-model="currentPageRef" 
+                                :per-page="3" v-show="camposdinamicos">
+                                </b-pagination>    
+                                </b-row>  
+                          </b-card-body>
+                        </b-tab>
+                        <b-tab title="Destinatario">
+                          <b-card-body>
+                              <b-form-row v-show="selectservice" class="my-1">
+                              <b-col>
+                                  <label  class="col-sm col-form-label col-form-label-sm"> Identificación: </label>
+                              </b-col>
+                              <b-col>
+                                  <b-form-input type="number" class="form-control form-control-sm"  placeholder="Indentidicación"
+                                  v-model="identificacion"
+                                  @keyup.enter.tab.native="buscar()"
+                                  @keydown.tab.native="buscar()"
+                                  :state="true"  v-b-popover.hover="'Se debe diligenciar sin puntos, en caso de NIT sin numero de validación, ni guion'" title="Num. Identificacion"></b-form-input>
+                                  <!--<input type="text" class="form-control form-control-sm"  placeholder="Nombre" v-model="detalles.destinatario.nombre">
+                                  -->
+                              </b-col>
+                          </b-form-row>
+                          
+                          
+                          <b-form-row v-show="selectservice&&mostrardestinatario" class="my-1">
+                              <b-col>
+                                  <label  class="col-sm col-form-label col-form-label-sm">Nombre: </label>
+                              </b-col>
+                              <b-col>
+                                  <b-form-input type="text" class="form-control form-control-sm"  placeholder="Nombre" v-model="detalles.destinatario.nombre"
+                                  :state="estado.nombre"></b-form-input>
+
+                              </b-col>
+                          </b-form-row>
+                          <b-form-row v-show="selectservice&&mostrardestinatario" class="my-1">
+                              <b-col>
+                                  <label  class="col-sm col-form-label col-form-label-sm">Dirección: </label>
+                              </b-col>
+                              <b-col>
+                                <b-form-input type="text"  class="form-control form-control-sm"  :state="estado.direccion" placeholder="Direccion" v-model="detalles.destinatario.direccion"> </b-form-input>
+
+                              </b-col>
+                          </b-form-row>
+                          <b-form-row v-show="selectservice&&mostrardestinatario" class="my-1">
+                              <b-col>
+                                  <label  class="col-sm col-form-label col-form-label-sm">Telefono: </label>
+                              </b-col>
+                              <b-col>
+
+                                  <input type="text" :style="validatecampoTel"  class="form-control form-control-sm" id="telefono" @keyup="numeros(this)" placeholder="Telefono" v-model="detalles.destinatario.telefono">
+                                  
+                              </b-col>
+                          </b-form-row>
+                          </b-card-body>
+                        </b-tab>
+                </b-tabs>  
+                
+                 <b-card-footer>
+                     <div class="text-center" v-show="selectservice">
+                        <b-button-group class="mt-2">
+                          <b-btn @click="tabIndex--"><i class="fa fa-chevron-left" aria-hidden="true"></i></b-btn>
+                          <b-btn @click="tabIndex++"><i class="fa fa-chevron-right" aria-hidden="true"></i></b-btn>
+                        </b-button-group>
+                        
+                      </div>
+                 </b-card-footer>
+                  </b-card>
+       
+            </b-container>
+            <div slot="modal-footer" class="w-100">
+               
 
             </div>
       </b-modal>
@@ -248,153 +265,168 @@
        no-close-on-backdrop
         no-close-on-esc size="lg">
         <div slot="modal-header" class="w-100">
-                <b-btn class=" float-right" variant="outline-danger"  @click="hideModal">
-                  <i class="fa fa-times" aria-hidden="true">  </i>
-                  </b-btn>
-            </div>
-            <b-container fluid>
-                <b-row>
-                    <label >Seleccione el Producto:</label>
-                    <b-form-select v-model="selectproduct" class="mb-3" 
-                    :options="productosurl" text-field="nombre" value-field="_id" 
-                     @change.native="service"
-                     disabled>
-                     </b-form-select>
-                </b-row>
-                <b-row>
-                    <label >Seleccione el Servicio:</label>
-                    <b-form-select v-model="selectservice" class="mb-3" 
-                     :options="serviciosurl" @change.native="campos" text-field="nombre"
-                     disabled value-field="_id">
-                    </b-form-select>
-                </b-row>
-                <b-row>
-                    <h2 v-show="selectservice"> Información Adicional: </h2>
-                </b-row>
-                <b-row  v-for="(data,indice) in inputsED.campos" class="my-2"> 
-                  <template v-if="data.type!='select'" >
-                    <template v-if="data.espieza==false">
-                    <b-col  >   
-                        <label  class="col-sm-2 col-form-label col-form-label-sm text-capitalize" :style="[data.style]" >{{data.placeholder}}: </label>
-                    </b-col>
-                    <b-col >
-                        <input class="form-control form-control-sm" 
-                        :type="data.type" :id="data.id" :style="[data.style,validatecampo]"
-                         :max="data.max" :placeholder="data.placeholder" 
-                         @keyup="PresionoED(indice)"  :value="valores(data.id)"      required>
-                    </b-col>
-                    </template>
- 
-                  </template>              
-                </b-row>
-                <b-row class="my-1">
-                    <h2 v-show="camposdinamicos"> Información Especifica: </h2>
-                </b-row>
-                <b-row v-for="(data,indice) in inputsED.campos" v-show="camposdinamicos">
-                <template v-if="data.type!='select'" >
-                    <template v-if="data.espieza==true">
-                    <b-col  >   
-                        <label  class="col-sm-2 col-form-label col-form-label-sm text-capitalize" :style="[data.style]" >{{data.placeholder}}: </label>
-                    </b-col>
-                    <b-col >
-                        <input class="form-control form-control-sm" :type="data.type"
-                         :id="data.id" :style="[data.style,validatecampo]" :max="data.max" 
-                         :placeholder="data.placeholder" @keyup="PresionoED(indice)"   required>
-                    </b-col>
-                    </template>
- 
-                  </template>  
-                </b-row>   
-               
-                <b-row v-show="ocultardicionarED">
-                  <b-col class="d-flex flex-row-reverse">
-                    <b-btn variant="outline-success" active-class class="float-right" @click="adicionarRefED" v-show="camposdinamicos">
-                      <i class="fa fa-plus"></i>
-                    </b-btn>
-                  </b-col>
-                </b-row> 
-                <b-row v-show="ocultareditarED">
-                  <b-col class="d-flex flex-row-reverse">
-                    <b-btn variant="outline-success" active-class class="float-right" @click="UpdateDinamicoED" v-show="camposdinamicos">
-                      <i class="fa fa-pencil"></i>
-                    </b-btn>
-                  </b-col>
-                </b-row>    
-
-                <b-row>
-                  <b-table striped   hover :items="itemsdinamicos"  :fields="fieldsdinamicos"
-                   :per-page="3" :current-page="currentPageRef" v-show="camposdinamicos"> 
-                      <template slot="eliminar" slot-scope="data">
-                        <i class="btn btn-danger fa fa-trash" v-on:click="eliminarRef(data)" ></i>
-                      </template>
-                      <template slot="actualizar" slot-scope="data">
-                        <i class="btn btn-primary fa fa-pencil" v-on:click="ActualizarRefED(data,data.index)" ></i>
-                      </template>
-                    </b-table>
-                 <b-pagination size="md" :total-rows="itemsdinamicos.length" v-model="currentPageRef" 
-                 :per-page="3" v-show="camposdinamicos">
-                 </b-pagination>    
-                </b-row> 
-
-                <b-row>
-                    <h2>Destinatario: </h2>
-                </b-row>
-                <b-form-row class="my-1">
-                    <b-col>
-                        <label  class="col-sm-2 col-form-label col-form-label-sm">Nombre: </label>
-                    </b-col>
-                    <b-col>
-                      <b-form-input type="text" class="form-control form-control-sm"  placeholder="Nombre" v-model="detalleseditar.destinatario.nombre"
-                         :state="estado.nombre"></b-form-input>
-                         <!--
-                        <input type="text" class="form-control form-control-sm" id="editarnombre"  placeholder="Nombre" v-model="detalleseditar.destinatario.nombre">
-                        -->
-                    </b-col>
-                </b-form-row>
-                <b-form-row class="my-1">
-                    <b-col>
-                        <label  class="col-sm-2 col-form-label col-form-label-sm">Dirección: </label>
-                    </b-col>
-                    <b-col>
-                      <b-form-input type="text" class="form-control form-control-sm"  placeholder="Direccion" v-model="detalleseditar.destinatario.direccion"
-                         :state="estado.direccion"></b-form-input>
-                         <!--
-                        <input type="text" class="form-control form-control-sm" id="editardire" placeholder="Direccion" v-model="detalleseditar.destinatario.direccion">
-                          -->
-                    </b-col>
-                </b-form-row>
-                <b-form-row class="my-1">
-                    <b-col>
-                        <label  class="col-sm-2 col-form-label col-form-label-sm">Telefono: </label>
-                    </b-col>
-                    <b-col>
-                        <input type="text" :style="validatecampoTel" class="form-control form-control-sm" id="telefonoedit"  @keyup="numeroseditar(this)"  placeholder="Telefono" v-model="detalleseditar.destinatario.telefono">
-                    </b-col>
-                </b-form-row>
-                <b-row>
-                    <b-form-textarea id="textarea1"
-                        v-model="detalleseditar.observaciones"
-                        placeholder="Enter something"
-                        :rows="3"
-                        :max-rows="6">
-                    </b-form-textarea>
-                </b-row>
-                <b-row>
-                    <b-form-textarea id="textarea1"
-                        v-model="detalleseditar.contenido"
-                        placeholder="Enter something"
-                        :rows="3"
-                        :max-rows="6">
-                    </b-form-textarea>
-                </b-row>
-            </b-container>
-            <div slot="modal-footer" class="w-100">
                 <b-btn class="mt-3" variant="danger"  @click="hideModal">
                   <i class="fa fa-times-circle" aria-hidden="true">  </i>
                   Cancelar</b-btn>
                 <b-btn class="mt-3 float-right " variant="success" v-on:click="actualizar()">
                   <i class="fa fa-floppy-o"></i> Guardar 
                 </b-btn>
+            </div>
+            <b-container fluid>
+                <b-row class=" my-1">
+                  <b-col>
+                    <small>Producto</small>
+                    <b-form-select v-model="selectproduct" class="mb-3" 
+                    :options="productosurl" text-field="nombre" value-field="_id" 
+                     @change.native="service"
+                     disabled>
+                     </b-form-select>
+                  </b-col>
+                  <b-col>
+                    <small>Servicio</small>
+                    <b-form-select v-model="selectservice" class="mb-3" 
+                     :options="serviciosurl" @change.native="campos" text-field="nombre"
+                     disabled value-field="_id">
+                    </b-form-select>
+                  </b-col>
+
+                </b-row>
+
+  <b-card no-body v-show="selectservice" class=" w-100 cards"
+                style="
+                padding-left: 0px;
+                padding-right: 0px;
+                padding-top: 0px;
+                padding-bottom: 0px;
+                ">
+                  <b-tabs card  v-show="selectservice" v-model="tabIndexED">
+                     <b-tab  title="Información" >
+                        <b-card-body>
+                          <b-row  v-for="(data,indice) in inputsED.campos" class="my-2"> 
+                            <template v-if="data.type!='select'" >
+                              <template v-if="data.espieza==false">
+                              <b-col  >   
+                                  <label  class="col-sm col-form-label col-form-label-sm text-capitalize" :style="[data.style]" >{{data.placeholder}}: </label>
+                              </b-col>
+                              <b-col >
+                                  <input class="form-control form-control-sm" 
+                                  :type="data.type" :id="data.id" :style="[data.style,validatecampo]"
+                                  :max="data.max" :placeholder="data.placeholder" 
+                                  @keyup="PresionoED(indice)"  :value="valores(data.id)"      required>
+                              </b-col>
+                              </template>
+          
+                            </template>              
+                          </b-row>
+                          <b-row class=" my-1">
+                            <b-form-textarea id="textarea1"
+                                v-model="detalleseditar.observaciones"
+                                placeholder="Observaciones"
+                                :rows="3"
+                                :max-rows="6">
+                            </b-form-textarea>
+                        </b-row>
+                        <b-row class=" my-1">
+                            <b-form-textarea id="textarea1"
+                                v-model="detalleseditar.contenido"
+                                placeholder="Ingrese el contenido"
+                                :rows="3"
+                                :max-rows="6">
+                            </b-form-textarea>
+                        </b-row>
+                        </b-card-body>
+                     </b-tab>
+                      <b-tab title="Detalle" :disabled="tabdinamico">
+                         <b-row v-for="(data,indice) in inputsED.campos" v-show="camposdinamicos">
+                        <template v-if="data.type!='select'" >
+                            <template v-if="data.espieza==true">
+                            <b-col  >   
+                                <label  class="col-sm col-form-label col-form-label-sm text-capitalize" :style="[data.style]" >{{data.placeholder}}: </label>
+                            </b-col>
+                            <b-col >
+                                <input class="form-control form-control-sm" :type="data.type"
+                                :id="data.id" :style="[data.style,validatecampo]" :max="data.max" 
+                                :placeholder="data.placeholder" @keyup="PresionoED(indice)"   required>
+                            </b-col>
+                            </template>
+        
+                          </template>  
+                        </b-row>   
+                      
+                        <b-row v-show="ocultardicionarED">
+                          <b-col class="d-flex flex-row-reverse">
+                            <b-btn variant="outline-success" active-class class="float-right" @click="adicionarRefED" v-show="camposdinamicos">
+                              <i class="fa fa-plus"></i>
+                            </b-btn>
+                          </b-col>
+                        </b-row> 
+                        <b-row v-show="ocultareditarED">
+                          <b-col class="d-flex flex-row-reverse">
+                            <b-btn variant="outline-success" active-class class="float-right" @click="UpdateDinamicoED" v-show="camposdinamicos">
+                              <i class="fa fa-pencil"></i>
+                            </b-btn>
+                          </b-col>
+                        </b-row>    
+
+                        <b-row>
+                          <b-table striped   hover :items="itemsdinamicos"  :fields="fieldsdinamicos"
+                          :per-page="3" :current-page="currentPageRef" v-show="camposdinamicos"> 
+                              <template slot="eliminar" slot-scope="data">
+                                <i class="btn btn-danger fa fa-trash" v-on:click="eliminarRef(data)" v-show="ocultardicionarED"></i>
+                              </template>
+                              <template slot="actualizar" slot-scope="data">
+                                <i class="btn btn-primary fa fa-pencil" v-on:click="ActualizarRefED(data,data.index)" v-show="ocultardicionarED"></i>
+                              </template>
+                            </b-table>
+                        <b-pagination size="md" :total-rows="itemsdinamicos.length" v-model="currentPageRef" 
+                        :per-page="3" v-show="camposdinamicos">
+                        </b-pagination>    
+                        </b-row> 
+                      </b-tab>
+                      <b-tab title="Destinatario">
+                       <b-card-body>
+                         <b-form-row class="my-1">
+                            <b-col>
+                                <label  class="col-sm col-form-label col-form-label-sm">Nombre: </label>
+                            </b-col>
+                            <b-col>
+                              <b-form-input type="text" class="form-control form-control-sm"  placeholder="Nombre" v-model="detalleseditar.destinatario.nombre"
+                                :state="estado.nombre"></b-form-input>
+                                <!--
+                                <input type="text" class="form-control form-control-sm" id="editarnombre"  placeholder="Nombre" v-model="detalleseditar.destinatario.nombre">
+                                -->
+                            </b-col>
+                        </b-form-row>
+                        <b-form-row class="my-1">
+                            <b-col>
+                                <label  class="col-sm col-form-label col-form-label-sm">Dirección: </label>
+                            </b-col>
+                            <b-col>
+                              <b-form-input type="text" class="form-control form-control-sm"  placeholder="Direccion" v-model="detalleseditar.destinatario.direccion"
+                                :state="estado.direccion"></b-form-input>
+                                <!--
+                                <input type="text" class="form-control form-control-sm" id="editardire" placeholder="Direccion" v-model="detalleseditar.destinatario.direccion">
+                                  -->
+                            </b-col>
+                        </b-form-row>
+                        <b-form-row class="my-1">
+                            <b-col>
+                                <label  class="col-sm col-form-label col-form-label-sm">Telefono: </label>
+                            </b-col>
+                            <b-col>
+                                <input type="text" :style="validatecampoTel" class="form-control form-control-sm" id="telefonoedit"  @keyup="numeroseditar(this)"  placeholder="Telefono" v-model="detalleseditar.destinatario.telefono">
+                            </b-col>
+                        </b-form-row>
+                       </b-card-body>
+                      </b-tab>
+                  </b-tabs>
+  </b-card>
+               
+                
+                
+            </b-container>
+            <div slot="modal-footer" class="w-100">
+                
 
             </div>
       </b-modal>
@@ -411,6 +443,25 @@ export default {
   },
   data() {
     return {
+      tabIndexED:0,
+      tabdinamico:false,
+      tabIndex:0,
+      items: [
+        {
+          text: "Inicio",
+          to: "/inicio"
+        },
+        {
+          text: "Generación Orden",
+          to: "/inicio/orden",
+          active: true
+        },
+        {
+          text: "Detalle Orden de Servicio",
+          to: "/inicio/ordenservicio",
+          active: true
+        }
+      ],
       ocultardicionarED: true,
       ocultareditarED: false,
       ocultardicionar: true,
@@ -490,18 +541,18 @@ export default {
   },
   methods: {
     UpdateDinamico(value) {
-      //console.log("entro a update");
-      //console.log(this.indicedinamico);
-      //console.log(this.currentPageRef);
+      //////console.log("entro a update");
+      //////console.log(this.indicedinamico);
+      //////console.log(this.currentPageRef);
       var objellaves = Object.keys(this.itemsdinamicos[0]);
-      //console.log(objellaves);
+      //////console.log(objellaves);
       var tituloopciones = {};
 
       for (var x = 0; x < this.inputs.campos.length; x++) {
         if (this.inputs.campos[x].espieza == true) {
           for (var y = 0; y < objellaves.length; y++) {
             if (this.inputs.campos[x].vmodel == objellaves[y]) {
-              //console.log(document.getElementById(this.inputs.campos[x].id).value);
+              //////console.log(document.getElementById(this.inputs.campos[x].id).value);
               eval(
                 "this.objeto." +
                   this.inputs.campos[x].vmodel +
@@ -518,9 +569,9 @@ export default {
       }
       //this.DetalleServicio.splice(this.indices, 1);
       //this.DetalleServicio.splice(this.indices, 0, detalles);
-      //console.log(this.itemsdinamicos);
-      //console.log(this.currentPageRef);
-      //console.log(tituloopciones);
+      //////console.log(this.itemsdinamicos);
+      //////console.log(this.currentPageRef);
+      //////console.log(tituloopciones);
       if (this.indicedinamico == 0 && this.currentPageRef == 1) {
         this.itemsdinamicos.splice(this.indicedinamico, 1);
         this.itemsdinamicos.splice(this.indicedinamico, 0, tituloopciones);
@@ -541,8 +592,8 @@ export default {
       this.ocultareditar = false;
     },
     UpdateDinamicoED(value) {
-      //console.log("entro a update edi");
-      ////console.log(this.DetalleServicio[this.indices].detalleslocal.infor);
+      //////console.log("entro a update edi");
+      ////////console.log(this.DetalleServicio[this.indices].detalleslocal.infor);
       var objellaves = Object.keys(
         this.DetalleServicio[this.indices].detalleslocal.infor
       );
@@ -567,21 +618,21 @@ export default {
           }
         }
       }
-      //console.log(this.DetalleServicio[this.indices].detalleslocal.infor);
+      //////console.log(this.DetalleServicio[this.indices].detalleslocal.infor);
       this.ocultardicionarED = true;
       this.ocultareditarED = false;
       /*
-      //console.log(this.indicedinamico);
-      //console.log(this.currentPageRef);
+      //////console.log(this.indicedinamico);
+      //////console.log(this.currentPageRef);
       var objellaves=Object.keys(this.itemsdinamicos[0])
-      //console.log(objellaves);
+      //////console.log(objellaves);
       var tituloopciones={}
 
       for(var x=0;x<this.inputs.campos.length;x++){
         if(this.inputs.campos[x].espieza==true){
           for(var y=0;y<objellaves.length;y++){
             if(this.inputs.campos[x].vmodel==objellaves[y]){
-                //console.log(document.getElementById(this.inputs.campos[x].id).value);
+                //////console.log(document.getElementById(this.inputs.campos[x].id).value);
                 eval('this.objeto.'+this.inputs.campos[x].vmodel+'='+document.getElementById(this.inputs.campos[x].id).value)
                 tituloopciones[objellaves[y]]=eval('this.objeto.'+objellaves[y])
                 document.getElementById(this.inputs.campos[x].id).value=''
@@ -591,9 +642,9 @@ export default {
       }
       //this.DetalleServicio.splice(this.indices, 1);
       //this.DetalleServicio.splice(this.indices, 0, detalles);
-      //console.log(this.itemsdinamicos);
-      //console.log(this.currentPageRef);
-      //console.log(tituloopciones);
+      //////console.log(this.itemsdinamicos);
+      //////console.log(this.currentPageRef);
+      //////console.log(tituloopciones);
       if(this.indicedinamico==0&&this.currentPageRef==1){
         this.itemsdinamicos.splice(this.indicedinamico, 1);
         this.itemsdinamicos.splice(this.indicedinamico, 0, tituloopciones);
@@ -616,10 +667,10 @@ export default {
       */
     },
     ActualizarRefED(value, value2) {
-      //console.log("entro a cambiar ref")
-      //console.log(value)
+      //////console.log("entro a cambiar ref")
+      //////console.log(value)
       this.indicedinamico = value2;
-      ////console.log(this.currentPageRef)
+      ////////console.log(this.currentPageRef)
       var objellaves = Object.keys(value.item);
       this.ocultardicionarED = false;
       this.ocultareditarED = true;
@@ -636,10 +687,10 @@ export default {
       }
     },
     ActualizarRef(value, value2) {
-      //console.log("entro a cambiar ref")
-      ////console.log(value2)
+      //////console.log("entro a cambiar ref")
+      ////////console.log(value2)
       this.indicedinamico = value2;
-      ////console.log(this.currentPageRef)
+      ////////console.log(this.currentPageRef)
       var objellaves = Object.keys(value.item);
       this.ocultardicionar = false;
       this.ocultareditar = true;
@@ -656,21 +707,21 @@ export default {
       }
     },
     eliminarRef(value) {
-      //console.log("entro a eliminar");
-      //console.log(value);
+      //////console.log("entro a eliminar");
+      //////console.log(value);
 
       this.itemsdinamicos.splice(value.index, 1);
     },
     adicionarRefED() {
-      //console.log("ntro a adicionareditar");
-      ////console.log(this.inputs);
-      ////console.log(this.DetalleServicio[this.indices].detalleslocal.infor.objetoUnidades);
+      //////console.log("ntro a adicionareditar");
+      ////////console.log(this.inputs);
+      ////////console.log(this.DetalleServicio[this.indices].detalleslocal.infor.objetoUnidades);
       var objetollaves = Object.keys(this.inputsED.objeto);
       var tituloopciones = {};
       var bandera = true;
       var resumen = this.DetalleServicio[this.indices].detalleslocal.infor
         .objetoUnidades;
-      //console.log(this.DetalleServicio[this.indices].detalleslocal.infor);
+      //////console.log(this.DetalleServicio[this.indices].detalleslocal.infor);
       for (var x = 0; x < this.inputsED.campos.length; x++) {
         if (this.inputsED.campos[x].espieza == true) {
           for (var y = 0; y < objetollaves.length; y++) {
@@ -693,24 +744,25 @@ export default {
           }
         }
       }
-      //console.log(bandera)
+      //////console.log(bandera)
       if (bandera == false) {
         swal("Error!", "Revise los campos", "error");
       } else {
         bandera = true;
-        //console.log(tituloopciones);
+        //////console.log(tituloopciones);
         this.itemsdinamicos.push(tituloopciones);
-        //console.log(this.itemsdinamicos);
+        //////console.log(this.itemsdinamicos);
       }
     },
     adicionarRef() {
-      //console.log("ntro a adicionar");
-      //console.log(this.inputs);
+      //////console.log("ntro a adicionar");
+      //////console.log(this.inputs);
       var objetollaves = Object.keys(this.inputs.objeto);
       var tituloopciones = {};
       var opciones = [];
       var bandera = true;
       //console.log(this.objeto);
+      //console.log(objetollaves);
       for (var x = 0; x < this.inputs.campos.length; x++) {
         if (this.inputs.campos[x].espieza == true) {
           for (var y = 0; y < objetollaves.length; y++) {
@@ -719,7 +771,7 @@ export default {
               tituloopciones[objetollaves[y]] = eval(
                 "this.objeto." + objetollaves[y]
               );
-              //console.log(document.getElementById(this.inputs.campos[x].id).value);
+              //////console.log(document.getElementById(this.inputs.campos[x].id).value);
               if (
                 document.getElementById(this.inputs.campos[x].id).value == "" ||
                 document.getElementById(this.inputs.campos[x].id).value == null
@@ -728,12 +780,12 @@ export default {
               } else {
                 document.getElementById(this.inputs.campos[x].id).value = "";
                 eval("this.objeto." + this.inputs.campos[x].vmodel + '=""');
-                //console.log("------------")
-                //console.log(this.objeto)
+                //////console.log("------------")
+                //////console.log(this.objeto)
                 /*
               
                   if(this.inputs.campos[x].vmodel=='unidades'){
-                  ////console.log(this.itemsdinamicos.length);
+                  ////////console.log(this.itemsdinamicos.length);
                   if(this.itemsdinamicos.length==0)
                   {
                     eval('this.objeto.'+objetollaves[y]+'='+1)
@@ -742,7 +794,7 @@ export default {
                     eval('this.objeto.'+objetollaves[y]+'='+this.itemsdinamicos.length+ eval('this.objeto.'+objetollaves[y]))
                   }
                   
-                  ////console.log(this.objeto.unidades);
+                  ////////console.log(this.objeto.unidades);
                 }
                 */
               }
@@ -750,7 +802,7 @@ export default {
           }
         }
       }
-      //console.log(bandera)
+      //////console.log(bandera)
       if (bandera == false) {
         swal("Error !", "Revise los campos", "error");
       } else {
@@ -760,18 +812,20 @@ export default {
         fields.push("actualizar");
 
         this.fieldsdinamicos = fields;
-        ////console.log(this.fieldsdinamicos);
+        ////////console.log(this.fieldsdinamicos);
         this.itemsdinamicos.push(tituloopciones);
-        //console.log(this.itemsdinamicos);
+        //////console.log(this.itemsdinamicos);
       }
+      //console.log(this.objeto);
+      //console.log(this.itemsdinamicos);
     },
     buscar() {
-      //console.log("entro a buscar");
-      //console.log(this.identificacion);
+      //////console.log("entro a buscar");
+      //////console.log(this.identificacion);
       this.axios
         .get(urlservicios + "obtenerDestinatario" + "/" + this.identificacion)
         .then(response => {
-          //console.log(response.data);
+          //////console.log(response.data);
           var destinatario = response.data.destinatarios;
           this.creaciondestinatarios = response.data.validar;
           if (response.data.validar == true) {
@@ -792,8 +846,8 @@ export default {
         });
     },
     numeroseditar(valor) {
-      ////console.log("entro a numeros editar");
-      ////console.log(document.getElementById("telefonoedit").value)
+      ////////console.log("entro a numeros editar");
+      ////////console.log(document.getElementById("telefonoedit").value)
       var a = document.getElementById("telefonoedit").value;
       //var x=check.which;
       //var x = a.charCode;
@@ -814,8 +868,8 @@ export default {
       }
     },
     numeros(valor) {
-      //console.log("entro a numeros");
-      ////console.log(document.getElementById("telefono").value)
+      //////console.log("entro a numeros");
+      ////////console.log(document.getElementById("telefono").value)
       var a = document.getElementById("telefono").value;
       //var x=check.which;
       //var x = a.charCode;
@@ -836,13 +890,13 @@ export default {
       }
     },
     PresionoED(index) {
-      //console.log("entro al presionar editar");
+      //////console.log("entro al presionar editar");
       this.validatecampo = "";
       var cero = "";
       setTimeout(
         function() {
           if (this.inputsED.campos[index].type == "text") {
-            //console.log("es");
+            //////console.log("es");
             if (
               document.getElementById(this.inputsED.campos[index].id).value ==
               ""
@@ -866,7 +920,7 @@ export default {
               document.getElementById(this.inputsED.campos[index].id).value ==
               ""
             ) {
-              //console.log(this.inputsED.campos[index].vmodel);
+              //////console.log(this.inputsED.campos[index].vmodel);
 
               eval(
                 "this.detalleseditar.infor." +
@@ -884,25 +938,25 @@ export default {
           }
         }.bind(this)
       );
-      //console.log(this.detalleseditar);
+      //////console.log(this.detalleseditar);
     },
     valores(dato) {
-      ////console.log(this.detalleseditar)
-      ////console.log(dato)
-      ////console.log(eval("this.detalleseditar.infor." + dato));
+      ////////console.log(this.detalleseditar)
+      ////////console.log(dato)
+      ////////console.log(eval("this.detalleseditar.infor." + dato));
       return eval("this.detalleseditar.infor." + dato);
     },
     actualizar() {
-      //console.log("actualizar");
+      //////console.log("actualizar");
       this.validatecampoTel = "";
       var pivoteedi = false;
       this.estado.nombre = null;
       this.estado.direccion = null;
       this.estado.referencia = null;
-      //console.log("detalles editar");
-      //console.log(this.detalleseditar);
+      //////console.log("detalles editar");
+      //////console.log(this.detalleseditar);
       if (this.detalleseditar.infor.objetoUnidades.length == 0) {
-        //console.log("no hay dinamicos");
+        //////console.log("no hay dinamicos");
       } else {
         var objetollaves = Object.keys(this.detalleseditar.infor);
 
@@ -912,9 +966,9 @@ export default {
         var totales = {};
         var algo = 0;
 
-        //console.log(this.itemsdinamicos);
+        //////console.log(this.itemsdinamicos);
         for (var y = 0; y < this.itemsdinamicos.length; y++) {
-          //console.log(this.itemsdinamicos[y]);
+          //////console.log(this.itemsdinamicos[y]);
           for (var x = 0; x < this.inputsED.campos.length; x++) {
             for (var z = 0; z < objdinamico.length; z++) {
               if (
@@ -940,14 +994,14 @@ export default {
                       );
 
                     totales[this.inputsED.campos[x].acumulaen] = anterior;
-                    //console.log(totales[this.inputs.campos[x].acumulaen]);
+                    //////console.log(totales[this.inputs.campos[x].acumulaen]);
                   }
                 }
 
                 //algo=algo+eval('this.itemsdinamicos[y].'+this.inputsED.campos[x].acumulaen)
-                //console.log(algo);
+                //////console.log(algo);
                 //totales[this.inputsED.campos[x].acumulaen]=algo
-                ////console.log(eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen));
+                ////////console.log(eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen));
                 //totales[this.inputs.campos[x].acumulaen]=eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen)+totales[this.inputs.campos[x].acumulaen]
               }
               if (
@@ -955,18 +1009,18 @@ export default {
                 this.inputsED.campos[x].type == "text"
               ) {
                 //algo=algo+eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen)
-                ////console.log(algo);
+                ////////console.log(algo);
                 totales[
                   this.inputsED.campos[x].acumulaen
                 ] = this.itemsdinamicos.length;
-                //console.log(totales)
-                ////console.log(eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen));
+                //////console.log(totales)
+                ////////console.log(eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen));
                 //totales[this.inputs.campos[x].acumulaen]=eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen)+totales[this.inputs.campos[x].acumulaen]
               }
             }
           }
         }
-        //console.log(totales);
+        //////console.log(totales);
         var objtotal = Object.keys(totales);
 
         for (var x = 0; x < objtotal.length; x++) {
@@ -979,7 +1033,7 @@ export default {
         }
       }
 
-      ////console.log(pivoteedi);
+      ////////console.log(pivoteedi);
       if (
         this.detalleseditar.destinatario.nombre == "" ||
         this.detalleseditar.destinatario.direccion == "" ||
@@ -1002,7 +1056,7 @@ export default {
           swal("Oops...", "Falto algun campo por completar!", "error");
         }
       } else {
-        //console.log(this.selectservicio);
+        //////console.log(this.selectservicio);
         var detalleslocal = this.detalleseditar;
         var productoslocal = this.selectproducto;
         var servicioslocal = this.selectservicio;
@@ -1012,10 +1066,10 @@ export default {
           productoslocal: productoslocal,
           detalleslocal: detalleslocal
         };
-        ////console.log((detalles));
+        ////////console.log((detalles));
         this.DetalleServicio.splice(this.indices, 1);
         this.DetalleServicio.splice(this.indices, 0, detalles);
-        console.log(this.DetalleServicio);
+        ////console.log(this.DetalleServicio);
         (this.objeto = ""),
           (this.inputs = ""),
           toastr.success("Se edito exitosamente");
@@ -1031,6 +1085,11 @@ export default {
             infor: {},
             observaciones: ""
           });
+           (this.selectservice = null);
+      this.selectproduct = null;
+          (this.camposdinamicos = false),
+        (this.fieldsdinamicos = []),
+        (this.itemsdinamicos = []),
         this.$refs.ModalEdit.hide();
       }
     },
@@ -1056,35 +1115,35 @@ export default {
       });
     },
     editar(index) {
-      ////console.log(index);
+      ////////console.log(index);
       this.validatecampo = "";
       this.validatecampoTel = "";
       this.estado.nombre = null;
       this.estado.direccion = null;
       this.estado.referencia = null;
       this.indices = index;
-      //console.log("entro al editar");
+      //////console.log("entro al editar");
       this.detalleseditar = this.DetalleServicio[index].detalleslocal;
       this.selectproduct = this.DetalleServicio[index].productoslocal._id;
       this.selectproducto = this.DetalleServicio[index].productoslocal;
       this.selectservice = this.DetalleServicio[index].servicioslocal._id;
       this.selectservicio = this.DetalleServicio[index].servicioslocal;
-      ////console.log(this.selectservice);
-      //console.log(this.detalleseditar);
+      ////////console.log(this.selectservice);
+      //////console.log(this.detalleseditar);
 
       this.itemsdinamicos = this.DetalleServicio[
         index
       ].detalleslocal.infor.objetoUnidades;
-      //console.log(this.itemsdinamicos);
+      //////console.log(this.itemsdinamicos);
       if (this.itemsdinamicos.length == 0) {
-        //console.log("no tiene dinamicos");
+        //////console.log("no tiene dinamicos");
       } else {
         var fields = Object.keys(
           this.DetalleServicio[index].detalleslocal.infor.objetoUnidades[0]
         );
         fields.push("eliminar");
         fields.push("actualizar");
-        //console.log(fields);
+        //////console.log(fields);
         this.fieldsdinamicos = fields;
       }
 
@@ -1100,9 +1159,9 @@ export default {
           this.inputsED = response.data;
 
           for (var x = 0; x < this.inputsED.campos.length; x++) {
-            ////console.log(this.inputsED.campos[x]);
+            ////////console.log(this.inputsED.campos[x]);
             if (this.inputsED.campos[x].espieza == true) {
-              ////console.log("algo dinamico");
+              ////////console.log("algo dinamico");
               this.camposdinamicos = true;
             }
           }
@@ -1138,7 +1197,7 @@ export default {
       this.estado.direccion = null;
       this.estado.referencia = null;
       var pivote = false;
-
+      ////console.log(this.objeto);
       var inforemitente = localStorage.getItem("orden");
       var inforemi = JSON.parse(inforemitente);
 
@@ -1150,15 +1209,15 @@ export default {
           telefono: this.detalles.destinatario.telefono,
           id_cliente: inforemi.selected_client
         };
-        ////console.log(objeto);
+        ////////console.log(objeto);
         this.axios
           .post(urlservicios + "CrearDestinatario", objeto)
           .then(response => {
-            //console.log(response);
+            //////console.log(response);
           });
       } else {
-        ////console.log("actualiza destinatario");
-        ////console.log(this.detalles.destinatario);
+        ////////console.log("actualiza destinatario");
+        ////////console.log(this.detalles.destinatario);
         var objeto = {
           numero_identificacion: this.identificacion,
           direccion: this.detalles.destinatario.direccion,
@@ -1166,7 +1225,7 @@ export default {
           telefono: this.detalles.destinatario.telefono,
           id_cliente: inforemi.selected_client
         };
-        ////console.log(objeto);
+        ////////console.log(objeto);
         this.axios
           .post(
             urlservicios +
@@ -1176,24 +1235,25 @@ export default {
             objeto
           )
           .then(response => {
-            ////console.log(response);
+            ////////console.log(response);
           });
       }
-
+      //console.log(this.objeto);
       if (this.objeto == undefined) {
+        ////console.log("objeto");
       } else {
         var llaves = "";
         var objllaves;
         llaves = Object.keys(this.objeto);
-        //console.log(this.objeto);
-        //console.log(this.itemsdinamicos);
+        //////console.log(this.objeto);
+        //////console.log(this.itemsdinamicos);
         if (this.itemsdinamicos.length > 0) {
           objllaves = Object.keys(this.itemsdinamicos[0]);
-          console.log(objllaves);
+          //console.log(objllaves);
           var totales = {};
           var algo = 0;
           var prsuma;
-
+          //console.log(this.objeto)
           for (var y = 0; y < this.itemsdinamicos.length; y++) {
             for (var x = 0; x < this.inputs.campos.length; x++) {
               for (var z = 0; z < objllaves.length; z++) {
@@ -1202,13 +1262,18 @@ export default {
                   this.inputs.campos[x].type == "number"
                 ) {
                   if (objllaves[z] == this.inputs.campos[x].vmodel) {
+                    //console.log(objllaves[z]);
+                    //console.log(this.inputs.campos[x].vmodel)
                     if (y == 0) {
+                      ////console.log(objllaves[z]);
+                      ////console.log(this.objeto);
                       algo = eval(
                         "this.itemsdinamicos[y]." +
                           this.inputs.campos[x].acumulaen
                       );
                       totales[this.inputs.campos[x].acumulaen] = algo;
                       algo = 0;
+                      ////console.log(totales);
                     } else {
                       var anterior = totales[this.inputs.campos[x].acumulaen];
 
@@ -1220,11 +1285,11 @@ export default {
                         );
 
                       totales[this.inputs.campos[x].acumulaen] = anterior;
-                      //console.log(totales[this.inputs.campos[x].acumulaen]);
+                      //////console.log(totales[this.inputs.campos[x].acumulaen]);
                     }
                   }
 
-                  ////console.log(eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen));
+                  ////////console.log(eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen));
                   //totales[this.inputs.campos[x].acumulaen]=eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen)+totales[this.inputs.campos[x].acumulaen]
                 }
                 if (
@@ -1232,79 +1297,79 @@ export default {
                   this.inputs.campos[x].type == "text"
                 ) {
                   //algo=algo+eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen)
-                  ////console.log(algo);
+                  ////////console.log(algo);
                   totales[
                     this.inputs.campos[x].acumulaen
                   ] = this.itemsdinamicos.length;
-                  ////console.log(eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen));
+                  ////////console.log(eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen));
                   //totales[this.inputs.campos[x].acumulaen]=eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen)+totales[this.inputs.campos[x].acumulaen]
                 }
               }
             }
           }
-          console.log(totales);
+          ////console.log(totales);
           var objtotales = Object.keys(totales);
           for (var x = 0; x < objtotales.length; x++) {
             eval("this.objeto." + objtotales[x] + "=" + totales[objtotales[x]]);
           }
 
           for (var x = 0; x < this.inputs.campos.length; x++) {
-            console.log(this.inputs.campos[x]);
+            ////console.log(this.inputs.campos[x]);
             if (this.inputs.campos[x].espieza == false) {
-              console.log(
-                eval("this.objeto." + this.inputs.campos[x].vmodel == null)
-              );
+              ////console.log(
+              //eval("this.objeto." + this.inputs.campos[x].vmodel == null)
+              //);
+              ////console.log(this.objeto);
               if (
                 eval("this.objeto." + this.inputs.campos[x].vmodel) == "" ||
                 eval("this.objeto." + this.inputs.campos[x].vmodel == "null") ||
                 eval("this.objeto." + this.inputs.campos[x].vmodel == null)
               ) {
-                ////console.log("");
-                console.log("pivote tru");
-                ////console.log(eval('this.objeto.'+llaves[x]));
+                ////////console.log("");
+                //////console.log("pivote tru");
+                ////////console.log(eval('this.objeto.'+llaves[x]));
                 this.validatecampo = {
                   border: "1px solid  #ff8080"
                 };
                 pivote = true;
               } else {
-                console.log("pivote else");
+                ////console.log("pivote else");
               }
             }
           }
-        }
-        else{
+        } else {
           for (var x = 0; x < this.inputs.campos.length; x++) {
-            console.log(this.inputs.campos[x]);
+            ////console.log(this.inputs.campos[x]);
             if (this.inputs.campos[x].espieza == false) {
-              console.log(
-                eval("this.objeto." + this.inputs.campos[x].vmodel == null)
-              );
+              ////console.log(
+              //eval("this.objeto." + this.inputs.campos[x].vmodel == null)
+              //);
               if (
                 eval("this.objeto." + this.inputs.campos[x].vmodel) == "" ||
                 eval("this.objeto." + this.inputs.campos[x].vmodel == "null") ||
                 eval("this.objeto." + this.inputs.campos[x].vmodel == null)
               ) {
-                ////console.log("");
-                console.log("pivote tru");
-                ////console.log(eval('this.objeto.'+llaves[x]));
+                ////////console.log("");
+                //////console.log("pivote tru");
+                ////////console.log(eval('this.objeto.'+llaves[x]));
                 this.validatecampo = {
                   border: "1px solid  #ff8080"
                 };
                 pivote = true;
               } else {
-                console.log("pivote else");
+                //////console.log("pivote else");
               }
             }
           }
         }
-        console.log(pivote);
-        console.log(this.objeto);
+        //////console.log(pivote);
+        ////console.log(this.objeto);
 
         if (pivote == false) {
           this.validatecampo = "";
         }
       }
-      ////console.log(pivote);
+      ////////console.log(pivote);
       if (
         this.selectproduct == "" ||
         this.selectservice == "" ||
@@ -1331,7 +1396,7 @@ export default {
 
         swal("Oops...", "Falto completar algun campo", "error");
       } else {
-        ////console.log(this.objeto);
+        ////////console.log(this.objeto);
         this.objeto.objetoUnidades;
         this.objeto.objetoUnidades = this.itemsdinamicos;
         var servicioslocal = this.selectservicio;
@@ -1347,7 +1412,7 @@ export default {
           detalleslocal: detalleslocal
         };
         this.DetalleServicio.push(detalles);
-        console.log(this.DetalleServicio);
+        //console.log(this.DetalleServicio);
         //BLANQUEAR DATOS
         this.camposdinamicos = false;
         this.fieldsdinamicos = [];
@@ -1440,11 +1505,19 @@ export default {
           }
         }.bind(this)
       );
-      ////console.log(this.objeto)
+      ////////console.log(this.objeto)
     },
     service(value) {
-      var vacio = { _id: null, nombre: "Por Favor Seleccione un Servicio" };
-      //console.log("entro a seleccion");
+              var vacio = { _id: null, nombre: "Por Favor Seleccione un Servicio" };
+
+      if(value.target.value==null|| value.target.value==''){
+        console.log("va vacio");
+         this.habilitar = true;
+         this.serviciosurl=[]
+         this.selectservice=null
+         this.serviciosurl.unshift(vacio);
+      }else{
+      //////console.log("entro a seleccion");
       //this.load = true;
       var load = true;
       setTimeout(() => {
@@ -1469,12 +1542,14 @@ export default {
             });
           });
           this.habilitar = false;
-          ////console.log(this.serviciosurl);
+          ////////console.log(this.serviciosurl);
           this.serviciosurl.unshift(vacio);
         });
+      }
+      
     },
     campos(value) {
-      //console.log("inputs");
+      //////console.log("inputs");
       //this.load = true;
       var load = true;
       setTimeout(() => {
@@ -1498,16 +1573,26 @@ export default {
         .then(response => {
           this.inputs = response.data;
 
-          console.log(this.inputs);
+          ////console.log(this.inputs);
           this.objeto = this.inputs.objeto;
-          //console.log(this.objeto)
+          //////console.log(this.objeto)
+          var bandera_dinamico=false
           for (var x = 0; x < this.inputs.campos.length; x++) {
-            //console.log(this.inputs.campos[x]);
+            //////console.log(this.inputs.campos[x]);
             if (this.inputs.campos[x].espieza == true) {
-              //console.log("algo dinamico");
+                //console.log("algo dinamico");
               this.camposdinamicos = true;
+
             }
           }
+          if(this.camposdinamicos == true){
+            console.log("algo dinamico");
+            this.tabdinamico=false
+          }else{
+            this.camposdinamicos = false;
+            this.tabdinamico=true
+          }
+          console.log(this.camposdinamicos);
           //this.load=false
           var load2 = false;
           setTimeout(() => {
@@ -1517,7 +1602,7 @@ export default {
           });
         })
         .catch(function(error) {
-          ////console.log("error estruc -> "+JSON.stringify(error));
+          ////////console.log("error estruc -> "+JSON.stringify(error));
         });
     },
     envioServicio() {
@@ -1526,7 +1611,7 @@ export default {
         this.DetalleServicio == null ||
         this.DetalleServicio == undefined
       ) {
-        //console.log("no se envia");
+        //////console.log("no se envia");
         swal("Atencion!", "La Orden debe tener minimo un detalle ", "error");
       } else {
         var login = localStorage.getItem("storedData");
@@ -1554,14 +1639,14 @@ export default {
           },
           detalle: this.DetalleServicio
         };
-        //console.log(this.DetalleServicio);
+        //////console.log(this.DetalleServicio);
         this.axios
           .post(urlservicios + "GuardarOrden", objeto)
           .then(response => {
             this.Documento = response.data.ducumento;
-            //console.log(response);
-            //console.log("-------");
-            ////console.log(JSON.stringify(objeto));
+            //////console.log(response);
+            //////console.log("-------");
+            ////////console.log(JSON.stringify(objeto));
             swal(
               "Excelente!",
               "La Orden de Servicio Generada es: " + this.Documento,
@@ -1589,11 +1674,41 @@ export default {
 </script>
 
 <style>
+.card-header-tabs{
+  background-color: #f8f8ff;
+    }
+.nav-link{
+  
+    border-left-width: 13px;
+
+}
+.contenedor {
+  padding-top: 0px;
+  padding-right: 5px;
+  padding-bottom: 0px;
+  padding-left: 5px;
+  background-color: #f8f8ff;
+}
 .prueba {
   display: inline-table;
   margin-left: 15px;
 }
 .card {
   margin-top: 2%;
+  
+}
+.cards {
+  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.1);
+  /*margin: 2%;
+    /*border-top-width: 3px;
+    */
+
+  border-left-width: 0px;
+  padding-left: 55px;
+  padding-right: 50px;
+  padding-top: 30px;
+  border-bottom-width: 30px;
+  padding-bottom: 30px;
+  border-color: 15px gray;
 }
 </style>

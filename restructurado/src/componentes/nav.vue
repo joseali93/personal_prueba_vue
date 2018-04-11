@@ -129,15 +129,23 @@
         </nav>
       </header>
       <!-- SECCION DEL HEADER Y CONTENIDO DIV-->
-      <section class="dashboard-header section-padding">
+      <section class="dashboard-header section-padding" 
+      style="
+    padding-top: 1px;">
+        <!--
         <div class="container">
            <div class="content-wrapper">
+             -->
             <!-- AQUI SE RENDERIZAN LAS VISTAS Y SE PASA PARMETROS  -->
+                    <!-- <b-breadcrumb :items="items" @click="jose"/>
+                -->
             <router-view
               v-bind:nombreusu="nombreusu">
             </router-view>
+            <!--
          </div>
         </div>
+        -->
       </section>
 
       <!-- FOOTER  -->
@@ -166,6 +174,13 @@ import { bus } from "../main";
 export default {
   data() {
     return {
+      items: [{
+        text: 'Inicio',
+        to: '/inicio',
+        active: true
+
+      }
+      ],
       nombreusu: "",
       load: "",
       imagen: "",
@@ -181,8 +196,19 @@ export default {
         this.load = userObject.load;
       }.bind(this)
     );
+    bus.$on(
+      "items",
+      function(userObject) {
+        this.items = userObject.items;
+      }.bind(this)
+    );
+    
   },
   methods: {
+    jose(){
+      console.log("jose");
+    },
+
     confiCliente() {
       console.log("entro a config cliente");
       this.$router.replace("/inicio/configcliente");
@@ -228,7 +254,10 @@ export default {
   components: {
     Preload
   },
+  
   mounted: function() {
+
+    
     var test2 = localStorage.getItem("storedData");
     var test = JSON.parse(test2);
     this.nombreusu = test.nombre;
@@ -275,6 +304,7 @@ export default {
 </script>
 
 <style>
+
 
 nav.side-navbar span {
   display: initial;
@@ -326,4 +356,6 @@ ul > li > a:hover {
   width: 10%;
   height: 5%;
 }
+
+
 </style>

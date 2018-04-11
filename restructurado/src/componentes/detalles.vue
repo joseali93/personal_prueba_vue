@@ -207,7 +207,7 @@
                             </b-col>
                             <b-col>
                                 <b-row class=" col-form-label col-form-label-sm"> 
-                                    {{info.detalle[0].detalleslocal.destinatario.nombre}}
+                                    {{info.detalle[indemodal].detalleslocal.destinatario.nombre}}
                                 </b-row>
                             </b-col>
                         </b-row>
@@ -219,7 +219,7 @@
                             </b-col>
                             <b-col>
                                 <b-row class=" col-form-label col-form-label-sm">
-                                    {{info.detalle[0].detalleslocal.destinatario.direccion}}
+                                    {{info.detalle[indemodal].detalleslocal.destinatario.direccion}}
                                 </b-row>
                             </b-col>
                         </b-row>                    
