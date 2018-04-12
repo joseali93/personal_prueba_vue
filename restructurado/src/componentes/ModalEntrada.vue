@@ -21,7 +21,7 @@
       <b-container  id="prueba" class="non-printableE " >
         <b-row>
           <b-col class="my-2">
-                    <b-img src="http://localhost:8080/src/assets/logo.png"  fluid alt="Fluid image" class="imgpr" />
+                    <b-img :src="otrainfo[1].url_logo"  fluid alt="Fluid image" class="imgpr" />
                     <!--
             <b-img src="https://lorempixel.com/300/150/" fluid alt="Fluid image" />
 

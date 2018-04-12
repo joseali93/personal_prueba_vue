@@ -174,6 +174,7 @@ import { bus } from "../main";
 export default {
   data() {
     return {
+      config:false,
       items: [{
         text: 'Inicio',
         to: '/inicio',

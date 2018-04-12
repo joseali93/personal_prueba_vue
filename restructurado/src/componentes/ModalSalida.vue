@@ -23,7 +23,7 @@
                 
                 <b-row>
                 <b-col class="my-2">
-                    <b-img src="http://localhost:8080/src/assets/logo.png"  fluid alt="Fluid image" class="imgpr" />
+                    <b-img :src="otrainfo[1].url_logo"  fluid alt="Fluid image" class="imgpr" />
                     <!--
             <b-img src="https://lorempixel.com/300/150/" fluid alt="Fluid image" />
 
@@ -194,7 +194,11 @@ export default {
         this.itemsmodal = userObject.itemsmodal
         console.log(this.itemsmodal);
         this.otrainfo= userObject.inforvaria
-        
+        if(this.otrainfo){
+
+        }
+        console.log("informacion que da error");
+        console.log(this.otrainfo);
       }.bind(this))
 
         moment.locale('es');
