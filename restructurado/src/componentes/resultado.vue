@@ -1,5 +1,6 @@
 <template>
-    <b-container class="cards">
+    <b-container fluid >
+       
         <h3>
             Listado de Ordenes de Servicio:
         </h3>
@@ -28,10 +29,12 @@
         </b-table>
         <b-pagination size="md" :total-rows="consulta.length" v-model="currentPage" :per-page="5">
         </b-pagination>
+        
     </b-container>
 </template>
 
 <script>
+import $ from 'jquery'
 import {bus} from '../main'
 import {urlservicios} from '../main'
 import moment from 'moment'
@@ -168,6 +171,7 @@ export default {
  
         },
         actualizar(inde){
+            //$('#jose').removeClass('cards')
             var ocultar=false
             var inputstotales=[]
              for(var a=0;a<inde.item.detalle.length;a++)
@@ -220,9 +224,27 @@ export default {
 </script>
 
 <style>
+
 .cards{
+    /*
     margin-top: 2%;
     border-top-width: 3px;
     border-color: gray
+    */
+    box-shadow: 1px 5px 7px 5px rgba(0,0,0,0.1);
+  /*margin: 2%;
+    /*border-top-width: 3px;
+    */
+
+  border-left-width:px;
+  padding-left: 55px;
+  padding-right: 50px;
+  padding-top: 30px;
+  border-bottom-width: 30px;
+  padding-bottom: 30px;
+  border-color: 15px gray;
+
+  
+
 }
 </style>

@@ -1,33 +1,42 @@
 <template>
-    <b-container>
+    <b-container fluid class="contenedorTotal">
+
+             <div >
+         <b-breadcrumb :items="items" />
+      </div>
+       
         
-        <b-card class="car" v-show="ocultartra">
-            <header slot="header" class="content-heading">
-                <h3>Consultar Trazabilidad</h3>
-                    <small>Se permite la búsqueda de detalles seleccionando los siguientes filtros </small>
-            </header>
-            <b-row>
-                    <b-col>
-                        <b-form-group 
-                        label="Clientes">
-                            <b-form-select v-model="selectedCL" id="clienteselect" v-bind:style="validatecampo" :options="clientes"  
-                            text-field="nombre" value-field="_id" @change.native="SelectCC" required
-                            :disabled="disabled_selectedCL" >
-                                    <!-- this slot appears above the options from 'options' prop -->          
-                            </b-form-select>
-                        </b-form-group>
-                    </b-col>
-                    <b-col>
-                        <b-form-group 
-                        label="Centro de Costo">
-                            <b-form-select v-model="selectedCC" id="costoselect"  v-bind:style="validatecampo" class="mb-3" :options="centros" 
-                            text-field="nombre" value-field="_id" required :disabled="disable">
-                            </b-form-select>
-                        </b-form-group>
-                    </b-col>
-            </b-row>
+        <b-container fluid>
+            <b-card class="cards" v-show="ocultartra">
+                <!--
+                <header slot="header" class="content-heading">
+                    <h3>Consultar Trazabilidad</h3>
+                        <small>Se permite la búsqueda de detalles seleccionando los siguientes filtros </small>
+                </header>
+                -->
+                 <b-row>
+                        <b-col>
+                            <b-form-group 
+                            label="Clientes">
+                                <b-form-select v-model="selectedCL" id="clienteselect" v-bind:style="validatecampo" :options="clientes"  
+                                text-field="nombre" value-field="_id" @change.native="SelectCC" required
+                                :disabled="disabled_selectedCL" >
+                                        <!-- this slot appears above the options from 'options' prop -->          
+                                </b-form-select>
+                            </b-form-group>
+                        </b-col>
+                        <b-col>
+                            <b-form-group 
+                            label="Centro de Costo">
+                                <b-form-select v-model="selectedCC" id="costoselect"  v-bind:style="validatecampo" class="mb-3" :options="centros" 
+                                text-field="nombre" value-field="_id" required :disabled="disable">
+                                </b-form-select>
+                            </b-form-group>
+                        </b-col>
+                </b-row>
         </b-card>
-        <b-card class="car"  v-show="ocultartra">
+        <br>
+        <b-card class="cards"  v-show="ocultartra">
             <b-row>
                 <b-col>
                     <b-form-group 
@@ -88,11 +97,14 @@
                 </b-col>
             </b-row>
         </b-card>
-            <b-row>
+        <br>
+           <b-card class="cards"  >
                 <router-view :consulta="consulta" :centro="centroseleccionado"
                     :cliente="clienteseleccionado">
                 </router-view>
-            </b-row>
+           </b-card>
+        </b-container>
+        
     </b-container>
 </template>
 
@@ -109,6 +121,17 @@ export default {
   },
 data(){
     return {
+        items: [
+        {
+          text: "Inicio",
+          to: "/inicio"
+        },
+        {
+          text: "Consulta Trazabilidad",
+          to: "/inicio/trazabilidad",
+          active: true
+        }
+      ],
         disabled_selectedCL:false,
         ocultartra: true,
         prueba: 'first',

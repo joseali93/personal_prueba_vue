@@ -2,15 +2,19 @@
 <!-- SE PERMITE LA SELECCION DE LOS CLIENTE Y CENTRO DE COSTO QUE CORRESPONDA PARA LA REALIZACION 
 DE LA ORDEN DE SERVICIO -->
 
-    <b-container fluid class="contenedor">
-        <b-breadcrumb :items="items" />
+    <b-container fluid class="contenedorTotal">
+      <div >
+         <b-breadcrumb :items="items" />
+      </div>
+       
 
-           
+      <b-container fluid>
+                <header class="content-heading" slot="header">
+                <h3>Generación Orden de Servicio</h3>
+                    
+                </header> 
+                <b-card class="cards">
             
-        <b-card class="cards">
-            <header slot="header" class="content-heading ">
-                <h3>INFORMACIÓN DE RECOGIDA</h3>
-            </header>
              <b-row>
                  <!--
                 <a  v-on:click="actualizar" > 
@@ -22,20 +26,20 @@ DE LA ORDEN DE SERVICIO -->
                 </a>
                 -->
                 <b-col md="3" offset-md="11">
-                  <b-btn class="rounded-circle" variant="primary"  v-on:click="actualizar"
+                  <b-btn class="rounded-circle" variant="primary" size="lg"  v-on:click="actualizar"
                   v-b-popover.hover="'Continuar'" ><i class="fa fa-arrow-right"></i></b-btn>
               </b-col>
             </b-row>
             <b-row>
                 <b-col>
-                    <h3>Seleccione el Cliente</h3>
+                    <h3 class="text-primary">Seleccione el Cliente</h3>
                     <b-form-select v-model="selected_client" class="mb-3"  
                     :options="clientes" text-field="nombre" value-field="_id" @change.native="ClientesSelect"
                     :disabled="disable_selected_client" >  
                     </b-form-select>
                 </b-col>
                 <b-col>
-                    <h3>Seleccione el Centro de Costos</h3>
+                    <h3 class="text-primary">Seleccione el Centro de Costos</h3>
                     <preload v-if="load"></preload>
                     <b-form-select v-model="selected_center" class="mb-3"
                     :options="centros" text-field="nombre" value-field="_id" @change.native="centrosseleccionado" :disabled="habilitar" v-else >
@@ -45,8 +49,8 @@ DE LA ORDEN DE SERVICIO -->
             <b-row>
                     <b-col>
                     <b-form-group id="exampleInputGroup1"
-                    
-                        label="Dirección: ">
+                      class="text-primary"
+                        label="Dirección ">
                             <b-form-input id="direccion"
                                 size="lg"
                                 type="text"
@@ -61,8 +65,8 @@ DE LA ORDEN DE SERVICIO -->
                 <b-row>
                     <b-col>
                     <b-form-group id="exampleInputGroup2"
-                    
-                        label="Contacto: ">
+                    class="text-primary"
+                        label="Contacto ">
                             <b-form-input id="direccion"
                                 size="lg"
                                 type="text"
@@ -78,8 +82,8 @@ DE LA ORDEN DE SERVICIO -->
                 <b-row>
                     <b-col>
                     <b-form-group id="exampleInputGroup3"
-                    
-                        label="Teléfono: " >
+                    class="text-primary"
+                        label="Teléfono " >
                             <b-form-input id="telefono"
                             size="lg"
                                 type="text"
@@ -93,6 +97,8 @@ DE LA ORDEN DE SERVICIO -->
                     </b-col>
                 </b-row>
         </b-card>
+        </b-container> 
+
     </b-container>
 </template>
 
@@ -484,11 +490,18 @@ export default {
 </script>
 
 <style>
-.contenedor {
+.contenedorTotal{
   padding-top: 0px;
-  padding-right: 5px;
+  padding-right: 0%;
   padding-bottom: 0px;
-  padding-left: 5px;
+  padding-left: 0%;
+  background-color: #f8f8ff;
+}
+.contenedorNavegacion {
+  padding-top: 0px;
+  padding-right: 2%;
+  padding-bottom: 0px;
+  padding-left: 4%;
   background-color: #f8f8ff;
 }
 .titulo {
@@ -497,15 +510,15 @@ export default {
   border-color: black;
 }
 .cards {
-  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.1);
+box-shadow: 1px 5px 7px 5px rgba(0,0,0,0.1);
   /*margin: 2%;
     /*border-top-width: 3px;
     */
 
-  border-left-width: 0px;
+  border-left-width:0px;
   padding-left: 55px;
   padding-right: 50px;
-  padding-top: 30px;
+  padding-top: 15px;
   border-bottom-width: 30px;
   padding-bottom: 30px;
   border-color: 15px gray;

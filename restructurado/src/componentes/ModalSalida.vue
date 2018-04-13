@@ -5,7 +5,8 @@
         <b-row id="ejemplo">
              
         </b-row>
-        <b-modal id="modallg2" size="lg" v-model="modal" :no-close-on-esc="true">
+        <b-modal id="modallg2" size="lg" v-model="modal" no-close-on-backdrop
+        no-close-on-esc>
             <div slot="modal-header" class="w-100 non-printableE">
                 <b-btn size="sm" class="float-left" variant="primary" @click="volver">
                 Volver

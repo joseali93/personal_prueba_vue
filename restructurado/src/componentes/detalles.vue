@@ -1,5 +1,5 @@
 <template>
-    <b-container fluid class="conta">
+    <b-container fluid>
         <b-row>
             <b-btn @click="volver" variant="success">
                 <i class="fa fa-chevron-left" aria-hidden="true"></i>
@@ -11,87 +11,93 @@
         <b-row>
            
         </b-row>
-          <b-card >
+          <b-card class="cards">
           
         <b-card-body>
-             <b-row>
-                <h1>Detalle de Orden de Servicio  {{info.id}}</h1>
+             <b-row class="text-center">
+                 <b-col>
+                    <p style="font-size:25px;">Orden de Servicio  
+                    </p>
+                 </b-col>
+                <b-col>
+                    <p style="font-size:25px;">Fecha Creación</p>
+                </b-col>
+                <b-col>
+                    <p style="font-size:25px;">Estado</p>
+                </b-col>
             </b-row>
-            <b-card fluid    class="mb-2 borderC"
-              >
-            <div slot="header" class="w-100">
-                <label class="float-left">INFORMACIÓN DE CLIENTE</label>
-            </div>
+            <b-row class="text-center">
+                 <b-col >
+                    <strong class="text-primary " style="font-size:28px;">{{info.id}}</strong> 
+                 </b-col>
+                <b-col>
+                    <strong  class="text-primary" style="font-size:28px;">{{currentUser.fecha_creacion | formatdate}}</strong>
+                </b-col>
+                <b-col>
+                    <strong  class="text-primary " style="font-size:25px;">{{currentUser.estado}}</strong>
+                </b-col>
+            </b-row>
+            <b-card fluid    class="mb-2 borderC">
+                <div slot="header" class="w-100">
+                    <strong class="float-left ">INFORMACIÓN DE CLIENTE</strong>
+                </div>
                 <b-row class="mb-2">
                 <b-col>
                     <b-row>
-                        <b-col>
-                            <h4>Cliente:</h4>
+                        <b-col >
+                            <h4 class="text-primary">Cliente:</h4>
                         </b-col>
+                        <b-col cols="8"> 
+                            <p class="text-capitalize" style="font-size:20px; ">{{currentUser.id_cliente.nombre}}</p> 
+                        </b-col>
+                        
+                    </b-row>
+                    <b-row>
                         <b-col>
-                            <p>{{currentUser.id_cliente.nombre}}</p> 
+                            <h4 class="text-primary">Dirección Cliente:</h4>
+                        </b-col>
+                        <b-col cols="8">
+                            <p 
+                            class="text-capitalize"
+                            style="font-size:20px;">{{currentUser.id_cliente.direccion}}</p> 
                         </b-col>
                     </b-row>
                     <b-row>
                         <b-col>
-                            <h4>Dirección Cliente:</h4>
+                            <h4 class="text-primary">Centro de Costo:</h4>
                         </b-col>
-                        <b-col>
-                            <p>{{currentUser.id_cliente.direccion}}</p> 
-                        </b-col>
-                    </b-row>
-                    <b-row>
-                        <b-col>
-                            <h4>Centro de Costo:</h4>
-                        </b-col>
-                        <b-col>
-                            <p>{{currentUser.id_centro_costo.nombre}}</p> 
+                        <b-col cols="8">
+                            <p 
+                            class="text-capitalize"
+                            style="font-size:20px;">{{currentUser.id_centro_costo.nombre}}</p> 
                         </b-col>
                     </b-row>
                     <b-row>
                         <b-col>
-                            <h4>Dirección Centro de Costo:</h4>
+                            <h4 class="text-primary">Dirección Centro de Costo:</h4>
                         </b-col>
-                        <b-col>
-                            <p>{{currentUser.id_centro_costo.direccion}}</p> 
+                        <b-col cols="8">
+                            <p 
+                            class="text-capitalize"
+                            style="font-size:20px;">{{currentUser.id_centro_costo.direccion}}</p> 
                         </b-col>
                     </b-row>
                 </b-col>
                 </b-row>
             </b-card>
 
-            <b-row>
-            <b-col>
-                <b-row>
-                    <b-col>
-                        <h4>Fecha Creación:</h4>
-                    </b-col>
-                    <b-col>
-                        <p>{{currentUser.fecha_creacion | formatdate}}</p> 
-                    </b-col>
-                </b-row>
-                <b-row>
-                    <b-col>
-                        <h4>Estado Orden de Servicio:</h4>
-                    </b-col>
-                    <b-col>
-                        <p><strong> {{currentUser.estado}}</strong></p> 
-                    </b-col>
-                </b-row>
-            </b-col>
-        </b-row>
         <b-card 
 
             class="mb-2 borderC">
              <div slot="header" class="w-100">
-                <label class="float-left">INFORMACIÓN DE RECOLECCIÓN</label>
+                <strong class="float-left ">INFORMACIÓN DE RECOLECCIÓN</strong>
             </div>
              <b-row class="mb-2">
             <b-col>
 
                 <b-row>
                     <b-col>
-                        <h4>Dirección Recolección</h4>
+                        <h4 class="text-primary">Dirección Recolección</h4>
                     </b-col>
                     <b-col>
                         <p>{{currentUser.remitente.direccion_recogida}}</p>
@@ -99,7 +105,7 @@
                 </b-row>
                  <b-row>
                     <b-col>
-                        <h4>Nombre Contacto Recolección</h4>
+                        <h4 class="text-primary">Nombre Contacto Recolección</h4>
                     </b-col>
                     <b-col>
                         <p>{{currentUser.remitente.nombre_contacto}}</p>
@@ -107,7 +113,7 @@
                 </b-row>
                 <b-row>
                     <b-col>
-                        <h4>Telefono Contacto Recolección</h4>
+                        <h4 class="text-primary">Telefono Contacto Recolección</h4>
                     </b-col>
                     <b-col>
                         <p>{{currentUser.remitente.telefono_contacto}}</p>
@@ -138,7 +144,7 @@
             </b-pagination>
             </b-row>
             <b-row>
-                <h4>Seleccione el Currier: </h4>
+                <h4 class="text-primary">Seleccione el Currier: </h4>
                 <b-form-select v-model="selected_curier" class="mb-3"  :options="curiers" text-field="nombre"
                  value-field="_id" :state="statuscourier"
                 @change.native="selectcuriers" :disabled="selec_disable">
@@ -327,6 +333,17 @@ import moment from 'moment'
 export default {
     data(){
         return{
+        items : [
+            {
+                text: "Inicio",
+                to: "/inicio"
+            },
+            {
+                text: "Consultar Ordenes de Servicio",
+                href: "#"
+            }
+
+            ],
             statuscourier:null,
             itemsvariables:[],
             servicio:'',
@@ -940,7 +957,10 @@ export default {
 </script>
 
 <style>
-
+.card-header{
+    background-color: #4db35a;
+    color: white;
+}
 .conta {
     padding: 3%
 }

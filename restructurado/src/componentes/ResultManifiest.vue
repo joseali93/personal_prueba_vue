@@ -57,7 +57,7 @@
                     </b-col>
                 </b-row>
                 <b-row>
-                    {{detalle.listaMovilizados}}
+                   
                     <b-col>
                         <b-table bordered fixed hover
                         :items="detalle.listaMovilizados"  :fields="fields2">

@@ -1,5 +1,11 @@
 <template>
-    <b-container>
+    <b-container fluid class="contenedorTotal">
+      <div>
+        <b-breadcrumb :items="itemsbr" />
+      </div>
+      <b-container fluid>
+        
+      <b-card class="cards">
         <b-row class="my-1 ">
             <b-col class="float-right">
                 <b-btn class="float-right rounded"  variant="success" @click="MostrarModal()" >
@@ -69,6 +75,10 @@
                 Generar
             </b-btn>
         </b-row>
+      </b-card>
+      </b-container>
+        
+        
 
         <router-view></router-view>
         <!-- Modal Component -->
@@ -134,11 +144,7 @@
                 </b-row>
             </b-container>
         </b-modal>
-        <b-modal id="modal1" ref="myModalRef2" title="Bootstrap-Vue" size="lg">
-    <p class="my-4">Hello from modal!</p>
-          <b-table striped hover :items="errores"></b-table>
 
-  </b-modal>
     </b-container>
 </template>
 
@@ -150,6 +156,18 @@ import Preload from "../componentes/preload.vue";
 export default {
   data() {
     return {
+      itemsbr: [
+        {
+          text: "Inicio",
+          to: "/inicio"
+        },
+        {
+          text: "Entradas y Salidas",
+          to: "/inicio/entradasalida",
+          active: true
+        },
+
+      ],
       errores:[],
       bandera: 0,
       value: [],
@@ -506,9 +524,11 @@ export default {
                 cancelButtonText:
                 'No',
                 cancelButtonAriaLabel: '',
-              }).then(()=> {
-
+              }).then((result)=> {
+                if(result.value){
                 this.metodo(this.errores); // this should execute now
+
+                }
 
               })
                   /*

@@ -1,73 +1,92 @@
 <template>
-    <b-container>
-        <b-card class="car" v-show="ocultar">
-            <header class="content-heading" slot="header">
-                <h3>Consultar Ordenes de Servicio</h3>
-                    <small>Se permite la búsqueda por las diferentes opciones </small>
-            </header>
-            <b-row>
-                <b-col>
-                    <b-form-group 
-                        label="Clientes">
-                    <b-form-select v-model="selectedCL" class="mb-3" :options="clientes"  
-                    text-field="nombre" value-field="_id" @change.native="SelectCC"
-                    :disabled="disabled_selectedCL">                        
-                    </b-form-select>
-                    </b-form-group>
-                </b-col>
-                <b-col>
-                    <b-form-group 
-                        label="Centros de Costo">
-                        <b-form-select v-model="selectedCC" class="mb-3" :options="centros" 
-                        text-field="nombre" value-field="_id" :disabled="habilitar">
-                        </b-form-select>
-                    </b-form-group>
-                </b-col>
-            </b-row>
-            <b-row>
-                <b-col>
-                    <b-form-group label="Rango de Fechas" class="mb-3">
-                    <date-picker width=400  v-model="time1" range lang="es" 
-                    :shortcuts="shortcuts" :confirm="true"
-                    ></date-picker>
-                    </b-form-group>
-                </b-col>
-                <b-col md="6" class="my-1">
-                    <b-form-group  label="Orden de Servicio" class="mb-0">
-                        <b-input-group>
-                            <b-form-input v-model="filter" type="number" @keyup="numeros(this)" placeholder="Digite numero Orden de Servicio" />
-                        </b-input-group>
-                    </b-form-group>
-                </b-col>
-                <b-col>
-                </b-col>
-            </b-row>
-            <b-row>
+    <b-container fluid class="contenedorTotal">
+        <div>
+            <b-breadcrumb :items="items" />
+        </div>
+               
+        <b-container fluid>
              
-                <b-col md="6" class="my-1">
-                    <b-form-group  label="Estados" class="mb-0">
-                        <b-input-group>
-                            <b-form-select  v-model="selected_state" :options="estados" text-field="nombre" value-field="nombre" @change.native="selestado">
+                <header class="content-heading" slot="header">
+                <h3>Consultar Ordenes de Servicio</h3>
+                    
+                </header>
+                <b-card class="cards" v-show="ocultar">
+                <!--
+                <header class="content-heading" slot="header">
+                    <h3>Consultar Ordenes de Servicio</h3>
+                        
+                </header>
+                -->
+                <b-row>
+                    <b-col>
+                        <b-form-group 
+                        class="text-primary"
+                            label="Clientes">
+                        <b-form-select v-model="selectedCL" class="mb-3" :options="clientes"  
+                        text-field="nombre" value-field="_id" @change.native="SelectCC"
+                        :disabled="disabled_selectedCL">                        
+                        </b-form-select>
+                        </b-form-group>
+                    </b-col>
+                    <b-col>
+                        <b-form-group 
+                        class="text-primary"
+                            label="Centros de Costo">
+                            <b-form-select v-model="selectedCC" class="mb-3" :options="centros" 
+                            text-field="nombre" value-field="_id" :disabled="habilitar">
                             </b-form-select>
-                            <b-input-group-button>
-                            </b-input-group-button>
-                        </b-input-group>
-                    </b-form-group>
-                </b-col>
-            </b-row>    
-            <b-row>
-                <b-col  md="6">
-                <b-btn class="my-1"  variant="primary" exact-active-class v-on:click="consultar()">
-                    <i class="fa fa-search" aria-hidden="true"></i>
-                    Consultar</b-btn>
-                </b-col>
-            </b-row>
-        </b-card>
-            <b-row>
+                        </b-form-group>
+                    </b-col>
+                </b-row>
+                <b-row>
+                    <b-col>
+                        <b-form-group 
+                        class="text-primary" label="Rango de Fechas" >
+                        <date-picker width=400  v-model="time1" range lang="es" 
+                        :shortcuts="shortcuts" :confirm="true"
+                        ></date-picker>
+                        </b-form-group>
+                    </b-col>
+                    <b-col md="6" class="my-1">
+                        <b-form-group 
+                        class="text-primary"
+                         label="Orden de Servicio" >
+                            <b-input-group>
+                                <b-form-input v-model="filter" type="number" @keyup="numeros(this)" placeholder="Digite numero Orden de Servicio" />
+                            </b-input-group>
+                        </b-form-group>
+                    </b-col>
+                    <b-col>
+                    </b-col>
+                </b-row>
+                <b-row>
+                
+                    <b-col md="6" class="my-1">
+                        <b-form-group  label="Estados" class="text-primary">
+                            <b-input-group>
+                                <b-form-select  v-model="selected_state" :options="estados" text-field="nombre" value-field="nombre" @change.native="selestado">
+                                </b-form-select>
+                                <b-input-group-button>
+                                </b-input-group-button>
+                            </b-input-group>
+                        </b-form-group>
+                    </b-col>
+                </b-row>    
+                <b-row>
+                    <b-col  md="6">
+                    <b-btn class="my-1"  variant="primary" exact-active-class v-on:click="consultar()">
+                        <i class="fa fa-search" aria-hidden="true"></i>
+                        Consultar</b-btn>
+                    </b-col>
+                </b-row>
+            </b-card>
+            <b-card id="jose" class="cards card2"  v-show="sel_conslta">
                 <router-view :consulta="consulta" :peticion="peticion">
 
-                </router-view>
-            </b-row>
+            </router-view>
+            </b-card>
+        </b-container>
+        
         </b-container>
 </template>
 
@@ -86,6 +105,17 @@ export default {
   },
     data() {
         return {
+            sel_conslta: false,
+            items : [
+            {
+                text: "Inicio",
+                to: "/inicio"
+            },
+            {
+                text: "Consultar Ordenes de Servicio",
+                href: "#"
+            }
+            ],
                 peticion:'',
              shortcuts: [
                 {
@@ -106,10 +136,12 @@ export default {
             ],
             disabled_selectedCL: false,
             ocultar: true,
+            /*
             items: [{
                 text: 'Consultar Ordenes de Servicio',
                 active: true
             }],
+            */
             habilitar: true,
             load: false,
             consulta: [],
@@ -146,6 +178,9 @@ export default {
             bus.$emit('actualizar',indice)
         },
         consultar: function(){
+            
+            this.sel_conslta=true
+            console.log();
             ///ObtenerOrdenesFiltrado/:consecutivo/:estado/:id_remitente/:id_centro/:fecha_inicio/:fecha_final
             var cliente
             var centrocosto
@@ -447,10 +482,33 @@ export default {
 </script>
 
 <style>
+.contenedor {
+  padding-top: 0px;
+  padding-right: 2%;
+  padding-bottom: 0px;
+  padding-left: 4%;
+  background-color: #f8f8ff;
+}
 .cards{
+    /*
     margin-top: 2%;
     border-top-width: 3px;
     border-color: gray
+    */
+    box-shadow: 1px 5px 7px 5px rgba(0,0,0,0.1);
+  /*margin: 2%;
+    /*border-top-width: 3px;
+    */
+
+  border-left-width:px;
+  padding-left: 55px;
+  padding-right: 50px;
+  padding-top: 30px;
+  border-bottom-width: 30px;
+  padding-bottom: 30px;
+  border-color: 15px gray;
+
+  
 }
 .car{
     border: 1px solid transparent;

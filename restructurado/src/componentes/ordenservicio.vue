@@ -1,54 +1,67 @@
 <template>
 <!-- EN ESTE SE PERMITE LA GENERACION DE LOS DETALLES ASOCIADOS A UN CLIENTE Y CENTOR DE COSTO -->
-    <b-container fluid class="contenedor">
+    <b-container fluid class="contenedorTotal">
+         <div >
          <b-breadcrumb :items="items" />
+        </div>
+       <b-container fluid>
 
-      <b-card class="cards">
-         <b-row>
-              <b-col md="2" offset-md="10">
-                  <b-btn class="rounded-circle" variant="secondary " to="/inicio/orden" ><i class="fa fa-arrow-left"></i></b-btn>
-                  <b-btn class="rounded-circle" variant="success"  @click="envioServicio"><i class="fa fa-check"></i></b-btn>
-                  <b-btn class="rounded-circle" variant="danger"  v-b-modal.modalcrear><i class="fa fa-plus"></i></b-btn>
-
-              </b-col>        
-          </b-row>
-
+        <b-card class="cards">
           <b-row>
-              <b-table :fields="fields" :per-page="5" :current-page="currentPage" :items="DetalleServicio">
+                <b-col md="3" offset-md="9">
+                    <b-btn class="rounded-circle" variant="secondary " 
+                     to="/inicio/orden" 
+                     v-b-tooltip.hover title="Anterior"
+                     size="lg"><i class="fa fa-arrow-left"></i>
+                     </b-btn>
+                    <b-btn  class="rounded-circle" variant="success"
+                       size="lg"  @click="envioServicio"
+                        v-b-tooltip.hover title="Finalizar"><i class="fa fa-check"></i>
+                    </b-btn>
+                    <b-btn class="rounded-circle" size="lg" variant="danger"  
+                    v-b-tooltip.hover title="Adicionar"
+                    v-b-modal.modalcrear><i class="fa fa-plus"></i>
+                    </b-btn>
+                </b-col>        
+            </b-row>
+            <br>
+            <b-row>
+                <b-table :fields="fields" :per-page="5" :current-page="currentPage" :items="DetalleServicio">
 
-                  <template slot="eliminar" slot-scope="data">
-                      <i class="btn btn-danger fa fa-trash" v-on:click="eliminar(index)" ></i>
-                  </template>
-                  <template slot="productoslocal"  slot-scope="data">
-                      {{data.value.nombre}}         
-                  </template>
-                  <template slot="servicioslocal"  slot-scope="data">
-                      {{data.value.nombre}}
-                  </template>
-                  <template slot="editar"  slot-scope="data">
-                      <i class="btn btn-success fa fa-pencil"  v-on:click="editar(data.index)" v-b-modal.modaleditar></i>
-                  </template>
-              </b-table>
-              <b-pagination size="md" :total-rows="DetalleServicio.length" v-model="currentPage" :per-page="5">
-              </b-pagination>
-          </b-row>
-          <!--
-          <b-row>
-            <b-col class="float-left" cols="5">
-              <b-btn to="/inicio/orden" variant="primary">
-              <i class="fa fa-chevron-left" aria-hidden="true">  </i>
-               Anterior</b-btn>
+                    <template slot="eliminar" slot-scope="data" >
+                        <i class="btn btn-danger fa fa-trash" v-on:click="eliminar(index)" ></i>
+                    </template>
+                    <template slot="productoslocal"  slot-scope="data">
+                        {{data.value.nombre}}         
+                    </template>
+                    <template slot="servicioslocal"  slot-scope="data">
+                        {{data.value.nombre}}
+                    </template>
+                    <template slot="editar"  slot-scope="data">
+                        <i class="btn btn-success fa fa-pencil"  v-on:click="editar(data.index)" v-b-modal.modaleditar></i>
+                    </template>
+                </b-table>
+                <b-pagination size="md" :total-rows="DetalleServicio.length" v-model="currentPage" :per-page="5">
+                </b-pagination>
+            </b-row>
+            <!--
+            <b-row>
+              <b-col class="float-left" cols="5">
+                <b-btn to="/inicio/orden" variant="primary">
+                <i class="fa fa-chevron-left" aria-hidden="true">  </i>
+                Anterior</b-btn>
 
-            </b-col>
-            <b-col class="d-flex flex-row-reverse">
-                                    <b-btn   @click="envioServicio" variant="primary">
-                                      <i class="fa fa-check" aria-hidden="true"></i>
-                                      Finalizar</b-btn>
+              </b-col>
+              <b-col class="d-flex flex-row-reverse">
+                                      <b-btn   @click="envioServicio" variant="primary">
+                                        <i class="fa fa-check" aria-hidden="true"></i>
+                                        Finalizar</b-btn>
 
-            </b-col>
-          </b-row>
-          -->
-      </b-card>
+              </b-col>
+            </b-row>
+            -->
+        </b-card>
+       </b-container>
       <!-- Modal Adicionar -->
       <b-modal id="modalcrear" ref="Modal" title="Adicionar Registro" 
         no-close-on-backdrop
@@ -96,10 +109,10 @@
                           <b-card-body>
                                   <b-row>
                                   <b-col>
-                                    <label class="col col-form-label col-form-label-sm text-capitalize" >Documento Referencia:</label>
+                                    <label class="col col-form-label col-form-label-sm text-capitalize text-primary" >Documento Referencia:</label>
                                   </b-col>
                                   <b-col>
-                                    <b-form-input type="text" class="form-control form-control-sm" 
+                                    <b-form-input type="text" class="form-control form-control-sm " 
                                                               placeholder="Referencia" v-model="detalles.referencia"
                                                           :state="estado.referencia"></b-form-input>
                                   </b-col>
@@ -111,11 +124,11 @@
                                     <template v-if="data.type!='select'" >
                                       <template v-if="data.espieza==false">
                                       <b-col  >   
-                                          <label  class="col-sm col-form-label col-form-label-sm text-capitalize" :style="[data.style]" >{{data.placeholder}}: </label>
+                                          <label  class="col-sm col-form-label col-form-label-sm text-capitalize text-primary" :style="[data.style]" >{{data.placeholder}}: </label>
                                       </b-col>
                                       <b-col >
                                         
-                                          <input class="form-control form-control-sm"  :maxlength="data.maxlength" :type="data.type" :id="data.id" :style="[data.style,validatecampo]" :max="data.max" :min="data.min" :placeholder="data.placeholder" @keyup="Presiono(indice)"   required>
+                                          <input class="form-control form-control-sm "  :maxlength="data.maxlength" :type="data.type" :id="data.id" :style="[data.style,validatecampo]" :max="data.max" :min="data.min" :placeholder="data.placeholder" @keyup="Presiono(indice)"   required>
                                       </b-col>
                                     
                                       </template>
@@ -150,7 +163,7 @@
                               <template v-if="data.type!='select'" >
                                   <template v-if="data.espieza==true">
                                   <b-col  >   
-                                      <label  class="col-sm col-form-label col-form-label-sm text-capitalize" :style="[data.style]" >{{data.placeholder}}: </label>
+                                      <label  class="col-sm col-form-label col-form-label-sm text-capitalize text-primary" :style="[data.style]" >{{data.placeholder}}: </label>
                                   </b-col>
                                   <b-col >
                                       <input focus class="form-control form-control-sm"  :maxlength="data.maxlength" :type="data.type" :id="data.id" :style="[data.style,validatecampo]" 
@@ -196,13 +209,13 @@
                           <b-card-body>
                               <b-form-row v-show="selectservice" class="my-1">
                               <b-col>
-                                  <label  class="col-sm col-form-label col-form-label-sm"> Identificación: </label>
+                                  <label  class="col-sm col-form-label col-form-label-sm text-primary"> Identificación: </label>
                               </b-col>
                               <b-col>
                                   <b-form-input type="number" class="form-control form-control-sm"  placeholder="Indentidicación"
                                   v-model="identificacion"
-                                  @keyup.enter.tab.native="buscar()"
-                                  @keydown.tab.native="buscar()"
+                                  @keyup.enter.tab.native="buscar('nuevo')"
+                                  @keydown.tab.native="buscar('nuevo')"
                                   :state="true"  v-b-popover.hover="'Se debe diligenciar sin puntos, en caso de NIT sin numero de validación, ni guion'" title="Num. Identificacion"></b-form-input>
                                   <!--<input type="text" class="form-control form-control-sm"  placeholder="Nombre" v-model="detalles.destinatario.nombre">
                                   -->
@@ -212,7 +225,7 @@
                           
                           <b-form-row v-show="selectservice&&mostrardestinatario" class="my-1">
                               <b-col>
-                                  <label  class="col-sm col-form-label col-form-label-sm">Nombre: </label>
+                                  <label  class="col-sm col-form-label col-form-label-sm text-primary">Nombre: </label>
                               </b-col>
                               <b-col>
                                   <b-form-input type="text" class="form-control form-control-sm"  placeholder="Nombre" v-model="detalles.destinatario.nombre"
@@ -220,9 +233,9 @@
 
                               </b-col>
                           </b-form-row>
-                          <b-form-row v-show="selectservice&&mostrardestinatario" class="my-1">
+                          <b-form-row v-show="selectservice&&mostrardestinatario " class="my-1">
                               <b-col>
-                                  <label  class="col-sm col-form-label col-form-label-sm">Dirección: </label>
+                                  <label  class="col-sm col-form-label col-form-label-sm text-primary">Dirección: </label>
                               </b-col>
                               <b-col>
                                 <b-form-input type="text"  class="form-control form-control-sm"  :state="estado.direccion" placeholder="Direccion" v-model="detalles.destinatario.direccion"> </b-form-input>
@@ -231,7 +244,7 @@
                           </b-form-row>
                           <b-form-row v-show="selectservice&&mostrardestinatario" class="my-1">
                               <b-col>
-                                  <label  class="col-sm col-form-label col-form-label-sm">Telefono: </label>
+                                  <label  class="col-sm col-form-label col-form-label-sm text-primary">Telefono: </label>
                               </b-col>
                               <b-col>
 
@@ -292,7 +305,7 @@
 
                 </b-row>
 
-  <b-card no-body v-show="selectservice" class=" w-100 cards"
+       <b-card no-body v-show="selectservice" class=" w-100 cards"
                 style="
                 padding-left: 0px;
                 padding-right: 0px;
@@ -385,6 +398,20 @@
                       </b-tab>
                       <b-tab title="Destinatario">
                        <b-card-body>
+                         <b-form-row v-show="selectservice" class="my-1">
+                              <b-col>
+                                  <label  class="col-sm col-form-label col-form-label-sm"> Identificación: </label>
+                              </b-col>
+                              <b-col>
+                                  <b-form-input type="number" class="form-control form-control-sm"  placeholder="Indentidicación"
+                                  v-model="detalleseditar.destinatario.numero_identificacion"
+                                  @keyup.enter.tab.native="buscar('editar')"
+                                  @keydown.tab.native="buscar('editar')"
+                                  :state="true"  v-b-popover.hover="'Se debe diligenciar sin puntos, en caso de NIT sin numero de validación, ni guion'" title="Num. Identificacion"></b-form-input>
+                                  <!--<input type="text" class="form-control form-control-sm"  placeholder="Nombre" v-model="detalles.destinatario.nombre">
+                                  -->
+                              </b-col>
+                          </b-form-row>
                          <b-form-row class="my-1">
                             <b-col>
                                 <label  class="col-sm col-form-label col-form-label-sm">Nombre: </label>
@@ -420,7 +447,7 @@
                        </b-card-body>
                       </b-tab>
                   </b-tabs>
-  </b-card>
+        </b-card>
                
                 
                 
@@ -541,9 +568,7 @@ export default {
   },
   methods: {
     UpdateDinamico(value) {
-      //////console.log("entro a update");
-      //////console.log(this.indicedinamico);
-      //////console.log(this.currentPageRef);
+
       var objellaves = Object.keys(this.itemsdinamicos[0]);
       //////console.log(objellaves);
       var tituloopciones = {};
@@ -567,11 +592,7 @@ export default {
           }
         }
       }
-      //this.DetalleServicio.splice(this.indices, 1);
-      //this.DetalleServicio.splice(this.indices, 0, detalles);
-      //////console.log(this.itemsdinamicos);
-      //////console.log(this.currentPageRef);
-      //////console.log(tituloopciones);
+
       if (this.indicedinamico == 0 && this.currentPageRef == 1) {
         this.itemsdinamicos.splice(this.indicedinamico, 1);
         this.itemsdinamicos.splice(this.indicedinamico, 0, tituloopciones);
@@ -621,50 +642,7 @@ export default {
       //////console.log(this.DetalleServicio[this.indices].detalleslocal.infor);
       this.ocultardicionarED = true;
       this.ocultareditarED = false;
-      /*
-      //////console.log(this.indicedinamico);
-      //////console.log(this.currentPageRef);
-      var objellaves=Object.keys(this.itemsdinamicos[0])
-      //////console.log(objellaves);
-      var tituloopciones={}
 
-      for(var x=0;x<this.inputs.campos.length;x++){
-        if(this.inputs.campos[x].espieza==true){
-          for(var y=0;y<objellaves.length;y++){
-            if(this.inputs.campos[x].vmodel==objellaves[y]){
-                //////console.log(document.getElementById(this.inputs.campos[x].id).value);
-                eval('this.objeto.'+this.inputs.campos[x].vmodel+'='+document.getElementById(this.inputs.campos[x].id).value)
-                tituloopciones[objellaves[y]]=eval('this.objeto.'+objellaves[y])
-                document.getElementById(this.inputs.campos[x].id).value=''
-            }
-          }
-        }
-      }
-      //this.DetalleServicio.splice(this.indices, 1);
-      //this.DetalleServicio.splice(this.indices, 0, detalles);
-      //////console.log(this.itemsdinamicos);
-      //////console.log(this.currentPageRef);
-      //////console.log(tituloopciones);
-      if(this.indicedinamico==0&&this.currentPageRef==1){
-        this.itemsdinamicos.splice(this.indicedinamico, 1);
-        this.itemsdinamicos.splice(this.indicedinamico, 0, tituloopciones);
-      }
-      else{
-        if(this.currentPageRef==1)
-        {
-          this.itemsdinamicos.splice(this.indicedinamico, 1);
-          this.itemsdinamicos.splice(this.indicedinamico, 0, tituloopciones);
-        }
-        else
-        {
-          this.itemsdinamicos.splice(this.indicedinamico+3, 1);
-          this.itemsdinamicos.splice(this.indicedinamico+3, 0, tituloopciones);
-        }
-      }
-
-      this.ocultardicionar= true
-      this.ocultareditar=false
-      */
     },
     ActualizarRefED(value, value2) {
       //////console.log("entro a cambiar ref")
@@ -819,13 +797,15 @@ export default {
       //console.log(this.objeto);
       //console.log(this.itemsdinamicos);
     },
-    buscar() {
+    buscar(accion) {
       //////console.log("entro a buscar");
       //////console.log(this.identificacion);
-      this.axios
+      if(accion=='nuevo'){
+        console.log("nuevo");
+        this.axios
         .get(urlservicios + "obtenerDestinatario" + "/" + this.identificacion)
         .then(response => {
-          //////console.log(response.data);
+          console.log(response.data);
           var destinatario = response.data.destinatarios;
           this.creaciondestinatarios = response.data.validar;
           if (response.data.validar == true) {
@@ -844,6 +824,36 @@ export default {
           }
           this.mostrardestinatario = true;
         });
+      }
+      if(accion=='editar'){
+        console.log("editar");
+        console.log(this.detalleseditar.destinatario);
+        this.axios
+        .get(urlservicios + "obtenerDestinatario" + "/" + this.detalleseditar.destinatario.numero_identificacion)
+        .then(response => {
+          console.log(response.data);
+          var destinatario = response.data.destinatarios;
+          this.creaciondestinatarios = response.data.validar;
+          if (response.data.validar == true) {
+            this.detalles.destinatario.numero_identificacion =
+              destinatario.numero_identificacion;
+            this.detalleseditar.destinatario._id = destinatario._id;
+            this.detalleseditar.destinatario.nombre = destinatario.nombre;
+            this.detalleseditar.destinatario.direccion = destinatario.direccion;
+            this.detalleseditar.destinatario.telefono = destinatario.telefono;
+          } else {
+            this.detalleseditar.destinatario.numero_identificacion = this.identificacion;
+            this.detalleseditar.destinatario._id = "";
+            this.detalleseditar.destinatario.nombre = "";
+            this.detalleseditar.destinatario.direccion = "";
+            this.detalleseditar.destinatario.telefono = "";
+          }
+          this.mostrardestinatario = true;
+        });
+        
+
+      }
+      
     },
     numeroseditar(valor) {
       ////////console.log("entro a numeros editar");
@@ -1116,6 +1126,8 @@ export default {
     },
     editar(index) {
       ////////console.log(index);
+       this.tabIndexED=0,
+       this.tabIndex=0
       this.validatecampo = "";
       this.validatecampoTel = "";
       this.estado.nombre = null;
@@ -1129,7 +1141,7 @@ export default {
       this.selectservice = this.DetalleServicio[index].servicioslocal._id;
       this.selectservicio = this.DetalleServicio[index].servicioslocal;
       ////////console.log(this.selectservice);
-      //////console.log(this.detalleseditar);
+      console.log(this.detalleseditar);
 
       this.itemsdinamicos = this.DetalleServicio[
         index
@@ -1168,6 +1180,8 @@ export default {
         });
     },
     hideModal() {
+      this.tabIndexED=0,
+       this.tabIndex=0
       (this.habilitar = true),
         (this.mostrardestinatario = false),
         (this.camposdinamicos = false),
@@ -1414,6 +1428,7 @@ export default {
         this.DetalleServicio.push(detalles);
         //console.log(this.DetalleServicio);
         //BLANQUEAR DATOS
+       this.tabIndex=0
         this.camposdinamicos = false;
         this.fieldsdinamicos = [];
         this.itemsdinamicos = [];

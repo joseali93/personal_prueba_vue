@@ -1,58 +1,72 @@
 <template>
-  <b-container>
-      <b-card v-show="ocultar">
-          <header slot="header" class="content-heading">
-                <h3>Consultar Manifiestos</h3>
-                    <small>Se permite la busqueda de Manifiestos seleccionando los siguientes filtros </small>
-            </header>
-            <b-row>
-                <b-col>
-                    <b-btn class="float-right" variant="success" @click="limpiar">
-                        <i class="fa fa-eraser"></i>
-                        
-                    </b-btn>
-                </b-col>
-            </b-row>
-            <b-row>
-                <b-col>
-                    <b-form-group label="Numero de Manifiesto" class="mb-3">
-                        <b-form-input v-model="nmanifiesto"
-                        :state="nmanifiestoestado"
-                        type="number"
-                        placeholder="Ingrese el numero de Manifiesto"
-                        v-on:keyup.enter.native="consultar()"></b-form-input>
-                    </b-form-group>
-                </b-col>
-            </b-row>
-            <b-row>
-                <b-col>
-                    <b-form-group label="Seleccione un Proceso Logistico" class="mb-3">
-                        <b-form-select v-model="procelogistica"  text-field="nombre" 
-                        :state="procelogisticaestado" value-field="_id" 
-                        :options="procesosLog" class="mb-3" @input="procesoseleccionado">
-                        </b-form-select>
-                    </b-form-group>
-                </b-col>
-            </b-row>
-            <b-row>
-                <b-col>
-                
-                        <b-form-group label="Rango de Fechas" class="mb-3">
-                            <date-picker disabled="true" id="fecha" width="500" v-model="time1" placeholder="Rango de Fechas" range lang="en"></date-picker>
+    <b-container fluid class="contenedorTotal">
+
+        <div >
+            <b-breadcrumb :items="items" />
+        </div>
+
+        <b-container fluid>
+            <b-card v-show="ocultar" class="cards">
+                <!--
+            <header slot="header" class="content-heading">
+                    <h3>Consultar Manifiestos</h3>
+                        <small>Se permite la busqueda de Manifiestos seleccionando los siguientes filtros </small>
+                </header>
+                -->
+                <b-row>
+                    <b-col>
+                        <b-btn class="float-right" variant="success" @click="limpiar">
+                            <i class="fa fa-eraser"></i>
+                            
+                        </b-btn>
+                    </b-col>
+                </b-row>
+                <b-row>
+                    <b-col>
+                        <b-form-group label="Numero de Manifiesto" >
+                            <b-form-input v-model="nmanifiesto"
+                            :state="nmanifiestoestado"
+                            type="number"
+                            placeholder="Ingrese el numero de Manifiesto"
+                            v-on:keyup.enter.native="consultar()"></b-form-input>
                         </b-form-group>
-                </b-col>
-            </b-row>
-            <b-row>
-                <b-col>
-                    <b-btn variant="success" class="float-right" @click="consultar()">
-                        <i class="fa fa-search " aria-hidden="true"></i>
-                        Consultar
-                    </b-btn>
-                </b-col>
-            </b-row>
-      </b-card>
-          <router-view :consulta="consulta"></router-view>
-  </b-container>
+                    </b-col>
+                </b-row>
+                <b-row>
+                    <b-col>
+                        <b-form-group label="Seleccione un Proceso Logistico">
+                            <b-form-select v-model="procelogistica"  text-field="nombre" 
+                            :state="procelogisticaestado" value-field="_id" 
+                            :options="procesosLog" @input="procesoseleccionado">
+                            </b-form-select>
+                        </b-form-group>
+                    </b-col>
+                </b-row>
+                <b-row>
+                    <b-col>
+                    
+                            <b-form-group label="Rango de Fechas" c>
+                                <date-picker disabled="true" id="fecha" width="500" v-model="time1" placeholder="Rango de Fechas" range lang="en"></date-picker>
+                            </b-form-group>
+                    </b-col>
+                </b-row>
+                <b-row>
+                    <b-col>
+                        <b-btn variant="success" class="float-right" @click="consultar()">
+                            <i class="fa fa-search " aria-hidden="true"></i>
+                            Consultar
+                        </b-btn>
+                    </b-col>
+                </b-row>
+            </b-card>
+            <br>
+            <b-card class="cards">
+                <router-view :consulta="consulta"></router-view>
+            </b-card>
+            
+        </b-container>
+        
+    </b-container>
 </template>
 
 <script>
@@ -67,6 +81,18 @@ export default {
   },
     data(){
         return{
+            items: [
+                {
+                text: "Inicio",
+                to: "/inicio"
+                },
+                {
+                text: "Consulta Manifiestos",
+                to: "/inicio/manifiestos",
+                active: true
+                },
+
+            ],
             ocultar:true,
             consulta:[],
             nmanifiestoestado:null,

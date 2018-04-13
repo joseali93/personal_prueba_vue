@@ -1,11 +1,11 @@
 <template>
-    <b-container fluid>
-        <b-row class="my-1">
+    <b-container fluid class=" w-100">
+       
                 <b-btn @click="volver" variant="success">
                     <i class="fa fa-chevron-left" aria-hidden="true"></i>
                     Volver
                 </b-btn>
-        </b-row>
+        
     <b-card-group deck>
         <b-card title="Información Remitente"
                >
@@ -88,10 +88,11 @@
 
             </b-col>
         </b-row>
+       
         <b-row v-for="(data,indice) in inputs" class="my-1">
           
                         <b-col cols="5">
-                            <label  class="col-sm-2 col-form-label col-form-label-sm text-capitalize">{{data.nombre}}: </label>
+                            <label  class="col-sm col-form-label col-form-label-sm text-capitalize">{{data.nombre}}: </label>
                         </b-col>
                     
                         <template >
@@ -103,21 +104,24 @@
                             </b-col>
                         </template>
         </b-row>
+         
                 <hr>
                 <b-row>
                      <b-col>
                     <h3>Courier:</h3>
                     </b-col>
                     <b-col>
-                        {{info.courier.nombre}} {{info.courier.apellido}}
+                        {{curier.nombre}} {{curier.apellido}}
                     </b-col>
                 </b-row>
+                
                 <b-row>
                     <b-col>
                      <b-table striped hover :items="info.detalleslocal.infor.objetoUnidades" ></b-table>
 
                     </b-col>
                 </b-row>
+                
     </b-col>
 
         <b-row>
@@ -257,6 +261,7 @@ export default {
                   estadoT:null,
                   
             info: '',
+            curier:{},
             otro:'',
             inputs:'',
             campostra:[
@@ -472,6 +477,13 @@ export default {
         this.info=userObject.value
         this.otro=userObject.personal
         this.inputs=userObject.personal.inputs
+        this.curier=userObject.value.courier
+        console.log("-----------");
+        if(this.curier==undefined||this.curier=='undefined'||
+            this.curier==''){
+                this.curier={}
+        }
+        console.log(this.curier);
       }.bind(this))
     }
 }
