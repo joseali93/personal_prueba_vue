@@ -80,7 +80,7 @@
                     </b-col>
                 </b-row>
             </b-card>
-            <b-card id="jose" class="cards card2"  v-show="sel_conslta">
+            <b-card id="jose" class="cards2"  v-show="sel_conslta">
                 <router-view :consulta="consulta" :peticion="peticion">
 
             </router-view>
@@ -482,6 +482,20 @@ export default {
 </script>
 
 <style>
+.cards2 {
+box-shadow: 1px 5px 7px 5px rgba(0,0,0,0.1);
+  /*margin: 2%;
+    /*border-top-width: 3px;
+    */
+
+  border-left-width:0px;
+  padding-left: 55px;
+  padding-right: 50px;
+  padding-top: 39px;
+  border-bottom-width: 30px;
+  padding-bottom: 30px;
+  border-color: 15px gray;
+}
 .contenedor {
   padding-top: 0px;
   padding-right: 2%;
