@@ -1,20 +1,37 @@
 <template>
-
-  <div class="content-wrapper ">
-    <div class="content-heading text-capitalize">
-      Bienvenido {{nombreusu}}
-    </div>
-      <div class="panel panel-default" >
-        <h3>
+   <b-container fluid class="contenedorTotal">
+      <div >
+         <b-breadcrumb :items="items" />
+      </div>
+       <b-container fluid>
+         <header class="content-heading text-capitalize">
+            Bienvenido {{nombreusu}}
+         </header>
+         <b-row>
+           <h3>
             <strong >Way</strong><strong class="text-primary">Logistic</strong> es un aplicativo para el manejo logístico de su empresa
         </h3>
-      </div>
-    </div>
+         </b-row>
+       </b-container>
+   </b-container>
+
+
 </template>
 
 <script>
 export default {
- props: ['nombreusu']
+ props: ['nombreusu'],
+  data() {
+    return {
+      items: [
+        {
+          text: "Inicio",
+          to: "/inicio"
+        }
+        
+      ],
+    }
+  }
 }
 </script>
 

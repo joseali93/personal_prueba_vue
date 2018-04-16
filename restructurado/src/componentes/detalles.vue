@@ -11,7 +11,7 @@
         <b-row>
            
         </b-row>
-          <b-card class="cards">
+          
           
         <b-card-body>
              <b-row class="text-center">
@@ -97,34 +97,39 @@
 
                 <b-row>
                     <b-col>
-                        <h4 class="text-primary">Dirección Recolección</h4>
+                        <h4 class="text-primary">Dirección </h4>
                     </b-col>
-                    <b-col>
-                        <p>{{currentUser.remitente.direccion_recogida}}</p>
+                    <b-col cols="8">
+                        <p  style="font-size:20px;">{{currentUser.remitente.direccion_recogida}}</p>
                     </b-col>
                 </b-row>
                  <b-row>
                     <b-col>
-                        <h4 class="text-primary">Nombre Contacto Recolección</h4>
+                        <h4 class="text-primary">Nombre Contacto </h4>
                     </b-col>
-                    <b-col>
-                        <p>{{currentUser.remitente.nombre_contacto}}</p>
+                    <b-col cols="8">
+                        <p  style="font-size:20px;">{{currentUser.remitente.nombre_contacto}}</p>
                     </b-col>
                 </b-row>
                 <b-row>
                     <b-col>
-                        <h4 class="text-primary">Telefono Contacto Recolección</h4>
+                        <h4 class="text-primary">Telefono Contacto </h4>
                     </b-col>
-                    <b-col>
-                        <p>{{currentUser.remitente.telefono_contacto}}</p>
+                    <b-col cols="8">
+                        <p  style="font-size:20px;">{{currentUser.remitente.telefono_contacto}}</p>
                     </b-col>
                 </b-row>
             </b-col>
 
             </b-row>
         </b-card>
-       
-        <b-row>
+        <b-card 
+
+            class="mb-2 borderC">
+             <div slot="header" class="w-100">
+                <strong class="float-left ">DETALLE ENVIOS</strong>
+            </div>
+            <b-row class="mb-2">
             <b-table :fields="fields" ref="table" :per-page="5" :current-page="currentPage" :items="this.currentUser.detalle">
                 <template slot="consecutivo" slot-scope="data">
                     {{data.item.id}}
@@ -143,6 +148,8 @@
             <b-pagination size="md" :total-rows="this.currentUser.detalle.length" v-model="currentPage" :per-page="5">
             </b-pagination>
             </b-row>
+        </b-card>
+        
             <b-row>
                 <h4 class="text-primary">Seleccione el Currier: </h4>
                 <b-form-select v-model="selected_curier" class="mb-3"  :options="curiers" text-field="nombre"
@@ -385,7 +392,9 @@ export default {
     },
     methods: {
         desabilitarguardar(){
-            if(this.info.estado=="orden de servicio cancelada"){
+            console.log(this.info.estado);
+            if(this.info.estado=="orden de servicio cancelada"||this.info.estado=="Orden De Servicio Recogida"){
+                this.selec_disable=true
                 return true
             }else{
                 return false

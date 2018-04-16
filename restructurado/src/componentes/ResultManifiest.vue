@@ -33,26 +33,32 @@
         <b-pagination size="md" :total-rows="consulta.length" v-model="currentPage" :per-page="5">
         </b-pagination>
         <!-- Modal Component -->
-        <b-modal id="modal1" size="lg" ref="myModalRef" title="Información">
+        <b-modal id="modal1" size="lg" ref="myModalRef" title="Información" class="text-primary">
+            <div slot="modal-header" class="w-100">
+                <b-btn size="sm" class="float-left" variant="primary" @click="cerrarModal">
+                Cerrar
+                </b-btn>
+                
+            </div>
             <b-container>
                 <b-row>
-                    <b-col class=" text-capitalize">
+                    <b-col class=" text-primary text-capitalize">
                         <label>Ciudad: <strong>{{detalle.ciudad}}</strong></label>
                     </b-col>
                 </b-row>
                 <b-row>
-                    <b-col class=" text-capitalize">
+                    <b-col class=" text-primary text-capitalize">
                         <label>Bodega: <strong>{{detalle.nombre_centro}}</strong></label>
                     </b-col>
                 </b-row>
 
-                <b-row>
+                <b-row class="text-primary">
                     <b-col>
-                        <label>Fecha: <strong>{{detalle.fecha_creacion | formatdate}}</strong></label>
+                        <label >Fecha: <strong>{{detalle.fecha_creacion | formatdate}}</strong></label>
                     </b-col>
                 </b-row>
                 <b-row>
-                    <b-col class=" text-capitalize">
+                    <b-col class=" text-primary text-capitalize">
                         <label>Conductor: <strong>{{detalle.nombre_courier}} {{detalle.apellido_courier}}</strong></label>
                     </b-col>
                 </b-row>
@@ -114,6 +120,9 @@ export default {
         }
     },
     methods:{
+        cerrarModal(){
+             this.$refs.myModalRef.hide()
+        },
         imprimir(value){
             console.log("entro a imprimir");
             var items=value.listaMovilizados

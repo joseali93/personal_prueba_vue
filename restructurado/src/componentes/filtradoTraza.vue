@@ -7,16 +7,16 @@
        
         
         <b-container fluid>
-            <b-card class="cards" v-show="ocultartra">
-                <!--
-                <header slot="header" class="content-heading">
+             <header class="content-heading" slot="header">
                     <h3>Consultar Trazabilidad</h3>
-                        <small>Se permite la búsqueda de detalles seleccionando los siguientes filtros </small>
+                    
                 </header>
-                -->
+            <b-card class="cards" v-show="ocultartra">
+               
                  <b-row>
                         <b-col>
                             <b-form-group 
+                              class="text-primary"
                             label="Clientes">
                                 <b-form-select v-model="selectedCL" id="clienteselect" v-bind:style="validatecampo" :options="clientes"  
                                 text-field="nombre" value-field="_id" @change.native="SelectCC" required
@@ -27,6 +27,7 @@
                         </b-col>
                         <b-col>
                             <b-form-group 
+                              class="text-primary"
                             label="Centro de Costo">
                                 <b-form-select v-model="selectedCC" id="costoselect"  v-bind:style="validatecampo" class="mb-3" :options="centros" 
                                 text-field="nombre" value-field="_id" required :disabled="disable">
@@ -40,9 +41,11 @@
             <b-row>
                 <b-col>
                     <b-form-group 
+                    
                         label="Por Favor seleccione como desea filtrar:"
                         label-size="lg">
                         <b-form-radio-group v-model="prueba"
+                        
                                         :options="options"
                                         name="radiosSm"
                                         >
@@ -60,28 +63,30 @@
             </b-row>
             <b-row v-show="prueba=='first'">
                     <b-col>
-                        <b-form-group label="Rango de Fechas" class="mb-3">
+                        <b-form-group 
+                          class="text-primary"
+                          label="Rango de Fechas" >
                             <date-picker disabled="true" id="fecha" width="430" v-model="time1" placeholder="Rango de Fechas" range lang="en"></date-picker>
                         </b-form-group>
                     </b-col>
             </b-row>
             <b-row v-show="prueba=='second'">
                     <b-col>
-                        <b-form-group label="Orden de Servicio" class="mb-3">
+                        <b-form-group label="Orden de Servicio" class="mb-3 text-primary">
                         <b-input-group>
                         <b-form-input v-model="orden" class="mb-3" type="number" id="orden" @input.native="ordenes"  placeholder="Orden de Servicio" />
                         </b-input-group>
                         </b-form-group>
                     </b-col>
                     <b-col>
-                        <b-form-group label="Referencia" class="mb-3">
+                        <b-form-group label="Referencia" class="mb-3 text-primary">
                         <b-input-group>
                         <b-form-input v-model="referencia" class="mb-3" type="text" id="referencia" @input.native="referencias"  placeholder="Referencia" />
                         </b-input-group>
                         </b-form-group>
                     </b-col>
                     <b-col>
-                        <b-form-group label="N° Movilizado" class="mb-3">
+                        <b-form-group label="N° Movilizado" class="mb-3 text-primary">
                         <b-input-group>
                         <b-form-input v-model="nmovilizado" class="mb-3" type="number" id="nmovilizado" @input.native="movilizado" placeholder="Num. Movilizado" />
                         </b-input-group>
@@ -98,8 +103,8 @@
             </b-row>
         </b-card>
         <br>
-           <b-card class="cards"  >
-                <router-view :consulta="consulta" :centro="centroseleccionado"
+           <b-card class="cards"  v-show="mostrarcard">
+                <router-view :consulta="consulta" :centro="centroseleccionado" 
                     :cliente="clienteseleccionado">
                 </router-view>
            </b-card>
@@ -121,6 +126,7 @@ export default {
   },
 data(){
     return {
+        mostrarcard:false,
         items: [
         {
           text: "Inicio",
@@ -390,6 +396,7 @@ methods:{
                 }            
             }
         }
+        this.mostrarcard=true
     },
     SelectCC(value){
         var vacio=  { _id: null, nombre: 'Por Favor Seleccione un Centro de Costo' };

@@ -218,8 +218,9 @@ export default {
           pais: this.ModalEdit.pais,
           ciudad: this.ModalEdit.ciudad
         };
-        this.$refs.ModalEditar.hide();
-
+        //this.$refs.ModalEditar.hide();
+        console.log(this.ModalEdit._id);
+        console.log(objeto);
         this.axios
           .post(
             urlservicios + "ActualizaCentrosLogisticos/" + this.ModalEdit._id,
@@ -235,8 +236,9 @@ export default {
                 type: "success"
               });
               this.centrosLogisticos.splice(this.indice, 1);
-              this.centrosLogisticos.splice(this.indice, 0, objeto);
+              this.centrosLogisticos.splice(this.indice, 0, response.data.centro);
               this.$refs.ModalEditar.hide();
+
             } else {
               swal({
                 title: "No se pudo actualizar",
@@ -252,7 +254,11 @@ export default {
       this.indice=value.index
       this.ModalEdit=Object.assign({},value.item)
       //this.ModalEdit = value.item;
+      console.log(this.ModalEdit._id);
+      if(this.ModalEdit._id!=undefined){
       this.$refs.ModalEditar.show();
+
+      }
     },
     ValidarTexto(id, accion) {
       var key, tecla, tecla_especial, letras, especiales;
@@ -371,6 +377,7 @@ export default {
         (this.statusdireccion = null),
         (this.statusnombre = null),
         (this.statuspais = null),
+        
         this.$refs.ModalNuevo.hide();
       this.$refs.ModalEditar.hide();
     },

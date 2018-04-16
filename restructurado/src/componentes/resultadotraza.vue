@@ -1,86 +1,102 @@
 <template>
     <b-container fluid class=" w-100">
        
-                <b-btn @click="volver" variant="success">
+                <b-btn @click="volver" variant="success" class=" mb-3">
                     <i class="fa fa-chevron-left" aria-hidden="true"></i>
                     Volver
                 </b-btn>
         
-    <b-card-group deck>
-        <b-card title="Información Remitente"
+    
+        <b-card  fluid    class="mb-2 borderC"
                >
-            <b-card-body class="card-text">
+               <div slot="header" class="w-100">
+                    <strong class="float-left ">Información de Remitente </strong>
+                </div>
+                <!--
+                 <div slot="header" class="w-100">
+                <strong class="float-left ">Información Remitente</strong>
+            </div>-->
                 <b-row>
                     <b-col>
-                        <h3>Cliente :</h3>
+                        <h3  class="text-primary ">Cliente :</h3>
                     </b-col>
                     <b-col>
-                        {{otro.cliente.nombre}}
+                        <p> {{otro.cliente.nombre}}</p>
                     </b-col>
                 </b-row>
                  <b-row>
                     <b-col>
-                        <h3>Centro de Costos:</h3>
+                        <h3  class="text-primary ">Centro de Costos:</h3>
                     </b-col>
                     <b-col>
-                        {{otro.centro.nombre}}
+                        <p>{{otro.centro.nombre}}</p>
+                        
                     </b-col>
                 </b-row>
-            </b-card-body>
         </b-card>
-        <b-card title="Información Destinatario"
-                >
-                <b-card-body class="card-text">
+        <b-card fluid    class="mb-2 borderC"  >    
+             <div slot="header" class="w-100">
+                    <strong class="float-left ">Información de Destinatario </strong>
+                </div>
+                <!--
+                 <header class="content-heading" slot="header">
+                    <h3>Información Destinatario</h3>
+                    
+                </header>
+                -->
                     <b-row>
                     <b-col>
-                        <h3>Nombre:</h3>
+                        <h3 class="text-primary" >Nombre:</h3>
                     </b-col>
                     <b-col>
-                        {{info.detalleslocal.destinatario.nombre}}
+                        <p>{{info.detalleslocal.destinatario.nombre}}</p>
                     </b-col>
                 </b-row>
                 <b-row>
                     <b-col>
-                        <h3>Dirección:</h3>
+                        <h3 class="text-primary">Dirección:</h3>
                     </b-col>
                     <b-col>
-                        {{info.detalleslocal.destinatario.direccion}}
+                        <p>{{info.detalleslocal.destinatario.direccion}}</p>
                     </b-col>
                 </b-row>
-                </b-card-body>
         </b-card>
-    </b-card-group>
-    <b-col class="borderF">
+   
+            <b-card fluid    class="mb-2 borderC"   >
+                <div slot="header" class="w-100">
+                    <strong class="float-left ">Detalle  Movilizado</strong>
+                </div>
+        <b-col >
         <b-row>
                 <b-col>
-                    <h3>Numero Orden de Servicio:</h3>
+                    <h3 class="text-primary">Numero Orden de Servicio:</h3>
                 </b-col>
                 <b-col>
-                    {{info.consec}}
-                </b-col>
-            </b-row>
-            <b-row>
-                <b-col>
-                    <h3>Numero de Movilizado:</h3>
-                </b-col>
-                <b-col>
-                    {{info.id}}
+                    <p>{{info.consec}}</p>
                 </b-col>
             </b-row>
             <b-row>
                 <b-col>
-                    <h3>Producto:</h3>
+                    <h3 class="text-primary">Numero de Movilizado:</h3>
                 </b-col>
                 <b-col>
-                    {{info.productoslocal.nombre}}
+                    <p>{{info.id}}</p>
                 </b-col>
             </b-row>
             <b-row>
                 <b-col>
-                    <h3>Servicio:</h3>
+                    <h3 class="text-primary">Producto:</h3>
                 </b-col>
                 <b-col>
-                    {{info.servicioslocal.nombre}}
+                    <p>{{info.productoslocal.nombre}}</p>
+                </b-col>
+            </b-row>
+            <b-row>
+                <b-col>
+                    <h3 class="text-primary">Servicio:</h3>
+                </b-col>
+                <b-col>
+                    <p>{{info.servicioslocal.nombre}}</p>
                 </b-col>
             </b-row>
         <b-row>
@@ -92,7 +108,7 @@
         <b-row v-for="(data,indice) in inputs" class="my-1">
           
                         <b-col cols="5">
-                            <label  class="col-sm col-form-label col-form-label-sm text-capitalize">{{data.nombre}}: </label>
+                            <label  class="col-sm col-form-label col-form-label-sm text-capitalize text-primary">{{data.nombre}}: </label>
                         </b-col>
                     
                         <template >
@@ -108,7 +124,7 @@
                 <hr>
                 <b-row>
                      <b-col>
-                    <h3>Courier:</h3>
+                    <h3 class="text-primary">Courier:</h3>
                     </b-col>
                     <b-col>
                         {{curier.nombre}} {{curier.apellido}}
@@ -122,27 +138,104 @@
                     </b-col>
                 </b-row>
                 
-    </b-col>
-
+        </b-col>
+            </b-card>
+  <b-card fluid    class="mb-2 borderC"   >
+                <div slot="header" class="w-100">
+                    <strong class="float-left ">Seguimiento del Detalle:</strong>
+                </div>
+       
         <b-row>
-            <h3>
-                Seguimiento del Detalle:
-            </h3>
-        </b-row>
-        <b-row>
-            <b-table :items="info.trazabilidad" :fields="campostra">
-                        <template slot="fecha" slot-scope="data">
+            <b-table :items="info.trazabilidad" :fields="campostra" thead-class=text-center tbody-class=text-center>
+                        <template slot="fecha" slot-scope="data" >
                             {{data.item.fecha |formatdate}}
                         </template>
-                        <template slot="nombre" slot-scope="data">
-                            {{data.item.nombre}}
+                        <template slot="nombre" slot-scope="data"  class="text-center">
+                            <p class="text-center">{{data.item.nombre}}</p>
                         </template>
                         <template slot="imagen" slot-scope="data">
                                 <i class="btn btn-success fa fa-picture-o" @click="imagenmodal(data.item)" v-show="data.item.imagenes.length>0">
                                 </i>   
                         </template>
+                         <template slot="recibido" slot-scope="data">
+                            <i class="btn btn-success fa fa-address-card-o" @click="contactoModal(data.item)" v-show="data.item.datosRecibidos">
+                            
+                            </i> 
+                                
+                        </template>
+                        <template slot="conceptos" slot-scope="data">
+                            <i class="btn btn-success fa fa-info text-center" @click="conceptoModal(data.item)" v-show="data.item.conceptos">
+                            
+                            </i> 
+                                
+                        </template>
                     </b-table>
         </b-row>
+    </b-card>
+
+        <!-- Modal Component -->
+        <b-modal id="ModalConcepto" ref="ModalConcepto" title="Concepto ">
+             <div slot="modal-header" class="w-100">
+                <b-btn size="sm" class="float-right " variant="danger" @click="closemodal">
+                X
+                </b-btn>
+             </div>
+            <b-container fluid>
+                <b-row>
+                    <b-col>
+                        <h3>Nombre</h3>
+                    </b-col>
+                    <b-col>
+                        <p>{{concepto}}</p>
+                    </b-col>
+                </b-row>
+               
+            </b-container>
+            <div slot="modal-footer" class="w-100">
+                 <b-btn size="sm" class="float-right " variant="danger" @click="closemodal">
+                Cerrar
+                </b-btn>
+            </div>
+        </b-modal>
+        <!-- Modal Component -->
+        <b-modal id="modalContacto" ref="ModalContacto" title="Recibido por: ">
+             <div slot="modal-header" class="w-100">
+                <b-btn size="sm" class="float-right " variant="danger" @click="closemodal">
+                X
+                </b-btn>
+             </div>
+            <b-container fluid>
+                <b-row>
+                    <b-col>
+                        <h3>Nombre</h3>
+                    </b-col>
+                    <b-col>
+                        <p>{{recibido.nombre}}</p>
+                    </b-col>
+                </b-row>
+                <b-row>
+                    <b-col>
+                        <h3>Documento Identificación</h3>
+                    </b-col>
+                    <b-col>
+                        <p>{{recibido.documento}}</p>
+                    </b-col>
+                </b-row>
+                <b-row>
+                    <b-col>
+                        <h3>Observaciones</h3>
+                    </b-col>
+                    <b-col>
+                        <p>{{recibido.observaciones}}</p>
+                    </b-col>
+                </b-row>
+            </b-container>
+            <div slot="modal-footer" class="w-100">
+                 <b-btn size="sm" class="float-right " variant="danger" @click="closemodal">
+                Cerrar
+                </b-btn>
+            </div>
+        </b-modal>
         <!-- Modal Component 1 imagen modal -->
         <b-modal id="modalimagen" ref="ModalImagunidetalle" title="Evidencia Digital">
             <b-container>
@@ -178,7 +271,7 @@
                         <b-card-header header-tag="header" class="p-1" role="tab">
                             <b-row>
                                 <b-col cols="8">
-                                    <b-btn block v-b-toggle="data.id" variant="info">
+                                    <b-btn block v-b-toggle="data.id" variant="primary">
                                         Evidencia {{indice+1}}
                                     </b-btn>
                                 </b-col>
@@ -245,6 +338,7 @@
 </template>
 
 <script>
+import $ from 'jquery'
 import {bus} from '../main'
 import moment from 'moment'
 import Preload from '../componentes/preload.vue'
@@ -252,6 +346,12 @@ import {urlservicios} from '../main'
 export default {
     data () {
         return {
+            concepto:'',
+            recibido:{
+                nombre:null,
+                documento:null,
+                obser:null
+            },
             respuesta:'',
                   email:'',
                   emailT:'',
@@ -268,6 +368,8 @@ export default {
                 { key: "fecha", label: "Fecha" },
                 { key: "nombre", label: "Nombre" },
                 { key: "imagen", label: "Imágenes" },
+                {key:"conceptos",label:"Concepto"},
+                {key:"recibido",label:"Recibido"}
                 
             ],
             imgmodal: {
@@ -292,6 +394,16 @@ export default {
         }
     },
     methods: {
+        conceptoModal(value){
+            console.log(value);
+            this.concepto=value.conceptos.nombre
+            this.$refs.ModalConcepto.show()
+        },
+        contactoModal(value){
+            console.log(value);
+            this.recibido=value.datosRecibidos
+            this.$refs.ModalContacto.show()
+        },
         validacorreoT(value){
             if(value.length==0){
                this.emailvalidoT=null
@@ -369,7 +481,8 @@ export default {
         closemodal(){
             this.$refs.ModalImagenesdetalle.hide()
             this.$refs.ModalImagunidetalle.hide()
-            
+            this.$refs.ModalContacto.hide()
+            this.$refs.ModalConcepto.hide()
         },
        validacorreo(value){
            if(value.length==0){
@@ -490,12 +603,35 @@ export default {
 </script>
 
 <style>
+.contenedorTotal{
+  padding-top: 0px;
+  padding-right: 0%;
+  padding-bottom: 0px;
+  padding-left: 0%;
+  background-color: #ffffff;
+}
 .borderF {
     border: 1px solid #DCDCDC;
     margin: 1%;
     padding: 1%
 }
-#jose{
-        outline: green dotted thick;
+
+.card-deck{
+        padding-bottom: 15px;
+}
+.card2{
+    box-shadow: 1px 5px 7px 5px rgba(0,0,0,0.1);
+    margin-top: 15px;
+    /* border-left-width: 0px; */
+    /* padding-left: 55px; */
+    /* padding-right: 50px; */
+    padding-top: 39px;
+    /* border-bottom-width: 30px; */
+    /* padding-bottom: 30px; */
+    border-color: 15px gray;
+}
+.card-header {
+    background-color: #4db35a;
+    color: white;
 }
 </style>

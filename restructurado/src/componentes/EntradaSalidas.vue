@@ -14,7 +14,7 @@
             </b-col>
         </b-row>
         <b-row>
-            <h3>Seleccione el Proceso Logistico</h3>
+            <h3 class="text-primary">Seleccione el Proceso Logistico</h3>
             <b-form-select v-model="selected"  text-field="nombre" value-field="_id" 
             :options="procesosLog" class="mb-3" @input="procesoseleccionado">
             </b-form-select>
@@ -22,7 +22,7 @@
         <b-row class="my-1"> 
         <template v-for="(data,indice) in inputs.campos">
             <template v-if="data.type=='text'">   
-                    <label>Ingrese {{ data.placeholder }}:</label>   
+                    <label class=" text-primary">Ingrese {{ data.placeholder }}:</label>   
                     <b-form-input 
                     :id="data.id"
                     :type="data.type"
@@ -32,7 +32,7 @@
     
             </template>
             <template v-if="data.type=='number'">
-                    <label>Ingrese {{ data.placeholder }}:</label>
+                    <label class=" text-primary">Ingrese {{ data.placeholder }}:</label>
                     <b-form-input 
                     :id="data.id"
                     :type="data.type"
@@ -42,7 +42,7 @@
                     </b-form-input>
             </template>
             <template v-if="data.type=='select'">
-                <h3>Seleccione el {{data.placeholder}}</h3>
+                <h3 class=" text-primary">Seleccione el {{data.placeholder}}</h3>
                 
                  <b-form-select :id="data.id"  :value="valores(indice,data)"  text-field="nombre" value-field="_id" 
                  :options="opciones[indice]" @change="seleccionado(data)" class="mb-3"
@@ -56,7 +56,7 @@
             :state="Scurier">
             </b-form-select>
         </b-row>
-        <b-row class="my-1">
+        <b-row class="my-1 text-primary">
             <b-col class="my-3">
                         Total de Movilizados :
                         <strong>
@@ -71,7 +71,7 @@
                     </b-col>
         </b-row>
          <b-row v-show="itemsmovilizados.length>0">
-            <b-btn variant="success" @click="generarManifiesto">
+            <b-btn variant="success" @click="generarManifiesto" :disabled="manifiesto">
                 Generar
             </b-btn>
         </b-row>
@@ -82,7 +82,7 @@
 
         <router-view></router-view>
         <!-- Modal Component -->
-        <b-modal id="modal1" ref="myModalRef" title="Manifiestos" size="lg" :no-close-on-esc="true">
+        <b-modal id="modal1" ref="myModalRef" title="Movilizados" class="text-primary" size="lg" :no-close-on-esc="true">
             <b-container fluid>
                  <b-row class="my-1">
                     <b-col>
@@ -103,8 +103,9 @@
                     </b-col>
                 </b-row>
                
-                <b-row class="my-1">
-                    <b-col class="my-3">
+                <b-row class="my-1 text-primary">
+                    <b-col class="my-3 ">
+                      <h3 ></h3>
                         Total de Movilizados :
                         <strong>
                         {{itemsmovilizados.length}}
@@ -119,7 +120,7 @@
                 </b-row>
                 <b-row>
                     <b-col>
-                        <h3>Listado de Movilizados:</h3> 
+                        <h3 class="text-primary">Listado de Movilizados:</h3> 
                             <b-table striped hover :fields="fields" :items="itemsmovilizados"
                             :per-page="5" :current-page="currentPage">
                                 <template slot="elimnar" slot-scope="data">
@@ -156,6 +157,7 @@ import Preload from "../componentes/preload.vue";
 export default {
   data() {
     return {
+      manifiesto:false,
       itemsbr: [
         {
           text: "Inicio",
@@ -463,6 +465,7 @@ export default {
             .then(response => {
                 console.log(response);
                 if(response.data.validacion==true){
+                  this.manifiesto=true
                   console.log("se creo correctamente");
                    localStorage.removeItem('Manifiesto');
                     console.log("mostramos modal");
@@ -477,6 +480,7 @@ export default {
                     this.$router.push(this.processSelected.modal)
                 }
                 if(response.data.validacion==false){
+                  this.manifiesto=false
                   console.log("no se creoo");
                   console.log(response.data.listaMovilizadoConManifiesto);
                   var Movilizados=response.data.listaMovilizadoConManifiesto
@@ -732,7 +736,24 @@ export default {
               }
             }
             if (this.mensaje.estado == false) {
-              swal({
+              if(this.mensaje.message=="esta en ruta"){
+                console.log("tengo mensaje en ruta");
+                swal({
+                title: "Error!",
+                text:
+                  "El N° Movilizado " +
+                  this.mensaje.id +
+                  " se encuentra en ruta",
+                type: "error",
+                focusConfirm: true,
+                showConfirmButton: true,
+                allowOutsideClick: false,
+                allowEscapeKey: false,
+                allowEnterKey: true,
+                timer: 4000
+              });
+              }else{
+                swal({
                 title: "Error!",
                 text:
                   "El N° Movilizado " +
@@ -747,6 +768,8 @@ export default {
                 allowEnterKey: true,
                 timer: 4000
               });
+              }
+              
             }
           });
       }
@@ -756,6 +779,7 @@ export default {
       var infoguardadoManifiesto = JSON.parse(guardadoManifiesto);
 
       console.log("cambio");
+      this.manifiesto=false
       if (infoguardadoManifiesto == null || infoguardadoManifiesto == "null") {
         console.log("no hay items paa cargar");
         var nvacio = { _id: null, nombre: "Por Favor Seleccione un Concepto" };

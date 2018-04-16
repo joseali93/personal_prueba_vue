@@ -23,7 +23,7 @@
                 </b-row>
                 <b-row>
                     <b-col>
-                        <b-form-group label="Numero de Manifiesto" >
+                        <b-form-group class="text-primary" label="Numero de Manifiesto" >
                             <b-form-input v-model="nmanifiesto"
                             :state="nmanifiestoestado"
                             type="number"
@@ -34,7 +34,9 @@
                 </b-row>
                 <b-row>
                     <b-col>
-                        <b-form-group label="Seleccione un Proceso Logistico">
+                        <b-form-group 
+                        class="text-primary"
+                        label="Seleccione un Proceso Logistico">
                             <b-form-select v-model="procelogistica"  text-field="nombre" 
                             :state="procelogisticaestado" value-field="_id" 
                             :options="procesosLog" @input="procesoseleccionado">
@@ -45,7 +47,9 @@
                 <b-row>
                     <b-col>
                     
-                            <b-form-group label="Rango de Fechas" c>
+                            <b-form-group 
+                            class="text-primary"
+                            label="Rango de Fechas" c>
                                 <date-picker disabled="true" id="fecha" width="500" v-model="time1" placeholder="Rango de Fechas" range lang="en"></date-picker>
                             </b-form-group>
                     </b-col>

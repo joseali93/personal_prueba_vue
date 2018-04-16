@@ -405,7 +405,7 @@ export default {
                     swal("Oops...", "Solo deben ser numeros !", "error");
                     this.statusnit=false
                     return document.getElementById(id).value = ""
-                } else if (a.length >= 20) {
+                } else if (a.length > 20) {
                     // if no is more then the value
                     swal("Oops...", "Maximo 20 digitos!", "error");
                     this.statusnit=null
@@ -458,7 +458,7 @@ export default {
                 } else if (a.length >= 20) {
                     // if no is more then the value
                     swal("Oops...", "Maximo 20 digitos!", "error");
-                    this.statusnit=false
+                    this.statusnit=null
                     return (document.getElementById(id).value = "");
                 }
                 else{
@@ -482,7 +482,7 @@ export default {
                     } else if (a.length >= 20) {
                         // if no is more then the value
                         swal("Oops...", "Maximo 20 digitos!", "error");
-                        this.statustelefono=false
+                        this.statustelefono=null
                         return (document.getElementById("telefono").value = "");
                     }
                     else{

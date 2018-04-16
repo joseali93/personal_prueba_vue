@@ -487,6 +487,7 @@ box-shadow: 1px 5px 7px 5px rgba(0,0,0,0.1);
   /*margin: 2%;
     /*border-top-width: 3px;
     */
+    margin-top: 15px;
 
   border-left-width:0px;
   padding-left: 55px;

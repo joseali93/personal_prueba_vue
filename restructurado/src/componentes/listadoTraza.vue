@@ -1,11 +1,12 @@
 <template>
-    <b-container class="conta">
+    <b-container fluid >
         <h3>
             Listado de Detalles obtenidos:
         </h3>
             <b-row>
                 <b-table  :items="consulta" :fields="fields"
-                :per-page="5" :current-page="currentPage" :bordered="true">
+                :per-page="5" :current-page="currentPage" :bordered="true"
+                thead-class=text-center tbody-class=text-center>
                     <template slot="id" slot-scope="data">
                         {{data.item.consec}}
                     </template>
@@ -139,7 +140,7 @@
                     :class="showCollapse ? 'collapsed' : null"
                     aria-controls="collapse4"
                     :aria-expanded="showCollapse ? 'true' : 'false'"
-                    variant="success">
+                    variant="primary">
                     <i class="fa fa-envelope-o" aria-hidden="true"></i>
 
                 Enviar Correo
@@ -217,7 +218,7 @@
                     :class="showCollapse ? 'collapsed' : null"
                     aria-controls="todo"
                     :aria-expanded="showCollapse ? 'true' : 'false'"
-                    variant="success">
+                    variant="primary">
                     <i class="fa fa-envelope-o" aria-hidden="true"></i>
 
                 Enviar Correo
@@ -291,6 +292,8 @@
 </template>
 
 <script>
+import $ from 'jquery'
+
 import {bus} from '../main'
 import moment from 'moment'
 import Preload from '../componentes/preload.vue'
@@ -914,9 +917,7 @@ export default {
 </script>
 
 <style>
-.conta{
-    padding: 5%
-}
+
 .collapsed > .when-opened,
 :not(.collapsed) > .when-closed {
   display: none;

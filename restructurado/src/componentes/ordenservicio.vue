@@ -1726,4 +1726,7 @@ export default {
   padding-bottom: 30px;
   border-color: 15px gray;
 }
+.card-header{
+  background-color: #f8f8ff
+}
 </style>

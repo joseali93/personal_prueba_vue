@@ -4,7 +4,8 @@
         <h3>
             Listado de Ordenes de Servicio:
         </h3>
-        <b-table :fields="fields" :per-page="5" :current-page="currentPage" :items="consulta" :bordered="true"> 
+        <b-table :fields="fields" :per-page="5" :current-page="currentPage" :items="consulta" :bordered="true"
+        thead-class=text-center tbody-class=text-center> 
             <template slot="index" slot-scope="data">
                 {{data.index + 1}}
             </template>
