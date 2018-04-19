@@ -67,7 +67,7 @@
                           fluid alt="C_T" 
                           width="25%"
                          />
-                          <span > Manifiestos </span>
+                          <span > Consulta Manifiestos </span>
                     </b-link>
                 </li>
             </ul>
@@ -299,7 +299,7 @@ export default {
     //console.log(this.rutas);
   },
   beforeCreate: function() {
-    console.log("antes");
+    
   }
 };
 </script>

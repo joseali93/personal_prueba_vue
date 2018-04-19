@@ -8,7 +8,8 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 import moment from "moment";
 import VueMomentJS from "vue-momentjs";
-
+import vSelect from 'vue-select';
+Vue.component('v-select', vSelect)
 Vue.use(VueMomentJS, moment);
 Vue.use(VueRouter);
 Vue.use(BootstrapVue);

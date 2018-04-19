@@ -858,36 +858,61 @@ export default {
           });
           this.inputs = response.data;
           this.objeto = this.inputs.objeto;
-          //console.log(this.inputs);
+          console.log(this.inputs);
           //console.log(this.objeto);
           if (this.objeto == undefined || this.objeto == "undefined") {
           } else {
             //console.log("hago peticiones");
             var llaves = Object.keys(this.objeto);
             //llaves.forEach(ele=>{
-
+            var errore
             this.inputs.campos.forEach((element, indice) => {
               if (element.urlobjeto == undefined) {
                 console.log("no se hace peticion de url");
               } else {
-                this.axios
-                  .get(element.urlobjeto + infologin.id_OperadorLogistico._id)
-                  .then(resp1 => {
-                    //this.value[indice]=null
-                    var vacio = {
-                      _id: "null",
-                      nombre: "Por Favor Seleccione un Campo"
-                    };
-                    var respuesta = resp1.data;
-                    respuesta.unshift(vacio);
-                    this.opciones.push(respuesta);
-                  });
+                setTimeout(function(){
+                  this.axios
+                    .get(element.urlobjeto + infologin.id_OperadorLogistico._id)
+                    .then(resp1 => {
+                      //this.value[indice]=null
+                      var vacio = {
+                        _id: "null",
+                        nombre: "Por Favor Seleccione un Campo"
+                      };
+                      var respuesta = resp1.data;
+                      respuesta.unshift(vacio);
+                      this.opciones.push(respuesta);
+                      console.log(this.opciones);
+                    })
+                    .catch(e => {
+                      console.log(e);
+                      /*
+                      swal({
+                      type: 'error',
+                      title: 'Oops...',
+                      text: 'Se presento un error, intente nuevamente',
+                      footer: 'Intente nuevamente',
+
+                      })
+                      */
+                     swal({
+                      type: 'warning',
+                      title: 'Oops',
+                      text: 'Se presento un problema en el servicio',
+                      footer: 'Intente nuevamente',
+                    })
+                    })
+                }.bind(this),10)
+
+                
+                  
+
               }
             });
             //});
           }
         });
-
+      
       for (var x = 0; x < this.procesosLog.length; x++) {
         if (this.procesosLog[x]._id == this.selected) {
           this.proceSeleccionado = this.procesosLog[x];
@@ -911,6 +936,7 @@ export default {
           }
         }
       }
+      
     }
   },
   beforeCreate: function() {

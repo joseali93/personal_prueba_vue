@@ -19,6 +19,7 @@
     "vue-axios": "^2.0.2",
     "vue-momentjs": "^0.1.1",
     "vue-router": "^3.0.1",
+    "vue-select": "^2.4.0",
     "vue2-datepicker": "^1.7.0"
   },
   "browserslist": [

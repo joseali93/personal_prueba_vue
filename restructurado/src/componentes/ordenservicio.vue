@@ -8,19 +8,22 @@
 
         <b-card class="cards">
           <b-row>
-                <b-col md="3" offset-md="9">
-                    <b-btn class="rounded-circle" variant="secondary " 
+                <b-col md="10" offset-md="7">
+                    <b-btn class="rounded" variant="secondary " 
                      to="/inicio/orden" 
                      v-b-tooltip.hover title="Anterior"
                      size="lg"><i class="fa fa-arrow-left"></i>
-                     </b-btn>
-                    <b-btn  class="rounded-circle" variant="success"
+                     Anterior</b-btn>
+                    <b-btn  class="rounded" variant="success"
                        size="lg"  @click="envioServicio"
                         v-b-tooltip.hover title="Finalizar"><i class="fa fa-check"></i>
+                        Finalizar
                     </b-btn>
-                    <b-btn class="rounded-circle" size="lg" variant="danger"  
+                    <b-btn class="rounded" size="lg" variant="danger"  
                     v-b-tooltip.hover title="Adicionar"
                     v-b-modal.modalcrear><i class="fa fa-plus"></i>
+                    Adicionar
+
                     </b-btn>
                 </b-col>        
             </b-row>
@@ -1180,8 +1183,8 @@ export default {
         });
     },
     hideModal() {
-      this.tabIndexED=0,
-       this.tabIndex=0
+      //this.tabIndexED=0,
+       //this.tabIndex
       (this.habilitar = true),
         (this.mostrardestinatario = false),
         (this.camposdinamicos = false),
@@ -1637,6 +1640,7 @@ export default {
         var inforemitente = localStorage.getItem("infoorden");
         var inforemi = JSON.parse(inforemitente);
 
+        /*
         var objeto = {
           id_OperadorLogistico: infologin.id_OperadorLogistico._id,
           id_usuario: infologin._id,
@@ -1646,6 +1650,20 @@ export default {
               id_usuario: infologin._id
             }
           ],
+          id_cliente: selecc.selected_client,
+          remitente: {
+            direccion_recogida: inforemi.infocentro.direccion,
+            telefono_contacto: inforemi.infocliente.telefono,
+            nombre_contacto: inforemi.infocliente.nombre
+          },
+          detalle: this.DetalleServicio
+        };
+        */
+        var objeto = {
+          id_OperadorLogistico: infologin.id_OperadorLogistico._id,
+          id_usuario: infologin._id,
+          id_centro_costo: selecc.selected_center,
+          
           id_cliente: selecc.selected_client,
           remitente: {
             direccion_recogida: inforemi.infocentro.direccion,
@@ -1688,7 +1706,7 @@ export default {
 };
 </script>
 
-<style>
+<style scoped>
 .card-header-tabs{
   background-color: #f8f8ff;
     }
@@ -1727,6 +1745,8 @@ export default {
   border-color: 15px gray;
 }
 .card-header{
-  background-color: #f8f8ff
+      background-color: #ebeaea;
+    border-bottom-color: #495057;
+    border-top: none;
 }
 </style>

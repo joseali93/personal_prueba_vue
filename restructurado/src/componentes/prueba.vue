@@ -2,12 +2,10 @@
 
 
   <b-container fluid>
-    <b-btn @click=jose>
-      ads
-    </b-btn>
-    
-   
 
+    
+   <v-select v-model="selected" label="nombre" value="_id" :options="clientes" @input="prue()"></v-select>
+  {{selected}}
   </b-container>
 </template>
 
@@ -18,10 +16,10 @@ import {bus} from '../main'
 export default {
   data () {
     return {
-
+      selected:'',
       modal2:true,
       algo:'',
-      
+      clientes:[],
         
       items: [
         
@@ -37,57 +35,10 @@ export default {
     
   },
   methods:{
-    metodo(){
-      console.log("llamo funcion externa");
-    },
-    jose(){
-       var titulo1_inicio='<div><ul>'
-       var conten_1=''
-       var conten_2
-       var titulo1_fin='</ul></div>'
-       var prueba
-       var total
-      console.log(this.items);
-      for(var y=0;y<this.items.length;y++){
-        conten_1=conten_1+'<li>'+this.items[y].cliente+'</li>'
-        console.log(this.items[y].cliente);
-        console.log(this.items[y].nmovilizado);
-        
-      }
-      total=titulo1_inicio+conten_1+titulo1_fin
-      console.log(total);
-        //var titulo= '<ul><li>Coffee</li><li>Coffee</li><li>Coffee</li></ul>'
-
-
-      swal({
-  title: '<i>HTML</i> <u>example</u>',
-  type: 'info',
-  html: total,
-  showCloseButton: true,
-  showCancelButton: true,
-  focusConfirm: false,
-  confirmButtonText:
-    'Eliminar',
-  confirmButtonAriaLabel: 'Thumbs up, great!',
-  cancelButtonText:
-  'Cancelar',
-  cancelButtonAriaLabel: 'Thumbs down',
-}).then(()=> {
-
-  this.metodo(); // this should execute now
-
-})
-    },
-      volver(){
-        this.$router.push('/inicio/entradasalida')
-      },
-      imprimir(){
-        console.log("entro a imprimir")
-      
-          //document.getElementById('app').appendChild(imprimible);
-          document.getElementById("print-content");
-         window.print()
-      }
+   prue(){
+     console.log("entro a prueba");
+     console.log(this.selected);
+   }
     },
     mounted: function() {
        bus.$on('modalinfo', function (userObject) {
@@ -99,6 +50,24 @@ export default {
     },
     updated: function(){
      
+    },
+    beforeCreate: function(){
+          var vacio = { _id: null, nombre: "Por Favor Seleccione un Cliente" };
+
+      var test2 = localStorage.getItem("storedData");
+    var test = JSON.parse(test2);
+    this.axios
+        .get(
+          urlservicios +
+            "clientesOperador/" +
+            test.id_OperadorLogistico._id +
+            "/null"
+        )
+        .then(response => {
+          console.log(response);
+          this.clientes = response.data;
+          this.clientes.unshift(vacio);
+        })
     },
   computed: {
   }

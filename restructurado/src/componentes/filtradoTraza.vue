@@ -21,8 +21,8 @@
                                 <b-form-select v-model="selectedCL" id="clienteselect" v-bind:style="validatecampo" :options="clientes"  
                                 text-field="nombre" value-field="_id" @change.native="SelectCC" required
                                 :disabled="disabled_selectedCL" >
-                                        <!-- this slot appears above the options from 'options' prop -->          
                                 </b-form-select>
+                                
                             </b-form-group>
                         </b-col>
                         <b-col>

@@ -22,19 +22,30 @@
                         <b-form-group 
                         class="text-primary"
                             label="Clientes">
+                        <!--    
                         <b-form-select v-model="selectedCL" class="mb-3" :options="clientes"  
                         text-field="nombre" value-field="_id" @change.native="SelectCC"
                         :disabled="disabled_selectedCL">                        
                         </b-form-select>
+                        -->
+                         <v-select v-model="selectedCL" label="nombre" placeholder="Seleccione el Cliente"
+                      :options="clientes" @input="seleccionCliente()"
+                      :disabled="disabled_selectedCL"></v-select>
                         </b-form-group>
                     </b-col>
                     <b-col>
                         <b-form-group 
                         class="text-primary"
                             label="Centros de Costo">
+                            <!--
                             <b-form-select v-model="selectedCC" class="mb-3" :options="centros" 
                             text-field="nombre" value-field="_id" :disabled="habilitar">
+                            
                             </b-form-select>
+                            -->
+                            <v-select v-model="selectedCC" label="nombre" placeholder="Seleccione el Cliente"
+                      :options="centros" 
+                      :disabled="habilitar"></v-select>
                         </b-form-group>
                     </b-col>
                 </b-row>
@@ -61,13 +72,18 @@
                 </b-row>
                 <b-row>
                 
-                    <b-col md="6" class="my-1">
+                    <b-col>
                         <b-form-group  label="Estados" class="text-primary">
                             <b-input-group>
-                                <b-form-select  v-model="selected_state" :options="estados" text-field="nombre" value-field="nombre" @change.native="selestado">
+                                <!--
+                                <b-form-select  v-model="selected_state" :options="estados" text-field="nombre"
+                                value-field="nombre" @change.native="selestado">
                                 </b-form-select>
-                                <b-input-group-button>
-                                </b-input-group-button>
+                                -->
+                                <v-select v-model="selected_state" label="nombre" placeholder="Seleccione un Estado"
+                                :options="estados"
+                                ></v-select>
+                                
                             </b-input-group>
                         </b-form-group>
                     </b-col>
@@ -145,19 +161,50 @@ export default {
             habilitar: true,
             load: false,
             consulta: [],
-            estados: {},
+            estados: [],
             selected_state: null,
             time1: [
                
             ],
             selectedCL: null,
-            clientes: null,
+            clientes: [],
             selectedCC: null,
-            centros: {},
+            centros: [],
             filter: ''
         };
     },
     methods:{
+        seleccionCliente(){
+            console.log("entro a sleccion cliente");
+            console.log(this.selectedCL);
+            if(this.selectedCL!=null){
+                var load=true
+                setTimeout(() => {
+                    bus.$emit('load', {
+                        load 
+                    })
+                    }, )
+                this.axios.get(urlservicios+"CentrosPorCliente/"+this.selectedCL._id)            
+                    //this.axios.get(urlservicios+"centros/")
+                    .then((response) => {
+                        this.centros=response.data
+                    
+                    //this.load=false
+                    var load=false
+                    setTimeout(() => {
+                        bus.$emit('load', {
+                            load
+                        })
+                        }, )
+                    this.habilitar= false
+                    })
+            }
+            else{
+                this.habilitar= true
+            }
+            
+            
+        },
         selestado(value){
             this.selected_state=value.target.value
         },
@@ -186,7 +233,11 @@ export default {
             var centrocosto
             var inicio
             var fin
-            console.log(this.time1);
+            var esadoconsulta
+            //console.log(this.selectedCL);
+            console.log(this.selected_state);
+            
+            //console.log(this.time1);
             if(this.time1[0]===''||this.time1[0]===undefined){
                 inicio="null"
                 }else{
@@ -200,20 +251,25 @@ export default {
             if(this.filter===''){
                 this.filter="null"
                 }
-            if(this.selected_state===''|| this.selected_state=='Por Favor Seleccione un Estado'){
-                this.selected_state="null"
+            if(this.selected_state===''|| this.selected_state==null){
+                //this.selected_state="null"
+                //queda pendiente de juan
+                esadoconsulta='null'
                 }
-            if(this.selectedCL===''){
+                else{
+                    esadoconsulta=this.selected_state.nombre
+                }
+            if(this.selectedCL===''||this.selectedCL===null){
                 cliente="null"
                 }
                 else{
-                cliente=this.selectedCL
+                cliente=this.selectedCL._id
                 }   
-            if(this.selectedCC===''){
+            if(this.selectedCC===''||this.selectedCC===null){
                 centrocosto="null"
                 }   
                 else{
-                centrocosto=this.selectedCC
+                centrocosto=this.selectedCC._id
                 }   
             var login = localStorage.getItem("storedData");
             var infologin =JSON.parse(login);  
@@ -223,13 +279,13 @@ export default {
                         load 
                     })
                     }, )
-            var peticiones= "ObtenerOrdenesFiltrado/"+infologin.id_OperadorLogistico._id+"/"+this.filter+"/"+this.selected_state+
+            var peticiones= "ObtenerOrdenesFiltrado/"+infologin.id_OperadorLogistico._id+"/"+this.filter+"/"+esadoconsulta+
             "/"+cliente+"/"+centrocosto+"/"+inicio+"/"+fin;
             console.log(peticiones);
             //this.peticion=peticiones
                     //console.log(urlservicios+"ObtenerOrdenesFiltrado/"+infologin.id_OperadorLogistico+"/"+this.filter+"/"+this.selected_state+
             //"/"+cliente+"/"+centrocosto+"/"+inicio+"/"+fin);
-            this.axios.get(urlservicios+"ObtenerOrdenesFiltrado/"+infologin.id_OperadorLogistico._id+"/"+this.filter+"/"+this.selected_state+
+            this.axios.get(urlservicios+"ObtenerOrdenesFiltrado/"+infologin.id_OperadorLogistico._id+"/"+this.filter+"/"+esadoconsulta+
             "/"+cliente+"/"+centrocosto+"/"+inicio+"/"+fin)
             .then((response) => {
                 this.consulta=response.data
@@ -258,6 +314,7 @@ export default {
                            this.$router.replace('/inicio/consultar/resultado')
                 }
             })
+            
         },
         SelectCC(value){
             var vacio=  { _id: null, nombre: 'Por Favor Seleccione un Centro de Costo' };
@@ -377,7 +434,7 @@ export default {
                 })
                 }, )
             this.axios.get(urlservicios+"clientesOperador/"+infologin.id_OperadorLogistico._id
-            +'/'+id_cliente)
+            +'/null')
             .then((response) => {
                 var load=false
             setTimeout(() => {
@@ -470,9 +527,9 @@ export default {
         this.axios.get(urlservicios+"estados/")
         .then((response) => {
             this.estados=response.data
-             var vacio3=  { nombre: 'Por Favor Seleccione un Estado' ,disabled:true};
-             this.selected_state='Por Favor Seleccione un Estado'
-             this.estados.unshift(vacio3)
+             //var vacio3=  { nombre: 'Por Favor Seleccione un Estado' ,disabled:true};
+             //this.selected_state='Por Favor Seleccione un Estado'
+             //this.estados.unshift(vacio3)
             //console.log(this.estados);
         })
             

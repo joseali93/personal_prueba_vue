@@ -25,25 +25,45 @@ DE LA ORDEN DE SERVICIO -->
                     </b-btn>
                 </a>
                 -->
-                <b-col md="3" offset-md="11">
-                  <b-btn class="rounded-circle" variant="primary" size="lg"  v-on:click="actualizar"
-                  v-b-popover.hover="'Continuar'" ><i class="fa fa-arrow-right"></i></b-btn>
+                <b-col md="3" offset-md="10">
+                  <b-btn class="rounded" variant="primary" size="lg"  v-on:click="actualizar"
+                  v-b-popover.hover="'Continuar'" >Continuar<i class="fa fa-arrow-right"></i>
+                  </b-btn>
               </b-col>
             </b-row>
             <b-row>
                 <b-col>
                     <h3 class="text-primary">Seleccione el Cliente</h3>
+                    <!--
                     <b-form-select v-model="selected_client" class="mb-3"  
                     :options="clientes" text-field="nombre" value-field="_id" @change.native="ClientesSelect"
                     :disabled="disable_selected_client" >  
                     </b-form-select>
+
+                    
+                    -->
+                     <v-select v-model="selected_client" label="nombre" placeholder="Seleccione el Cliente"
+                      :options="clientes" @input="clienteSeleccionado()"></v-select>
+                      
                 </b-col>
                 <b-col>
                     <h3 class="text-primary">Seleccione el Centro de Costos</h3>
                     <preload v-if="load"></preload>
+                    <!--
                     <b-form-select v-model="selected_center" class="mb-3"
-                    :options="centros" text-field="nombre" value-field="_id" @change.native="centrosseleccionado" :disabled="habilitar" v-else >
+                    :options="centros" text-field="nombre" value-field="_id"
+                     @change.native="centrosseleccionado" :disabled="habilitar" v-else >
                     </b-form-select>
+
+                    <v-select v-model="selected_center" label="nombre" 
+                    placeholder="Seleccione el Centro de Costo" :options="centros" 
+                    @input="centroSeleccionado()" :disabled="habilitar"
+                      ></v-select>
+                    -->
+                    <v-select v-model="selected_center" label="nombre" 
+                    placeholder="Seleccione el Centro de Costo" :options="centros" 
+                    @input="centroSeleccionado()" :disabled="habilitar"
+                      ></v-select>
                 </b-col>
             </b-row>
             <b-row>
@@ -148,18 +168,118 @@ export default {
       selected_center: null,
       selected_cliente: {},
       selected_centro: {},
-      clientes: {},
-      centros: {},
+      clientes: [],
+      centros: [],
       load: false,
       habilitar: true
     };
   },
 
   methods: {
+    centroSeleccionado(){
+      console.log("entro a centro");
+      this.selected_centro=Object.assign({}, this.selected_center)
+      
+
+    },
+    clienteSeleccionado(){
+      //console.log(this.selected_client);
+      if (this.disable_selected_client == true) {
+
+      }
+      else{
+        if(this.selected_client){
+          var orden = localStorage.getItem("orden");
+          var ordenjson = JSON.parse(orden);
+
+          if(orden){
+            //console.log(ordenjson);
+            console.log("entro a cargue");
+            this.selected_cliente=Object.assign({},ordenjson.selected_client);
+            this.selected_centro= Object.assign({},ordenjson.selected_center)
+            this.selected_center = Object.assign({},this.selected_centro)
+            localStorage.removeItem("orden");
+
+              var load = true;
+              setTimeout(() => {
+                bus.$emit("load", {
+                  load
+                });
+              });
+              this.axios
+                  .get(urlservicios + "CentrosPorCliente/" + this.selected_client._id)
+                  .then(response => {
+                    this.centros = response.data;
+                    
+                    //this.selected_centro = {};
+                    this.habilitar = false;
+                    //this.load=false
+                    var load = false;
+                    setTimeout(() => {
+                      bus.$emit("load", {
+                        load
+                      });
+                    });
+                  });
+          }
+          else{
+            console.log("entro");
+            console.log(this.selected_client);        
+            this.selected_cliente=Object.assign({}, this.selected_client);
+            this.selected_center = null;
+            var load = true;
+            setTimeout(() => {
+              bus.$emit("load", {
+                load
+              });
+            });
+            console.log(urlservicios + "CentrosPorCliente/" + this.selected_client._id);
+            this.axios
+                .get(urlservicios + "CentrosPorCliente/" + this.selected_client._id)
+                .then(response => {
+                  console.log(response);
+                  this.centros = response.data;
+                  
+                  this.selected_centro = {};
+                  this.habilitar = false;
+                  //this.load=false
+                  var load = false;
+                  setTimeout(() => {
+                    bus.$emit("load", {
+                      load
+                    });
+                  });
+                });
+          }
+          
+        }
+        else{   
+          var load = true;
+          setTimeout(() => {
+            bus.$emit("load", {
+              load
+            });
+          });
+          console.log(this.selected_client);
+          this.selected_cliente={}
+          this.selected_center = null;
+          this.habilitar = true
+          this.centros=[]
+          var load = false;
+          setTimeout(() => {
+            bus.$emit("load", {
+              load
+            });
+          });
+        }
+      }
+      
+    },
     centrosseleccionado(seleccion) {
       /*
                 FUNCION DEL CUAL OBTENEMOS EL CENTRO QUE FUE SELECCIONADO SEGUN EL CLIENTE
             */
+    /*
       if (seleccion.target.value == "" || seleccion.target.value == null) {
         this.selected_centro = {};
         this.selected_center = null;
@@ -170,12 +290,13 @@ export default {
           }
         }
       }
+      */
     },
     ClientesSelect(seleccion) {
       /*
                 FUNCION DEL CUAL OBTENEMOS EL CLIENTE QUE FUE SELECCIONADO 
             */
-
+      
       console.log("entro a seleccion clientes");
       if (this.disable_selected_client == true) {
         var id_cliente;
@@ -221,10 +342,7 @@ export default {
           this.selected_center = null;
           this.habilitar = true;
         } else {
-          var vacio = {
-            _id: null,
-            nombre: "Por Favor Seleccione un Centro de Costo"
-          };
+          var vacio = {_id: null,nombre: "Por Favor Seleccione un Centro de Costo"};
           for (var i = 0; i < this.clientes.length; i++) {
             if (this.clientes[i]._id == seleccion.target.value) {
               this.selected_cliente = Object.assign({}, this.clientes[i]);
@@ -258,6 +376,7 @@ export default {
           }
         }
       }
+      
     },
     actualizar: function() {
       if (
@@ -270,15 +389,16 @@ export default {
       ) {
         swal("Cuidado", "Se deben completar todos los campos !", "error");
       } else {
-        var selected_client = this.selected_client;
-        var selected_center = this.selected_center;
+        var selected_client = this.selected_cliente;
+        var selected_center = this.selected_centro;
         var seleccionados = {
           selected_client: selected_client,
           selected_center: selected_center
+
         };
         var selecciones = {
-          idcliente: selected_client,
-          idcentro: selected_center,
+          idcliente: selected_client._id,
+          idcentro: selected_center._id,
           infocliente: this.selected_cliente,
           infocentro: this.selected_centro
         };
@@ -288,32 +408,30 @@ export default {
         bus.$emit("remitente", seleccionados);
         localStorage.setItem("orden", JSON.stringify(seleccionados));
         localStorage.setItem("infoorden", JSON.stringify(selecciones));
-        //console.log(selecciones);
+        console.log(selecciones);
+        //console.log("-----------");
+        console.log(seleccionados);
         this.$router.replace("/inicio/ordenservicio");
       }
     }
   },
 
   mounted: function() {
-    var orden = localStorage.getItem("orden");
-    var ordenjson = JSON.parse(orden);
+  
+    /*
     if (orden == null || orden == "null" || orden == "") {
     } else {
       this.selected_client = ordenjson.selected_client;
       this.selected_center = ordenjson.selected_center;
       this.axios
-        .get(urlservicios + "CentrosPorCliente/" + this.selected_client)
+        .get(urlservicios + "CentrosPorCliente/" + this.selected_client._id)
         .then(response => {
           this.centros = response.data;
           console.log(this.centros);
           console.log(this.selected_center);
           //this.selected_centro.direccion=this.centros.direccion
           this.habilitar = false;
-          for (var i = 0; i < this.centros.length; i++) {
-            if (this.centros[i]._id == this.selected_center) {
-              this.selected_centro = this.centros[i];
-            }
-          }
+          this.selected_centro = Object.assign({}, this.selected_center)
           var load = false;
           setTimeout(() => {
             bus.$emit("load", {
@@ -324,32 +442,23 @@ export default {
       var test2 = localStorage.getItem("storedData");
       var test = JSON.parse(test2);
       console.log("errr");
-      var vacio = { _id: null, nombre: "Por Favor Seleccione un Cliente" };
-      this.axios
-        .get(
-          urlservicios +
-            "clientesOperador/" +
-            test.id_OperadorLogistico._id +
-            "/null"
-        )
+      this.axios.get(urlservicios +"clientesOperador/" +test.id_OperadorLogistico._id +"/null")
         .then(response => {
           this.clientes = response.data;
-
-          for (var i = 0; i < this.clientes.length; i++) {
-            if (this.clientes[i]._id == this.selected_client) {
-              this.selected_cliente = this.clientes[i];
-            }
-          }
-          this.clientes.unshift(vacio);
+          this.selected_cliente ==Object.assign({}, this.selected_client)
         });
+        
     }
+    */
   },
   created: function() {
     var _this = this;
-    var vacio = { _id: null, nombre: "Por Favor Seleccione un Cliente" };
+
+    // -------------------------------
     var test2 = localStorage.getItem("storedData");
     var test = JSON.parse(test2);
     //console.log(test.id_cliente);
+
     var id_cliente;
     if (test.id_cliente == undefined || test.id_cliente == null) {
       id_cliente = "null";
@@ -372,7 +481,21 @@ export default {
         .then(response => {
           //console.log(response);
           this.clientes = response.data;
-          this.clientes.unshift(vacio);
+          var orden = localStorage.getItem("orden");
+          var ordenjson = JSON.parse(orden);
+
+          if(orden){
+          //console.log(ordenjson);
+          this.selected_cliente=ordenjson.selected_client
+          this.selected_centro=ordenjson.selected_center
+          this.clientes.forEach(element => {
+            if(element._id==this.selected_cliente._id){
+              //console.log("son iguales");
+              this.selected_client=element
+            }
+          });
+          }
+          //this.clientes.unshift(vacio);
           var load = false;
           setTimeout(() => {
             bus.$emit("load", {
@@ -410,8 +533,10 @@ export default {
               }
             });
           }
-        });
-    } else {
+          });
+          
+    } 
+    else {
       console.log("tengo cliente");
       id_cliente = test.id_cliente;
       //console.log(urlservicios+"clientesOperador/"+test.id_OperadorLogistico+'/'+id_cliente);
@@ -485,6 +610,7 @@ export default {
         items
       });
     });
+     
   }
 };
 </script>

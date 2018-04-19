@@ -532,22 +532,51 @@ export default {
             console.log(this.consulta);
             var desti,llaveslv2desti,direcciondesti,destllavelvl3
             var novedades=[]
+            var nomEstados=[]
             var bandera=true
             var fechaC 
+            var prueba
+            for(var x=0; x<this.consulta.length;x++){
+                //longitud de items en consulta
+                for(var y=0;y<this.consulta[x].trazabilidad.length;y++){
+                    var objEstados=Object.keys(this.consulta[x].trazabilidad[y])
+                    for(var z=0;z<objEstados.length;z++){
+                         if(objEstados[z]=="nombre"){
+                             //console.log(this.consulta[x].trazabilidad[y].nombre);
+                             nomEstados[x]=eval('this.consulta[x].trazabilidad[y].nombre')
+                           
+                         }
+                    }
+                }
+                this.consulta[x].prueba=nomEstados
+            }
+            console.log(nomEstados);
+            console.log(this.consulta);
+            
             for(var a=0;a<this.consulta.length;a++){
                 var objtraza=Object.keys(this.consulta[a].trazabilidad[0])
                 for(var x=0;x<this.consulta[a].trazabilidad.length;x++){
                     if(x==0){
                         for(var y=0;y<objtraza.length;y++){
                             //console.log(objtraza[y]);
+                            
                             if(objtraza[y]=="EsCierre"){
                                 //console.log("tengo cierre");
                                 //console.log(eval('this.consulta[a].trazabilidad[x].conceptos'));
                                 //console.log(this.consulta[a]);
                                 if(this.consulta[a].trazabilidad[x].EsCierre=="true"){
                                     //console.log("hay cierre");
-                                    novedades[a]=eval('this.consulta[a].trazabilidad[x].conceptos.nombre')
+                                    //console.log(this.consulta[a]);
+                                    //console.log(x);
+                                    if(eval('this.consulta[a].trazabilidad[x].conceptos')===undefined){
+                                        console.log("es ubdefinido");
+                                    }
+                                    else{
+                                        novedades[a]=eval('this.consulta[a].trazabilidad[x].conceptos.nombre')
                                     this.consulta[a].novedades=novedades[a]
+                                    }
+                                    
+                                    
                                 }
                                 
                                 
@@ -622,6 +651,9 @@ export default {
                     if(llaveslv1[a]=='novedades'){
                         nov=llaveslv1[a]
                     }
+                    if(llaveslv1[a]=='prueba'){
+                        nov=llaveslv1[a]
+                    }
                     if(llaveslv1[a]=='nombre_proceso'){
                         estado=llaveslv1[a]
                     }
@@ -666,12 +698,7 @@ export default {
                                 
                                 for(var c=0;c<llaveslv3.length;c++){
                                     //console.log(llaveslv3[c]);
-                                   /*
-                                   if(llaveslv3[c]==='trayectoobj')
-                                    {
-                                        console.log("no saco ");
-                                    }
-                                    */
+                                   
                                     if(llaveslv3[c]==="objetoUnidades"||llaveslv3[c]==='trayectoobj'||
                                     llaveslv3[c]==='id_trayecto')
                                     {
@@ -714,6 +741,7 @@ export default {
                     consult+=detalles+ '->'+infor+'->'+variable[d]+' as '+variable[d]+','
                     }
                  }
+                 //console.log(consult);
                 var algo = 'SELECT '+
                     fechaC+' as Fecha_Creacion, '+
                     producto+ '->nombre as Producto, '+
@@ -730,13 +758,15 @@ export default {
                     detalles+'->'+refe+' as Referencia, '+
                     detalles+'->'+desti+'->'+direcciondesti+' as Destino, '+
                     nov+' as Novedades, '+
+                    prueba+ ' as Prueba, '+
                     detalles+'->'+infor+'->'+trayecto+'->'+nombre_trayecto+ ' as Trayecto, '+
                     consult+
                     'INTO XLS("Data.xls",{headers:true}) FROM ?'
+                    //console.log(this.consulta);
                     console.log(algo);
-                    alasql(algo,[this.consulta])
+                    //alasql(algo,[this.consulta])
 
-                   
+                  
                    
                    
         },
