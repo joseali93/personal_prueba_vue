@@ -8,20 +8,20 @@
 
         <b-card class="cards">
           <b-row>
-                <b-col md="10" offset-md="7">
+                <b-col md="10" offset-md="8">
                     <b-btn class="rounded" variant="secondary " 
                      to="/inicio/orden" 
                      v-b-tooltip.hover title="Anterior"
-                     size="lg"><i class="fa fa-arrow-left"></i>
+                     ><i class="fa fa-arrow-left"></i>
                      Anterior</b-btn>
                     <b-btn  class="rounded" variant="success"
-                       size="lg"  @click="envioServicio"
+                         @click="envioServicio"
                         v-b-tooltip.hover title="Finalizar"><i class="fa fa-check"></i>
                         Finalizar
                     </b-btn>
-                    <b-btn class="rounded" size="lg" variant="danger"  
+                    <b-btn class="rounded"  variant="danger"  
                     v-b-tooltip.hover title="Adicionar"
-                    v-b-modal.modalcrear><i class="fa fa-plus"></i>
+                    @click="abirmodal()"><i class="fa fa-plus"></i>
                     Adicionar
 
                     </b-btn>
@@ -65,401 +65,410 @@
             -->
         </b-card>
        </b-container>
-      <!-- Modal Adicionar -->
-      <b-modal id="modalcrear" ref="Modal" title="Adicionar Registro" 
-        no-close-on-backdrop
-        no-close-on-esc
-        size="lg">
-         <div slot="modal-header" class="w-100">
-                <b-btn class="mt-3" variant="danger"  @click="hideModal">
-                  <i class="fa fa-times-circle" aria-hidden="true">  </i>
-                  Cancelar</b-btn>
-                <b-btn class="mt-3 float-right" variant="success" v-on:click="ingresarOrden">
-                  <i class="fa fa-floppy-o">  </i> Guardar
-                </b-btn>
-        </div>
-            <b-container fluid>
-              <b-row class=" my-1">
-                <b-col>
-                  
-                <b-form-select v-model="selectproduct"   id="produ" 
-                :options="productosurl" text-field="nombre" value-field="_id"  @change.native="service">
-                </b-form-select>
-                    
-                </b-col>
-                <b-col>
-                  
-                  <b-form-select v-model="selectservice"  :options="serviciosurl"
-                  @change.native="campos"
-                  text-field="nombre" value-field="_id"  :disabled="habilitar" >
-                </b-form-select>
-                </b-col>
-              </b-row>
-              
-             
-                <b-card no-body v-show="selectservice" class=" w-100 cards"
-                style="
-                padding-left: 0px;
-                padding-right: 0px;
-                padding-top: 0px;
-                padding-bottom: 0px;
-                ">
-                            
-               
-                <b-tabs card  v-show="selectservice" v-model="tabIndex">
-                        <b-tab  title="Información" >
-
-                          <b-card-body>
-                                  <b-row>
-                                  <b-col>
-                                    <label class="col col-form-label col-form-label-sm text-capitalize text-primary" >Documento Referencia:</label>
-                                  </b-col>
-                                  <b-col>
-                                    <b-form-input type="text" class="form-control form-control-sm " 
-                                                              placeholder="Referencia" v-model="detalles.referencia"
-                                                          :state="estado.referencia"></b-form-input>
-                                  </b-col>
-                                  </b-row>
+        <!-- Modal Adicionar -->
+        <b-modal id="modalcrear" ref="Modal" title="Adicionar Registro" 
+            no-close-on-backdrop
+            no-close-on-esc
+            size="lg">
+            <div slot="modal-header" class="w-100">
+                    <b-btn class="mt-3" variant="danger"  @click="hideModal">
+                    <i class="fa fa-times-circle" aria-hidden="true">  </i>
+                    Cancelar</b-btn>
+                    <b-btn class="mt-3 float-right" variant="success" v-on:click="ingresarOrden">
+                    <i class="fa fa-floppy-o">  </i> Guardar
+                    </b-btn>
+            </div>
+                <b-container fluid>
+                <b-row class=" my-1">
+                    <b-col>
+                    <!--
+                    <b-form-select v-model="selectproduct"   id="produ" 
+                    :options="productosurl" text-field="nombre" value-field="_id"  @change.native="service">
+                    </b-form-select>
+                    -->
+                    <v-select v-model="selectproduct" label="nombre" placeholder="Digite el Producto"
+                        :options="productosurl" @input="seleccionarServicio()">
+                    </v-select>
+                        
+                    </b-col>
+                    <b-col>
+                    <!--
+                    <b-form-select v-model="selectservice"  :options="serviciosurl"
+                    @change.native="campos"
+                    text-field="nombre" value-field="_id"  :disabled="habilitar" >
+                    </b-form-select>
+                    -->
+                    <v-select v-model="selectservice" label="nombre" placeholder="Digite el Servicio"
+                        :disabled="habilitar"
+                        :options="serviciosurl" @input="camposNversion()">
+                    </v-select>
+                    </b-col>
+                </b-row>
+                
+                
+                    <b-card no-body v-show="selectservice" class=" w-100 cards"
+                    style="
+                    padding-left: 0px;
+                    padding-right: 0px;
+                    padding-top: 0px;
+                    padding-bottom: 0px;
+                    ">
                                 
+                
+                    <b-tabs card  v-show="selectservice" v-model="tabIndex">
+                            <b-tab  title="Información" >
 
-
-                                  <b-row  v-for="(data,indice) in inputs.campos" class="my-2"> 
-                                    <template v-if="data.type!='select'" >
-                                      <template v-if="data.espieza==false">
-                                      <b-col  >   
-                                          <label  class="col-sm col-form-label col-form-label-sm text-capitalize text-primary" :style="[data.style]" >{{data.placeholder}}: </label>
-                                      </b-col>
-                                      <b-col >
-                                        
-                                          <input class="form-control form-control-sm "  :maxlength="data.maxlength" :type="data.type" :id="data.id" :style="[data.style,validatecampo]" :max="data.max" :min="data.min" :placeholder="data.placeholder" @keyup="Presiono(indice)"   required>
-                                      </b-col>
+                            <b-card-body>
+                                    <b-row>
+                                    <b-col>
+                                        <label class="col col-form-label col-form-label-sm text-capitalize text-primary" >Documento Referencia:</label>
+                                    </b-col>
+                                    <b-col>
+                                        <b-form-input type="text" class="form-control form-control-sm " 
+                                                                placeholder="Referencia" v-model="detalles.referencia"
+                                                            :state="estado.referencia"></b-form-input>
+                                    </b-col>
+                                    </b-row>
                                     
-                                      </template>
-                  
-                                    </template>              
-                                  </b-row>
-                                  <b-form-row v-show="selectservice" class=" my-1">
+
+
+                                    <b-row  v-for="(data,indice) in inputs.campos" class="my-2"> 
+                                        <template v-if="data.type!='select'" >
+                                        <template v-if="data.espieza==false">
+                                        <b-col  >   
+                                            <label  class="col-sm col-form-label col-form-label-sm text-capitalize text-primary" :style="[data.style]" >{{data.placeholder}}: </label>
+                                        </b-col>
+                                        <b-col >
+                                            
+                                            <input class="form-control form-control-sm "  :maxlength="data.maxlength" :type="data.type" :id="data.id" :style="[data.style,validatecampo]" :max="data.max" :min="data.min" :placeholder="data.placeholder" @keyup="Presiono(indice)"   required>
+                                        </b-col>
+                                        
+                                        </template>
+                    
+                                        </template>              
+                                    </b-row>
+                                    <b-form-row v-show="selectservice" class=" my-1">
+                                    <b-col>
+                                    <b-form-textarea id="textarea1"
+                                        v-model="detalles.observaciones"
+                                        placeholder="Ingrese las observaciones necesarias"
+                                        :rows="3"
+                                        :max-rows="6">
+                                    </b-form-textarea>
+                                    </b-col>
+                                </b-form-row>
+                                <b-form-row v-show="selectservice" class=" my-1">
+                                    <b-col>
+                                    <b-form-textarea id="textarea1"
+                                        v-model="detalles.contenido"
+                                        placeholder="Ingrese el contenido de los paquetes"
+                                        :rows="3"
+                                        :max-rows="6">
+                                    </b-form-textarea>
+                                    </b-col>
+                                </b-form-row>
+                            </b-card-body>
+                            </b-tab>
+                            <b-tab title="Detalle" :disabled="tabdinamico">
+                            <b-card-body>
+                                <b-row v-for="(data,indice) in inputs.campos" v-show="camposdinamicos">
+                                <template v-if="data.type!='select'" >
+                                    <template v-if="data.espieza==true">
+                                    <b-col  >   
+                                        <label  class="col-sm col-form-label col-form-label-sm text-capitalize text-primary" :style="[data.style]" >{{data.placeholder}}: </label>
+                                    </b-col>
+                                    <b-col >
+                                        <input focus class="form-control form-control-sm"  :maxlength="data.maxlength" :type="data.type" :id="data.id" :style="[data.style,validatecampo]" 
+                                        :max="data.max" :min="data.min" :placeholder="data.placeholder" @keyup="Presiono(indice)"   required>
+                                    </b-col>
+                                    </template>
+                
+                                    </template>  
+                                </b-row>   
+                                <b-row v-show="ocultardicionar">
+                                    <b-col class="d-flex flex-row-reverse">
+                                        <b-btn variant="outline-success" active-class class="float-right" @click="adicionarRef" v-show="camposdinamicos">
+                                        <i class="fa fa-plus"></i>
+                                        </b-btn>
+                                    </b-col>
+                                    </b-row> 
+                                    <b-row v-show="ocultareditar">
+                                    <b-col class="d-flex flex-row-reverse">
+                                        <b-btn variant="outline-success" active-class class="float-right" @click="UpdateDinamico" v-show="camposdinamicos">
+                                        <i class="fa fa-pencil"></i>
+                                        </b-btn>
+                                    </b-col>
+                                    </b-row>    
+                                    <b-row>
+                                    <b-table striped hover :items="itemsdinamicos"  :fields="fieldsdinamicos"
+                                    :per-page="3" :current-page="currentPageRef" v-show="camposdinamicos"> 
+                                        <template slot="eliminar" slot-scope="data">
+                                            <i class="btn btn-danger fa fa-trash" v-on:click="eliminarRef(data)" v-show="ocultardicionar"></i>
+                                        </template>
+                                        <template slot="actualizar" slot-scope="data">
+                                            <i class="btn btn-primary fa fa-pencil" v-on:click="ActualizarRef(data,data.index)" v-show="ocultardicionar"></i>
+                                        </template>
+                                    
+                                        
+                                        </b-table>
+                                    <b-pagination size="md" :total-rows="itemsdinamicos.length" v-model="currentPageRef" 
+                                    :per-page="3" v-show="camposdinamicos">
+                                    </b-pagination>    
+                                    </b-row>  
+                            </b-card-body>
+                            </b-tab>
+                            <b-tab title="Destinatario">
+                            <b-card-body>
+                                <b-form-row v-show="selectservice" class="my-1">
                                 <b-col>
-                                  <b-form-textarea id="textarea1"
-                                      v-model="detalles.observaciones"
-                                      placeholder="Ingrese las observaciones necesarias"
-                                      :rows="3"
-                                      :max-rows="6">
-                                  </b-form-textarea>
+                                    <label  class="col-sm col-form-label col-form-label-sm text-primary"> Identificación: </label>
                                 </b-col>
-                              </b-form-row>
-                              <b-form-row v-show="selectservice" class=" my-1">
                                 <b-col>
-                                  <b-form-textarea id="textarea1"
-                                      v-model="detalles.contenido"
-                                      placeholder="Ingrese el contenido de los paquetes"
-                                      :rows="3"
-                                      :max-rows="6">
-                                  </b-form-textarea>
+                                    <b-form-input type="number" class="form-control form-control-sm"  placeholder="Indentidicación"
+                                    v-model="identificacion"
+                                    @keyup.enter.tab.native="buscar('nuevo')"
+                                    @keydown.tab.native="buscar('nuevo')"
+                                    :state="true"  v-b-popover.hover="'Se debe diligenciar sin puntos, en caso de NIT sin numero de validación, ni guion'" title="Num. Identificacion"></b-form-input>
+                                    <!--<input type="text" class="form-control form-control-sm"  placeholder="Nombre" v-model="detalles.destinatario.nombre">
+                                    -->
                                 </b-col>
-                              </b-form-row>
-                          </b-card-body>
+                            </b-form-row>
+                            
+                            
+                            <b-form-row v-show="selectservice&&mostrardestinatario" class="my-1">
+                                <b-col>
+                                    <label  class="col-sm col-form-label col-form-label-sm text-primary">Nombre: </label>
+                                </b-col>
+                                <b-col>
+                                    <b-form-input type="text" class="form-control form-control-sm"  placeholder="Nombre" v-model="detalles.destinatario.nombre"
+                                    :state="estado.nombre"></b-form-input>
+
+                                </b-col>
+                            </b-form-row>
+                            <b-form-row v-show="selectservice&&mostrardestinatario " class="my-1">
+                                <b-col>
+                                    <label  class="col-sm col-form-label col-form-label-sm text-primary">Dirección: </label>
+                                </b-col>
+                                <b-col>
+                                    <b-form-input type="text"  class="form-control form-control-sm"  :state="estado.direccion" placeholder="Direccion" v-model="detalles.destinatario.direccion"> </b-form-input>
+
+                                </b-col>
+                            </b-form-row>
+                            <b-form-row v-show="selectservice&&mostrardestinatario" class="my-1">
+                                <b-col>
+                                    <label  class="col-sm col-form-label col-form-label-sm text-primary">Telefono: </label>
+                                </b-col>
+                                <b-col>
+
+                                    <input type="text" :style="validatecampoTel"  class="form-control form-control-sm" id="telefono" @keyup="numeros(this)" placeholder="Telefono" v-model="detalles.destinatario.telefono">
+                                    
+                                </b-col>
+                            </b-form-row>
+                            </b-card-body>
+                            </b-tab>
+                    </b-tabs>  
+                    
+                    <b-card-footer>
+                        <div class="text-center" v-show="selectservice">
+                            <b-button-group class="mt-2">
+                            <b-btn @click="tabIndex--"><i class="fa fa-chevron-left" aria-hidden="true"></i></b-btn>
+                            <b-btn @click="tabIndex++"><i class="fa fa-chevron-right" aria-hidden="true"></i></b-btn>
+                            </b-button-group>
+                            
+                        </div>
+                    </b-card-footer>
+                    </b-card>
+        
+                </b-container>
+                <div slot="modal-footer" class="w-100">
+                
+
+                </div>
+        </b-modal>
+        <!-- Modal Editar -->
+        <b-modal id="modaleditar" ref="ModalEdit" title="Editar Registro"
+         no-close-on-backdrop
+            no-close-on-esc size="lg">
+            <div slot="modal-header" class="w-100">
+                    <b-btn class="mt-3" variant="danger"  @click="hideModal">
+                    <i class="fa fa-times-circle" aria-hidden="true">  </i>
+                    Cancelar</b-btn>
+                    <b-btn class="mt-3 float-right " variant="success" v-on:click="actualizar()">
+                    <i class="fa fa-floppy-o"></i> Guardar 
+                    </b-btn>
+                </div>
+                <b-container fluid>
+                    <b-row class=" my-1">
+                    <b-col>
+                        <small>Producto</small>
+                        <b-form-select v-model="selectproduct" class="mb-3" 
+                        :options="productosurl" text-field="nombre" value-field="_id" 
+                        @change.native="service"
+                        disabled>
+                        </b-form-select>
+                    </b-col>
+                    <b-col>
+                        <small>Servicio</small>
+                        <b-form-select v-model="selectservice" class="mb-3" 
+                        :options="serviciosurl" @change.native="campos" text-field="nombre"
+                        disabled value-field="_id">
+                        </b-form-select>
+                    </b-col>
+
+                    </b-row>
+
+            <b-card no-body v-show="selectservice" class=" w-100 cards"
+                    style="
+                    padding-left: 0px;
+                    padding-right: 0px;
+                    padding-top: 0px;
+                    padding-bottom: 0px;
+                    ">
+                    <b-tabs card  v-show="selectservice" v-model="tabIndexED">
+                        <b-tab  title="Información" >
+                            <b-card-body>
+                            <b-row  v-for="(data,indice) in inputsED.campos" class="my-2"> 
+                                <template v-if="data.type!='select'" >
+                                <template v-if="data.espieza==false">
+                                <b-col  >   
+                                    <label  class="col-sm col-form-label col-form-label-sm text-capitalize" :style="[data.style]" >{{data.placeholder}}: </label>
+                                </b-col>
+                                <b-col >
+                                    <input class="form-control form-control-sm" 
+                                    :type="data.type" :id="data.id" :style="[data.style,validatecampo]"
+                                    :max="data.max" :placeholder="data.placeholder" 
+                                    @keyup="PresionoED(indice)"  :value="valores(data.id)"      required>
+                                </b-col>
+                                </template>
+            
+                                </template>              
+                            </b-row>
+                            <b-row class=" my-1">
+                                <b-form-textarea id="textarea1"
+                                    v-model="detalleseditar.observaciones"
+                                    placeholder="Observaciones"
+                                    :rows="3"
+                                    :max-rows="6">
+                                </b-form-textarea>
+                            </b-row>
+                            <b-row class=" my-1">
+                                <b-form-textarea id="textarea1"
+                                    v-model="detalleseditar.contenido"
+                                    placeholder="Ingrese el contenido"
+                                    :rows="3"
+                                    :max-rows="6">
+                                </b-form-textarea>
+                            </b-row>
+                            </b-card-body>
                         </b-tab>
                         <b-tab title="Detalle" :disabled="tabdinamico">
-                          <b-card-body>
-                              <b-row v-for="(data,indice) in inputs.campos" v-show="camposdinamicos">
-                              <template v-if="data.type!='select'" >
-                                  <template v-if="data.espieza==true">
-                                  <b-col  >   
-                                      <label  class="col-sm col-form-label col-form-label-sm text-capitalize text-primary" :style="[data.style]" >{{data.placeholder}}: </label>
-                                  </b-col>
-                                  <b-col >
-                                      <input focus class="form-control form-control-sm"  :maxlength="data.maxlength" :type="data.type" :id="data.id" :style="[data.style,validatecampo]" 
-                                      :max="data.max" :min="data.min" :placeholder="data.placeholder" @keyup="Presiono(indice)"   required>
-                                  </b-col>
-                                  </template>
-              
-                                </template>  
-                              </b-row>   
-                              <b-row v-show="ocultardicionar">
-                                  <b-col class="d-flex flex-row-reverse">
-                                    <b-btn variant="outline-success" active-class class="float-right" @click="adicionarRef" v-show="camposdinamicos">
-                                      <i class="fa fa-plus"></i>
-                                    </b-btn>
-                                  </b-col>
-                                </b-row> 
-                                <b-row v-show="ocultareditar">
-                                  <b-col class="d-flex flex-row-reverse">
-                                    <b-btn variant="outline-success" active-class class="float-right" @click="UpdateDinamico" v-show="camposdinamicos">
-                                      <i class="fa fa-pencil"></i>
-                                    </b-btn>
-                                  </b-col>
-                                </b-row>    
-                                <b-row>
-                                  <b-table striped hover :items="itemsdinamicos"  :fields="fieldsdinamicos"
-                                  :per-page="3" :current-page="currentPageRef" v-show="camposdinamicos"> 
-                                      <template slot="eliminar" slot-scope="data">
-                                        <i class="btn btn-danger fa fa-trash" v-on:click="eliminarRef(data)" v-show="ocultardicionar"></i>
-                                      </template>
-                                      <template slot="actualizar" slot-scope="data">
-                                        <i class="btn btn-primary fa fa-pencil" v-on:click="ActualizarRef(data,data.index)" v-show="ocultardicionar"></i>
-                                      </template>
-                                  
-                                      
-                                    </b-table>
-                                <b-pagination size="md" :total-rows="itemsdinamicos.length" v-model="currentPageRef" 
-                                :per-page="3" v-show="camposdinamicos">
-                                </b-pagination>    
-                                </b-row>  
-                          </b-card-body>
+                            <b-row v-for="(data,indice) in inputsED.campos" v-show="camposdinamicos">
+                            <template v-if="data.type!='select'" >
+                                <template v-if="data.espieza==true">
+                                <b-col  >   
+                                    <label  class="col-sm col-form-label col-form-label-sm text-capitalize" :style="[data.style]" >{{data.placeholder}}: </label>
+                                </b-col>
+                                <b-col >
+                                    <input class="form-control form-control-sm" :type="data.type"
+                                    :id="data.id" :style="[data.style,validatecampo]" :max="data.max" 
+                                    :placeholder="data.placeholder" @keyup="PresionoED(indice)"   required>
+                                </b-col>
+                                </template>
+            
+                            </template>  
+                            </b-row>   
+                        
+                            <b-row v-show="ocultardicionarED">
+                            <b-col class="d-flex flex-row-reverse">
+                                <b-btn variant="outline-success" active-class class="float-right" @click="adicionarRefED" v-show="camposdinamicos">
+                                <i class="fa fa-plus"></i>
+                                </b-btn>
+                            </b-col>
+                            </b-row> 
+                            <b-row v-show="ocultareditarED">
+                            <b-col class="d-flex flex-row-reverse">
+                                <b-btn variant="outline-success" active-class class="float-right" @click="UpdateDinamicoED" v-show="camposdinamicos">
+                                <i class="fa fa-pencil"></i>
+                                </b-btn>
+                            </b-col>
+                            </b-row>    
+
+                            <b-row>
+                            <b-table striped   hover :items="itemsdinamicos"  :fields="fieldsdinamicos"
+                            :per-page="3" :current-page="currentPageRef" v-show="camposdinamicos"> 
+                                <template slot="eliminar" slot-scope="data">
+                                    <i class="btn btn-danger fa fa-trash" v-on:click="eliminarRef(data)" v-show="ocultardicionarED"></i>
+                                </template>
+                                <template slot="actualizar" slot-scope="data">
+                                    <i class="btn btn-primary fa fa-pencil" v-on:click="ActualizarRefED(data,data.index)" v-show="ocultardicionarED"></i>
+                                </template>
+                                </b-table>
+                            <b-pagination size="md" :total-rows="itemsdinamicos.length" v-model="currentPageRef" 
+                            :per-page="3" v-show="camposdinamicos">
+                            </b-pagination>    
+                            </b-row> 
                         </b-tab>
                         <b-tab title="Destinatario">
-                          <b-card-body>
-                              <b-form-row v-show="selectservice" class="my-1">
-                              <b-col>
-                                  <label  class="col-sm col-form-label col-form-label-sm text-primary"> Identificación: </label>
-                              </b-col>
-                              <b-col>
-                                  <b-form-input type="number" class="form-control form-control-sm"  placeholder="Indentidicación"
-                                  v-model="identificacion"
-                                  @keyup.enter.tab.native="buscar('nuevo')"
-                                  @keydown.tab.native="buscar('nuevo')"
-                                  :state="true"  v-b-popover.hover="'Se debe diligenciar sin puntos, en caso de NIT sin numero de validación, ni guion'" title="Num. Identificacion"></b-form-input>
-                                  <!--<input type="text" class="form-control form-control-sm"  placeholder="Nombre" v-model="detalles.destinatario.nombre">
-                                  -->
-                              </b-col>
-                          </b-form-row>
-                          
-                          
-                          <b-form-row v-show="selectservice&&mostrardestinatario" class="my-1">
-                              <b-col>
-                                  <label  class="col-sm col-form-label col-form-label-sm text-primary">Nombre: </label>
-                              </b-col>
-                              <b-col>
-                                  <b-form-input type="text" class="form-control form-control-sm"  placeholder="Nombre" v-model="detalles.destinatario.nombre"
-                                  :state="estado.nombre"></b-form-input>
-
-                              </b-col>
-                          </b-form-row>
-                          <b-form-row v-show="selectservice&&mostrardestinatario " class="my-1">
-                              <b-col>
-                                  <label  class="col-sm col-form-label col-form-label-sm text-primary">Dirección: </label>
-                              </b-col>
-                              <b-col>
-                                <b-form-input type="text"  class="form-control form-control-sm"  :state="estado.direccion" placeholder="Direccion" v-model="detalles.destinatario.direccion"> </b-form-input>
-
-                              </b-col>
-                          </b-form-row>
-                          <b-form-row v-show="selectservice&&mostrardestinatario" class="my-1">
-                              <b-col>
-                                  <label  class="col-sm col-form-label col-form-label-sm text-primary">Telefono: </label>
-                              </b-col>
-                              <b-col>
-
-                                  <input type="text" :style="validatecampoTel"  class="form-control form-control-sm" id="telefono" @keyup="numeros(this)" placeholder="Telefono" v-model="detalles.destinatario.telefono">
-                                  
-                              </b-col>
-                          </b-form-row>
-                          </b-card-body>
-                        </b-tab>
-                </b-tabs>  
-                
-                 <b-card-footer>
-                     <div class="text-center" v-show="selectservice">
-                        <b-button-group class="mt-2">
-                          <b-btn @click="tabIndex--"><i class="fa fa-chevron-left" aria-hidden="true"></i></b-btn>
-                          <b-btn @click="tabIndex++"><i class="fa fa-chevron-right" aria-hidden="true"></i></b-btn>
-                        </b-button-group>
-                        
-                      </div>
-                 </b-card-footer>
-                  </b-card>
-       
-            </b-container>
-            <div slot="modal-footer" class="w-100">
-               
-
-            </div>
-      </b-modal>
-      <!-- Modal Editar -->
-      <b-modal id="modaleditar" ref="ModalEdit" title="Editar Registro"
-       no-close-on-backdrop
-        no-close-on-esc size="lg">
-        <div slot="modal-header" class="w-100">
-                <b-btn class="mt-3" variant="danger"  @click="hideModal">
-                  <i class="fa fa-times-circle" aria-hidden="true">  </i>
-                  Cancelar</b-btn>
-                <b-btn class="mt-3 float-right " variant="success" v-on:click="actualizar()">
-                  <i class="fa fa-floppy-o"></i> Guardar 
-                </b-btn>
-            </div>
-            <b-container fluid>
-                <b-row class=" my-1">
-                  <b-col>
-                    <small>Producto</small>
-                    <b-form-select v-model="selectproduct" class="mb-3" 
-                    :options="productosurl" text-field="nombre" value-field="_id" 
-                     @change.native="service"
-                     disabled>
-                     </b-form-select>
-                  </b-col>
-                  <b-col>
-                    <small>Servicio</small>
-                    <b-form-select v-model="selectservice" class="mb-3" 
-                     :options="serviciosurl" @change.native="campos" text-field="nombre"
-                     disabled value-field="_id">
-                    </b-form-select>
-                  </b-col>
-
-                </b-row>
-
-       <b-card no-body v-show="selectservice" class=" w-100 cards"
-                style="
-                padding-left: 0px;
-                padding-right: 0px;
-                padding-top: 0px;
-                padding-bottom: 0px;
-                ">
-                  <b-tabs card  v-show="selectservice" v-model="tabIndexED">
-                     <b-tab  title="Información" >
                         <b-card-body>
-                          <b-row  v-for="(data,indice) in inputsED.campos" class="my-2"> 
-                            <template v-if="data.type!='select'" >
-                              <template v-if="data.espieza==false">
-                              <b-col  >   
-                                  <label  class="col-sm col-form-label col-form-label-sm text-capitalize" :style="[data.style]" >{{data.placeholder}}: </label>
-                              </b-col>
-                              <b-col >
-                                  <input class="form-control form-control-sm" 
-                                  :type="data.type" :id="data.id" :style="[data.style,validatecampo]"
-                                  :max="data.max" :placeholder="data.placeholder" 
-                                  @keyup="PresionoED(indice)"  :value="valores(data.id)"      required>
-                              </b-col>
-                              </template>
-          
-                            </template>              
-                          </b-row>
-                          <b-row class=" my-1">
-                            <b-form-textarea id="textarea1"
-                                v-model="detalleseditar.observaciones"
-                                placeholder="Observaciones"
-                                :rows="3"
-                                :max-rows="6">
-                            </b-form-textarea>
-                        </b-row>
-                        <b-row class=" my-1">
-                            <b-form-textarea id="textarea1"
-                                v-model="detalleseditar.contenido"
-                                placeholder="Ingrese el contenido"
-                                :rows="3"
-                                :max-rows="6">
-                            </b-form-textarea>
-                        </b-row>
+                            <b-form-row v-show="selectservice" class="my-1">
+                                <b-col>
+                                    <label  class="col-sm col-form-label col-form-label-sm"> Identificación: </label>
+                                </b-col>
+                                <b-col>
+                                    <b-form-input type="number" class="form-control form-control-sm"  placeholder="Indentidicación"
+                                    v-model="detalleseditar.destinatario.numero_identificacion"
+                                    @keyup.enter.tab.native="buscar('editar')"
+                                    @keydown.tab.native="buscar('editar')"
+                                    :state="true"  v-b-popover.hover="'Se debe diligenciar sin puntos, en caso de NIT sin numero de validación, ni guion'" title="Num. Identificacion"></b-form-input>
+                                    <!--<input type="text" class="form-control form-control-sm"  placeholder="Nombre" v-model="detalles.destinatario.nombre">
+                                    -->
+                                </b-col>
+                            </b-form-row>
+                            <b-form-row class="my-1">
+                                <b-col>
+                                    <label  class="col-sm col-form-label col-form-label-sm">Nombre: </label>
+                                </b-col>
+                                <b-col>
+                                <b-form-input type="text" class="form-control form-control-sm"  placeholder="Nombre" v-model="detalleseditar.destinatario.nombre"
+                                    :state="estado.nombre"></b-form-input>
+                                    <!--
+                                    <input type="text" class="form-control form-control-sm" id="editarnombre"  placeholder="Nombre" v-model="detalleseditar.destinatario.nombre">
+                                    -->
+                                </b-col>
+                            </b-form-row>
+                            <b-form-row class="my-1">
+                                <b-col>
+                                    <label  class="col-sm col-form-label col-form-label-sm">Dirección: </label>
+                                </b-col>
+                                <b-col>
+                                <b-form-input type="text" class="form-control form-control-sm"  placeholder="Direccion" v-model="detalleseditar.destinatario.direccion"
+                                    :state="estado.direccion"></b-form-input>
+                                    <!--
+                                    <input type="text" class="form-control form-control-sm" id="editardire" placeholder="Direccion" v-model="detalleseditar.destinatario.direccion">
+                                    -->
+                                </b-col>
+                            </b-form-row>
+                            <b-form-row class="my-1">
+                                <b-col>
+                                    <label  class="col-sm col-form-label col-form-label-sm">Telefono: </label>
+                                </b-col>
+                                <b-col>
+                                    <input type="text" :style="validatecampoTel" class="form-control form-control-sm" id="telefonoedit"  @keyup="numeroseditar(this)"  placeholder="Telefono" v-model="detalleseditar.destinatario.telefono">
+                                </b-col>
+                            </b-form-row>
                         </b-card-body>
-                     </b-tab>
-                      <b-tab title="Detalle" :disabled="tabdinamico">
-                         <b-row v-for="(data,indice) in inputsED.campos" v-show="camposdinamicos">
-                        <template v-if="data.type!='select'" >
-                            <template v-if="data.espieza==true">
-                            <b-col  >   
-                                <label  class="col-sm col-form-label col-form-label-sm text-capitalize" :style="[data.style]" >{{data.placeholder}}: </label>
-                            </b-col>
-                            <b-col >
-                                <input class="form-control form-control-sm" :type="data.type"
-                                :id="data.id" :style="[data.style,validatecampo]" :max="data.max" 
-                                :placeholder="data.placeholder" @keyup="PresionoED(indice)"   required>
-                            </b-col>
-                            </template>
-        
-                          </template>  
-                        </b-row>   
-                      
-                        <b-row v-show="ocultardicionarED">
-                          <b-col class="d-flex flex-row-reverse">
-                            <b-btn variant="outline-success" active-class class="float-right" @click="adicionarRefED" v-show="camposdinamicos">
-                              <i class="fa fa-plus"></i>
-                            </b-btn>
-                          </b-col>
-                        </b-row> 
-                        <b-row v-show="ocultareditarED">
-                          <b-col class="d-flex flex-row-reverse">
-                            <b-btn variant="outline-success" active-class class="float-right" @click="UpdateDinamicoED" v-show="camposdinamicos">
-                              <i class="fa fa-pencil"></i>
-                            </b-btn>
-                          </b-col>
-                        </b-row>    
+                        </b-tab>
+                    </b-tabs>
+            </b-card>
+                
+                    
+                    
+                </b-container>
+                <div slot="modal-footer" class="w-100">
+                    
 
-                        <b-row>
-                          <b-table striped   hover :items="itemsdinamicos"  :fields="fieldsdinamicos"
-                          :per-page="3" :current-page="currentPageRef" v-show="camposdinamicos"> 
-                              <template slot="eliminar" slot-scope="data">
-                                <i class="btn btn-danger fa fa-trash" v-on:click="eliminarRef(data)" v-show="ocultardicionarED"></i>
-                              </template>
-                              <template slot="actualizar" slot-scope="data">
-                                <i class="btn btn-primary fa fa-pencil" v-on:click="ActualizarRefED(data,data.index)" v-show="ocultardicionarED"></i>
-                              </template>
-                            </b-table>
-                        <b-pagination size="md" :total-rows="itemsdinamicos.length" v-model="currentPageRef" 
-                        :per-page="3" v-show="camposdinamicos">
-                        </b-pagination>    
-                        </b-row> 
-                      </b-tab>
-                      <b-tab title="Destinatario">
-                       <b-card-body>
-                         <b-form-row v-show="selectservice" class="my-1">
-                              <b-col>
-                                  <label  class="col-sm col-form-label col-form-label-sm"> Identificación: </label>
-                              </b-col>
-                              <b-col>
-                                  <b-form-input type="number" class="form-control form-control-sm"  placeholder="Indentidicación"
-                                  v-model="detalleseditar.destinatario.numero_identificacion"
-                                  @keyup.enter.tab.native="buscar('editar')"
-                                  @keydown.tab.native="buscar('editar')"
-                                  :state="true"  v-b-popover.hover="'Se debe diligenciar sin puntos, en caso de NIT sin numero de validación, ni guion'" title="Num. Identificacion"></b-form-input>
-                                  <!--<input type="text" class="form-control form-control-sm"  placeholder="Nombre" v-model="detalles.destinatario.nombre">
-                                  -->
-                              </b-col>
-                          </b-form-row>
-                         <b-form-row class="my-1">
-                            <b-col>
-                                <label  class="col-sm col-form-label col-form-label-sm">Nombre: </label>
-                            </b-col>
-                            <b-col>
-                              <b-form-input type="text" class="form-control form-control-sm"  placeholder="Nombre" v-model="detalleseditar.destinatario.nombre"
-                                :state="estado.nombre"></b-form-input>
-                                <!--
-                                <input type="text" class="form-control form-control-sm" id="editarnombre"  placeholder="Nombre" v-model="detalleseditar.destinatario.nombre">
-                                -->
-                            </b-col>
-                        </b-form-row>
-                        <b-form-row class="my-1">
-                            <b-col>
-                                <label  class="col-sm col-form-label col-form-label-sm">Dirección: </label>
-                            </b-col>
-                            <b-col>
-                              <b-form-input type="text" class="form-control form-control-sm"  placeholder="Direccion" v-model="detalleseditar.destinatario.direccion"
-                                :state="estado.direccion"></b-form-input>
-                                <!--
-                                <input type="text" class="form-control form-control-sm" id="editardire" placeholder="Direccion" v-model="detalleseditar.destinatario.direccion">
-                                  -->
-                            </b-col>
-                        </b-form-row>
-                        <b-form-row class="my-1">
-                            <b-col>
-                                <label  class="col-sm col-form-label col-form-label-sm">Telefono: </label>
-                            </b-col>
-                            <b-col>
-                                <input type="text" :style="validatecampoTel" class="form-control form-control-sm" id="telefonoedit"  @keyup="numeroseditar(this)"  placeholder="Telefono" v-model="detalleseditar.destinatario.telefono">
-                            </b-col>
-                        </b-form-row>
-                       </b-card-body>
-                      </b-tab>
-                  </b-tabs>
-        </b-card>
-               
-                
-                
-            </b-container>
-            <div slot="modal-footer" class="w-100">
-                
-
-            </div>
-      </b-modal>
+                </div>
+        </b-modal>
     </b-container>
 </template>
 
@@ -473,9 +482,9 @@ export default {
   },
   data() {
     return {
-      tabIndexED:0,
-      tabdinamico:false,
-      tabIndex:0,
+      tabIndexED: 0,
+      tabdinamico: false,
+      tabIndex: 0,
       items: [
         {
           text: "Inicio",
@@ -527,9 +536,9 @@ export default {
       ],
       DetalleServicio: [],
       remitentes: [],
-      productosurl: {},
+      productosurl: [],
       selectproducto: {},
-      serviciosurl: {},
+      serviciosurl: [],
       selectservice: null,
       selectproduct: null,
       selectservicio: {},
@@ -570,8 +579,20 @@ export default {
     selectservice(n, o) {}
   },
   methods: {
+    abirmodal(){
+        this.selectservice= null
+        this.selectproduct= null
+        var login = localStorage.getItem("storedData");
+        var infologin = JSON.parse(login);
+        this.axios
+        .get(urlservicios + "productos/" + infologin.id_OperadorLogistico._id)
+        .then(response => {
+            this.productosurl = response.data;
+            //this.productosurl.unshift(vacio);
+        });
+        this.$refs.Modal.show()
+    },
     UpdateDinamico(value) {
-
       var objellaves = Object.keys(this.itemsdinamicos[0]);
       //////console.log(objellaves);
       var tituloopciones = {};
@@ -645,7 +666,6 @@ export default {
       //////console.log(this.DetalleServicio[this.indices].detalleslocal.infor);
       this.ocultardicionarED = true;
       this.ocultareditarED = false;
-
     },
     ActualizarRefED(value, value2) {
       //////console.log("entro a cambiar ref")
@@ -803,60 +823,63 @@ export default {
     buscar(accion) {
       //////console.log("entro a buscar");
       //////console.log(this.identificacion);
-      if(accion=='nuevo'){
+      if (accion == "nuevo") {
         console.log("nuevo");
         this.axios
-        .get(urlservicios + "obtenerDestinatario" + "/" + this.identificacion)
-        .then(response => {
-          console.log(response.data);
-          var destinatario = response.data.destinatarios;
-          this.creaciondestinatarios = response.data.validar;
-          if (response.data.validar == true) {
-            this.detalles.destinatario.numero_identificacion =
-              destinatario.numero_identificacion;
-            this.detalles.destinatario._id = destinatario._id;
-            this.detalles.destinatario.nombre = destinatario.nombre;
-            this.detalles.destinatario.direccion = destinatario.direccion;
-            this.detalles.destinatario.telefono = destinatario.telefono;
-          } else {
-            this.detalles.destinatario.numero_identificacion = this.identificacion;
-            this.detalles.destinatario._id = "";
-            this.detalles.destinatario.nombre = "";
-            this.detalles.destinatario.direccion = "";
-            this.detalles.destinatario.telefono = "";
-          }
-          this.mostrardestinatario = true;
-        });
+          .get(urlservicios + "obtenerDestinatario" + "/" + this.identificacion)
+          .then(response => {
+            console.log(response.data);
+            var destinatario = response.data.destinatarios;
+            this.creaciondestinatarios = response.data.validar;
+            if (response.data.validar == true) {
+              this.detalles.destinatario.numero_identificacion =
+                destinatario.numero_identificacion;
+              this.detalles.destinatario._id = destinatario._id;
+              this.detalles.destinatario.nombre = destinatario.nombre;
+              this.detalles.destinatario.direccion = destinatario.direccion;
+              this.detalles.destinatario.telefono = destinatario.telefono;
+            } else {
+              this.detalles.destinatario.numero_identificacion = this.identificacion;
+              this.detalles.destinatario._id = "";
+              this.detalles.destinatario.nombre = "";
+              this.detalles.destinatario.direccion = "";
+              this.detalles.destinatario.telefono = "";
+            }
+            this.mostrardestinatario = true;
+          });
       }
-      if(accion=='editar'){
+      if (accion == "editar") {
         console.log("editar");
         console.log(this.detalleseditar.destinatario);
         this.axios
-        .get(urlservicios + "obtenerDestinatario" + "/" + this.detalleseditar.destinatario.numero_identificacion)
-        .then(response => {
-          console.log(response.data);
-          var destinatario = response.data.destinatarios;
-          this.creaciondestinatarios = response.data.validar;
-          if (response.data.validar == true) {
-            this.detalles.destinatario.numero_identificacion =
-              destinatario.numero_identificacion;
-            this.detalleseditar.destinatario._id = destinatario._id;
-            this.detalleseditar.destinatario.nombre = destinatario.nombre;
-            this.detalleseditar.destinatario.direccion = destinatario.direccion;
-            this.detalleseditar.destinatario.telefono = destinatario.telefono;
-          } else {
-            this.detalleseditar.destinatario.numero_identificacion = this.identificacion;
-            this.detalleseditar.destinatario._id = "";
-            this.detalleseditar.destinatario.nombre = "";
-            this.detalleseditar.destinatario.direccion = "";
-            this.detalleseditar.destinatario.telefono = "";
-          }
-          this.mostrardestinatario = true;
-        });
-        
-
+          .get(
+            urlservicios +
+              "obtenerDestinatario" +
+              "/" +
+              this.detalleseditar.destinatario.numero_identificacion
+          )
+          .then(response => {
+            console.log(response.data);
+            var destinatario = response.data.destinatarios;
+            this.creaciondestinatarios = response.data.validar;
+            if (response.data.validar == true) {
+              this.detalles.destinatario.numero_identificacion =
+                destinatario.numero_identificacion;
+              this.detalleseditar.destinatario._id = destinatario._id;
+              this.detalleseditar.destinatario.nombre = destinatario.nombre;
+              this.detalleseditar.destinatario.direccion =
+                destinatario.direccion;
+              this.detalleseditar.destinatario.telefono = destinatario.telefono;
+            } else {
+              this.detalleseditar.destinatario.numero_identificacion = this.identificacion;
+              this.detalleseditar.destinatario._id = "";
+              this.detalleseditar.destinatario.nombre = "";
+              this.detalleseditar.destinatario.direccion = "";
+              this.detalleseditar.destinatario.telefono = "";
+            }
+            this.mostrardestinatario = true;
+          });
       }
-      
     },
     numeroseditar(valor) {
       ////////console.log("entro a numeros editar");
@@ -1098,12 +1121,12 @@ export default {
             infor: {},
             observaciones: ""
           });
-           (this.selectservice = null);
-      this.selectproduct = null;
-          (this.camposdinamicos = false),
-        (this.fieldsdinamicos = []),
-        (this.itemsdinamicos = []),
-        this.$refs.ModalEdit.hide();
+        this.selectservice = null;
+        this.selectproduct = null;
+        (this.camposdinamicos = false),
+          (this.fieldsdinamicos = []),
+          (this.itemsdinamicos = []),
+          this.$refs.ModalEdit.hide();
       }
     },
     eliminar: function(indice) {
@@ -1129,8 +1152,7 @@ export default {
     },
     editar(index) {
       ////////console.log(index);
-       this.tabIndexED=0,
-       this.tabIndex=0
+      (this.tabIndexED = 0), (this.tabIndex = 0);
       this.validatecampo = "";
       this.validatecampoTel = "";
       this.estado.nombre = null;
@@ -1184,7 +1206,7 @@ export default {
     },
     hideModal() {
       //this.tabIndexED=0,
-       //this.tabIndex
+      //this.tabIndex
       (this.habilitar = true),
         (this.mostrardestinatario = false),
         (this.camposdinamicos = false),
@@ -1431,7 +1453,7 @@ export default {
         this.DetalleServicio.push(detalles);
         //console.log(this.DetalleServicio);
         //BLANQUEAR DATOS
-       this.tabIndex=0
+        this.tabIndex = 0;
         this.camposdinamicos = false;
         this.fieldsdinamicos = [];
         this.itemsdinamicos = [];
@@ -1444,7 +1466,11 @@ export default {
           (this.objeto = ""),
           (this.inputs = ""),
           toastr.success("Se agrego exitosamente");
-        (this.selectservice = null), (this.selectproduct = null);
+        //this.selectservice = null
+         //this.selectproduct = null
+         //this.selectproducto=null
+         //this.selectservicio=null
+         
         (this.objeto = ""),
           (this.detalles = {
             destinatario: {
@@ -1525,46 +1551,122 @@ export default {
       );
       ////////console.log(this.objeto)
     },
-    service(value) {
-              var vacio = { _id: null, nombre: "Por Favor Seleccione un Servicio" };
-
-      if(value.target.value==null|| value.target.value==''){
-        console.log("va vacio");
-         this.habilitar = true;
-         this.serviciosurl=[]
-         this.selectservice=null
-         this.serviciosurl.unshift(vacio);
-      }else{
-      //////console.log("entro a seleccion");
-      //this.load = true;
-      var load = true;
-      setTimeout(() => {
-        bus.$emit("load", {
-          load
-        });
-      });
-      for (var i = 0; i < this.productosurl.length; i++) {
-        if (this.productosurl[i]._id == value.target.value) {
-          this.selectproducto = this.productosurl[i];
+    seleccionarServicio(){
+        console.log(this.selectproduct);
+        if(this.selectproduct==null||this.selectproduct=='null'|this.selectproduct==''){
+            this.habilitar = true;
+            this.serviciosurl = [];
+            this.selectservice = null; 
         }
-      }
-      this.axios
-        .get(urlservicios + "servicios/" + this.selectproducto._id)
-        .then(response => {
-          this.serviciosurl = response.data;
-          //this.load=false
-          var load2 = false;
-          setTimeout(() => {
-            bus.$emit("load", {
-              load2
+        else{
+            var load = true;
+            setTimeout(() => {
+                bus.$emit("load", {
+                    load
+                });
             });
+            //this.habilitar = false;
+            this.selectproducto=this.selectproduct
+            this.axios.get(urlservicios + "servicios/" + this.selectproducto._id)
+                .then(response => {
+                    this.serviciosurl = response.data;
+                    //this.load=false
+                    var load2 = false;
+                    setTimeout(() => {
+                    bus.$emit("load", {
+                        load2
+                    });
+                    });
+                    this.habilitar = false;
+                    ////////console.log(this.serviciosurl);
+                    
+                });
+
+        }
+    },
+    service(value) {
+      var vacio = { _id: null, nombre: "Por Favor Seleccione un Servicio" };
+
+      if (value.target.value == null || value.target.value == "") {
+        console.log("va vacio");
+        this.habilitar = true;
+        this.serviciosurl = [];
+        this.selectservice = null;
+        this.serviciosurl.unshift(vacio);
+      } else {
+        //////console.log("entro a seleccion");
+        //this.load = true;
+        var load = true;
+        setTimeout(() => {
+          bus.$emit("load", {
+            load
           });
-          this.habilitar = false;
-          ////////console.log(this.serviciosurl);
-          this.serviciosurl.unshift(vacio);
         });
+        for (var i = 0; i < this.productosurl.length; i++) {
+          if (this.productosurl[i]._id == value.target.value) {
+            this.selectproducto = this.productosurl[i];
+          }
+        }
+        this.axios
+          .get(urlservicios + "servicios/" + this.selectproducto._id)
+          .then(response => {
+            this.serviciosurl = response.data;
+            //this.load=false
+            var load2 = false;
+            setTimeout(() => {
+              bus.$emit("load", {
+                load2
+              });
+            });
+            this.habilitar = false;
+            ////////console.log(this.serviciosurl);
+            this.serviciosurl.unshift(vacio);
+          });
       }
-      
+    },
+    camposNversion(){
+        console.log(this.selectservice); 
+        if(this.selectservice==null||this.selectservice==''||this.selectservice=='null'){
+            console.log("no hago nada");
+        }
+        else{
+            this.selectservicio=this.selectservice
+            this.axios.get(urlservicios+"estructuraf/"+this.selectproducto._id+"/" +this.selectservicio._id)
+            .then(response => {
+            this.inputs = response.data;
+
+            ////console.log(this.inputs);
+            this.objeto = this.inputs.objeto;
+            //////console.log(this.objeto)
+            var bandera_dinamico = false;
+            for (var x = 0; x < this.inputs.campos.length; x++) {
+                //////console.log(this.inputs.campos[x]);
+                if (this.inputs.campos[x].espieza == true) {
+                //console.log("algo dinamico");
+                this.camposdinamicos = true;
+                }
+            }
+            if (this.camposdinamicos == true) {
+                console.log("algo dinamico");
+                this.tabdinamico = false;
+            } else {
+                this.camposdinamicos = false;
+                this.tabdinamico = true;
+            }
+            console.log(this.camposdinamicos);
+            //this.load=false
+            var load2 = false;
+            setTimeout(() => {
+                bus.$emit("load", {
+                load2
+                });
+            });
+            })
+            .catch(function(error) {
+            ////////console.log("error estruc -> "+JSON.stringify(error));
+            });
+        }
+        
     },
     campos(value) {
       //////console.log("inputs");
@@ -1594,21 +1696,20 @@ export default {
           ////console.log(this.inputs);
           this.objeto = this.inputs.objeto;
           //////console.log(this.objeto)
-          var bandera_dinamico=false
+          var bandera_dinamico = false;
           for (var x = 0; x < this.inputs.campos.length; x++) {
             //////console.log(this.inputs.campos[x]);
             if (this.inputs.campos[x].espieza == true) {
-                //console.log("algo dinamico");
+              //console.log("algo dinamico");
               this.camposdinamicos = true;
-
             }
           }
-          if(this.camposdinamicos == true){
+          if (this.camposdinamicos == true) {
             console.log("algo dinamico");
-            this.tabdinamico=false
-          }else{
+            this.tabdinamico = false;
+          } else {
             this.camposdinamicos = false;
-            this.tabdinamico=true
+            this.tabdinamico = true;
           }
           console.log(this.camposdinamicos);
           //this.load=false
@@ -1663,7 +1764,7 @@ export default {
           id_OperadorLogistico: infologin.id_OperadorLogistico._id,
           id_usuario: infologin._id,
           id_centro_costo: selecc.selected_center,
-          
+
           id_cliente: selecc.selected_client,
           remitente: {
             direccion_recogida: inforemi.infocentro.direccion,
@@ -1693,27 +1794,26 @@ export default {
   },
   created: function() {},
   beforeCreate: function() {
-    var vacio = { _id: null, nombre: "Por Favor Seleccione un Producto" };
+    /*
     var login = localStorage.getItem("storedData");
     var infologin = JSON.parse(login);
     this.axios
       .get(urlservicios + "productos/" + infologin.id_OperadorLogistico._id)
       .then(response => {
         this.productosurl = response.data;
-        this.productosurl.unshift(vacio);
+        //this.productosurl.unshift(vacio);
       });
+      */
   }
 };
 </script>
 
 <style scoped>
-.card-header-tabs{
+.card-header-tabs {
   background-color: #f8f8ff;
-    }
-.nav-link{
-  
-    border-left-width: 13px;
-
+}
+.nav-link {
+  border-left-width: 13px;
 }
 .contenedor {
   padding-top: 0px;
@@ -1728,7 +1828,6 @@ export default {
 }
 .card {
   margin-top: 2%;
-  
 }
 .cards {
   box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.1);
@@ -1744,9 +1843,9 @@ export default {
   padding-bottom: 30px;
   border-color: 15px gray;
 }
-.card-header{
-      background-color: #ebeaea;
-    border-bottom-color: #495057;
-    border-top: none;
+.card-header {
+  background-color: #ebeaea;
+  border-bottom-color: #495057;
+  border-top: none;
 }
 </style>

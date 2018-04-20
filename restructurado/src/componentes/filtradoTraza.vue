@@ -7,10 +7,9 @@
        
         
         <b-container fluid>
-             <header class="content-heading" slot="header">
-                    <h3>Consultar Trazabilidad</h3>
-                    
-                </header>
+            <header class="content-heading" slot="header">
+                <h3>Consultar Trazabilidad</h3>                
+            </header>
             <b-card class="cards" v-show="ocultartra">
                
                  <b-row>
@@ -18,20 +17,31 @@
                             <b-form-group 
                               class="text-primary"
                             label="Clientes">
+                                <!--
                                 <b-form-select v-model="selectedCL" id="clienteselect" v-bind:style="validatecampo" :options="clientes"  
                                 text-field="nombre" value-field="_id" @change.native="SelectCC" required
                                 :disabled="disabled_selectedCL" >
                                 </b-form-select>
-                                
+                                -->
+                                <v-select v-model="selectedCL" label="nombre" 
+                                v-bind:style="validatecampo"
+                                placeholder="Seleccione el Cliente" id="clienteselect"
+                                :options="clientes" @input="clienteSelec()"></v-select>
                             </b-form-group>
                         </b-col>
                         <b-col>
                             <b-form-group 
                               class="text-primary"
                             label="Centro de Costo">
+                                <!--
                                 <b-form-select v-model="selectedCC" id="costoselect"  v-bind:style="validatecampo" class="mb-3" :options="centros" 
                                 text-field="nombre" value-field="_id" required :disabled="disable">
                                 </b-form-select>
+                                -->
+                                <v-select v-model="selectedCC" label="nombre" 
+                                v-bind:style="validatecampo" :disabled="disable"
+                                placeholder="Seleccione el Centro de Costos" id="costoselect"
+                                :options="centros"></v-select>
                             </b-form-group>
                         </b-col>
                 </b-row>
@@ -104,8 +114,12 @@
         </b-card>
         <br>
            <b-card class="cards"  v-show="mostrarcard">
-                <router-view :consulta="consulta" :centro="centroseleccionado" 
-                    :cliente="clienteseleccionado">
+               <!--
+                    <router-view :consulta="consulta" :centro="selectedCC" 
+                    :cliente="selectedCL">
+                -->
+                <router-view :consulta="consulta" :centro="selectedCC" 
+                    :cliente="selectedCL" >
                 </router-view>
            </b-card>
         </b-container>
@@ -147,18 +161,18 @@ data(){
         referencia:'',
         nmovilizado: '',    
         selectedCL: null,
-        clientes: {},
+        clientes: [],
         clienteseleccionado:{},
         centroseleccionado: {},
         selectedCC: null,
-        centros: {},
+        centros: [],
         time1: '',
         validatecampo: '',
         options: [
         { text: 'Rango de Fechas', value: 'first' },
         { text: 'Orden, Referencia, N° Movilizado', value: 'second' }
       ],
-        consulta:{}
+        consulta:[]
     }
 },
     updated: function () {
@@ -171,21 +185,63 @@ data(){
       }.bind(this))
     },
 methods:{
-   limpiarfiltro(){
-       console.log("entro a limpiar filtro");
-       this.time1='',
-       this.referencia='',
-       this.nmovilizado='',
-       this.orden=''
-        var referencia = document.getElementById('referencia')
-        var nummovilizado =document.getElementById('nmovilizado')
-        var orden =document.getElementById('orden')
-        referencia.disabled= false
-        nummovilizado.disabled=false
-        orden.disabled=false
+    clienteSelec(){
+        if(this.disabled_selectedCL==true){
+            console.log("asd");
+        }
+        else{
+            if(this.selectedCL!=null){
+                
+                var load=true
+                setTimeout(() => {
+                bus.$emit('load', {
+                    load
+                })
+                }, )
+                this.axios.get(urlservicios+"CentrosPorCliente/"+this.selectedCL._id)            
+                //this.axios.get(urlservicios+"centros/")
+                .then((response) => {
+                    this.centros=response.data
+                    //console.log(this.centros)
+                    this.load=false
+                    var load=false
+                            setTimeout(() => {
+                                bus.$emit('load', {
+                                    load
+                                })
+                                }, )
+                    this.disable= false
+                }) 
+            }
+            else{
+                this.load=true
+                this.centros=[]
+                this.selectedCC=null
+                this.disable= true
+            }
+            
+        }
+    },
+    centrosSelec(){
 
+    },
+    limpiarfiltro(){
+        console.log("entro a limpiar filtro");
+        this.time1='',
+        this.referencia='',
+        this.nmovilizado='',
+        this.orden=''
+            var referencia = document.getElementById('referencia')
+            var nummovilizado =document.getElementById('nmovilizado')
+            var orden =document.getElementById('orden')
+            referencia.disabled= false
+            nummovilizado.disabled=false
+            orden.disabled=false
+         this.mostrarcard=false
+        this.$router.replace('/inicio/trazabilidad')
+                
 
-   },
+    },
     consultar(){
         //console.log("entro a consultar");
         var inicio,fin
@@ -231,8 +287,8 @@ methods:{
                             load 
                         })
                         }, )
-                    console.log(urlservicios+"/ObtenerOrdenesFiltradoDetalle/"+this.selectedCC+"/"+this.selectedCL+'/null/null/null/'+inicio+'/'+fin+'');
-                    this.axios.get(urlservicios+"/ObtenerOrdenesFiltradoDetalle/"+this.selectedCC+"/"+this.selectedCL+'/null/null/null/'+inicio+'/'+fin+'')
+                    console.log(urlservicios+"/ObtenerOrdenesFiltradoDetalle/"+this.selectedCC._id+"/"+this.selectedCL._id+'/null/null/null/'+inicio+'/'+fin+'');
+                    this.axios.get(urlservicios+"/ObtenerOrdenesFiltradoDetalle/"+this.selectedCC._id+"/"+this.selectedCL._id+'/null/null/null/'+inicio+'/'+fin+'')
                         .then((response) => {
                             this.consulta=response.data
                             console.log(this.consulta);
@@ -281,7 +337,7 @@ methods:{
                                 load
                             })
                             }, )
-                            this.axios.get(urlservicios+"/ObtenerOrdenesFiltradoDetalle/"+this.selectedCC+"/"+this.selectedCL+'/'+this.orden+'/null/null/null/null')
+                            this.axios.get(urlservicios+"/ObtenerOrdenesFiltradoDetalle/"+this.selectedCC._id+"/"+this.selectedCL._id+'/'+this.orden+'/null/null/null/null')
                                 .then((response) => {
                                     this.consulta=response.data
                                     if(this.consulta==''){
@@ -322,7 +378,7 @@ methods:{
                             load
                         })
                         }, )
-                            this.axios.get(urlservicios+"/ObtenerOrdenesFiltradoDetalle/"+this.selectedCC+"/"+this.selectedCL+'/null/null/'+this.referencia+'/null/null')
+                            this.axios.get(urlservicios+"/ObtenerOrdenesFiltradoDetalle/"+this.selectedCC._id+"/"+this.selectedCL._id+'/null/null/'+this.referencia+'/null/null')
                             .then((response) => {
                                 this.consulta=response.data
                                 
@@ -366,7 +422,7 @@ methods:{
                         }, )
                         //console.log("movilizado");
                         //console.log(this.nmovilizado);
-                        this.axios.get(urlservicios+"ObtenerOrdenesFiltradoDetalle/"+this.selectedCC+"/"+this.selectedCL+'/null/'+this.nmovilizado+'/null/null/null')
+                        this.axios.get(urlservicios+"ObtenerOrdenesFiltradoDetalle/"+this.selectedCC._id+"/"+this.selectedCL._id+'/null/'+this.nmovilizado+'/null/null/null')
                             .then((response) => {
                                 this.consulta=response.data
                                 if(this.consulta==''){
@@ -398,6 +454,7 @@ methods:{
         }
         this.mostrarcard=true
     },
+    /*
     SelectCC(value){
         var vacio=  { _id: null, nombre: 'Por Favor Seleccione un Centro de Costo' };
         if(this.disabled_selectedCL==true){
@@ -451,6 +508,7 @@ methods:{
                 })
         }
     },
+    */      
     ordenes(value){
         this.orden =value.target.value
         var referencia = document.getElementById('referencia')
@@ -498,8 +556,7 @@ methods:{
     mounted: function () {
         var bandera=true
         var _this=this
-        var vacio=  { _id: null, nombre: 'Por Favor Seleccione un Cliente' };
-        var vacio2= { nombre: 'Por Favor Seleccione un Cliente' };
+       
         console.log("montado")
         var login = localStorage.getItem("storedData");
         var infologin =JSON.parse(login);
@@ -521,7 +578,7 @@ methods:{
                     })
                     }, )
                 this.clientes=response.data
-                this.clientes.unshift(vacio)
+               
                 //console.log(this.clientes)
             }).catch(function(error){
                     bandera=false

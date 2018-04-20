@@ -26,7 +26,7 @@ DE LA ORDEN DE SERVICIO -->
                 </a>
                 -->
                 <b-col md="3" offset-md="10">
-                  <b-btn class="rounded" variant="primary" size="lg"  v-on:click="actualizar"
+                  <b-btn class="rounded" variant="primary"   v-on:click="actualizar"
                   v-b-popover.hover="'Continuar'" >Continuar<i class="fa fa-arrow-right"></i>
                   </b-btn>
               </b-col>

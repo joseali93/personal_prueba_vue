@@ -1,146 +1,172 @@
 <template>
-  <b-container>
-    <b-card title="Configuración de Centros de Costo"
-    sub-title="Se permite la creación y edición de los centros de costo">
-      <b-card-body>
+    <b-container>
+        <b-card title="Configuración de Centros de Costo"
+        sub-title="Se permite la creación y edición de los centros de costo">
+            <b-card-body>
+                    <!--
+                    <b-form-select v-model="Cliente" class="mb-3"  
+                    :options="clientes" text-field="nombre" value-field="_id" @input="SelectedClient()">  
+                    </b-form-select>
+                    -->
+                <v-select v-model="Cliente" label="nombre" placeholder="Digite el Cliente"
+                            :options="clientes" @input="SelectedClient()"></v-select>
+                <b-input-group class="mb-3">
+                <b-form-input v-model="Centro"
+                type="text"
+                placeholder="Ingrese el nombre del Centro de Costo">
+                </b-form-input>
+                <b-btn variant="outline-success" v-show="Centro!=''&&Cliente!=null" @click="nuevocc">
+                <i class="fa fa-plus"></i>
+                </b-btn>
+                </b-input-group>
 
-        <b-form-select v-model="Cliente" class="mb-3"  
-        :options="clientes" text-field="nombre" value-field="_id" @input="SelectedClient()">  
-        </b-form-select>
+                <b-table striped hover :items="CentrosTabla"
+                :fields="fields" :filter="Centro" >
+                <template slot="editar" slot-scope="data">
+                <i class="btn btn-success fa fa-pencil" @click="editar(data)"></i>
+                </template>
+                <template slot="nombre" slot-scope="data">
+                <label class="text-capitalize">{{data.item.nombre}}</label>
+                </template>
 
-        <b-input-group class="mb-3">
-          <b-form-input v-model="Centro"
-          type="text"
-          placeholder="Ingrese el nombre del Centro de Costo">
-          </b-form-input>
-          <b-btn variant="outline-success" v-show="Centro!=''&&Cliente!=null" @click="nuevocc">
-          <i class="fa fa-plus"></i>
-          </b-btn>
-        </b-input-group>
+                </b-table>
 
-      <b-table striped hover :items="CentrosTabla"
-      :fields="fields" :filter="Centro" >
-      <template slot="editar" slot-scope="data">
-      <i class="btn btn-success fa fa-pencil" @click="editar(data)"></i>
-      </template>
-      <template slot="nombre" slot-scope="data">
-      <label class="text-capitalize">{{data.item.nombre}}</label>
-      </template>
+            </b-card-body>
+        </b-card>
+        <!-- Modal Crear Centro logistico -->
+        <b-modal id="modalNuevo" ref="modalNuevo" size="lg" >
+            <b-container fluid>
+                <b-form-checkbox id="status_nuevo"
+                     v-model="status"
+                     value="accepted"
+                     class=""
+                     unchecked-value="not_accepted"
+                     @change="esPadre()">
+                    Es Centro de Costo Padre
+                </b-form-checkbox>
+                <v-select 
+                    v-show="status=='not_accepted'"
+                    v-model="centrocostopadre" label="nombre" placeholder="Digite el Centro de Costo Padre"
 
-      </b-table>
-
-      </b-card-body>
-    </b-card>
-    <!-- Modal Crear Centro logistico -->
-    <b-modal id="modalNuevo" ref="modalNuevo" size="lg" >
-      <b-container fluid>
-        <b-form-group id="fieldsetHorizontal"
-                horizontal
-                :label-cols="4"
-                breakpoint="md"
-                description="Digite nombre del Centro de Costo"
-                label="Nombre"
-                label-for="nombreCentroC">
-                    <b-form-input id="nombreCentroC" v-model="ModalNew.nombre"
-                    :state="statusnombre"
-                    maxlength="100"
-                    @input="ValidarTexto('nombreCentroC','nuevo')"></b-form-input>
-          </b-form-group>
-          <b-form-group id="fieldsetHorizontal"
-                horizontal
-                :label-cols="4"
-                breakpoint="md"
-                description="Digite dirección del Centro de Costo"
-                label="Dirección Centro de Costo"
-                label-for="direccionCC">
-                    <b-form-input id="direccionCC" v-model="ModalNew.direccion"
-                    :state="statusdireccion"
-                    maxlength="100"
-                     @input="ValidarTexto('direccionCC','nuevo')"></b-form-input>
-          </b-form-group>
-          <b-form-group id="fieldsetHorizontal"
-                horizontal
-                :label-cols="4"
-                breakpoint="md"
-                description="Digite la descripción del Centro de Costo"
-                label="Descripción"
-                label-for="descripcionCC">
-                <b-form-textarea id="descripcionCC"
-                     v-model="ModalNew.descripcion"
-                     placeholder="Ingrese la descripción del centro de costo"
-                     :rows="3"
-                     :max-rows="6"
-                     :state="statusdescripcion"
-                     maxlength="400"
-                     @input="ValidarTexto('descripcionCC','nuevo')">
-                </b-form-textarea>      
-          </b-form-group>
-      </b-container>
-      <div slot="modal-footer" class="w-100">
-         <b-btn size="sm" class="float-right" variant="primary" @click="crearcentrocosto()">
-           Guardar
-         </b-btn>
-         <b-btn size="sm" class="float-left" variant="danger" @click="cerrarModal()">
-           Cancelar
-         </b-btn>
-       </div>
-    </b-modal>
-    <!-- Modal Editar Centro Costo -->
-    <b-modal id="modalEditar" ref="modalEditar" size="lg" >
-        <b-container fluid>
-          <b-form-group id="fieldsetHorizontal"
-                horizontal
-                :label-cols="4"
-                breakpoint="md"
-                description="Digite nombre del Centro de Costo"
-                label="Nombre"
-                label-for="nombreCentroCED">
-                    <b-form-input id="nombreCentroCED" v-model="ModalEdit.nombre"
-                    :state="statusnombre"
-                     maxlength="100"
-                     @input="ValidarTexto('nombreCentroCED','editar')"></b-form-input>
-          </b-form-group>
-          <b-form-group id="fieldsetHorizontal"
-                horizontal
-                :label-cols="4"
-                breakpoint="md"
-                description="Digite dirección del Centro de Costo"
-                label="Dirección Centro de Costo"
-                label-for="direccionCCED">
-                    <b-form-input id="direccionCCED" v-model="ModalEdit.direccion"
-                    :state="statusdireccion"
-                    maxlength="100"
-                     @input="ValidarTexto('direccionCCED','editar')"></b-form-input>
-          </b-form-group>
-          <b-form-group id="fieldsetHorizontal"
-                horizontal
-                :label-cols="4"
-                breakpoint="md"
-                description="Digite la descripción del Centro de Costo"
-                label="Descripción"
-                label-for="descripcionCCED">
-                <b-form-textarea id="descripcionCCED"
-                     v-model="ModalEdit.descripcion"
-                     :state="statusdescripcion"
-                     placeholder="Digite la descripción del Centro de Costo"
-                     :rows="3"
-                     :max-rows="6"
-                     maxlength="400"
-                     @input="ValidarTexto('descripcionCCED','editar')">
-                </b-form-textarea>      
-          </b-form-group>
-        </b-container>
-        <div slot="modal-footer" class="w-100">
-         <b-btn size="sm" class="float-right" variant="primary" @click="actualizar()">
-           Guardar
-         </b-btn>
-         <b-btn size="sm" class="float-left" variant="danger" @click="cerrarModal()">
-           Cerrar
-         </b-btn>
-       </div>
-    </b-modal>
-
-  </b-container>
+                    :options="CentrosPadre" ></v-select> 
+                <b-form-group id="fieldsetHorizontal"
+                        horizontal
+                        :label-cols="4"
+                        breakpoint="md"
+                        description="Digite nombre del Centro de Costo"
+                        label="Nombre"
+                        label-for="nombreCentroC">
+                            <b-form-input id="nombreCentroC" v-model="ModalNew.nombre"
+                            :state="statusnombre"
+                            maxlength="100"
+                            @input="ValidarTexto('nombreCentroC','nuevo')"></b-form-input>
+                </b-form-group>
+                <b-form-group id="fieldsetHorizontal"
+                        horizontal
+                        :label-cols="4"
+                        breakpoint="md"
+                        description="Digite dirección del Centro de Costo"
+                        label="Dirección Centro de Costo"
+                        label-for="direccionCC">
+                            <b-form-input id="direccionCC" v-model="ModalNew.direccion"
+                            :state="statusdireccion"
+                            maxlength="100"
+                            @input="ValidarTexto('direccionCC','nuevo')"></b-form-input>
+                </b-form-group>
+                <b-form-group id="fieldsetHorizontal"
+                        horizontal
+                        :label-cols="4"
+                        breakpoint="md"
+                        description="Digite la descripción del Centro de Costo"
+                        label="Descripción"
+                        label-for="descripcionCC">
+                        <b-form-textarea id="descripcionCC"
+                            v-model="ModalNew.descripcion"
+                            placeholder="Ingrese la descripción del centro de costo"
+                            :rows="3"
+                            :max-rows="6"
+                            :state="statusdescripcion"
+                            maxlength="400"
+                            @input="ValidarTexto('descripcionCC','nuevo')">
+                        </b-form-textarea>      
+                </b-form-group>
+            </b-container>
+            <div slot="modal-footer" class="w-100">
+                <b-btn size="sm" class="float-right" variant="primary" @click="crearcentrocosto()">
+                Guardar
+                </b-btn>
+                <b-btn size="sm" class="float-left" variant="danger" @click="cerrarModal()">
+                Cancelar
+                </b-btn>
+            </div>
+        </b-modal>
+        <!-- Modal Editar Centro Costo -->
+        <b-modal id="modalEditar" ref="modalEditar" size="lg" >
+            <b-container fluid>
+                <b-form-checkbox id="status_editar"
+                     v-model="status_editar"
+                     value="accepted"
+                     class=""
+                     unchecked-value="not_accepted"
+                     @change="esPadre()">
+                    Es Centro de Costo Padre
+                </b-form-checkbox>
+                <v-select 
+                    v-show="status_editar=='not_accepted'"
+                    v-model="centrocostopadreEditar" label="nombre" placeholder="Digite el Centro de Costo Padre"
+                    :options="CentrosPadreEditar" ></v-select> 
+            <b-form-group id="fieldsetHorizontal"
+                    horizontal
+                    :label-cols="4"
+                    breakpoint="md"
+                    description="Digite nombre del Centro de Costo"
+                    label="Nombre"
+                    label-for="nombreCentroCED">
+                        <b-form-input id="nombreCentroCED" v-model="ModalEdit.nombre"
+                        :state="statusnombre"
+                        maxlength="100"
+                        @input="ValidarTexto('nombreCentroCED','editar')"></b-form-input>
+            </b-form-group>
+            <b-form-group id="fieldsetHorizontal"
+                    horizontal
+                    :label-cols="4"
+                    breakpoint="md"
+                    description="Digite dirección del Centro de Costo"
+                    label="Dirección Centro de Costo"
+                    label-for="direccionCCED">
+                        <b-form-input id="direccionCCED" v-model="ModalEdit.direccion"
+                        :state="statusdireccion"
+                        maxlength="100"
+                        @input="ValidarTexto('direccionCCED','editar')"></b-form-input>
+            </b-form-group>
+            <b-form-group id="fieldsetHorizontal"
+                    horizontal
+                    :label-cols="4"
+                    breakpoint="md"
+                    description="Digite la descripción del Centro de Costo"
+                    label="Descripción"
+                    label-for="descripcionCCED">
+                    <b-form-textarea id="descripcionCCED"
+                        v-model="ModalEdit.descripcion"
+                        :state="statusdescripcion"
+                        placeholder="Digite la descripción del Centro de Costo"
+                        :rows="3"
+                        :max-rows="6"
+                        maxlength="400"
+                        @input="ValidarTexto('descripcionCCED','editar')">
+                    </b-form-textarea>      
+            </b-form-group>
+            </b-container>
+            <div slot="modal-footer" class="w-100">
+            <b-btn size="sm" class="float-right" variant="primary" @click="actualizar()">
+            Guardar
+            </b-btn>
+            <b-btn size="sm" class="float-left" variant="danger" @click="cerrarModal()">
+            Cerrar
+            </b-btn>
+            </div>
+        </b-modal>
+    </b-container>
 </template>
 
 <script>
@@ -152,9 +178,15 @@ export default {
      data () {
 
     return {
+        CentrosPadreEditar:[],
+        CentrosPadre:[],
+        centrocostopadre:null,
+        centrocostopadreEditar:null,
+        status:'accepted',
+        status_editar:'accepted',
         indice:null,
         Cliente: null,
-        clientes:{},
+        clientes:[],
         Centro:'',
         CentrosTabla:[],
         fields:[
@@ -175,6 +207,16 @@ export default {
     }    
     },
     methods:{
+        esPadre(){
+            console.log(this.status);
+            if(this.status=='accepted'){
+                this.axios.get(urlservicios+"CentrosPorClientePadre/"+this.Cliente._id)
+                .then((response) => {
+                    console.log(response);
+                    this.CentrosPadre=response.data  
+                })
+            }
+        },
       ValidarTexto(id,accion){
             var key,tecla,tecla_especial,letras,especiales
             var e = document.getElementById(eval('id')).value;
@@ -327,16 +369,40 @@ export default {
             'error'
             )
         }
-        else{
-        console.log(this.ModalNew);
-        console.log(this.Cliente);
-        var objeto ={
-          id_cliente:this.Cliente,
-          nombre:this.ModalNew.nombre,
-          descripcion:this.ModalNew.descripcion,
-          direccion:this.ModalNew.direccion
+        if(this.centrocostopadre==null&&this.status=='not_accepted'){
+            swal(
+            'Error!',
+            'Debe Completar la información del Centro de Costo Padre',
+            'warning'
+            )
         }
+        else{
+        var objeto
+        //console.log(this.ModalNew);
+        //console.log(this.Cliente);
+        //console.log(this.status);
+        if(this.status=='not_accepted'){
+            objeto ={
+                id_cliente:this.Cliente._id,
+                id_padre: this.centrocostopadre._id,
+                nombre:this.ModalNew.nombre,
+                descripcion:this.ModalNew.descripcion,
+                direccion:this.ModalNew.direccion
+            }
+            
+        }
+        if(this.status=='accepted'){
+            objeto ={
+                id_cliente:this.Cliente._id,
+                id_padre: null,
+                nombre:this.ModalNew.nombre,
+                descripcion:this.ModalNew.descripcion,
+                direccion:this.ModalNew.direccion
+            }
+        }
+         
         console.log(objeto);
+        
         this.axios.post(urlservicios+"CreacionCentrosCostos/",objeto)
                 .then((response) => {
                     console.log(response);
@@ -347,6 +413,7 @@ export default {
                         timer: 1500,
                         type:'success'})
                         this.CentrosTabla.push(response.data.centro)
+                        this.ModalNew={}
                         this.$refs.modalNuevo.hide()
 
                     }else{
@@ -357,7 +424,8 @@ export default {
                     }
                     
                 })
-
+        
+       //this.$refs.modalNuevo.hide()
         }
       },
       cerrarModal(){
@@ -402,9 +470,17 @@ export default {
             }
             else{
                console.log("entro a actualizar");
-                console.log(this.ModalEdit);
-                
-
+                //console.log(this.ModalEdit);
+                var objeto
+                 objeto ={
+                    id_cliente:this.ModalEdit._id,
+                    id_padre: this.ModalEdit.id_padre,
+                    nombre:this.ModalEdit.nombre,
+                    descripcion:this.ModalEdit.descripcion,
+                    direccion:this.ModalEdit.direccion
+                }
+                console.log(objeto);
+                /*
                 this.axios.post(urlservicios+"ActualizarCentroCostos/"+this.ModalEdit._id,this.ModalEdit)
                         .then((response) => {
                           console.log(response.data);
@@ -425,6 +501,7 @@ export default {
                                 type:'error'})
                             }
                         })
+                        */
                 //this.$refs.modalEditar.hide()
             }
        
@@ -432,38 +509,70 @@ export default {
       },
       editar(value){
         console.log("entro a editar");
-        console.log(value.item);
+        //console.log(value.item);
         this.indice=value.index
         this.ModalEdit=Object.assign({},value.item)
-        this.$refs.modalEditar.show()
+        if(this.ModalEdit.id_padre==null){
+            console.log("es padre")
+            this.status_editar='accepted'
+            this.$refs.modalEditar.show()
+            //al editar se debe validar que no sea padre de hijos
+        }
+        else{
+            console.log("es hijo");
+            this.status_editar='not_accepted'
+            this.axios.get(urlservicios+"CentrosPorClientePadre/"+this.Cliente._id)
+                .then((response) => {
+                    //console.log(response);
+                    this.CentrosPadreEditar=response.data  
+                    this.CentrosPadreEditar.forEach(element => {
+                        //console.log(element);
+                        if(this.ModalEdit.id_padre==element._id){
+                            console.log(element);
+                            this.centrocostopadreEditar=element
+                        }
+                    });
+                })
+            this.$refs.modalEditar.show()
+        }
+        
       },
       SelectedClient(){
-          if(this.Cliente==null)
-          {
-            console.log("no hago peticion");
+        if(this.Cliente==null||this.Cliente=='null'||this.Cliente==''){
             this.CentrosTabla=[]
-          }
-          else
-          {
-            this.axios.get(urlservicios+"CentrosPorCliente/"+this.Cliente)
-                        .then((response) => {
-                          this.CentrosTabla=response.data  
-                        })
-          }
-           
-      }
+            
+        }
+        else{
+            this.axios.get(urlservicios+"CentrosTodosPorCliente/"+this.Cliente._id)
+                .then((response) => {
+                    this.CentrosTabla=response.data  
+                })
+        }   
+        /*  
+        if(this.Cliente==null)
+        {
+        console.log("no hago peticion");
+        this.CentrosTabla=[]
+        }
+        else
+        {
+        this.axios.get(urlservicios+"CentrosPorCliente/"+this.Cliente)
+                    .then((response) => {
+                        this.CentrosTabla=response.data  
+                    })
+        }
+        */ 
+        }
     },
     created: function(){
         var test2 = localStorage.getItem("storedData");
         var test =JSON.parse(test2);
         var id_cliente
-        var vacio=  { _id: null, nombre: 'Por Favor Seleccione un Cliente' };
 
         id_cliente='null'
         this.axios.get(urlservicios+"clientesOperador/"+test.id_OperadorLogistico._id+'/'+id_cliente)
                 .then((response) => {
                     this.clientes=response.data
-                    this.clientes.unshift(vacio)
                 })
     }
 
