@@ -108,7 +108,7 @@
                      value="accepted"
                      class=""
                      unchecked-value="not_accepted"
-                     @change="esPadre()">
+                     @change="esPadreEditar()">
                     Es Centro de Costo Padre
                 </b-form-checkbox>
                 <v-select 
@@ -207,6 +207,17 @@ export default {
     }    
     },
     methods:{
+        esPadreEditar(){
+            console.log("editar");
+            console.log(this.status_editar);
+            if(this.status_editar=='accepted'){
+                this.axios.get(urlservicios+"CentrosPorClientePadre/"+this.Cliente._id)
+                .then((response) => {
+                    console.log(response);
+                    this.CentrosPadreEditar=response.data  
+                })
+            }  
+        },
         esPadre(){
             console.log(this.status);
             if(this.status=='accepted'){
@@ -432,7 +443,13 @@ export default {
         this.ModalNew.nombre=''
         this.ModalNew.descripcion=''
         this.ModalNew.direccion=''
-        //this.ModalEdit={}
+        this.ModalEdit.nombre=''
+        this.ModalEdit.direccion=''
+        this.ModalEdit.descripcion=''
+        this.centrocostopadre=null
+        this.centrocostopadreEditar=null
+        this.CentrosPadreEditar=[]
+        this.CentrosPadre=[]
         this.$refs.modalEditar.hide()
         this.$refs.modalNuevo.hide()
       },
@@ -471,17 +488,34 @@ export default {
             else{
                console.log("entro a actualizar");
                 //console.log(this.ModalEdit);
+                console.log("id papa");
+                console.log(this.centrocostopadreEditar);
                 var objeto
-                 objeto ={
-                    id_cliente:this.ModalEdit._id,
-                    id_padre: this.ModalEdit.id_padre,
+                if(this.centrocostopadreEditar==null){
+                    objeto ={
+                        id_centro_costo:this.ModalEdit._id,
+                        id_cliente:this.ModalEdit.id_cliente,
+                        id_padre: this.centrocostopadreEditar,
+                        nombre:this.ModalEdit.nombre,
+                        descripcion:this.ModalEdit.descripcion,
+                        direccion:this.ModalEdit.direccion
+                    }
+                }
+                else{
+                    objeto ={
+                        id_centro_costo:this.ModalEdit._id,
+                    id_cliente:this.ModalEdit.id_cliente,
+                    id_padre: this.centrocostopadreEditar._id,
                     nombre:this.ModalEdit.nombre,
                     descripcion:this.ModalEdit.descripcion,
                     direccion:this.ModalEdit.direccion
                 }
+                }
+                 
                 console.log(objeto);
-                /*
-                this.axios.post(urlservicios+"ActualizarCentroCostos/"+this.ModalEdit._id,this.ModalEdit)
+                
+                console.log(urlservicios+"ActualizarCentroCostos/"+this.ModalEdit._id);
+                this.axios.post(urlservicios+"ActualizarCentroCostos/"+this.ModalEdit._id,objeto)
                         .then((response) => {
                           console.log(response.data);
                           if(response.data.validar==true)
@@ -492,7 +526,8 @@ export default {
                                 type:'success'})
                                 this.CentrosTabla.splice(this.indice, 1);
                                 this.CentrosTabla.splice(this.indice, 0, this.ModalEdit);
-                                this.$refs.modalEditar.hide()
+                                //this.centrocostopadreEditar=null
+                                this.cerrarModal()
 
                             }else{
                                 swal({
@@ -501,7 +536,7 @@ export default {
                                 type:'error'})
                             }
                         })
-                        */
+                    
                 //this.$refs.modalEditar.hide()
             }
        

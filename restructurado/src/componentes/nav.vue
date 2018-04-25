@@ -22,7 +22,7 @@
                <li v-for="(ruta,indice) in rutas">
                     <b-link :to="ruta" v-if="indice=='ruta_uno'"  class="pintar">
                          <!--<i class="fa fa-wpforms"></i> /lib/icons/generacion_orden.svg -->
-                         <b-img src="/src/assets/icons/generar_orden.svg"
+                         <b-img src="../../lib/icons/generar_orden.svg"
                           fluid alt="G_O" 
                           width="25%"
                          />
@@ -33,7 +33,7 @@
                 <li v-for="(ruta,indice) in rutas"> 
                     <b-link :to="ruta" v-if="indice=='ruta_dos'" >
                         <!--<i class="fa fa-truck " ></i>-->
-                        <b-img src="/src/assets/icons/consulta_orden.svg"
+                        <b-img src="../../lib/icons/consulta_orden.svg"
                           fluid alt="C_O" 
                           width="25%"
                          />
@@ -43,7 +43,7 @@
                 <li  v-for="(ruta,indice) in rutas"> 
                     <b-link :to="ruta" v-if="indice=='ruta_tres'">  
                         <!--<i class="fa fa-map-signs" >-->
-                           <b-img src="/src/assets/icons/trazabilidad.svg"
+                           <b-img src="../../lib/icons/trazabilidad.svg"
                           fluid alt="C_T" 
                           width="25%"
                          />
@@ -53,7 +53,7 @@
                 <li  v-for="(ruta,indice) in rutas"> 
                     <b-link :to="ruta" v-if="indice=='ruta_cuatro'">
                        
-                        <b-img src="/src/assets/icons/entradas_salidas.svg"
+                        <b-img src="../../lib/icons/entradas_salidas.svg"
                           fluid alt="C_T" 
                           width="25%"
                          />
@@ -63,7 +63,7 @@
                 <li  v-for="(ruta,indice) in rutas"> 
                     <b-link :to="ruta" v-if="indice=='ruta_cinco'">
                         
-                           <b-img src="/src/assets/icons/documento.svg"
+                           <b-img src="../../lib/icons/documento.svg"
                           fluid alt="C_T" 
                           width="25%"
                          />

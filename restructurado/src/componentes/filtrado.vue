@@ -235,9 +235,36 @@ export default {
             var fin
             var esadoconsulta
             //console.log(this.selectedCL);
-            console.log(this.selected_state);
-            
+            //console.log(this.selected_state);
             //console.log(this.time1);
+             var fecha=new Date();
+            var _this=this
+            var d =new Date()
+            var year = d.getFullYear()
+            var month = d.getMonth()
+            var day = d.getDate()
+            var ant_mest = new Date()
+            var monthante = ant_mest.getMonth()-1
+           
+            var dayante =ant_mest.getDate()
+            d.setFullYear(year,month,day)
+            ant_mest.setFullYear(year,monthante,dayante)
+            console.log("hace un mes+"+ant_mest);
+            console.log("----ant ----");
+            console.log(ant_mest);
+            console.log("time");
+            console.log(this.time1)
+            var yearcap=this.time1[0].getFullYear()
+            var mescap=this.time1[0].getMonth()
+            var diacap=this.time1[0].getDate()
+            console.log(ant_mest);
+            console.log(this.time1[0]);
+            if(dayante==diacap&&monthante==mescap&&year==yearcap){
+                console.log("cumple");
+            }
+            else{
+                console.log("no cumple");
+            }
             if(this.time1[0]===''||this.time1[0]===undefined){
                 inicio="null"
                 }else{
@@ -271,6 +298,7 @@ export default {
                 else{
                 centrocosto=this.selectedCC._id
                 }   
+                 /*
             var login = localStorage.getItem("storedData");
             var infologin =JSON.parse(login);  
             var load=true
@@ -279,12 +307,7 @@ export default {
                         load 
                     })
                     }, )
-            var peticiones= "ObtenerOrdenesFiltrado/"+infologin.id_OperadorLogistico._id+"/"+this.filter+"/"+esadoconsulta+
-            "/"+cliente+"/"+centrocosto+"/"+inicio+"/"+fin;
-            console.log(peticiones);
-            //this.peticion=peticiones
-                    //console.log(urlservicios+"ObtenerOrdenesFiltrado/"+infologin.id_OperadorLogistico+"/"+this.filter+"/"+this.selected_state+
-            //"/"+cliente+"/"+centrocosto+"/"+inicio+"/"+fin);
+           
             this.axios.get(urlservicios+"ObtenerOrdenesFiltrado/"+infologin.id_OperadorLogistico._id+"/"+this.filter+"/"+esadoconsulta+
             "/"+cliente+"/"+centrocosto+"/"+inicio+"/"+fin)
             .then((response) => {
@@ -314,7 +337,7 @@ export default {
                            this.$router.replace('/inicio/consultar/resultado')
                 }
             })
-            
+            */
         },
         SelectCC(value){
             var vacio=  { _id: null, nombre: 'Por Favor Seleccione un Centro de Costo' };
@@ -443,7 +466,6 @@ export default {
                 })
                 }, )
                 this.clientes=response.data
-                this.clientes.unshift(vacio)
 
             }).catch(function(error){
                     bandera=false
@@ -479,13 +501,22 @@ export default {
                     }
             })
         }else{
-            //console.log("hay cliente");
+            console.log("hay cliente");
             id_cliente=infologin.id_cliente
+            var load=true
+            setTimeout(() => {
+                bus.$emit('load', {
+                    load 
+                })
+            }, )
             this.axios.get(urlservicios+"clientesOperador/"+infologin.id_OperadorLogistico._id
             +'/'+id_cliente)
             .then((response) => {
+                console.log("_----------------");
+                console.log(response.data);
                 this.clientes=response.data
-                this.clientes.unshift(vacio)
+                this.selectedCL=Object.assign({},this.clientes[0])
+                //this.clientes.unshift(vacio)
 
             }).catch(function(error){
                     bandera=false
@@ -521,7 +552,7 @@ export default {
                     }
             })
             this.disabled_selectedCL=true
-            this.SelectCC(id_cliente)
+            //this.SelectCC(id_cliente)
         }
             
         this.axios.get(urlservicios+"estados/")

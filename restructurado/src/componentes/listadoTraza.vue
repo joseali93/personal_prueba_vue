@@ -298,6 +298,7 @@ import {bus} from '../main'
 import moment from 'moment'
 import Preload from '../componentes/preload.vue'
 import {urlservicios} from '../main'
+import detallesVue from './detalles.vue';
 
 
 export default {
@@ -522,6 +523,60 @@ export default {
             return eval("this.consultaactualizar.detalleslocal.infor."+value)
         },
         exportarxls(){
+            console.log(this.envios);
+            var centro,cliente,inicio,fin,detalle,orden,refere
+            centro=this.envios.centro
+            cliente=this.envios.cliente
+            var test2 = localStorage.getItem("storedData");
+            var test = JSON.parse(test2);
+            if(this.envios.inicio==undefined||this.envios.inicio==''
+                ||this.envios.inicio===undefined){
+                inicio='null'
+            }
+            else{
+                inicio=this.envios.inicio
+            }
+            if(this.envios.fin==undefined||this.envios.fin===undefined
+                ||this.envios.fin==''){
+                fin='null'
+            }
+            else{
+                fin=this.envios.fin
+            }
+            if(this.envios.orden==undefined||this.envios.orden===undefined
+                ||this.envios.orden==''){
+                orden='null'
+            }
+            else{
+                orden=this.envios.orden
+            }
+            if(this.envios.referencia==undefined||this.envios.referencia===undefined||
+            this.envios.referencia==''){
+                refere='null'
+            }
+            else{
+                refere=this.envios.referencia
+            }
+            if(this.envios.nmovilizado==undefined||this.envios.nmovilizado===undefined||
+            this.envios.nmovilizado==''){
+                detalle='null'
+            }
+            else{
+                detalle=this.envios.nmovilizado                                                                   
+            }
+            console.log(urlservicios+"/ConsultaExcel/"+test.id_OperadorLogistico._id+"/"+centro+"/"+cliente+"/"+orden+"/"+detalle+"/"+refere+"/"+inicio+"/"+fin+"/");
+            /*
+            this.axios.get(urlservicios+"/ConsultaExcel/"+test.id_OperadorLogistico._id+"/"+centro+"/"+cliente+"/null/null/null/"+inicio+"/"+fin+"/")
+            .then(response => {
+                console.log(response);
+                var consulta=response.data.select
+                this.resul=response.data.movilizadosobjet    
+                //alasql(consulta,[this.consulta])      
+            })
+            */
+
+        //console.log(res);
+            /*
             var consecutivo,id,estado,fechaT,producto,servicio,detalles,infor,refe,trayecto,nombre_trayecto
             var variable=[], constante=[]
             var llaveslv1,llaveslv2,llaveslv3,llaveslvl4
@@ -768,7 +823,7 @@ export default {
 
                   
                    
-                   
+           */        
         },
         actualizar(value){
             console.log(value);
@@ -841,10 +896,13 @@ export default {
 
     beforeCreate: function() {
         console.log(consulta);
+        console.log("----------");
+        //console.log(envio);
     },
-    props:['consulta','centro','cliente'],
+    props:['consulta','centro','cliente', 'envios'],
     data () {
         return {
+            resul:[],
             acor:false,
             load:false,
             showCollapse: false,

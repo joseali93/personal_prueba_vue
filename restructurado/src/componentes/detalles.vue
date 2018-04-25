@@ -151,11 +151,30 @@
         </b-card>
         
             <b-row>
-                <h4 class="text-primary">Seleccione el Currier: </h4>
-                <b-form-select v-model="selected_curier" class="mb-3"  :options="curiers" text-field="nombre"
-                 value-field="_id" :state="statuscourier"
-                @change.native="selectcuriers" :disabled="selec_disable">
-                </b-form-select>
+                <b-col>
+                    <h4 class="text-primary">Seleccione el Medio de Transporte: </h4>
+                    <!--
+                    <b-form-select v-model="selected_curier" class="mb-3"  :options="curiers" text-field="nombre"
+                    value-field="_id" :state="statuscourier"
+                    @change.native="selectcuriers" :disabled="selec_disable">
+                    </b-form-select>
+                    -->
+                    <v-select v-model="model_medios" label="tipo" placeholder="Seleccione el Medio de Transporte"
+                      :options="medios" @input="vehic()"></v-select>
+                </b-col>
+                <b-col>
+                    <h4 class="text-primary">Seleccione el Currier: </h4>
+                    <!--
+                    <b-form-select v-model="selected_curier" class="mb-3"  :options="curiers" text-field="nombre"
+                    value-field="_id" :state="statuscourier"
+                    @change.native="selectcuriers" :disabled="selec_disable">
+                    </b-form-select>
+                    -->
+                    <v-select v-model="selected_curier" label="nombre" placeholder="Seleccione el Courier"
+                      :options="curiers"  
+                      :disabled="selec_disable"></v-select>
+                </b-col>
+                
             </b-row>
         <b-row>
             <b-btn size="lg" variant="success" @click="asignar(selected_curier)"
@@ -340,6 +359,9 @@ import moment from 'moment'
 export default {
     data(){
         return{
+            
+            model_medios:null,
+            medios:[],
         items : [
             {
                 text: "Inicio",
@@ -373,7 +395,7 @@ export default {
             currentPage: 1,
             currentUser: '',
             selected_curier: null,
-            curiers: '',
+            curiers: [],
             Documento: '',
             selection: null,
             trayectos: null,
@@ -383,16 +405,33 @@ export default {
             info:{}
         }
     },
-        filters: {
+    filters: {
         formatdate: function(value) {
         if (value) {
             return moment(String(value)).format('MM/DD/YYYY')
         }
-        }
+    }
     },
     methods: {
+        vehic(){
+            console.log(this.model_medios);
+            if(this.model_medios!=null){
+                var login = localStorage.getItem("storedData");
+                var infologin = JSON.parse(login);
+                this.axios.get(urlservicios+"UsuariosCurier/"+infologin.id_OperadorLogistico._id+'/'+this.model_medios._id)
+                .then(response => {
+                    this.curiers = response.data;
+                    //this.selec_disable=false
+
+                });
+            }
+            else{
+                //this.selec_disable=true
+            }
+           
+        },
         desabilitarguardar(){
-            console.log(this.info.estado);
+            //console.log(this.info.estado);
             if(this.info.estado=="orden de servicio cancelada"||this.info.estado=="Orden De Servicio Recogida"){
                 this.selec_disable=true
                 return true
@@ -492,8 +531,8 @@ export default {
 
         },
         selectcuriers(value){
-
-            this.selected_curier=value.target.value
+            console.log(value);
+            //this.selected_curier=value.target.value
         },
         Presiono(indi,dato){
             console.log("entro a presionar");
@@ -661,7 +700,7 @@ export default {
         },
         asignarcurier(seleccionado)
         {
-
+            console.log("entro a seleccion final");
             if(seleccionado==''||seleccionado=='null'||seleccionado==null){
                     swal(
                             "Atencion!",
@@ -672,12 +711,13 @@ export default {
                     this.statuscourier=false
                     }
                     else{
-                         var obj ={
-                        id_orden:this.currentUser._id,
-                        id_curier: seleccionado
+                        var obj ={
+                            id_orden:this.currentUser._id,
+                            id_curier: seleccionado._id,
+                            id_medio: this.model_medios._id
                         }
                         this.statuscourier=null
-
+                    console.log(obj);
                         
                         this.axios
                             .post(urlservicios+"AsignarOrdenCurrier/",obj)
@@ -695,6 +735,7 @@ export default {
                             }
             
                             });
+                        
                     }
                    
         },
@@ -750,7 +791,7 @@ export default {
                                     banderasinT=true
                                     contador=contador+1
                                     correcto.push(x)
-                                    console.log(correcto);
+                                    //console.log(correcto);
 
                                 } 
                             }
@@ -767,7 +808,7 @@ export default {
                             {   
                                 console.log(eval('this.currentUser.detalle[x].detalleslocal.infor.'+llavesinfor[y]))
                                 if(llavesinfor[y]!='trayectoobj'){
-                                    console.log("entrooo");
+                                   // console.log("entrooo");
                                 }
                                 /*
                                 if(typeof(eval('this.currentUser.detalle[x].detalleslocal.infor.'+llavesinfor[y]))!='object')
@@ -795,10 +836,10 @@ export default {
                         {
                             
                             if(pendi[o]==correcto[p]){
-                                console.log("son iguales");
+                                //console.log("son iguales");
                                 
                                 pendi.splice(o,1)
-                                console.log(pendi);
+                                //console.log(pendi);
                             }
                         }
                     }
@@ -810,10 +851,10 @@ export default {
                     console.log(pendi);
                     console.log(correcto);
                     if(contador==this.currentUser.detalle.length){
-                        console.log("todos andan completos");
+                        //console.log("todos andan completos");
                         this.asignarcurier(seleccionado)
                     }else{
-                        console.log("no andan completos")
+                        //console.log("no andan completos")
                         swal(
                                 "Falta algo por completar!",
                                 "Los servicios "+pendi+" Aún no tienen asignado un trayecto",
@@ -935,13 +976,12 @@ export default {
         var x=0
         var login = localStorage.getItem("storedData");
         var infologin = JSON.parse(login);
-        this.axios
-        .get(
-            urlservicios+"UsuariosCurier/"+infologin.id_OperadorLogistico._id 
-        )
+        this.axios.get(urlservicios+"medios/")
         .then(response => {
-            this.curiers = response.data;
-            this.curiers.unshift(vacio)
+            //console.log(response);
+            this.medios=response.data
+            //this.curiers = response.data;
+            //this.curiers.unshift(vacio)
 
         });
 
@@ -952,6 +992,8 @@ export default {
             this.selected_curier=null
         }
         else{
+            console.log("------");
+            console.log(this.medios);
             this.selected_curier=this.currentUser.id_courier
         }
         this.vali=userObject.inde

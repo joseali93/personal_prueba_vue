@@ -25,6 +25,7 @@
                                 -->
                                 <v-select v-model="selectedCL" label="nombre" 
                                 v-bind:style="validatecampo"
+                                :disabled="disabled_selectedCL"
                                 placeholder="Seleccione el Cliente" id="clienteselect"
                                 :options="clientes" @input="clienteSelec()"></v-select>
                             </b-form-group>
@@ -76,7 +77,9 @@
                         <b-form-group 
                           class="text-primary"
                           label="Rango de Fechas" >
-                            <date-picker disabled="true" id="fecha" width="430" v-model="time1" placeholder="Rango de Fechas" range lang="en"></date-picker>
+                            <date-picker disabled="true" id="fecha" width="430" 
+                            v-model="time1" placeholder="Rango de Fechas" range lang="en"
+                             :shortcuts="shortcuts" :confirm="true"></date-picker>
                         </b-form-group>
                     </b-col>
             </b-row>
@@ -119,7 +122,8 @@
                     :cliente="selectedCL">
                 -->
                 <router-view :consulta="consulta" :centro="selectedCC" 
-                    :cliente="selectedCL" >
+                    :cliente="selectedCL"
+                    :envios="envio" >
                 </router-view>
            </b-card>
         </b-container>
@@ -140,6 +144,24 @@ export default {
   },
 data(){
     return {
+        shortcuts: [
+                {
+                text: 'Hoy',
+                start: new Date(),
+                end: new Date()
+                },
+                {
+                text: 'Semana',
+                start: new Date(),
+                end: new Date()
+                },
+                {
+                text: 'Mes',
+                start: new Date(),
+                end: new Date()
+                },
+            ],
+        envio:[],
         mostrarcard:false,
         items: [
         {
@@ -187,7 +209,35 @@ data(){
 methods:{
     clienteSelec(){
         if(this.disabled_selectedCL==true){
-            console.log("asd");
+            if(this.selectedCL!=null){
+                
+                var load=true
+                setTimeout(() => {
+                bus.$emit('load', {
+                    load
+                })
+                }, )
+                this.axios.get(urlservicios+"CentrosPorCliente/"+this.selectedCL._id)            
+                //this.axios.get(urlservicios+"centros/")
+                .then((response) => {
+                    this.centros=response.data
+                    //console.log(this.centros)
+                    this.load=false
+                    var load=false
+                            setTimeout(() => {
+                                bus.$emit('load', {
+                                    load
+                                })
+                                }, )
+                    this.disable= false
+                }) 
+            }
+            else{
+                this.load=true
+                this.centros=[]
+                this.selectedCC=null
+                this.disable= true
+            }
         }
         else{
             if(this.selectedCL!=null){
@@ -299,7 +349,15 @@ methods:{
                                     'error'
                                     )
                                     //this.load = false;
-                            }//this.load = false;
+                            }
+                            var envio={
+                                centro:this.selectedCC._id,
+                                cliente:this.selectedCL._id,
+                                inicio:inicio,
+                                fin:fin
+                            }
+                            this.envio=envio
+                            //this.load = false;
                             var load=false
                             setTimeout(() => {
                                 bus.$emit('load', {
@@ -348,12 +406,19 @@ methods:{
                                             )
                                             this.load = false;
                                             var load=false
-                        setTimeout(() => {
-                            bus.$emit('load', {
-                                load
-                            })
-                            }, )
+                                    setTimeout(() => {
+                                        bus.$emit('load', {
+                                            load
+                                        })
+                                        }, )
                                     }
+                                        var envio={
+                                            centro:this.selectedCC._id,
+                                            cliente:this.selectedCL._id,
+                                            orden:this.orden,
+                                            
+                                        }
+                                    this.envio=envio
                                     this.load = false;
                                     var load=false
                         setTimeout(() => {
@@ -396,6 +461,13 @@ methods:{
                         })
                         }, )
                                 }
+                                var envio={
+                                            centro:this.selectedCC._id,
+                                            cliente:this.selectedCL._id,
+                                            referencia:this.referencia,
+                                            
+                                        }
+                                    this.envio=envio
                                 //console.log(this.consulta);
                                 this.load = false;
                                 var load=false
@@ -438,7 +510,15 @@ methods:{
                             load
                         })
                         }, )
-                                }this.load = false;
+                                }
+                                var envio={
+                                            centro:this.selectedCC._id,
+                                            cliente:this.selectedCL._id,
+                                            nmovilizado:this.nmovilizado,
+                                            
+                                        }
+                                    this.envio=envio
+                                this.load = false;
                                 var load=false
                     setTimeout(() => {
                         bus.$emit('load', {
@@ -452,6 +532,7 @@ methods:{
                 }            
             }
         }
+
         this.mostrarcard=true
     },
     /*
@@ -554,6 +635,40 @@ methods:{
     },
 },
     mounted: function () {
+        //---------------- fechas
+        var fecha=new Date();
+        var _this=this
+        var d =new Date()
+        var year = d.getFullYear()
+        var month = d.getMonth()
+        var day = d.getDate()
+        var ant = new Date()
+        var monthante = ant.getMonth()-1
+        var dayante =ant.getDate()
+        d.setFullYear(year,month,day)
+        ant.setFullYear(year,monthante,dayante)
+       
+       var mana=new Date(fecha.getTime() + 24*60*60*1000);
+       
+       
+        var HaceUnaSemana=new Date(fecha.getTime() - (24*60*60*1000)*7);
+        var HaceUnaSemanaDia = HaceUnaSemana.getDate()
+        var HaceUnaSemanaMes = HaceUnaSemana.getMonth()
+        var HaceUnaSemanaYear = HaceUnaSemana.getFullYear()
+        HaceUnaSemana.setFullYear(HaceUnaSemanaYear,HaceUnaSemanaMes,HaceUnaSemanaDia)
+        for(var p=0;p<this.shortcuts.length;p++){
+            if(p==1)
+            {
+                this.shortcuts[p].start=HaceUnaSemana
+                this.shortcuts[p].end=d
+            }
+            if(p==2)
+            {
+                this.shortcuts[p].start=ant
+                this.shortcuts[p].end=d
+            }
+        }
+        //-----------------------------------
         var bandera=true
         var _this=this
        
@@ -625,6 +740,17 @@ methods:{
             id_cliente=infologin.id_cliente
             this.axios.get(urlservicios+"clientesOperador/"+infologin.id_OperadorLogistico._id+'/'+id_cliente)
             .then((response) => {
+                console.log(response);
+                var load=false
+                    setTimeout(() => {
+                        bus.$emit('load', {
+                            load 
+                        })
+                }, )
+                this.disabled_selectedCL=true
+                this.clientes=response.data
+                this.selectedCL=Object.assign({},this.clientes[0])
+                /*
                 this.clientes=response.data
                 this.clientes.unshift(vacio)
                 this.disabled_selectedCL=true
@@ -636,6 +762,7 @@ methods:{
                 }, )
                 //console.log(this.clientes)
                 this.SelectCC(id_cliente)
+                */
             }).catch(function(error){
                     bandera=false
                     var load=false
