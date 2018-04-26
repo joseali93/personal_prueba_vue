@@ -133,7 +133,7 @@
         <!-- Modal Component 1 imagen -->
         <b-modal id="modalimagen" ref="ModalImaguni" title="Evidencia Digital" no-close-on-backdrop>
             <b-container>
-                <b-img :src="modalima.trazabilidad[0].imagenes[0].url" fluid alt="Fluid image" />
+                <b-img :src="variableServidor+modalima.trazabilidad[0].imagenes[0].url" fluid alt="Fluid image" />
             </b-container>
             <div slot="modal-header" class="w-100">
                 <b-btn @click="showCollapse = !showCollapse"
@@ -194,7 +194,7 @@
                         <b-collapse :id="data.id" accordion="my-accordion" role="tabpanel">
                             <b-card-body>
                             <p class="card-text">
-                                <b-img :src="data.url" fluid alt="Fluid image" />
+                                <b-img :src="variableServidor+data.url" fluid alt="Fluid image" />
                             </p>
                             </b-card-body>
                         </b-collapse>
@@ -565,265 +565,25 @@ export default {
                 detalle=this.envios.nmovilizado                                                                   
             }
             console.log(urlservicios+"/ConsultaExcel/"+test.id_OperadorLogistico._id+"/"+centro+"/"+cliente+"/"+orden+"/"+detalle+"/"+refere+"/"+inicio+"/"+fin+"/");
-            /*
-            this.axios.get(urlservicios+"/ConsultaExcel/"+test.id_OperadorLogistico._id+"/"+centro+"/"+cliente+"/null/null/null/"+inicio+"/"+fin+"/")
+            
+            
+            this.axios.get(urlservicios+"/ConsultaExcel/"+test.id_OperadorLogistico._id+"/"+centro+"/"+cliente+"/"+orden+"/"+detalle+"/"+refere+"/"+inicio+"/"+fin+"/")
             .then(response => {
+                alasql.fn.fechas= function(date)
+            {
+              
+            //console.log( moment(date).format('DD/MM/YYYY, h:mm:ss'));
+            //return date.toLocaleString()
+            return moment(date).format('DD/MM/YYYY, h:mm:ss')
+            }
                 console.log(response);
                 var consulta=response.data.select
                 this.resul=response.data.movilizadosobjet    
-                //alasql(consulta,[this.consulta])      
+                alasql(consulta,[this.resul])      
             })
-            */
-
-        //console.log(res);
-            /*
-            var consecutivo,id,estado,fechaT,producto,servicio,detalles,infor,refe,trayecto,nombre_trayecto
-            var variable=[], constante=[]
-            var llaveslv1,llaveslv2,llaveslv3,llaveslvl4
-            var llav2cc,detallecc,llav2cl,detallecl
-            var nomcliente,dircliente
-            var nomcentro,dircentro
-            var detallecurier,llaveslvl2curier,nomcurier
-            console.log(this.consulta);
-            var desti,llaveslv2desti,direcciondesti,destllavelvl3
-            var novedades=[]
-            var nomEstados=[]
-            var bandera=true
-            var fechaC 
-            var prueba
-            for(var x=0; x<this.consulta.length;x++){
-                //longitud de items en consulta
-                for(var y=0;y<this.consulta[x].trazabilidad.length;y++){
-                    var objEstados=Object.keys(this.consulta[x].trazabilidad[y])
-                    for(var z=0;z<objEstados.length;z++){
-                         if(objEstados[z]=="nombre"){
-                             //console.log(this.consulta[x].trazabilidad[y].nombre);
-                             nomEstados[x]=eval('this.consulta[x].trazabilidad[y].nombre')
-                           
-                         }
-                    }
-                }
-                this.consulta[x].prueba=nomEstados
-            }
-            console.log(nomEstados);
-            console.log(this.consulta);
             
-            for(var a=0;a<this.consulta.length;a++){
-                var objtraza=Object.keys(this.consulta[a].trazabilidad[0])
-                for(var x=0;x<this.consulta[a].trazabilidad.length;x++){
-                    if(x==0){
-                        for(var y=0;y<objtraza.length;y++){
-                            //console.log(objtraza[y]);
-                            
-                            if(objtraza[y]=="EsCierre"){
-                                //console.log("tengo cierre");
-                                //console.log(eval('this.consulta[a].trazabilidad[x].conceptos'));
-                                //console.log(this.consulta[a]);
-                                if(this.consulta[a].trazabilidad[x].EsCierre=="true"){
-                                    //console.log("hay cierre");
-                                    //console.log(this.consulta[a]);
-                                    //console.log(x);
-                                    if(eval('this.consulta[a].trazabilidad[x].conceptos')===undefined){
-                                        console.log("es ubdefinido");
-                                    }
-                                    else{
-                                        novedades[a]=eval('this.consulta[a].trazabilidad[x].conceptos.nombre')
-                                    this.consulta[a].novedades=novedades[a]
-                                    }
-                                    
-                                    
-                                }
-                                
-                                
-                            }
-                            else{
-                                bandera=false
-                            }
 
-                        }
-                    }
-                }
-                //console.log(novedades[a]);
-                if(novedades[a]==undefined){
-                    
-                    novedades[a]=''
-                    this.consulta[a].novedades=novedades[a]
-
-                }
-            }
-            
-            //console.log(novedades);
-
-            
-            var nov
-            for(var i=0;i<this.consulta.length;i++){
-                llaveslv1=Object.keys(this.consulta[i])
-                for(var a=0;a<llaveslv1.length;a++){
-                    
-                    if(llaveslv1[a]=='courier'){
-                        detallecurier=llaveslv1[a]
-                        llaveslvl2curier=Object.keys(this.consulta[i].courier);
-                        for(var b=0; b<llaveslvl2curier.length;b++){
-                            if(llaveslvl2curier[b]=='nombre'){
-                                nomcurier=llaveslvl2curier[b]
-                                
-                            }
-                        }
-                    }
-                    if(llaveslv1[a]=='centro_costos')
-                    {
-                        detallecc=llaveslv1[a]
-                        llav2cc= Object.keys(this.consulta[i].centro_costos);
-                        for(var b=0; b<llav2cc.length;b++){
-                            if(llav2cc[b]=='direccion'){
-                                dircentro=llav2cc[b]
-                                
-                            }
-                            if(llav2cc[b]=='nombre'){
-                                nomcentro=llav2cc[b]
-                            }
-                        }
-                    }
-                    if(llaveslv1[a]=='cliente')
-                    {
-                        detallecl=llaveslv1[a]
-                        llav2cl= Object.keys(this.consulta[i].cliente);
-                        for(var b=0; b<llav2cl.length;b++){
-                            if(llav2cl[b]=='direccion'){
-                                dircliente=llav2cl[b]
-                            }
-                            if(llav2cl[b]=='nombre'){
-                                nomcliente=llav2cl[b]
-                            }
-                        }
-                    }
-                    if(llaveslv1[a]=='consec'){
-                        consecutivo=llaveslv1[a];
-                    }
-                    if(llaveslv1[a]=='id'){
-                        id=llaveslv1[a]
-                    }
-                    if(llaveslv1[a]=='novedades'){
-                        nov=llaveslv1[a]
-                    }
-                    if(llaveslv1[a]=='prueba'){
-                        nov=llaveslv1[a]
-                    }
-                    if(llaveslv1[a]=='nombre_proceso'){
-                        estado=llaveslv1[a]
-                    }
-                    if(llaveslv1[a]=='fecha_estado'){
-                        fechaT=llaveslv1[a]
-                    }
-                    if(llaveslv1[a]=='fecha_creacion'){
-                        fechaC=llaveslv1[a]
-                    }
-                    
-                    if(llaveslv1[a]=='productoslocal'){
-                        producto= llaveslv1[a]
-                    }
-                    if(llaveslv1[a]=='servicioslocal'){
-                        servicio= llaveslv1[a]
-                    }
-                    if(llaveslv1[a]=='detalleslocal'){
-                        detalles= llaveslv1[a]
-                        
-                        llaveslv2= Object.keys(this.consulta[i].detalleslocal);
-                        for(var b=0; b<llaveslv2.length;b++){
-                        if(llaveslv2[b]=='referencia')
-                            {
-                                refe=llaveslv2[b]
-                            }
-                        if(llaveslv2[b]=='destinatario')
-                            {
-                                desti=llaveslv2[b]
-                                destllavelvl3=Object.keys(this.consulta[i].detalleslocal.destinatario)
-                                //console.log(destllavelvl3);
-                                
-                                for(var c=0; c<destllavelvl3.length;c++){
-                                    if(destllavelvl3[c]=='direccion'){
-                                        direcciondesti=destllavelvl3[c]
-                                    }
-                                }
-                                
-                            }  
-                        if(llaveslv2[b]=='infor'){
-                                infor= llaveslv2[b]
-                                llaveslv3=Object.keys(this.consulta[i].detalleslocal.infor);
-                                
-                                for(var c=0;c<llaveslv3.length;c++){
-                                    //console.log(llaveslv3[c]);
-                                   
-                                    if(llaveslv3[c]==="objetoUnidades"||llaveslv3[c]==='trayectoobj'||
-                                    llaveslv3[c]==='id_trayecto')
-                                    {
-                                        if(llaveslv3[c]==='trayectoobj'){
-                                            trayecto=llaveslv3[c]
-                                            llaveslvl4=Object.keys(this.consulta[i].detalleslocal.infor.trayectoobj)
-                                            for(var e=0;e<llaveslvl4.length;e++)
-                                            {
-                                               
-                                                if(llaveslvl4[e]==='nombre'){
-                                                    nombre_trayecto=llaveslvl4[e]
-                                                }
-                                            }
-                                        }
-                                        //console.log("no saco ");
-                                    }
-                                    else
-                                    {
-                                        //console.log("saco");
-                                        variable[c]=llaveslv3[c]
-                                    }
-                                }
-                        }
-
-                        }
-                    }
-                }
-            }
-            
-            var consultclient=''
-         
-            var consult='';
-            //console.log(variable);
-                for(var d=0;d<variable.length;d++){
-                    if(d==(variable.length-1))
-                    {
-                    consult+=detalles+ '->'+infor+'->'+variable[d]+' as '+variable[d]+' '
-                    }
-                    else{
-                    consult+=detalles+ '->'+infor+'->'+variable[d]+' as '+variable[d]+','
-                    }
-                 }
-                 //console.log(consult);
-                var algo = 'SELECT '+
-                    fechaC+' as Fecha_Creacion, '+
-                    producto+ '->nombre as Producto, '+
-                    servicio+'->nombre as Servicio, '+
-                    consecutivo+' as NumOrden, '+
-                    id+' as NumMovilizado,'+
-                    detallecurier+'->'+nomcurier+' as Operador,'+
-                    detallecl+'->'+nomcliente+' as Cliente,'+
-                    detallecl+'->'+dircliente+' as Direccion_Cliente,'+
-                    detallecc+'->'+nomcentro+' as Centro_Costo,'+
-                    detallecc+'->'+dircentro+' as Direccion_CentroCosto,'+
-                    estado+' as Estado, '+
-                    fechaT+' as Fecha, '+
-                    detalles+'->'+refe+' as Referencia, '+
-                    detalles+'->'+desti+'->'+direcciondesti+' as Destino, '+
-                    nov+' as Novedades, '+
-                    prueba+ ' as Prueba, '+
-                    detalles+'->'+infor+'->'+trayecto+'->'+nombre_trayecto+ ' as Trayecto, '+
-                    consult+
-                    'INTO XLS("Data.xls",{headers:true}) FROM ?'
-                    //console.log(this.consulta);
-                    console.log(algo);
-                    //alasql(algo,[this.consulta])
-
-                  
-                   
-           */        
+        
         },
         actualizar(value){
             console.log(value);
@@ -893,15 +653,20 @@ export default {
                 }, )
         },
     },
-
+    mounted: function() {
+    var servi =localStorage.getItem("servidor")
+        var servicios = JSON.parse(servi)
+        console.log("----------------");
+        console.log(servicios);
+        this.variableServidor=servicios
+    },
     beforeCreate: function() {
-        console.log(consulta);
-        console.log("----------");
-        //console.log(envio);
+       
     },
     props:['consulta','centro','cliente', 'envios'],
     data () {
         return {
+            variableServidor:'',
             resul:[],
             acor:false,
             load:false,

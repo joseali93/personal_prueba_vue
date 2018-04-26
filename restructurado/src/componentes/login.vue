@@ -118,15 +118,25 @@ export default {
             */
             //urlservicios
             var algo='/routes/usuario/'
+            var objetoLogin={
+                password:this.password,
+                correo:this.correo
+            }
+            console.log(objetoLogin);
            //console.log(+"/UsuarioA/"+this.password+"/"+this.correo);
             this.axios.get(urlservicios+"UsuarioA/"+this.password+"/"+this.correo)
             .then((response) => {
+              console.log(response);
+              console.log(response.status);
+              
               this.usuario=response.data.objeto;
               //console.log(' this.usuario: ',  this.usuario);
               this.estado= response.data.estado;
               //console.log('this.estado: ', this.estado);
               if(this.estado){
                 localStorage.setItem('storedData', JSON.stringify(this.usuario))
+                localStorage.setItem('servidor', JSON.stringify(response.data.servidor))
+                //localStorage.setItem('puerto', JSON.stringify(response.data.puerto))
                 //bus.$emit('login',this.usuario)
                 this.$router.replace('/inicio')
 
@@ -140,7 +150,25 @@ export default {
                 this.correo ='',
                 this.password= ''    
                  }
+                 
             }).catch(function(error){
+                console.log(JSON.stringify(error));
+                console.log(error.response);
+                if(error.response.status==401)
+                {
+                    console.log("no esta autorizado");
+                     swal(
+                    'Oops...',
+                    'Usuario o Contraseña incorrectos',
+                    'warning'
+                  )     
+                }
+                if(error.response.status==500)
+                {
+                    console.log("no esta autorizado");
+                }
+                
+                /*
               if(error.response){
                 // The request was made and the server responded with a status code
                 // that falls out of the range of 2xx    
@@ -166,7 +194,7 @@ export default {
                   )                 
               }
               //console.log("error de config"+JSON.stringify(error.config));
-  
+                */
             })
 
           }

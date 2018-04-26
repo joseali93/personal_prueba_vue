@@ -25,6 +25,9 @@
                 <b-col>
                     <p style="font-size:25px;">Estado</p>
                 </b-col>
+                <b-col>
+                    <p style="font-size:25px;">Leida por Courier</p>
+                </b-col>
             </b-row>
             <b-row class="text-center">
                  <b-col >
@@ -35,6 +38,9 @@
                 </b-col>
                 <b-col>
                     <strong  class="text-primary " style="font-size:25px;">{{currentUser.estado}}</strong>
+                </b-col>
+                <b-col>
+                    <strong  class="text-primary " style="font-size:25px;">{{leido}}</strong>
                 </b-col>
             </b-row>
             <b-card fluid    class="mb-2 borderC">
@@ -359,7 +365,7 @@ import moment from 'moment'
 export default {
     data(){
         return{
-            
+            leido:'',
             model_medios:null,
             medios:[],
         items : [
@@ -414,20 +420,56 @@ export default {
     },
     methods: {
         vehic(){
-            console.log(this.model_medios);
-            if(this.model_medios!=null){
-                var login = localStorage.getItem("storedData");
-                var infologin = JSON.parse(login);
-                this.axios.get(urlservicios+"UsuariosCurier/"+infologin.id_OperadorLogistico._id+'/'+this.model_medios._id)
+            console.log(this.currentUser);
+            console.log(typeof(this.model_medios));
+          
+            var login = localStorage.getItem("storedData");
+            var infologin = JSON.parse(login);
+
+            if(typeof(this.model_medios)=='string'){
+                //console.log("es id");
+                this.axios.get(urlservicios+"medios/")
                 .then(response => {
-                    this.curiers = response.data;
-                    //this.selec_disable=false
+                    //console.log(response);
+                    this.medios=response.data
+                    this.medios.forEach(element => {
+                        if(element._id==this.model_medios){
+                            //console.log("son iguales");
+                            this.model_medios=element
+                        }
+                    });
+                    this.axios.get(urlservicios+"UsuariosCurier/"+infologin.id_OperadorLogistico._id+'/'+this.model_medios._id)
+                    .then(response2 => {
+                        this.curiers = response2.data;
+                        //this.selec_disable=false
+                        this.curiers.forEach(element2 => {
+                            if(element2._id==this.selected_curier)
+                            this.selected_curier=element2
+                        });
+                    });
+
 
                 });
-            }
+ 
+
+            } 
             else{
-                //this.selec_disable=true
+                if(this.model_medios!=null){
+                    //console.log(this.medios);
+                    //console.log("entro a vehiculos");
+                    
+                    
+                    this.axios.get(urlservicios+"UsuariosCurier/"+infologin.id_OperadorLogistico._id+'/'+this.model_medios._id)
+                    .then(response => {
+                        this.curiers = response.data;
+                        //this.selec_disable=false
+                    });
+                }
+                else{
+                    //this.selec_disable=true
+                }
             }
+            
            
         },
         desabilitarguardar(){
@@ -948,16 +990,17 @@ export default {
 
   },
       mounted: function () {
-          console.log("montado");
+          //console.log("montado");
        bus.$on('ocultar', function (userObject) {
         
         this.ocultar = userObject.ocultar
-      }.bind(this))
+        }.bind(this))
        var login = localStorage.getItem("storedData");
         var infologin =JSON.parse(login);
         //console.log(infologin.id_cliente);
         var id_cliente
         
+
         if(infologin.id_cliente==undefined||infologin.id_cliente==null){
             //console.log("no hay cliente");
         }
@@ -967,9 +1010,32 @@ export default {
             this.id_cliente_local=infologin.id_cliente
 
         }
+        
     },
     created: function(){
+        bus.$on('thisEvent', function (userObject) {
+        this.currentUser = userObject.inde.item
+        //console.log(this.currentUser);
+        if(this.currentUser.leido==true){
+            this.leido="Si"
+        }
+        if(this.currentUser.leido==false){
+            this.leido="No"
+        }
+        if(this.currentUser.id_courier=="000000000000000000000000"){
+            this.selected_curier=null
+        }
+        else{
+       
+            this.selected_curier=this.currentUser.id_courier
+            this.model_medios=this.currentUser.id_medio
+        }
+        this.vali=userObject.inde
+        this.info=this.currentUser
+        this.inputstotales=userObject.inputstotales
+        }.bind(this))
 
+        //console.log(this.currentUser);
     }, 
     beforeCreate: function() {
         var vacio=  { _id: null, nombre: 'Por Favor Seleccione un Cliente' };
@@ -980,26 +1046,13 @@ export default {
         .then(response => {
             //console.log(response);
             this.medios=response.data
+            //console.log(this.medios);
             //this.curiers = response.data;
             //this.curiers.unshift(vacio)
 
         });
 
-        bus.$on('thisEvent', function (userObject) {
-        this.currentUser = userObject.inde.item
-        //console.log(this.currentUser);
-        if(this.currentUser.id_courier=="000000000000000000000000"){
-            this.selected_curier=null
-        }
-        else{
-            console.log("------");
-            console.log(this.medios);
-            this.selected_curier=this.currentUser.id_courier
-        }
-        this.vali=userObject.inde
-        this.info=this.currentUser
-        this.inputstotales=userObject.inputstotales
-        }.bind(this))
+        
     }
 }
 
@@ -1007,7 +1060,7 @@ export default {
 
 </script>
 
-<style>
+<style scoped>
 .card-header{
     background-color: #4db35a;
     color: white;

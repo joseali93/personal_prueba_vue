@@ -36,7 +36,7 @@ export default {
   methods:{
    prue(){
      console.log("eeeeeeeeeeeeeeeeeen");
-     /*
+     
      console.log("entro a prueba");
      var dt = new Date('8/24/2009');
      var prueba=[
@@ -49,13 +49,14 @@ export default {
      }
      alasql.fn.prueba= function(date)
      {
-       console.log(date.toLocaleString());
+       //console.log(date.toString());
+       date.setDateFormat="MM-dd-yyyy HH:mm:ss"
 
-     return date.toLocaleString()
+     return date
      }
      console.log(this.clientes);
     alasql('SELECT prueba(direccion) as Fecha INTO XLS("Data.xls",{headers:true}) FROM ?',[this.clientes]);
-    */
+    /*
     var test2 = localStorage.getItem("storedData");
     var test = JSON.parse(test2);
     console.log(urlservicios +"ConsultaExcel/" +test.id_OperadorLogistico._id +"/5a11a8faee87f501080bce29/5a2052ea6535d593c73c815c/90/null/null/null/null/");
@@ -67,7 +68,7 @@ export default {
            //alasql(consulta,[this.consulta])      
         })
 
-       
+      */ 
            
    }
 

@@ -9,7 +9,7 @@
             <div class="sidenav-header d-flex align-items-center justify-content-center">
             <div class="sidenav-header-inner text-center " >
               <b-link to="/inicio" class="active">
-                <b-img :src="imagen" fluid alt="Responsive image" 
+                <b-img :src="servidor+imagen" fluid alt="Responsive image" 
                 class="img-fluid   mCS_img_loaded"/>
               </b-link>
             </div>
@@ -182,6 +182,7 @@ export default {
 
       }
       ],
+      servidor:'',
       nombreusu: "",
       load: "",
       imagen: "",
@@ -261,9 +262,13 @@ export default {
     
     var test2 = localStorage.getItem("storedData");
     var test = JSON.parse(test2);
+    var servi =localStorage.getItem("servidor")
+    var servicios = JSON.parse(servi)
+    console.log(servicios);
     this.nombreusu = test.nombre;
     this.imagen = test.url_logo;
-
+    this.servidor = servicios
+    //console.log(this.servidor+this.imagen);
     if (test.id_rol.nombre == "courier") {
       console.log("hay courier");
       this.config = false;

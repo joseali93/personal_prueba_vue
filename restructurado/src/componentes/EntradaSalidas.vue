@@ -922,7 +922,7 @@ export default {
             this.axios
               .get(
                 urlservicios +
-                  "UsuariosCurier/" +
+                  "UsuariosCurierOperador/" +
                   infologin.id_OperadorLogistico._id
               )
               .then(response => {

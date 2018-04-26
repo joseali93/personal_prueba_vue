@@ -24,7 +24,7 @@
                 
                 <b-row>
                 <b-col class="my-2">
-                    <b-img :src="otrainfo[1].url_logo"  fluid alt="Fluid image" class="imgpr" />
+                    <b-img :src="servicios+imagen"  fluid alt="Fluid image" class="imgpr" />
                     <!--
             <b-img src="https://lorempixel.com/300/150/" fluid alt="Fluid image" />
 
@@ -121,6 +121,8 @@ export default {
     },
     data(){
         return{
+            servicios:'',
+            imagen:'',
             fecha:  moment().format("DD/MM/YYYY"),
             fechaimpre:moment().format('MMMM Do YYYY, h:mm:ss a'),
             otrainfo:'',
@@ -190,6 +192,12 @@ export default {
       }
     },
     mounted: function() {
+        var servi =localStorage.getItem("servidor")
+      var servicios = JSON.parse(servi)
+      var test2 = localStorage.getItem("storedData");
+    var test = JSON.parse(test2);
+    this.imagen = test.url_logo;
+      this.servicios = servicios
        bus.$on('modalinfo', function (userObject) {
      
         this.itemsmodal = userObject.itemsmodal

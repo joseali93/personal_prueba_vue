@@ -136,6 +136,7 @@ import {bus} from "../main"
 import {urlservicios} from '../main'
 import Preload from '../componentes/preload.vue'
 import DatePicker from "vue2-datepicker";
+import moment from 'moment'
 
 export default {
      components :{
@@ -188,7 +189,7 @@ data(){
         centroseleccionado: {},
         selectedCC: null,
         centros: [],
-        time1: '',
+        time1: [],
         validatecampo: '',
         options: [
         { text: 'Rango de Fechas', value: 'first' },
@@ -295,6 +296,27 @@ methods:{
     consultar(){
         //console.log("entro a consultar");
         var inicio,fin
+        var fecha=new Date();
+            var _this=this
+            var d =new Date()
+            var year = d.getFullYear()
+            var month = d.getMonth()
+            var day = d.getDate()
+            var ant = new Date()
+            var monthante = ant.getMonth()-1
+            var dayante =ant.getDate()
+            d.setFullYear(year,month,day)
+            ant.setFullYear(year,monthante,dayante)
+        
+            var mana=new Date(fecha.getTime() + 24*60*60*1000);
+            var fechainicial= moment(this.time1[0])
+            var finalfinal= moment(this.time1[1])
+           
+            var cantidaddias=finalfinal.diff(fechainicial, 'days')
+            console.log(mana);
+            console.log(ant);
+            console.log(cantidaddias);
+            console.log(this.time1);
         if(this.selectedCL==''||this.selectedCC==''
         ||this.selectedCL==null||this.selectedCC==null)
         {  
@@ -321,10 +343,24 @@ methods:{
                 this.orden=''
                 this.referencia=''
                 this.nmovilizado=''
-                if(this.time1[0]==''||this.time1[0]==undefined||this.time1[0]==null||this.time1[1]==''||this.time1[1]==undefined||this.time1[1]==null)
+
+                if(cantidaddias>32||this.time1=='')
                 {
-                    console.log("es vacio fecha");
-                    swal("Oops...", "Falto algun seleccionar el rango de fechas", "error");
+                    if(cantidaddias>32){
+                        swal(
+                        'Advertencia',
+                        'Solo puede seleccionarse maximo 30 días',
+                        'warning'
+                        )
+                        this.$router.replace('/inicio/trazabilidad')
+                    }
+                    if(this.time1==''){
+                        console.log("es vacio fecha");
+
+                        swal("Oops...", "Falto algun seleccionar el rango de fechas", "warning");
+                        this.$router.replace('/inicio/trazabilidad')
+                    }   
+                    
                 }
                 else{
                     inicio=this.time1[0]
@@ -668,6 +704,8 @@ methods:{
                 this.shortcuts[p].end=d
             }
         }
+        //this.time1[1]= mana
+        //this.time1[0] =ant
         //-----------------------------------
         var bandera=true
         var _this=this

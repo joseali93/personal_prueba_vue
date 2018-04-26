@@ -119,6 +119,7 @@ export default {
     Preload,
     DatePicker
   },
+  
     data() {
         return {
             sel_conslta: false,
@@ -243,101 +244,199 @@ export default {
             var year = d.getFullYear()
             var month = d.getMonth()
             var day = d.getDate()
-            var ant_mest = new Date()
-            var monthante = ant_mest.getMonth()-1
-           
-            var dayante =ant_mest.getDate()
+            var ant = new Date()
+            var monthante = ant.getMonth()-1
+            var dayante =ant.getDate()
             d.setFullYear(year,month,day)
-            ant_mest.setFullYear(year,monthante,dayante)
-            console.log("hace un mes+"+ant_mest);
-            console.log("----ant ----");
-            console.log(ant_mest);
-            console.log("time");
-            console.log(this.time1)
-            var yearcap=this.time1[0].getFullYear()
-            var mescap=this.time1[0].getMonth()
-            var diacap=this.time1[0].getDate()
-            console.log(ant_mest);
-            console.log(this.time1[0]);
-            if(dayante==diacap&&monthante==mescap&&year==yearcap){
-                console.log("cumple");
-            }
-            else{
-                console.log("no cumple");
-            }
-            if(this.time1[0]===''||this.time1[0]===undefined){
-                inicio="null"
-                }else{
-                    inicio=this.time1[0]
-                }
-            if(this.time1[1]===''||this.time1[1]===undefined){
-                fin="null"
-                }else{
-                    fin=this.time1[1]
-                }
-            if(this.filter===''){
-                this.filter="null"
-                }
-            if(this.selected_state===''|| this.selected_state==null){
-                //this.selected_state="null"
-                //queda pendiente de juan
-                esadoconsulta='null'
-                }
-                else{
-                    esadoconsulta=this.selected_state.nombre
-                }
-            if(this.selectedCL===''||this.selectedCL===null){
-                cliente="null"
-                }
-                else{
-                cliente=this.selectedCL._id
-                }   
-            if(this.selectedCC===''||this.selectedCC===null){
-                centrocosto="null"
-                }   
-                else{
-                centrocosto=this.selectedCC._id
-                }   
-                 /*
-            var login = localStorage.getItem("storedData");
-            var infologin =JSON.parse(login);  
-            var load=true
-                setTimeout(() => {
-                    bus.$emit('load', {
-                        load 
-                    })
-                    }, )
+            ant.setFullYear(year,monthante,dayante)
+        
+            var mana=new Date(fecha.getTime() + 24*60*60*1000);
+            var fechainicial= moment(this.time1[0])
+            var finalfinal= moment(this.time1[1])
            
-            this.axios.get(urlservicios+"ObtenerOrdenesFiltrado/"+infologin.id_OperadorLogistico._id+"/"+this.filter+"/"+esadoconsulta+
-            "/"+cliente+"/"+centrocosto+"/"+inicio+"/"+fin)
-            .then((response) => {
-                this.consulta=response.data
-                if(this.consulta==''){
-                    var load=false
+            var cantidaddias=finalfinal.diff(fechainicial, 'days')
+            /*
+            console.log(mana);
+            console.log(ant);
+            console.log(cantidaddias);
+            console.log(this.time1);
+            */
+            if(cantidaddias>32||this.time1=='')
+            {
+                //console.log("tiempo mayor de 30 dias");
+                if(cantidaddias>32){
+                    swal(
+                    'Advertencia',
+                    'Solo puede seleccionarse maximo 30 días',
+                    'warning'
+                    )
+                }
+                else{
+                    if(this.time1==''||this.time1===''||this.time1===undefined){
+                        this.time1=[]
+                        this.time1[0]=mana
+                        this.time1[1]=ant
+                    }
+                    if(this.time1[0]===''||this.time1[0]===undefined){
+                    inicio=ant
+                    }
+                    else{
+                            inicio=this.time1[0]
+                    }
+                    if(this.time1[1]===''||this.time1[1]===undefined){
+                        fin=mana
+                    }
+                    else{
+                            fin=this.time1[1]
+                        }
+                    if(this.filter===''){
+                        this.filter="null"
+                        }
+                    if(this.selected_state===''|| this.selected_state==null){
+                        //this.selected_state="null"
+                        //queda pendiente de juan
+                        esadoconsulta='null'
+                        }
+                        else{
+                            esadoconsulta=this.selected_state.nombre
+                        }
+                    if(this.selectedCL===''||this.selectedCL===null){
+                        cliente="null"
+                        }
+                        else{
+                        cliente=this.selectedCL._id
+                        }   
+                    if(this.selectedCC===''||this.selectedCC===null){
+                        centrocosto="null"
+                        }   
+                        else{
+                        centrocosto=this.selectedCC._id
+                        }   
+                        console.log(this.time1);
+                        
+                    var login = localStorage.getItem("storedData");
+                    var infologin =JSON.parse(login);  
+                    var load=true
+                        setTimeout(() => {
+                            bus.$emit('load', {
+                                load 
+                            })
+                            }, )
+                
+                    this.axios.get(urlservicios+"ObtenerOrdenesFiltrado/"+infologin.id_OperadorLogistico._id+"/"+this.filter+"/"+esadoconsulta+
+                    "/"+cliente+"/"+centrocosto+"/"+inicio+"/"+fin)
+                    .then((response) => {
+                        this.consulta=response.data
+                        if(this.consulta==''){
+                            var load=false
+                            setTimeout(() => {
+                                bus.$emit('load', {
+                                    load
+                                })
+                                }, )
+                            swal(
+                                'Oops...',
+                                'No se encontro ninguna Orden!',
+                                'error'
+                                )
+                                
+                        }
+                        else{
+                            console.log(this.consulta);
+                            var load=false
                     setTimeout(() => {
                         bus.$emit('load', {
                             load
                         })
                         }, )
-                    swal(
-                        'Oops...',
-                        'No se encontro ninguna Orden!',
-                        'error'
-                        )
-                        
+                                this.$router.replace('/inicio/consultar/resultado')
+                        }
+                    })
+                    
+                }
+               
+               
+            }
+            else{
+                console.log("hago peticion");
+                if(this.time1[0]===''||this.time1[0]===undefined){
+                inicio=ant
                 }
                 else{
-                    console.log(this.consulta);
-                    var load=false
-            setTimeout(() => {
-                bus.$emit('load', {
-                    load
-                })
-                }, )
-                           this.$router.replace('/inicio/consultar/resultado')
+                        inicio=this.time1[0]
                 }
-            })
-            */
+                if(this.time1[1]===''||this.time1[1]===undefined){
+                    fin=mana
+                }
+                else{
+                        fin=this.time1[1]
+                    }
+                if(this.filter===''){
+                    this.filter="null"
+                    }
+                if(this.selected_state===''|| this.selected_state==null){
+                    //this.selected_state="null"
+                    //queda pendiente de juan
+                    esadoconsulta='null'
+                    }
+                    else{
+                        esadoconsulta=this.selected_state.nombre
+                    }
+                if(this.selectedCL===''||this.selectedCL===null){
+                    cliente="null"
+                    }
+                    else{
+                    cliente=this.selectedCL._id
+                    }   
+                if(this.selectedCC===''||this.selectedCC===null){
+                    centrocosto="null"
+                    }   
+                    else{
+                    centrocosto=this.selectedCC._id
+                    }   
+                    console.log(this.time1);
+                    
+                var login = localStorage.getItem("storedData");
+                var infologin =JSON.parse(login);  
+                var load=true
+                    setTimeout(() => {
+                        bus.$emit('load', {
+                            load 
+                        })
+                        }, )
+            
+                this.axios.get(urlservicios+"ObtenerOrdenesFiltrado/"+infologin.id_OperadorLogistico._id+"/"+this.filter+"/"+esadoconsulta+
+                "/"+cliente+"/"+centrocosto+"/"+inicio+"/"+fin)
+                .then((response) => {
+                    this.consulta=response.data
+                    if(this.consulta==''){
+                        var load=false
+                        setTimeout(() => {
+                            bus.$emit('load', {
+                                load
+                            })
+                            }, )
+                        swal(
+                            'Oops...',
+                            'No se encontro ninguna Orden!',
+                            'error'
+                            )
+                            
+                    }
+                    else{
+                        console.log(this.consulta);
+                        var load=false
+                setTimeout(() => {
+                    bus.$emit('load', {
+                        load
+                    })
+                    }, )
+                            this.$router.replace('/inicio/consultar/resultado')
+                    }
+                })
+                
+            }
+            
         },
         SelectCC(value){
             var vacio=  { _id: null, nombre: 'Por Favor Seleccione un Centro de Costo' };
@@ -354,7 +453,7 @@ export default {
                 //this.axios.get(urlservicios+"centros/")
                 .then((response) => {
                     this.centros=response.data
-                    this.centros.unshift(vacio)
+                    //this.centros.unshift(vacio)
                 //this.load=false
                 var load=false
                 setTimeout(() => {
@@ -377,7 +476,7 @@ export default {
                 //this.axios.get(urlservicios+"centros/")
                 .then((response) => {
                     this.centros=response.data
-                    this.centros.unshift(vacio)
+                    //this.centros.unshift(vacio)
                 //this.load=false
                 var load=false
                 setTimeout(() => {
