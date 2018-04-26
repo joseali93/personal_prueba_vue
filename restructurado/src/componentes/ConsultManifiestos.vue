@@ -15,7 +15,7 @@
                 -->
                 <b-row>
                     <b-col>
-                        <b-btn class="float-right" variant="success" @click="limpiar">
+                        <b-btn class="float-right rounded" variant="success" @click="limpiar">
                             <i class="fa fa-eraser"></i>
                             
                         </b-btn>
@@ -56,7 +56,7 @@
                 </b-row>
                 <b-row>
                     <b-col>
-                        <b-btn variant="success" class="float-right" @click="consultar()">
+                        <b-btn variant="success" class="float-right rounded" @click="consultar()">
                             <i class="fa fa-search " aria-hidden="true"></i>
                             Consultar
                         </b-btn>

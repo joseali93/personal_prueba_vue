@@ -66,7 +66,7 @@
                     
                 </b-col>
                 <b-col >
-                    <b-btn active-class class="float-right" @click="limpiarfiltro">
+                    <b-btn active-class class="float-right rounded" @click="limpiarfiltro">
                         <i class="fa fa-refresh" aria-hidden="true"></i>
                         Busqueda
                     </b-btn>
@@ -108,7 +108,7 @@
             </b-row>
             <b-row class="my-1">
                 <b-col>
-                <b-button @click="consultar()" variant="success" class="my-1">
+                <b-button @click="consultar()" variant="success" class="my-1 rounded">
                     <i class="fa fa-search" aria-hidden="true"></i>
                     Consultar
                 </b-button>

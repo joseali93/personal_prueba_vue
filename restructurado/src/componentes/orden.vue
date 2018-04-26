@@ -755,4 +755,8 @@ export default {
   padding-bottom: 30px;
   border-color: 15px gray;
 }
+.dashboard-header section-padding{
+    padding-top: 1px;
+    padding-bottom: 01px;
+}
 </style>

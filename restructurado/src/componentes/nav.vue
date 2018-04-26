@@ -131,7 +131,7 @@
       <!-- SECCION DEL HEADER Y CONTENIDO DIV-->
       <section class="dashboard-header section-padding" 
       style="
-    padding-top: 1px;">
+    padding-top: 1px;padding-bottom: 0px;">
         <!--
         <div class="container">
            <div class="content-wrapper">

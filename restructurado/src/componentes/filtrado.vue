@@ -90,7 +90,7 @@
                 </b-row>    
                 <b-row>
                     <b-col  md="6">
-                    <b-btn class="my-1"  variant="primary" exact-active-class v-on:click="consultar()">
+                    <b-btn class="my-1 rounded"  variant="primary" exact-active-class v-on:click="consultar()">
                         <i class="fa fa-search" aria-hidden="true"></i>
                         Consultar</b-btn>
                     </b-col>
