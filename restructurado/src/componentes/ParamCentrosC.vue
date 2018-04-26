@@ -525,7 +525,7 @@ export default {
                                 timer: 1500,
                                 type:'success'})
                                 this.CentrosTabla.splice(this.indice, 1);
-                                this.CentrosTabla.splice(this.indice, 0, this.ModalEdit);
+                                this.CentrosTabla.splice(this.indice, 0, response.data.centro);
                                 //this.centrocostopadreEditar=null
                                 this.cerrarModal()
 
