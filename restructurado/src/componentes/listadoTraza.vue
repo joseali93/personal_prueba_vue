@@ -171,7 +171,7 @@
             <b-container>
                 <template v-for="(data,indice) in modalima.trazabilidad[0].imagenes">
                     <b-card no-body class="mb-1">
-                        <b-card-header header-tag="header" class="p-1" role="tab">
+                        <b-card-header header-tag="header" class="p-1 joseperso" role="tab">
                             <b-row>
                                 <b-col cols="8">
                                     <b-btn block v-b-toggle="data.id" variant="info">
@@ -769,10 +769,19 @@ export default {
 }
 </script>
 
-<style>
-
+<style scoped>
+.joseperso{
+      background-color: #ebeaea ;
+  border-bottom-color: #495057;
+  border-top: none;
+}
+.card-header {
+  background-color: #ebeaea ;
+  border-bottom-color: #495057;
+  border-top: none;
+}
 .collapsed > .when-opened,
 :not(.collapsed) > .when-closed {
   display: none;
 }
-</style>
+</styl>

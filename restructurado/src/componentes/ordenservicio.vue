@@ -106,7 +106,7 @@
                 </b-row>
                 
                 
-                    <b-card no-body v-show="selectservice" class=" w-100 cards"
+                    <b-card no-body v-show="selectservice" class=" w-100 cards" 
                     style="
                     padding-left: 0px;
                     padding-right: 0px;
@@ -1808,9 +1808,9 @@ export default {
 };
 </script>
 
-<style >
+<style module>
 .card-header-tabs {
-  background-color: #f8f8ff;
+  background-color: #ebeaea;
 }
 .nav-link {
   border-left-width: 13px;
@@ -1843,8 +1843,17 @@ export default {
   padding-bottom: 30px;
   border-color: 15px gray;
 }
+
 .card-header {
   background-color: #ebeaea;
+  /*
+  border-bottom-color: #031424;
+  */
+  border-top: none;
+}
+
+#josecard{
+    background-color: #ebeaea;
   border-bottom-color: #495057;
   border-top: none;
 }
