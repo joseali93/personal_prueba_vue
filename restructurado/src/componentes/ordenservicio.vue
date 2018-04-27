@@ -1808,7 +1808,14 @@ export default {
 };
 </script>
 
-<style module>
+<style>
+.contenedorTotal {
+  padding-top: 0px;
+  padding-right: 0%;
+  padding-bottom: 0px;
+  padding-left: 0%;
+  background-color: #f8f8ff;
+}
 .card-header-tabs {
   background-color: #ebeaea;
 }
@@ -1845,13 +1852,18 @@ export default {
 }
 
 .card-header {
-  background-color: #ebeaea;
+  
   /*
   border-bottom-color: #031424;
   */
+  background-color: #ebeaea;
+    color: white;
   border-top: none;
 }
-
+.card-header {
+    background-color: #ebeaea;
+    color: white;
+}
 #josecard{
     background-color: #ebeaea;
   border-bottom-color: #495057;

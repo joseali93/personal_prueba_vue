@@ -13,7 +13,7 @@
         </b-row>
           
           
-        <b-card-body>
+        <b-card>
              <b-row class="text-center">
                  <b-col>
                     <p style="font-size:25px;">Orden de Servicio  
@@ -1067,7 +1067,7 @@ export default {
 }
 
 .card-header{
-    background-color: #4db35a !important;
+    background-color: #4db35a ;
     color: white;
 }
 
