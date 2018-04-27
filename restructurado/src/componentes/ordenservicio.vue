@@ -1808,7 +1808,7 @@ export default {
 };
 </script>
 
-<style scoped>
+<style >
 .card-header-tabs {
   background-color: #f8f8ff;
 }

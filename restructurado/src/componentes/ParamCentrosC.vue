@@ -1,38 +1,41 @@
 <template>
-    <b-container>
-        <b-card title="Configuración de Centros de Costo"
-        sub-title="Se permite la creación y edición de los centros de costo">
-            <b-card-body>
-                    <!--
-                    <b-form-select v-model="Cliente" class="mb-3"  
-                    :options="clientes" text-field="nombre" value-field="_id" @input="SelectedClient()">  
-                    </b-form-select>
-                    -->
-                <v-select v-model="Cliente" label="nombre" placeholder="Digite el Cliente"
-                            :options="clientes" @input="SelectedClient()"></v-select>
-                <b-input-group class="mb-3">
-                <b-form-input v-model="Centro"
-                type="text"
-                placeholder="Ingrese el nombre del Centro de Costo">
-                </b-form-input>
-                <b-btn variant="outline-success" v-show="Centro!=''&&Cliente!=null" @click="nuevocc">
-                <i class="fa fa-plus"></i>
-                </b-btn>
-                </b-input-group>
+    
+    <b-container fluid class="contenedorTotal">
+        <div >
+            <b-breadcrumb :items="items" />
+        </div>
 
-                <b-table striped hover :items="CentrosTabla"
-                :fields="fields" :filter="Centro" >
-                <template slot="editar" slot-scope="data">
-                <i class="btn btn-success fa fa-pencil" @click="editar(data)"></i>
-                </template>
-                <template slot="nombre" slot-scope="data">
-                <label class="text-capitalize">{{data.item.nombre}}</label>
-                </template>
+        <b-container fluid> 
+            <b-card class="cards"
+            >
+                <b-card-body>
 
-                </b-table>
+                    <v-select class="mb-3" v-model="Cliente" label="nombre" placeholder="Digite el Cliente"
+                                :options="clientes" @input="SelectedClient()"></v-select>
+                    <b-input-group class="mb-3">
+                    <b-form-input v-model="Centro"
+                    type="text"
+                    placeholder="Ingrese el nombre del Centro de Costo">
+                    </b-form-input>
+                    <b-btn variant="outline-success" v-show="Centro!=''&&Cliente!=null" @click="nuevocc">
+                    <i class="fa fa-plus"></i>
+                    </b-btn>
+                    </b-input-group>
 
-            </b-card-body>
-        </b-card>
+                    <b-table striped hover :items="CentrosTabla"
+                        :fields="fields" :filter="Centro" >
+                        <template slot="editar" slot-scope="data">
+                        <i class="btn btn-success fa fa-pencil" @click="editar(data)"></i>
+                        </template>
+                        <template slot="nombre" slot-scope="data">
+                        <label class="text-capitalize">{{data.item.nombre}}</label>
+                        </template>
+
+                    </b-table>
+
+                </b-card-body>
+            </b-card>
+        </b-container>
         <!-- Modal Crear Centro logistico -->
         <b-modal id="modalNuevo" ref="modalNuevo" size="lg" >
             <b-container fluid>
@@ -178,6 +181,17 @@ export default {
      data () {
 
     return {
+         items: [
+        {
+          text: "Inicio",
+          to: "/inicio"
+        },
+        {
+          text: "Configuración Centros de Costo",
+          to: "/inicio/configcliente",
+          active: true
+        }
+      ],
         CentrosPadreEditar:[],
         CentrosPadre:[],
         centrocostopadre:null,

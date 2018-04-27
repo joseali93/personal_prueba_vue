@@ -1,18 +1,24 @@
 <template>
-    <b-container>
-        <b-card title="Configuración de Clientes"
-                sub-title="Se permite la creación y edición de los clientes">
-            <b-card-body>
-                <b-row>
-                    <b-col>
-                        <b-btn variant="outline-success" class="mb-3 float-right" @click="ClienteNuevo()">
-                        <i class="fa fa-plus"></i>                      
-                        </b-btn>
-                        <b-btn variant="outline-success" class="mb-3 float-right" @click="refrescarClientes()">
-                            <i class="fa fa-refresh"></i>                              
-                        </b-btn>
-                    </b-col>
-                </b-row>
+    
+    <b-container fluid class="contenedorTotal">
+        <div >
+            <b-breadcrumb :items="items" />
+        </div>
+
+        <b-container fluid> 
+            <b-card  class="cards"
+               >
+                <b-card-body>
+                    <b-row>
+                        <b-col>
+                            <b-btn variant="outline-success" class="mb-3 float-right" @click="ClienteNuevo()">
+                            <i class="fa fa-plus"></i>                      
+                            </b-btn>
+                            <b-btn variant="outline-success" class="mb-3 float-right" @click="refrescarClientes()">
+                                <i class="fa fa-refresh"></i>                              
+                            </b-btn>
+                        </b-col>
+                    </b-row>
                 
                     <b-form-group id="fieldsetHorizontal"
                                     horizontal
@@ -28,28 +34,32 @@
                                         ></b-form-input>
                     </b-form-group>
 
-                <b-table responsive fixed :items="ClientesTabla" :fields="fields"
-                 :filter="Cliente"
-                 class="my-2">
-                    <template slot="editar" slot-scope="data">
-                        <i class="btn btn-success fa fa-pencil" @click="editar(data)"></i>
-                    </template>
-                    <template slot="nombre" slot-scope="data">
-                        {{data.item.nombre}}
-                    </template>
-                    <template slot="direccion" slot-scope="data">
-                        {{data.item.direccion}}
-                    </template>
-                    <template slot="nit" slot-scope="data">
-                        {{data.item.nit}}
-                    </template>
-                    <template slot="correo" slot-scope="data">
-                        {{data.item.correo}}
-                    </template>
+                    <b-table responsive fixed :items="ClientesTabla" :fields="fields"
+                    :filter="Cliente" :current-page="currentPage" :per-page="10"
+                    class="my-2">
+                        <template slot="editar" slot-scope="data">
+                            <i class="btn btn-success fa fa-pencil" @click="editar(data)"></i>
+                        </template>
+                        <template slot="nombre" slot-scope="data">
+                            {{data.item.nombre}}
+                        </template>
+                        <template slot="direccion" slot-scope="data">
+                            {{data.item.direccion}}
+                        </template>
+                        <template slot="nit" slot-scope="data">
+                            {{data.item.nit}}
+                        </template>
+                        <template slot="correo" slot-scope="data">
+                            {{data.item.correo}}
+                        </template>
 
-                </b-table>
-            </b-card-body>
-        </b-card>
+                    </b-table>
+                    <b-pagination size="md" :total-rows="ClientesTabla.length" v-model="currentPage" :per-page="10">
+                    </b-pagination>
+                </b-card-body>
+            </b-card>
+        </b-container>
+        
 
         <!-- Modal Nuevo Cliente -->
         <b-modal id="modalNuevo" size="lg" ref="modalNuevo" 
@@ -140,7 +150,7 @@
             </div>
             <div slot="modal-header" class="w-100">
                 <strong >Crear Cliente</strong>
-                <b-btn size="sm" class="float-right" variant="outline-danger" @click="cerrarModal()">
+                <b-btn size="sm" class="float-right" variant="danger" @click="cerrarModal()">
                 X
                 </b-btn>
             </div>
@@ -248,6 +258,18 @@ export default {
      data () {
 
     return {
+        currentPage:0,
+        items: [
+        {
+          text: "Inicio",
+          to: "/inicio"
+        },
+        {
+          text: "Configuración Clientes",
+          to: "/inicio/configcliente",
+          active: true
+        }
+      ],
         indice:null,
         statustelefono:null,
         statusnombre:null,

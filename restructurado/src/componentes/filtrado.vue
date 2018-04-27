@@ -669,6 +669,13 @@ export default {
 </script>
 
 <style>
+.contenedorTotal {
+    padding-top: 0px;
+    padding-right: 0%;
+    padding-bottom: 0px;
+    padding-left: 0%;
+    background-color: #f8f8ff;
+}
 .cards2 {
 box-shadow: 1px 5px 7px 5px rgba(0,0,0,0.1);
   /*margin: 2%;

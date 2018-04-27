@@ -1,45 +1,51 @@
 <template>
-  <b-container>
-    <b-card>
-      <b-card-body>
-        <b-row >
-          <b-col >
-            <b-btn class="float-right" variant="outline-success" @click="nuevocl">
-            <i class="fa fa-plus"></i>
-          </b-btn>
-          <b-btn class="float-right" variant="outline-success"  @click="refrescarCentrosLogisticos()">
-            <i class="fa fa-refresh"></i>                              
-          </b-btn>
-          </b-col>
-          
-        </b-row>
-          <b-form-group id="fieldsetHorizontal"
-                                    horizontal
-                                    :label-cols="4"
-                                    breakpoint="md"
-                                    description="Filtrara del listado de centros logisticos asociados."
-                                    label="Buscar Centro Logistico "
-                                    label-for="inputHorizontal">
-                        <b-form-input   id="inputHorizontal" 
-                                        v-model="CentroL"
-                                        placeholder="Ingrese el nombre del Centro de Logistico"
-                                        
-                                        ></b-form-input>
-                    </b-form-group>
-        <b-row>
-          <b-table  fixed :items="centrosLogisticos" 
-          :fields="fields"
-           :filter="CentroL">
-            <template slot="editar" slot-scope="data">
-              <i class="btn btn-success fa fa-pencil" @click="editar(data)"></i>
-            </template>
-          </b-table>
-        </b-row>
-        
-        
+  <b-container fluid class="contenedorTotal">
+        <div >
+            <b-breadcrumb :items="items" />
+        </div>
 
-      </b-card-body>
-    </b-card>
+        <b-container fluid> 
+          <b-card class="cards">
+            <b-card-body>
+              <b-row >
+                <b-col >
+                  <b-btn class="float-right" variant="outline-success" @click="nuevocl">
+                  <i class="fa fa-plus"></i>
+                </b-btn>
+                <b-btn class="float-right" variant="outline-success"  @click="refrescarCentrosLogisticos()">
+                  <i class="fa fa-refresh"></i>                              
+                </b-btn>
+                </b-col>
+                
+              </b-row>
+                <b-form-group id="fieldsetHorizontal"
+                                          horizontal
+                                          :label-cols="4"
+                                          breakpoint="md"
+                                          description="Filtrara del listado de centros logisticos asociados."
+                                          label="Buscar Centro Logistico "
+                                          label-for="inputHorizontal">
+                              <b-form-input   id="inputHorizontal" 
+                                              v-model="CentroL"
+                                              placeholder="Ingrese el nombre del Centro de Logistico"
+                                              
+                                              ></b-form-input>
+                          </b-form-group>
+              <b-row>
+                <b-table  fixed :items="centrosLogisticos" 
+                :fields="fields"
+                :filter="CentroL">
+                  <template slot="editar" slot-scope="data">
+                    <i class="btn btn-success fa fa-pencil" @click="editar(data)"></i>
+                  </template>
+                </b-table>
+              </b-row>
+              
+              
+
+            </b-card-body>
+          </b-card>
+        </b-container>
     <!-- Modal Nuevo Centro Logistico -->
     <b-modal id="ModalNuevo" size="lg" ref="ModalNuevo"
       no-close-on-backdrop
@@ -151,6 +157,17 @@ import { urlservicios } from "../main";
 export default {
   data() {
     return {
+       items: [
+        {
+          text: "Inicio",
+          to: "/inicio"
+        },
+        {
+          text: "Configuración Centros Logisticos",
+          to: "/inicio/configcliente",
+          active: true
+        }
+      ],
       indice:null,
       statusciudad: null,
       statusdireccion: null,

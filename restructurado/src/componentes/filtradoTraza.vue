@@ -841,6 +841,13 @@ methods:{
 </script>
 
 <style>
+.contenedorTotal {
+    padding-top: 0px;
+    padding-right: 0%;
+    padding-bottom: 0px;
+    padding-left: 0%;
+    background-color: #f8f8ff;
+}
 .borderF {
     border: 1px solid red;
 }

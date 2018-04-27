@@ -239,7 +239,7 @@
         <!-- Modal Component 1 imagen modal -->
         <b-modal id="modalimagen" ref="ModalImagunidetalle" title="Evidencia Digital">
             <b-container>
-                <b-img :src="imgmodal.imagenes[0].url" fluid alt="Fluid image" />
+                <b-img :src="variableServidor+imgmodal.imagenes[0].url" fluid alt="Fluid image" />
             </b-container>
             <div slot="modal-footer" class="w-100">
                 <b-btn size="sm" class="float-left" variant="primary" v-b-toggle.todo>
@@ -289,7 +289,7 @@
                         <b-collapse :id="data.id" accordion="my-accordion" role="tabpanel">
                             <b-card-body>
                             <p class="card-text">
-                                <b-img :src="data.url" fluid alt="Fluid image" />
+                                <b-img :src="variableServidor+data.url" fluid alt="Fluid image" />
                             </p>
                             </b-card-body>
                         </b-collapse>
@@ -346,6 +346,7 @@ import {urlservicios} from '../main'
 export default {
     data () {
         return {
+            variableServidor:'',
             concepto:'',
             recibido:{
                 nombre:null,
@@ -559,6 +560,7 @@ export default {
 
         },
         imagenmodal(data){
+            console.log('servidor :', this.variableServidor);
             console.log("entro a el modal");
             if(data.imagenes.length==1)
             {
@@ -583,8 +585,14 @@ export default {
     },
     mounted: function () {
         var llaves
+        var servi =localStorage.getItem("servidor")
+        var servicios = JSON.parse(servi)
+        console.log("----------------");
+        console.log(servicios);
+        this.variableServidor=servicios
     },
     beforeCreate: function() {
+         
         bus.$on('resultado', function (userObject) {
             //console.log(userObject);
         this.info=userObject.value

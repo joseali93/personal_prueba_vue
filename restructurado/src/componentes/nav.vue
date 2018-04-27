@@ -14,7 +14,7 @@
               </b-link>
             </div>
             <div class="sidenav-header-logo">
-              <a  class="brand-small text-center"><b-link > <strong class="text-dark">W</strong><strong class="text-primary">L</strong></b-link></a></div>
+              <a  class="brand-small text-center"><b-link to="/inicio"> <strong class="text-dark">W</strong><strong class="text-primary">L</strong></b-link></a></div>
             </div>
             <div class="main-menu">
               <!-- ASIDE BAR -->
@@ -30,7 +30,7 @@
                             Generación Orden de Servicio </span>
                     </b-link>
                 </li>
-                <li v-for="(ruta,indice) in rutas"> 
+                <li v-for="(ruta,indice) in rutas" @click="orden()"> 
                     <b-link :to="ruta" v-if="indice=='ruta_dos'" >
                         <!--<i class="fa fa-truck " ></i>-->
                         <b-img src="../../lib/icons/consulta_orden.svg"
@@ -40,8 +40,8 @@
                         <span > Consultar Ordenes de Servicio </span>
                     </b-link>
                 </li>
-                <li  v-for="(ruta,indice) in rutas"> 
-                    <b-link :to="ruta" v-if="indice=='ruta_tres'">  
+                <li  v-for="(ruta,indice) in rutas" @click="Traza()"> 
+                    <b-link :to="ruta" v-if="indice=='ruta_tres'" >  
                         <!--<i class="fa fa-map-signs" >-->
                            <b-img src="../../lib/icons/trazabilidad.svg"
                           fluid alt="C_T" 
@@ -207,6 +207,26 @@ export default {
     
   },
   methods: {
+    orden(){
+      var ocultar=true
+            var eliminar= this.vali
+            setTimeout(() => {
+                bus.$emit('ocultar', {
+                    ocultar,eliminar 
+                })
+                }, )
+            this.$router.replace('/inicio/consultar/resultado')
+    },
+    Traza(){
+      console.log("entro a traza nav");
+      var ocultartra=true
+            setTimeout(() => {
+                bus.$emit('ocultartra', {
+                    ocultartra 
+                })
+                }, )
+            this.$router.replace('/inicio/trazabilidad/listado')
+    },
     jose(){
       console.log("jose");
     },
@@ -329,6 +349,20 @@ imagen {
 }
 ul > li > a:hover {
   text-decoration: none;
+}
+.cards {
+  box-shadow: 1px 5px 7px 5px rgba(0, 0, 0, 0.1);
+  /*margin: 2%;
+    /*border-top-width: 3px;
+    */
+
+  border-left-width: 0px;
+  padding-left: 55px;
+  padding-right: 50px;
+  padding-top: 15px;
+  border-bottom-width: 30px;
+  padding-bottom: 30px;
+  border-color: 15px gray;
 }
 .textb {
   color: white;

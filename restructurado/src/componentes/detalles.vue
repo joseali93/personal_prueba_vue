@@ -43,8 +43,8 @@
                     <strong  class="text-primary " style="font-size:25px;">{{leido}}</strong>
                 </b-col>
             </b-row>
-            <b-card fluid    class="mb-2 borderC">
-                <div slot="header" class="w-100">
+            <b-card fluid    class="mb-2  borderC">
+                <div slot="header" class="w-100 cardPersonalizada">
                     <strong class="float-left ">INFORMACIÓN DE CLIENTE</strong>
                 </div>
                 <b-row class="mb-2">
@@ -1060,11 +1060,17 @@ export default {
 
 </script>
 
-<style scoped>
-.card-header{
+<style >
+.cardPersonalizada card-header{
     background-color: #4db35a;
     color: white;
 }
+
+.card-header{
+    background-color: #4db35a !important;
+    color: white;
+}
+
 .conta {
     padding: 3%
 }
