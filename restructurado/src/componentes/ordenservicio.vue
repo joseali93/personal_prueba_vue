@@ -115,7 +115,7 @@
                     ">
                                 
                 
-                    <b-tabs card  v-show="selectservice" v-model="tabIndex">
+                    <b-tabs card   v-show="selectservice" v-model="tabIndex">
                             <b-tab  title="Información" >
 
                             <b-card-body>
