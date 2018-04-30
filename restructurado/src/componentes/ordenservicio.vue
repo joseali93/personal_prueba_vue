@@ -115,8 +115,8 @@
                     ">
                                 
                 
-                    <b-tabs card   v-show="selectservice" v-model="tabIndex">
-                            <b-tab  title="Información" >
+                    <b-tabs card id="tarjeta"  class=" cardPersonalizada" v-show="selectservice" v-model="tabIndex">
+                            <b-tab  title="Información" class="cardPersonalizada" >
 
                             <b-card-body>
                                     <b-row>
@@ -482,6 +482,11 @@ export default {
   },
   data() {
     return {
+      pruebas:{
+        'background-color': '#ebeaea',
+       ' border-bottom-color': '#495057',
+       ' border-top': 'none',
+      },
       tabIndexED: 0,
       tabdinamico: false,
       tabIndex: 0,
@@ -1809,6 +1814,7 @@ export default {
 </script>
 
 <style>
+
 .contenedorTotal {
   padding-top: 0px;
   padding-right: 0%;
@@ -1850,23 +1856,26 @@ export default {
   padding-bottom: 30px;
   border-color: 15px gray;
 }
-
-.card-header {
-  
-  /*
-  border-bottom-color: #031424;
-  */
-  background-color: #ebeaea;
+/*
+.card-header{
+    background-color: #ebeaea !important;
     color: white;
-  border-top: none;
 }
-.card-header {
+
+.cardPersonalizada card-header{
     background-color: #ebeaea;
+   
     color: white;
 }
 #josecard{
     background-color: #ebeaea;
   border-bottom-color: #495057;
   border-top: none;
+}
+*/
+#tarjeta .card-header{
+ background-color: #ebeaea !important;
+   
+    color: white;
 }
 </style>

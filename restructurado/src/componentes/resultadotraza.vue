@@ -610,7 +610,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .contenedorTotal{
   padding-top: 0px;
   padding-right: 0%;

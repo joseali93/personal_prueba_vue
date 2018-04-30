@@ -33,12 +33,15 @@
                           </b-form-group>
               <b-row>
                 <b-table  fixed :items="centrosLogisticos" 
+                :current-page="currentPage" :per-page="perPage"
                 :fields="fields"
                 :filter="CentroL">
                   <template slot="editar" slot-scope="data">
                     <i class="btn btn-success fa fa-pencil" @click="editar(data)"></i>
                   </template>
                 </b-table>
+                <b-pagination size="md" :total-rows="centrosLogisticos.length" v-model="currentPage" :per-page="perPage">
+                    </b-pagination>
               </b-row>
               
               
@@ -157,6 +160,8 @@ import { urlservicios } from "../main";
 export default {
   data() {
     return {
+       currentPage:0,
+        perPage:5,
        items: [
         {
           text: "Inicio",

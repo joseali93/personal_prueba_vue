@@ -6,6 +6,11 @@
     background-color: #f8f8ff;
 }
 
+.card-header {
+    background-color: #ebeaea !important;
+    color: white;
+}
+
 @media print {
     body * {
         visibility: hidden;

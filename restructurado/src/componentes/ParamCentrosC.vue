@@ -22,7 +22,7 @@
                     </b-btn>
                     </b-input-group>
 
-                    <b-table striped hover :items="CentrosTabla"
+                    <b-table striped hover :items="CentrosTabla"  :current-page="currentPage" :per-page="perPage"
                         :fields="fields" :filter="Centro" >
                         <template slot="editar" slot-scope="data">
                         <i class="btn btn-success fa fa-pencil" @click="editar(data)"></i>
@@ -32,7 +32,8 @@
                         </template>
 
                     </b-table>
-
+                <b-pagination size="md" :total-rows="CentrosTabla.length" v-model="currentPage" :per-page="perPage">
+                    </b-pagination>
                 </b-card-body>
             </b-card>
         </b-container>
@@ -181,6 +182,8 @@ export default {
      data () {
 
     return {
+        currentPage:0,
+        perPage:5,
          items: [
         {
           text: "Inicio",

@@ -202,10 +202,7 @@ export default {
                         load
                     });
                     });
-                    this.axios
-                    .get(
-                        urlservicios + "CentrosPorCliente/" + this.selected_client._id
-                    )
+                    this.axios.get(urlservicios + "CentrosPorCliente/" + this.selected_client._id)
                     .then(response => {
                         this.centros = response.data;
 
@@ -218,6 +215,9 @@ export default {
                             load
                         });
                         });
+                    })
+                    .catch(error => {
+                        console.log(error.response)
                     });
                 } else {
                     console.log("entro");
@@ -233,10 +233,7 @@ export default {
                     console.log(
                     urlservicios + "CentrosPorCliente/" + this.selected_client._id
                     );
-                    this.axios
-                    .get(
-                        urlservicios + "CentrosPorCliente/" + this.selected_client._id
-                    )
+                    this.axios.get(urlservicios + "CentrosPorCliente/" + this.selected_client._id)
                     .then(response => {
                         console.log(response);
                         this.centros = response.data;
@@ -250,6 +247,9 @@ export default {
                             load
                         });
                         });
+                    })
+                    .catch(error => {
+                        console.log(error.response)
                     });
                 }
             } 
@@ -600,9 +600,8 @@ export default {
               load
             });
           });
-          //onsole.log(JSON.stringify(error));
-          //this.$router.replace('/inicio')
-          if (bandera == false) {
+          if(error.response='""'){
+            console.log("error de conexion");
             swal({
               title: "No hay Internet",
               text: "Revise su conexion",
@@ -621,6 +620,38 @@ export default {
                 _this.$router.replace("/inicio");
               }
             });
+          }
+          else{
+            console.log("valdiacion");
+            swal({
+              title: "Dificultades en el Servicio",
+              text: "Intente nuevamente",
+              type: "warning",
+              showCancelButton: true,
+              confirmButtonColor: "#3085d6",
+              cancelButtonColor: "#d33",
+              confirmButtonText: "Ok"
+            }).then(result => {
+              if (result.value) {
+                swal(
+                  "Se Redireccionara al pagino de inicio",
+                  "Intente luego",
+                  "warning"
+                );
+                _this.$router.replace("/inicio");
+              }
+            });
+          }
+          /*
+          if(error.response.status==500){
+            console.log("error 500");
+          }
+          */
+          console.log(JSON.stringify(error));
+          //this.$router.replace('/inicio')
+
+          if (bandera == false) {
+            
           }
         });
     } else {
@@ -721,7 +752,13 @@ export default {
 };
 </script>
 
-<style>
+<style >
+/*
+.card-header{
+    background-color: #ebeaea ;
+    color: white;
+}
+*/
 .contenedorTotal {
   padding-top: 0px;
   padding-right: 0%;

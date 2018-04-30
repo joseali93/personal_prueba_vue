@@ -44,7 +44,7 @@
                 </b-col>
             </b-row>
             <b-card fluid    class="mb-2  borderC">
-                <div slot="header" class="w-100 cardPersonalizada">
+                <div slot="header" class="w-100 ">
                     <strong class="float-left ">INFORMACIÓN DE CLIENTE</strong>
                 </div>
                 <b-row class="mb-2">
@@ -1060,14 +1060,15 @@ export default {
 
 </script>
 
-<style >
+<style modules >
+
 .cardPersonalizada card-header{
     background-color: #4db35a;
     color: white;
 }
 
 .card-header{
-    background-color: #4db35a ;
+    background-color: #4db35a !important;
     color: white;
 }
 

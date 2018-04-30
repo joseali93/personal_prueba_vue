@@ -564,14 +564,14 @@ export default {
             else{
                 detalle=this.envios.nmovilizado                                                                   
             }
-            console.log(urlservicios+"/ConsultaExcel/"+test.id_OperadorLogistico._id+"/"+centro+"/"+cliente+"/"+orden+"/"+detalle+"/"+refere+"/"+inicio+"/"+fin+"/");
+            console.log(urlservicios+"ConsultaExcel/"+test.id_OperadorLogistico._id+"/"+centro+"/"+cliente+"/"+orden+"/"+detalle+"/"+refere+"/"+inicio+"/"+fin+"/");
             
             
-            this.axios.get(urlservicios+"/ConsultaExcel/"+test.id_OperadorLogistico._id+"/"+centro+"/"+cliente+"/"+orden+"/"+detalle+"/"+refere+"/"+inicio+"/"+fin+"/")
+            this.axios.get(urlservicios+"ConsultaExcel/"+test.id_OperadorLogistico._id+"/"+centro+"/"+cliente+"/"+orden+"/"+detalle+"/"+refere+"/"+inicio+"/"+fin+"/")
             .then(response => {
                 alasql.fn.fechas= function(date)
             {
-              
+              console.log(response);
             //console.log( moment(date).format('DD/MM/YYYY, h:mm:ss'));
             //return date.toLocaleString()
             return moment(date).format('DD/MM/YYYY, h:mm:ss')
