@@ -1,12 +1,12 @@
 <template>
     <b-container fluid class="contenedorTotal">
 
-             <div >
-         <b-breadcrumb :items="items" />
-      </div>
+        <div class="breadPersonalizado">
+            <b-breadcrumb :items="items" />
+        </div>
        
         
-        <b-container fluid>
+        <b-container fluid class="contenedorInterno">
             <header class="content-heading" slot="header">
                 <h3>Consultar Trazabilidad</h3>                
             </header>

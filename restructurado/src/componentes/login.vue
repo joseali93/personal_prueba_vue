@@ -123,7 +123,7 @@ export default {
                 correo:this.correo
             }
             console.log(objetoLogin);
-           //console.log(+"/UsuarioA/"+this.password+"/"+this.correo);
+           console.log(urlservicios+"/UsuarioA/"+this.password+"/"+this.correo);
             this.axios.get(urlservicios+"UsuarioA/"+this.password+"/"+this.correo)
             .then((response) => {
               console.log(response);
@@ -154,6 +154,7 @@ export default {
             }).catch(function(error){
                 console.log(JSON.stringify(error));
                 console.log(error.response);
+                /*
                 if(error.response.status==401)
                 {
                     console.log("no esta autorizado");
@@ -167,8 +168,8 @@ export default {
                 {
                     console.log("no esta autorizado");
                 }
+                */
                 
-                /*
               if(error.response){
                 // The request was made and the server responded with a status code
                 // that falls out of the range of 2xx    
@@ -194,7 +195,7 @@ export default {
                   )                 
               }
               //console.log("error de config"+JSON.stringify(error.config));
-                */
+                
             })
 
           }

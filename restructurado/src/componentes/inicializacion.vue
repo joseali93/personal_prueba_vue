@@ -1,9 +1,9 @@
 <template>
    <b-container fluid class="contenedorTotal">
-      <div >
+      <div class="breadPersonalizado">
          <b-breadcrumb :items="items" />
       </div>
-       <b-container fluid>
+       <b-container fluid class="contenedorInterno">
           <b-card class="cards">
             <header class="content-heading text-capitalize">
                 Bienvenido {{nombreusu}}
@@ -38,6 +38,9 @@ export default {
 </script>
 
 <style>
+.breadPersonalizado{
+
+}
 .contenedorTotal {
   padding-top: 0px;
   padding-right: 0%;

@@ -9,8 +9,8 @@
             <div class="sidenav-header d-flex align-items-center justify-content-center">
             <div class="sidenav-header-inner text-center " >
               <b-link to="/inicio" class="active">
-                <b-img :src="servidor+imagen" fluid alt="Responsive image" 
-                class="img-fluid   mCS_img_loaded"/>
+                <b-img :src="servidor+imagen" fluid alt="Responsive image"  
+                class="img-fluid   mCS_img_loaded imagenpersonalizada"/>
               </b-link>
             </div>
             <div class="sidenav-header-logo">
@@ -89,8 +89,10 @@
         </div>
     </nav>
     <div id="div-prueba" class="page home-page">
-      <!-- NAVBAR-->
-      <header class="header ">
+      <!-- NAVBAR
+      
+      -->
+      <header class="header " id="headerpersonalizado" >
         <nav class="navbar ">
           <div class="container-fluid">
             <div class="navbar-holder d-flex align-items-center justify-content-between">
@@ -149,7 +151,7 @@
       </section>
 
       <!-- FOOTER  -->
-      <footer class="main-footer">
+      <footer class="main-footer" id="footerpersonalizado">
         <div class="container-fluid">
           <div class="row">
             <div class="col-sm-6">
@@ -251,6 +253,8 @@ export default {
           $("#nav-prueba").addClass(
             "side-navbar mCustomScrollbar _mCS_1 shrink"
           );
+          $("#div-prueba").css({"width": "96%"})
+          $("footer").css({"width":"96%"})
         });
         this.estado = false;
       } else {
@@ -260,9 +264,12 @@ export default {
           $("#div-prueba")
             .removeClass("page home-page active")
             .addClass("page home-page");
+             $("#div-prueba").css({"width": "95%"})
           $("#nav-prueba")
             .removeClass("side-navbar mCustomScrollbar _mCS_1 shrink")
             .addClass("side-navbar mCustomScrollbar _mCS_1");
+            $("#div-prueba").css({"width": "87%"})
+             $("footer").css({"width":"87%"})
         });
       }
     },
@@ -331,7 +338,10 @@ export default {
 
 <style>
 
-
+.imagenpersonalizada:hover{
+  transition-duration: 3s;
+  transform: rotate(360deg);
+}
 nav.side-navbar span {
   display: initial;
 }

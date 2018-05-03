@@ -764,6 +764,7 @@ export default {
                         this.axios
                             .post(urlservicios+"AsignarOrdenCurrier/",obj)
                             .then(response => {
+                                console.log(response);
                             this.Documento = response.data;
                             if(this.Documento.validacion==false){
                           

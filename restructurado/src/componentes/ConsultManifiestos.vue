@@ -1,11 +1,11 @@
 <template>
     <b-container fluid class="contenedorTotal">
 
-        <div >
+        <div class="breadPersonalizado">
             <b-breadcrumb :items="items" />
         </div>
 
-        <b-container fluid>
+        <b-container fluid class="contenedorInterno">
             <b-card v-show="ocultar" class="cards">
                 <!--
             <header slot="header" class="content-heading">

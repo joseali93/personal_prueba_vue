@@ -4,6 +4,38 @@
     padding-bottom: 0px;
     padding-left: 0%;
     background-color: #f8f8ff;
+    /*
+    position: absolute;
+    top: 35%;
+    */
+}
+
+.headerpersonalizado {
+    position: fixed;
+    z-index: 1000;
+    width: 100%;
+}
+
+
+/*
+.footerpersonalizado {
+    position: fixed;
+    z-index: 1000;
+    width: 100%;
+}
+*/
+
+.contenedorInterno {
+    position: absolute;
+    top: 25%;
+}
+
+.breadPersonalizado {
+    position: absolute;
+    top: 11%;
+    left: 0.5%;
+    z-index: 100;
+    width: 100%;
 }
 
 .card-header {
@@ -1193,7 +1225,11 @@ section.updates .activities .content strong {
 }
 
 footer.main-footer {
-    position: absolute;
+    /*
+        position: absolute;
+    */
+    z-index: 100;
+    position: fixed;
     width: 100%;
     bottom: 0;
     background: #222;

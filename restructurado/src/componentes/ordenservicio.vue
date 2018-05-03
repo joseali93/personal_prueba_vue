@@ -1,10 +1,10 @@
 <template>
 <!-- EN ESTE SE PERMITE LA GENERACION DE LOS DETALLES ASOCIADOS A UN CLIENTE Y CENTOR DE COSTO -->
     <b-container fluid class="contenedorTotal">
-         <div >
+         <div class="breadPersonalizado">
          <b-breadcrumb :items="items" />
         </div>
-       <b-container fluid>
+       <b-container fluid class="contenedorInterno">
 
         <b-card class="cards">
           <b-row>
@@ -1778,7 +1778,8 @@ export default {
           },
           detalle: this.DetalleServicio
         };
-        //////console.log(this.DetalleServicio);
+        console.log(JSON.stringify(objeto));
+        console.log(this.DetalleServicio);
         this.axios
           .post(urlservicios + "GuardarOrden", objeto)
           .then(response => {

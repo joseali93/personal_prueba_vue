@@ -38,7 +38,9 @@
             </b-card>
         </b-container>
         <!-- Modal Crear Centro logistico -->
-        <b-modal id="modalNuevo" ref="modalNuevo" size="lg" >
+        <b-modal id="modalNuevo" ref="modalNuevo" size="lg" 
+        no-close-on-backdrop
+        no-close-on-esc>
             <b-container fluid>
                 <b-form-checkbox id="status_nuevo"
                      v-model="status"
@@ -81,6 +83,18 @@
                         horizontal
                         :label-cols="4"
                         breakpoint="md"
+                        description="Digite codigo Centro de Costo x Cliente"
+                        label="Codigo Centro de Costo   "
+                        label-for="direccionCC">
+                            <b-form-input id="CCxCliente" v-model="ModalNew.CCxCliente"
+                            :state="statusCCxCliente"
+                            maxlength="20"
+                            @input="ValidarTexto('CCxCliente','nuevo')"></b-form-input>
+                </b-form-group>
+                <b-form-group id="fieldsetHorizontal"
+                        horizontal
+                        :label-cols="4"
+                        breakpoint="md"
                         description="Digite la descripción del Centro de Costo"
                         label="Descripción"
                         label-for="descripcionCC">
@@ -105,7 +119,9 @@
             </div>
         </b-modal>
         <!-- Modal Editar Centro Costo -->
-        <b-modal id="modalEditar" ref="modalEditar" size="lg" >
+        <b-modal id="modalEditar" ref="modalEditar" size="lg"
+        no-close-on-backdrop
+        no-close-on-esc >
             <b-container fluid>
                 <b-form-checkbox id="status_editar"
                      v-model="status_editar"
@@ -143,6 +159,18 @@
                         maxlength="100"
                         @input="ValidarTexto('direccionCCED','editar')"></b-form-input>
             </b-form-group>
+            <b-form-group id="fieldsetHorizontal"
+                        horizontal
+                        :label-cols="4"
+                        breakpoint="md"
+                        description="Digite codigo Centro de Costo x Cliente"
+                        label="Codigo Centro de Costo   "
+                        label-for="direccionCC">
+                            <b-form-input id="CCxCliente" v-model="ModalEdit.codigo_cc"
+                            :state="statusCCxCliente"
+                            maxlength="20"
+                            @input="ValidarTexto('CCxCliente','editar')"></b-form-input>
+                </b-form-group>
             <b-form-group id="fieldsetHorizontal"
                     horizontal
                     :label-cols="4"
@@ -216,8 +244,10 @@ export default {
         ModalNew:{
           nombre:'',
           direccion:'',
-          descripcion:''
+          descripcion:'',
+          CCxCliente:''
         },
+        statusCCxCliente:null,
         statusnombre:null,
         statusdireccion:null,
         statusdescripcion:null
@@ -268,6 +298,15 @@ export default {
                     }
                 }
                 if(e.match(/^[0-9a-zA-Z\s\-]*$/)){
+                    if(id=='CCxCliente')
+                    {
+                        if(e.length>20){
+                            this.statusCCxCliente=false
+                        }
+                        else{
+                            this.statusCCxCliente=null
+                        }
+                    }
                     if(id=='nombreCentroC')
                     {
                         if(e.length>100){
@@ -319,6 +358,15 @@ export default {
                         }
                     }
                 }
+                 if(id=='CCxCliente')
+                    {
+                        if(e.length>20){
+                            this.statusCCxCliente=false
+                        }
+                        else{
+                            this.statusCCxCliente=null
+                        }
+                    }
                 if(id=='direccionCCED'){
 
                     if(this.ModalEdit.direccion.match(/^[0-9a-zA-Z\s\#\-]+$/)){
@@ -415,6 +463,7 @@ export default {
                 id_padre: this.centrocostopadre._id,
                 nombre:this.ModalNew.nombre,
                 descripcion:this.ModalNew.descripcion,
+                codigo_cc:this.ModalNew.CCxCliente,
                 direccion:this.ModalNew.direccion
             }
             
@@ -425,6 +474,7 @@ export default {
                 id_padre: null,
                 nombre:this.ModalNew.nombre,
                 descripcion:this.ModalNew.descripcion,
+                codigo_cc:this.ModalNew.CCxCliente,
                 direccion:this.ModalNew.direccion
             }
         }
@@ -564,6 +614,7 @@ export default {
         //console.log(value.item);
         this.indice=value.index
         this.ModalEdit=Object.assign({},value.item)
+        console.log(this.ModalEdit);
         if(this.ModalEdit.id_padre==null){
             console.log("es padre")
             this.status_editar='accepted'

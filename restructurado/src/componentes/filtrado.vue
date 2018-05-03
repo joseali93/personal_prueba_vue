@@ -1,10 +1,10 @@
 <template>
     <b-container fluid class="contenedorTotal">
-        <div>
+        <div class="breadPersonalizado">
             <b-breadcrumb :items="items" />
         </div>
                
-        <b-container fluid>
+        <b-container fluid class="contenedorInterno">
              
                 <header class="content-heading" slot="header">
                 <h3>Consultar Ordenes de Servicio</h3>

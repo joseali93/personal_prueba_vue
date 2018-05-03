@@ -25,8 +25,9 @@ import ConfigCentroLogistico from '../componentes/ParamCentroL.vue'
 
 
 import EnterExitComponent from '../componentes/EntradaSalidas.vue'
-export const rutas = [    
-    {
+mode: 'history'
+
+export const rutas = [{
         path: '/prueba',
         component: prueba,
     },
@@ -37,84 +38,104 @@ export const rutas = [
     {
         path: '/inicio/',
         component: NavComponent,
-        children:[
-            {
-                path: 'configcentrol',  component: ConfigCentroLogistico,    
-                
+        children: [{
+                path: 'configcentrol',
+                component: ConfigCentroLogistico,
+
             },
             {
-                path: 'configcliente',  component: ConfigCliente,    
-                
+                path: 'configcliente',
+                component: ConfigCliente,
+
             },
             {
-                path: 'configcentroc',  component: ConfigCentroCosto,    
-                
+                path: 'configcentroc',
+                component: ConfigCentroCosto,
+
             },
             {
-                path: '',  component: InicializaComponent,    
-                
+                path: '',
+                component: InicializaComponent,
+
             },
             {
-                path: 'orden',  component: OrdenComponent,    
-                
+                path: 'orden',
+                component: OrdenComponent,
+
             },
             {
-                path: 'ordenservicio',  component: OrdenServiceComponent,    
-                
+                path: 'ordenservicio',
+                component: OrdenServiceComponent,
+
             },
             {
-                path: 'consultar',  component: ConsultComponent,props: true,
-                children:[
-                    {
-                        path: '',  component: Blank,  props: true,  
-                        
+                path: 'consultar',
+                component: ConsultComponent,
+                props: true,
+                children: [{
+                        path: '',
+                        component: Blank,
+                        props: true,
+
                     },
                     {
-                        path: 'resultado',  component: ResultComponent,  props: true,  
-                        
-                    },      
+                        path: 'resultado',
+                        component: ResultComponent,
+                        props: true,
+
+                    },
                     {
-                        path: 'detalles',  component: DetailComponent,  props: true,  
-                        
-                    },      
+                        path: 'detalles',
+                        component: DetailComponent,
+                        props: true,
+
+                    },
                     {
-                        path:'*',
+                        path: '*',
                         redirect: '/404'
-                    }        
-   
-                ]                    
+                    }
+
+                ]
             },
             {
                 path: 'trazabilidad',
-                component: ConsultTraceComponent, props: true,
-                children:[
-                    {
-                        path: '',  component: Blank,  props: true,  
-                        
+                component: ConsultTraceComponent,
+                props: true,
+                children: [{
+                        path: '',
+                        component: Blank,
+                        props: true,
+
                     },
                     {
-                        path: 'listado',  component: ListadoComponent,  props: true,  
-                        
+                        path: 'listado',
+                        component: ListadoComponent,
+                        props: true,
+
                     },
                     {
-                        path: 'resultado',  component: ResultTraceComponent,  props: true,  
-                        
+                        path: 'resultado',
+                        component: ResultTraceComponent,
+                        props: true,
+
                     },
-                    
+
                     {
-                        path:'*',
+                        path: '*',
                         redirect: '/404'
-                    } 
+                    }
                 ]
             },
             {
                 path: 'entradasalida',
-                component: EnterExitComponent, props: true,
-                children:[
-                    {
-                        path: '',  component: Blank,  props: true,  
-                        
-                    }, 
+                component: EnterExitComponent,
+                props: true,
+                children: [{
+                        path: '',
+                        component: Blank,
+                        props: true,
+
+                    },
                     {
                         path: 'ModalEntrada',
                         component: MEntrada,
@@ -122,21 +143,23 @@ export const rutas = [
                     {
                         path: 'ModalSalida',
                         component: MSalida,
-                    },   
+                    },
                     {
-                        path:'*',
+                        path: '*',
                         redirect: '/404'
-                    } 
+                    }
                 ]
             },
             {
                 path: 'manifiestos',
-                component: ManifiestComponent, props: true,
-                children:[
-                    {
-                        path: '',  component: Blank,  props: true,  
-                        
-                    }, 
+                component: ManifiestComponent,
+                props: true,
+                children: [{
+                        path: '',
+                        component: Blank,
+                        props: true,
+
+                    },
                     {
                         path: 'resultado',
                         component: ResultManifiest,
@@ -147,12 +170,14 @@ export const rutas = [
                     },
                     {
                         path: 'entradasalida',
-                        component: EnterExitComponent, props: true,
-                        children:[
-                            {
-                                path: '',  component: Blank,  props: true,  
-                                
-                            }, 
+                        component: EnterExitComponent,
+                        props: true,
+                        children: [{
+                                path: '',
+                                component: Blank,
+                                props: true,
+
+                            },
                             {
                                 path: 'ModalEntrada',
                                 component: MEntrada,
@@ -160,22 +185,22 @@ export const rutas = [
                             {
                                 path: 'ModalSalida',
                                 component: MSalida,
-                            },   
+                            },
                             {
-                                path:'*',
+                                path: '*',
                                 redirect: '/404'
-                            } 
+                            }
                         ]
                     }
-                    
+
                 ]
             }
-            
+
         ]
-    }, 
+    },
     {
         path: '/404',
         component: NotFoundComponent
     },
- 
-    ]    
+
+]

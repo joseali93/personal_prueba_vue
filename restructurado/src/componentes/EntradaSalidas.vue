@@ -1,9 +1,9 @@
 <template>
     <b-container fluid class="contenedorTotal">
-      <div>
+      <div class="breadPersonalizado">
         <b-breadcrumb :items="itemsbr" />
       </div>
-      <b-container fluid>
+      <b-container fluid class="contenedorInterno">
         
       <b-card class="cards">
         <b-row class="my-1 ">
@@ -460,6 +460,7 @@ export default {
             //console.log(this.processSelected.modal)
             console.log(envio);
             var validacion
+            
             this.axios
             .post(urlservicios+"GenerarManifiestoWeb", envio)
             .then(response => {
@@ -534,41 +535,9 @@ export default {
 
                 }
 
-              })
-                  /*
-                  swal("Movilizados con Manifiesto Creado", 
-                        ""+n_movilizados,
-                        "error",{
-                              allowEnterKey: true,
-                        });
-                        */
-                }
-                /*
-                this.validacionModal=response.validacionModal
-                if(this.validacionModal=true)
-                {
-                    localStorage.removeItem('Manifiesto');
-                    console.log("mostramos modal");
-                    console.log(itemsmodal);
-                    console.log(inforvaria);
-                    setTimeout(() => {
-                        bus.$emit('modalinfo', {
-                            itemsmodal,inforvaria
-                        })
-                        }, )
-            
-                    this.$router.push(this.processSelected.modal)
-                }
-                else
-                {
-                    console.log("no mostramos modal");
-                    swal("Debe completarse", 
-                        "No se puede Generar el Manifiesto en este momento",
-                        "error",{
-                              allowEnterKey: true,
-                        });
-                }
-                */
+              });
+
+                }    
             })
             
     },
@@ -963,6 +932,7 @@ export default {
       this.axios
         .get(urlservicios + "Procesos/" + infologin.id_OperadorLogistico._id)
         .then(response => {
+          console.log(response);
           var load = false;
           setTimeout(() => {
             bus.$emit("load", {
