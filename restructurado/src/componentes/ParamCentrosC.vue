@@ -565,7 +565,8 @@ export default {
                         id_padre: this.centrocostopadreEditar,
                         nombre:this.ModalEdit.nombre,
                         descripcion:this.ModalEdit.descripcion,
-                        direccion:this.ModalEdit.direccion
+                        direccion:this.ModalEdit.direccion,
+                        codigo_cc:this.ModalEdit.codigo_cc
                     }
                 }
                 else{
@@ -575,7 +576,8 @@ export default {
                     id_padre: this.centrocostopadreEditar._id,
                     nombre:this.ModalEdit.nombre,
                     descripcion:this.ModalEdit.descripcion,
-                    direccion:this.ModalEdit.direccion
+                    direccion:this.ModalEdit.direccion,
+                    codigo_cc:this.ModalEdit.codigo_cc
                 }
                 }
                  
