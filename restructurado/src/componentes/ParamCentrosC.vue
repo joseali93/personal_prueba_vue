@@ -458,10 +458,11 @@ export default {
         //console.log(this.Cliente);
         //console.log(this.status);
         if(this.status=='not_accepted'){
+            console.log("sera hijo");
             objeto ={
                 id_cliente:this.Cliente._id,
                 id_padre: this.centrocostopadre._id,
-                nombre:this.ModalNew.nombre,
+                nombre:this.centrocostopadre.nombre+' - '+this.ModalNew.CCxCliente+' - '+this.ModalNew.nombre,
                 descripcion:this.ModalNew.descripcion,
                 codigo_cc:this.ModalNew.CCxCliente,
                 direccion:this.ModalNew.direccion
@@ -469,6 +470,7 @@ export default {
             
         }
         if(this.status=='accepted'){
+            console.log("sera papa");
             objeto ={
                 id_cliente:this.Cliente._id,
                 id_padre: null,
@@ -502,6 +504,7 @@ export default {
                     }
                     
                 })
+                
         
        //this.$refs.modalNuevo.hide()
         }
