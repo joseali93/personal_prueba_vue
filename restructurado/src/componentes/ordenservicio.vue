@@ -105,7 +105,6 @@
                     </b-col>
                 </b-row>
                 
-                
                     <b-card no-body v-show="selectservice" class=" w-100 cards" 
                     style="
                     padding-left: 0px;
@@ -1633,6 +1632,9 @@ export default {
         console.log(this.selectservice); 
         if(this.selectservice==null||this.selectservice==''||this.selectservice=='null'){
             console.log("no hago nada");
+            this.inputs=''
+            this.objeto=''
+            this.tabdinamico=true
         }
         else{
             this.selectservicio=this.selectservice
@@ -1645,13 +1647,18 @@ export default {
             //////console.log(this.objeto)
             var bandera_dinamico = false;
             for (var x = 0; x < this.inputs.campos.length; x++) {
-                //////console.log(this.inputs.campos[x]);
+                console.log(this.inputs.campos[x]);
                 if (this.inputs.campos[x].espieza == true) {
                 //console.log("algo dinamico");
+                bandera_dinamico=true
                 this.camposdinamicos = true;
                 }
+                else{
+                  this.camposdinamicos = true;
+                 
+                }
             }
-            if (this.camposdinamicos == true) {
+            if (this.camposdinamicos == true&&bandera_dinamico==true) {
                 console.log("algo dinamico");
                 this.tabdinamico = false;
             } else {
@@ -1659,6 +1666,8 @@ export default {
                 this.tabdinamico = true;
             }
             console.log(this.camposdinamicos);
+            console.log("----tab---");
+            console.log(this.tabdinamico);
             //this.load=false
             var load2 = false;
             setTimeout(() => {
@@ -1673,62 +1682,7 @@ export default {
         }
         
     },
-    campos(value) {
-      //////console.log("inputs");
-      //this.load = true;
-      var load = true;
-      setTimeout(() => {
-        bus.$emit("load", {
-          load
-        });
-      });
-      for (var i = 0; i < this.serviciosurl.length; i++) {
-        if (this.serviciosurl[i]._id == value.target.value) {
-          this.selectservicio = this.serviciosurl[i];
-        }
-      }
-      this.axios
-        .get(
-          urlservicios +
-            "estructuraf/" +
-            this.selectproducto._id +
-            "/" +
-            this.selectservicio._id
-        )
-        .then(response => {
-          this.inputs = response.data;
-
-          ////console.log(this.inputs);
-          this.objeto = this.inputs.objeto;
-          //////console.log(this.objeto)
-          var bandera_dinamico = false;
-          for (var x = 0; x < this.inputs.campos.length; x++) {
-            //////console.log(this.inputs.campos[x]);
-            if (this.inputs.campos[x].espieza == true) {
-              //console.log("algo dinamico");
-              this.camposdinamicos = true;
-            }
-          }
-          if (this.camposdinamicos == true) {
-            console.log("algo dinamico");
-            this.tabdinamico = false;
-          } else {
-            this.camposdinamicos = false;
-            this.tabdinamico = true;
-          }
-          console.log(this.camposdinamicos);
-          //this.load=false
-          var load2 = false;
-          setTimeout(() => {
-            bus.$emit("load", {
-              load2
-            });
-          });
-        })
-        .catch(function(error) {
-          ////////console.log("error estruc -> "+JSON.stringify(error));
-        });
-    },
+ 
     envioServicio() {
       if (
         this.DetalleServicio == "" ||
