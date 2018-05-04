@@ -571,15 +571,23 @@ export default {
             .then(response => {
                 alasql.fn.fechas= function(date)
             {
-              console.log(response);
+              //console.log(response);
             //console.log( moment(date).format('DD/MM/YYYY, h:mm:ss'));
             //return date.toLocaleString()
             return moment(date).format('DD/MM/YYYY, h:mm:ss')
             }
-                console.log(response);
+                //console.log(response);
                 var consulta=response.data.select
                 this.resul=response.data.movilizadosobjet    
                 alasql(consulta,[this.resul])      
+            })
+            .catch(function(error){
+                console.log(error);
+                swal(
+                'Error al descargar el reporte!',
+                'Intente Nuevamente',
+                'warning'
+                )   
             })
             
 
