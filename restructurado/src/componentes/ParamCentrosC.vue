@@ -85,7 +85,7 @@
                         breakpoint="md"
                         description="Digite codigo Centro de Costo x Cliente"
                         label="Codigo Centro de Costo   "
-                        label-for="direccionCC">
+                        label-for="CCxCliente">
                             <b-form-input id="CCxCliente" v-model="ModalNew.CCxCliente"
                             :state="statusCCxCliente"
                             maxlength="20"
@@ -527,19 +527,20 @@ export default {
       },
       actualizar(){
         if(this.ModalEdit.nombre==''||
-                this.ModalEdit.direccion==''||
-                this.ModalEdit.descripcion==''
-               ){
+                this.ModalEdit.direccion=='')//||
+                //this.ModalEdit.descripcion==''
+               {
                     if(this.ModalEdit.nombre==''){
                         this.statusnombre=false
                     }
                     if(this.ModalEdit.direccion==''){
                         this.statusdireccion=false
                     }
+                    /*
                     if(this.ModalEdit.descripcion==''){
                         this.statusdescripcion=false
                     }
-                    
+                    */
                     swal(
                     'Error!',
                     'Para Actualizar deben estar completos todos los campos',
@@ -547,8 +548,8 @@ export default {
                     )
             }
             if(this.statusnombre==false||
-            this.statusdireccion==false||
-            this.statusdescripcion==false
+            this.statusdireccion==false//||
+            //this.statusdescripcion==false
            ){
                 //console.log("alguno no cumple formato");
                  swal(
