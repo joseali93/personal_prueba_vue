@@ -43,7 +43,7 @@
                             
                             </b-form-select>
                             -->
-                            <v-select v-model="selectedCC" label="nombre" placeholder="Seleccione el Cliente"
+                            <v-select v-model="selectedCC" label="nombre_concatenado" placeholder="Seleccione el Cliente"
                       :options="centros" 
                       :disabled="habilitar"></v-select>
                         </b-form-group>

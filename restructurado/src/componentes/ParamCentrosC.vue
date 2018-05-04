@@ -462,10 +462,11 @@ export default {
             objeto ={
                 id_cliente:this.Cliente._id,
                 id_padre: this.centrocostopadre._id,
-                nombre:this.centrocostopadre.nombre+' - '+this.ModalNew.CCxCliente+' - '+this.ModalNew.nombre,
+                nombre:this.ModalNew.nombre,
                 descripcion:this.ModalNew.descripcion,
                 codigo_cc:this.ModalNew.CCxCliente,
-                direccion:this.ModalNew.direccion
+                direccion:this.ModalNew.direccion,
+                nombre_concatenado:this.centrocostopadre.nombre+' - '+this.ModalNew.CCxCliente+' - '+this.ModalNew.nombre
             }
             
         }
@@ -477,7 +478,8 @@ export default {
                 nombre:this.ModalNew.nombre,
                 descripcion:this.ModalNew.descripcion,
                 codigo_cc:this.ModalNew.CCxCliente,
-                direccion:this.ModalNew.direccion
+                direccion:this.ModalNew.direccion,
+                nombre_concatenado:this.ModalNew.nombre
             }
         }
          
@@ -562,6 +564,7 @@ export default {
                 console.log(this.centrocostopadreEditar);
                 var objeto
                 if(this.centrocostopadreEditar==null){
+                    console.log("edito pade");
                     objeto ={
                         id_centro_costo:this.ModalEdit._id,
                         id_cliente:this.ModalEdit.id_cliente,
@@ -569,10 +572,13 @@ export default {
                         nombre:this.ModalEdit.nombre,
                         descripcion:this.ModalEdit.descripcion,
                         direccion:this.ModalEdit.direccion,
-                        codigo_cc:this.ModalEdit.codigo_cc
+                        codigo_cc:this.ModalEdit.codigo_cc,
+                          nombre_concatenado:this.ModalEdit.nombre
+
                     }
                 }
                 else{
+                    console.log("edito hijo");
                     objeto ={
                         id_centro_costo:this.ModalEdit._id,
                     id_cliente:this.ModalEdit.id_cliente,
@@ -580,7 +586,9 @@ export default {
                     nombre:this.ModalEdit.nombre,
                     descripcion:this.ModalEdit.descripcion,
                     direccion:this.ModalEdit.direccion,
-                    codigo_cc:this.ModalEdit.codigo_cc
+                    codigo_cc:this.ModalEdit.codigo_cc,
+                    nombre_concatenado:this.centrocostopadreEditar.nombre+' - '+this.ModalEdit.codigo_cc+' - '+this.ModalEdit.nombre
+
                 }
                 }
                  

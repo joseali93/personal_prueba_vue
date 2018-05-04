@@ -61,7 +61,7 @@ DE LA ORDEN DE SERVICIO -->
                     @input="centroSeleccionado()" :disabled="habilitar"
                       ></v-select>
                     -->
-                    <v-select v-model="selected_center" label="nombre" 
+                    <v-select v-model="selected_center" label="nombre_concatenado" 
                     placeholder="Seleccione el Centro de Costo" :options="centros" 
                     @input="centroSeleccionado()" :disabled="habilitar"
                       ></v-select>

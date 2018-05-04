@@ -39,7 +39,7 @@
                                 text-field="nombre" value-field="_id" required :disabled="disable">
                                 </b-form-select>
                                 -->
-                                <v-select v-model="selectedCC" label="nombre" 
+                                <v-select v-model="selectedCC" label="nombre_concatenado" 
                                 v-bind:style="validatecampo" :disabled="disable"
                                 placeholder="Seleccione el Centro de Costos" id="costoselect"
                                 :options="centros"></v-select>
