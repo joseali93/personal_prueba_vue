@@ -32,6 +32,9 @@
             <b-row>
             <h1>MANIFIESTO DE BODEGA ENTRADA</h1>
             </b-row>
+             <b-row>
+              <label class="labels">Numero de Manifiesto: <strong class="text-capitalize">{{nmanifiesto}}</strong></label>
+            </b-row>
             <b-row>
               <label class="labels">Ciudad: <strong class="text-capitalize">{{otrainfo[0].ciudad}}</strong></label>
             </b-row>
@@ -54,10 +57,11 @@
           <b-table id="mitablita" responsive="sm" bordered :fixed="true"	
           outlined :items="itemsmodal" :fields="fields" class="juana">
            <template slot="referencia" slot-scope="data">
-                    <!--                     
+                                      
                       {{data.item.referencia}}
-                      -->
+                      <!--   
                       {{referencias(data.item)}}
+                      -->
                     </template>
           </b-table>
 
@@ -108,6 +112,7 @@ export default {
     },
     data(){
         return{
+          nmanifiesto:'',
           imagen:'',
           servicios:'',
             fecha:  moment().format("DD/MM/YYYY"),
@@ -167,7 +172,7 @@ export default {
           $("#print").html($("#prueba").html());
           window.print();
 
-          $("#print").remove();
+        $("#print").remove();
         }
       
     },
@@ -182,15 +187,16 @@ export default {
      
         this.itemsmodal = userObject.itemsmodal
         this.otrainfo= userObject.inforvaria
-        
+        this.nmanifiesto=userObject.nmanifiesto
       }.bind(this))
     },
 }
 </script>
 
 <style>
+/*
         @import url("../css/PrintManifest.css") print;
-
+*/
 .labels{
   font-size: 20px;
 }

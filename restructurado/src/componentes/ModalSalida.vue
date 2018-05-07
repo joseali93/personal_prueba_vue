@@ -35,6 +35,9 @@
 
                     <h1>MANIFIESTO DE BODEGA SALIDA</h1>
                     </b-row>
+                     <b-row>
+                    <label class="labels">Numero de Manifiesto: <strong class="text-capitalize">{{nmanifiesto}}</strong></label>
+                    </b-row>
                     <b-row>
                     <h1>Ciudad: <strong class="text-capitalize"> {{otrainfo[0].ciudad}}</strong></h1> 
                     </b-row>
@@ -54,13 +57,15 @@
                 </b-row>
                 <b-row class="my-5">
                 <b-col class="my-5">
-                <b-table id="mitablita" responsive="sm" bordered	outlined :items="itemsmodal"
+                <b-table id="mitablita" responsive="sm"  bordered :fixed="true"	
+                    outlined  :items="itemsmodal"
                  :fields="fields2" class="juana">
                     <template slot="referencia" slot-scope="data">
-                        <!--
+                        
                         {{data.item.referencia}}
-                        -->
+                        <!--
                         {{referencias(data.item)}}
+                        -->
                     </template>
                  
                  </b-table>
@@ -121,6 +126,7 @@ export default {
     },
     data(){
         return{
+            nmanifiesto:'',
             servicios:'',
             imagen:'',
             fecha:  moment().format("DD/MM/YYYY"),
@@ -203,6 +209,8 @@ export default {
         this.itemsmodal = userObject.itemsmodal
         console.log(this.itemsmodal);
         this.otrainfo= userObject.inforvaria
+        this.nmanifiesto=userObject.nmanifiesto
+        
         if(this.otrainfo){
 
         }
@@ -215,7 +223,7 @@ export default {
 }
 </script>
 <style  scopped>
-
+            /*
             @import url("../css/PrintManifest.css") print;
-
+            */
         </style>

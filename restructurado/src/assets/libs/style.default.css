@@ -63,12 +63,15 @@
     .impresion {
         margin: 5rem;
     }
-    /*
+    .table td, .table th{
+        padding: 0rem !important;
+    }
+    
     @page {  size: letter portrait;
         margin: 0cm 0cm 0cm 0cm;
    
     } 
-    */
+    
     .table,
     td,
     th {
@@ -78,7 +81,7 @@
         /*
         page-break-before: left;
         */
-        padding: 2px;
+        padding: 1px;
     }
     #mitablita {
         padding: 5px;
@@ -86,7 +89,7 @@
         background-color: #495057;
         */
         font-size: 9pt;
-        width: 90% !important;
+        width: 95% !important;
         /*
         height: auto;
         

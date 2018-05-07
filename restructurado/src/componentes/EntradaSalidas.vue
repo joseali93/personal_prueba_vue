@@ -472,9 +472,10 @@ export default {
                     console.log("mostramos modal");
                     console.log(itemsmodal);
                     console.log(inforvaria);
+                    var nmanifiesto=response.data.manifiesto
                     setTimeout(() => {
                         bus.$emit('modalinfo', {
-                            itemsmodal,inforvaria
+                            itemsmodal,inforvaria,nmanifiesto
                         })
                         }, )
             
