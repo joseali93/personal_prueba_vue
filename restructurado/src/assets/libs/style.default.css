@@ -59,7 +59,11 @@
         bottom: 0;
         /* Because it's footer */
     }
-    .imgpr {}
+    .imgpr {
+
+        width: 250px !important;
+        height: auto;
+    }
     .impresion {
         margin: 5rem;
     }

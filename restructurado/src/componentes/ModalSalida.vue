@@ -169,7 +169,13 @@ export default {
             //console.log("entro a Total unidades");
 
             for(var x=0;x<this.itemsmodal.length;x++){
+                if(this.itemsmodal[x].unidades==undefined||this.itemsmodal[x].unidades===undefined||
+                    this.itemsmodal[x].unidades==''||this.itemsmodal[x].unidades===''){
+                retornar=retornar+0
+                }
+                else{
                 retornar=retornar+parseInt(this.itemsmodal[x].unidades)
+                }
             }
             return retornar
         },
