@@ -171,6 +171,19 @@ export default {
                                 this.$router.replace('/inicio/manifiestos/resultado')
                             }
                         })
+                        .catch(function(error) {
+                        var load = false;
+                        setTimeout(() => {
+                            bus.$emit("load", {
+                            load
+                            });
+                        });
+                        swal(
+                            "Se presento un problema",
+                            "Intente nuevamente, por favor",
+                            "warning"
+                        );
+                    });
                 
             }
             
@@ -236,7 +249,7 @@ export default {
                     //this.$router.replace('/inicio')
                     if(bandera==false){
                         swal({
-                        title: 'No hay Internet',
+                        title:  "Se presento un problema",
                         text: "Revise su conexion",
                         type: 'warning',
                         showCancelButton: true,

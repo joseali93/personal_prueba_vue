@@ -460,7 +460,12 @@ export default {
             //console.log(this.processSelected.modal)
             console.log(envio);
             var validacion
-            
+            var load = true;
+                        setTimeout(() => {
+                            bus.$emit("load", {
+                            load
+                            });
+                        });
             this.axios
             .post(urlservicios+"GenerarManifiestoWeb", envio)
             .then(response => {
@@ -538,8 +543,27 @@ export default {
 
               });
 
-                }    
+                }  
+                var load = false;
+                        setTimeout(() => {
+                            bus.$emit("load", {
+                            load
+                            });
+                        });  
             })
+            .catch(function(error) {
+                        var load = false;
+                        setTimeout(() => {
+                            bus.$emit("load", {
+                            load
+                            });
+                        });
+                        swal(
+                            "Se presento un problema",
+                            "Intente nuevamente, por favor",
+                            "warning"
+                        );
+                    });
             
     },
     digitar(value) {
@@ -623,12 +647,7 @@ export default {
               this.selected
           )
           .then(response => {
-            var load = false;
-            setTimeout(() => {
-              bus.$emit("load", {
-                load
-              });
-            });
+            
             console.log(response);
             this.mensaje = response.data;
             if (this.mensaje.message) {
@@ -741,7 +760,26 @@ export default {
               }
               
             }
-          });
+            var load = false;
+            setTimeout(() => {
+              bus.$emit("load", {
+                load
+              });
+            });
+          })
+          .catch(function(error) {
+                        var load = false;
+                        setTimeout(() => {
+                            bus.$emit("load", {
+                            load
+                            });
+                        });
+                        swal(
+                            "Se presento un problema",
+                            "Intente nuevamente, por favor",
+                            "warning"
+                        );
+                    });
       }
     },
     procesoseleccionado(value) {
@@ -820,12 +858,7 @@ export default {
             this.selected
         )
         .then(response => {
-          var load = false;
-          setTimeout(() => {
-            bus.$emit("load", {
-              load
-            });
-          });
+         
           this.inputs = response.data;
           this.objeto = this.inputs.objeto;
           console.log(this.inputs);
@@ -881,7 +914,26 @@ export default {
             });
             //});
           }
-        });
+           var load = false;
+          setTimeout(() => {
+            bus.$emit("load", {
+              load
+            });
+          });
+        })
+        .catch(function(error) {
+                        var load = false;
+                        setTimeout(() => {
+                            bus.$emit("load", {
+                            load
+                            });
+                        });
+                        swal(
+                            "Se presento un problema",
+                            "Intente nuevamente, por favor",
+                            "warning"
+                        );
+                    });
       
       for (var x = 0; x < this.procesosLog.length; x++) {
         if (this.procesosLog[x]._id == this.selected) {
@@ -889,6 +941,12 @@ export default {
           if (this.proceSeleccionado.atencion_courier == true) {
             var login = localStorage.getItem("storedData");
             var infologin = JSON.parse(login);
+             var load = true;
+                        setTimeout(() => {
+                            bus.$emit("load", {
+                            load
+                            });
+                        });
             this.axios
               .get(
                 urlservicios +
@@ -902,7 +960,26 @@ export default {
                   nombre: "Por Favor Seleccione un Curier"
                 };
                 this.curiers2.unshift(vacio);
-              });
+                 var load = false;
+                        setTimeout(() => {
+                            bus.$emit("load", {
+                            load
+                            });
+                        });
+              })
+              .catch(function(error) {
+                        var load = false;
+                        setTimeout(() => {
+                            bus.$emit("load", {
+                            load
+                            });
+                        });
+                        swal(
+                            "Se presento un problema",
+                            "Intente nuevamente, por favor",
+                            "warning"
+                        );
+                    });
           }
         }
       }
@@ -976,6 +1053,57 @@ export default {
           }
         });
     } else {
+      var load = true;
+      setTimeout(() => {
+        bus.$emit("load", {
+          load
+        });
+      });
+      this.axios
+        .get(urlservicios + "Procesos/" + infologin.id_OperadorLogistico._id)
+        .then(response => {
+          console.log(response);
+          var load = false;
+          setTimeout(() => {
+            bus.$emit("load", {
+              load
+            });
+          });
+          this.procesosLog = response.data;
+          this.procesosLog.unshift(vacio);
+          console.log(this.procesosLog);
+        })
+        .catch(function(error) {
+          bandera = false;
+          var load = false;
+          setTimeout(() => {
+            bus.$emit("load", {
+              load
+            });
+          });
+          //onsole.log(JSON.stringify(error));
+          //this.$router.replace('/inicio')
+          if (bandera == false) {
+            swal({
+              title: "No hay Internet",
+              text: "Revise su conexion",
+              type: "warning",
+              showCancelButton: true,
+              confirmButtonColor: "#3085d6",
+              cancelButtonColor: "#d33",
+              confirmButtonText: "Ok, Entiendo"
+            }).then(result => {
+              if (result.value) {
+                swal(
+                  "Se Redireccionara a la pagina de inicio",
+                  "Buen Rato",
+                  "warning"
+                );
+                _this.$router.replace("/inicio");
+              }
+            });
+          }
+        });
       swal({
         title: "Hay un Manifiesto Pendiente?",
         text: "Quiere continuar",

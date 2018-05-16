@@ -88,14 +88,26 @@ export default {
         }
     },
     beforeCreate: function() {
+        var load=true
+                    setTimeout(() => {
+                        bus.$emit('load', {
+                            load 
+                        })
+                }, )
         bus.$on('detallemanifiesto', function (userObject) {
             //console.log(userObject);
         this.valores=userObject.detalles
          for(var x=0;x<this.valores.listaMovilizados.length;x++){
              this.valores.listaMovilizados[x].id_manifiesto=this.valores.id
          }
+
         }.bind(this))
-       
+       var load=false
+                    setTimeout(() => {
+                        bus.$emit('load', {
+                            load 
+                        })
+                }, )
     }
 }
 </script>

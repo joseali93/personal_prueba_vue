@@ -49,7 +49,7 @@ export default {
     filters: {
         formatdate: function(value) {
         if (value) {
-            return moment(String(value)).format('MM/DD/YYYY')
+            return moment(String(value)).format('MM/DD/YYYY, h:mm:ss a')
         }
         }
     },
@@ -146,11 +146,25 @@ export default {
                                         console.log(response.data);
                                         if(response.data.message=="orden de servicio actualizada")
                                         {
+                                            this.consulta.splice(ind,1)
                                             swal("Orden Eliminada!", "Orden de Servicio Cancelada!", "success");
 
                                         }
                                     })
-                                this.consulta.splice(ind,1)
+                                    .catch(function(error) {
+                                        var load = false;
+                                            setTimeout(() => {
+                                                bus.$emit("load", {
+                                                load
+                                                });
+                                            });
+                                            swal(
+                                                'Se presento un problema',
+                                                'Intente nuevamente, por favor',
+                                                'warning'
+                                                )
+                                    }) 
+                                
                             }
                             else
                             {
@@ -179,13 +193,23 @@ export default {
             {
                 var produc= inde.item.detalle[a].productoslocal._id
                 var serv = inde.item.detalle[a].servicioslocal._id
+                var load = true;
+                setTimeout(() => {
+                    bus.$emit("load", {
+                    load
+                    });
+                });
                 this.axios.get(urlservicios+"estructuraf/" +produc +
-                "/" +serv).then(response => {
-
+                "/" +serv).
+                then(response => {
+                    var load = false;
+                    setTimeout(() => {
+                        bus.$emit("load", {
+                        load
+                        });
+                    });
                         inputstotales.push(response.data)
-                })
-            }   
-            bus.$emit('items',inde,inputstotales)
+                        bus.$emit('items',inde,inputstotales)
             setTimeout(() => {
                 bus.$emit('thisEvent', {
                     inde, inputstotales, 
@@ -210,6 +234,22 @@ export default {
                 })
                 }, )
             this.$router.replace('/inicio/consultar/detalles')
+                })
+                 .catch(function(error) {
+                    var load = false;
+                        setTimeout(() => {
+                            bus.$emit("load", {
+                            load
+                            });
+                        });
+                        swal(
+                            'Se presento un problema',
+                            'Intente nuevamente, por favor',
+                            'warning'
+                            )
+                }) 
+            }   
+            
         },
          mounted: function () {  
              bus.$on('ocultar', function (userObject) {

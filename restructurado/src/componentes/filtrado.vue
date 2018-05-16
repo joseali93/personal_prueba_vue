@@ -199,6 +199,19 @@ export default {
                         }, )
                     this.habilitar= false
                     })
+                    .catch(function(error) {
+                    var load = false;
+                        setTimeout(() => {
+                            bus.$emit("load", {
+                            load
+                            });
+                        });
+                        swal(
+                            'Se presento un problema',
+                            'Intente nuevamente, por favor',
+                            'warning'
+                            )
+        }) 
             }
             else{
                 this.habilitar= true
@@ -344,7 +357,7 @@ export default {
                         else{
                             console.log(this.consulta);
                             var load=false
-                    setTimeout(() => {
+                        setTimeout(() => {
                         bus.$emit('load', {
                             load
                         })
@@ -352,6 +365,19 @@ export default {
                                 this.$router.replace('/inicio/consultar/resultado')
                         }
                     })
+                    .catch(function(error) {
+                    var load = false;
+                        setTimeout(() => {
+                            bus.$emit("load", {
+                            load
+                            });
+                        });
+                        swal(
+                            'Se presento un problema',
+                            'Intente nuevamente, por favor',
+                            'warning'
+                            )
+        }) 
                     
                 }
                
@@ -426,14 +452,27 @@ export default {
                     else{
                         console.log(this.consulta);
                         var load=false
-                setTimeout(() => {
-                    bus.$emit('load', {
-                        load
-                    })
-                    }, )
+                    setTimeout(() => {
+                        bus.$emit('load', {
+                            load
+                        })
+                        }, )
                             this.$router.replace('/inicio/consultar/resultado')
                     }
                 })
+                .catch(function(error) {
+                    var load = false;
+                        setTimeout(() => {
+                            bus.$emit("load", {
+                            load
+                            });
+                        });
+                        swal(
+                            'Se presento un problema',
+                            'Intente nuevamente, por favor',
+                            'warning'
+                            )
+        }) 
                 
             }
             
@@ -454,15 +493,28 @@ export default {
                 .then((response) => {
                     this.centros=response.data
                     //this.centros.unshift(vacio)
-                //this.load=false
-                var load=false
-                setTimeout(() => {
-                    bus.$emit('load', {
-                        load
-                    })
-                    }, )
-                this.habilitar= false
+                    //this.load=false
+                    var load=false
+                    setTimeout(() => {
+                        bus.$emit('load', {
+                            load
+                        })
+                        }, )
+                    this.habilitar= false
                 })
+                .catch(function(error) {
+                    var load = false;
+                        setTimeout(() => {
+                            bus.$emit("load", {
+                            load
+                            });
+                        });
+                        swal(
+                            'Se presento un problema',
+                            'Intente nuevamente, por favor',
+                            'warning'
+                            )
+        }) 
             }else{
                 this.selectedCL=value.target.value
                   //this.load = true;
@@ -476,16 +528,29 @@ export default {
                 //this.axios.get(urlservicios+"centros/")
                 .then((response) => {
                     this.centros=response.data
-                    //this.centros.unshift(vacio)
-                //this.load=false
-                var load=false
-                setTimeout(() => {
-                    bus.$emit('load', {
-                        load
-                    })
-                    }, )
-                this.habilitar= false
+                        //this.centros.unshift(vacio)
+                    //this.load=false
+                    var load=false
+                    setTimeout(() => {
+                        bus.$emit('load', {
+                            load
+                        })
+                        }, )
+                    this.habilitar= false
                 })
+                .catch(function(error) {
+                    var load = false;
+                        setTimeout(() => {
+                            bus.$emit("load", {
+                            load
+                            });
+                        });
+                        swal(
+                            'Se presento un problema',
+                            'Intente nuevamente, por favor',
+                            'warning'
+                            )
+        }) 
             }
             
 
@@ -566,39 +631,19 @@ export default {
                 }, )
                 this.clientes=response.data
 
-            }).catch(function(error){
-                    bandera=false
-                    var load=false
-                    setTimeout(() => {
-                        bus.$emit('load', {
-                            load 
-                        })
-                }, )
-                    //onsole.log(JSON.stringify(error));
-                    //this.$router.replace('/inicio')
-                    if(bandera==false){
-                        swal({
-                        title: 'No hay Internet',
-                        text: "Revise su conexion",
-                        type: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#3085d6',
-                        cancelButtonColor: '#d33',
-                        confirmButtonText: 'Ok, Entiendo'
-                        }).then((result) => {
-                        if (result.value) {
-                            
-                            swal(
-                            'Se Redireccionara a la pagina de inicio',
-                            'Buen Rato',
-                            'warning'
-                            )
-                            _this.$router.replace('/inicio')
-                        }
-                        })
-                        
-                    }
-            })
+            }).catch(function(error) {
+             var load = false;
+                setTimeout(() => {
+                    bus.$emit("load", {
+                    load
+                    });
+                });
+                swal(
+                    'Error',
+                    'Intente nuevamente, por favor',
+                    'warning'
+                    )
+        }) 
         }else{
             console.log("hay cliente");
             id_cliente=infologin.id_cliente
@@ -617,51 +662,55 @@ export default {
                 this.selectedCL=Object.assign({},this.clientes[0])
                 //this.clientes.unshift(vacio)
 
-            }).catch(function(error){
-                    bandera=false
-                    var load=false
-                    setTimeout(() => {
-                        bus.$emit('load', {
-                            load 
-                        })
-                }, )
-                    //onsole.log(JSON.stringify(error));
-                    //this.$router.replace('/inicio')
-                    if(bandera==false){
-                        swal({
-                        title: 'No hay Internet',
-                        text: "Revise su conexion",
-                        type: 'warning',
-                        showCancelButton: true,
-                        confirmButtonColor: '#3085d6',
-                        cancelButtonColor: '#d33',
-                        confirmButtonText: 'Ok, Entiendo'
-                        }).then((result) => {
-                        if (result.value) {
-                            
-                            swal(
-                            'Se Redireccionara a la pagina de inicio',
-                            'Buen Rato',
-                            'warning'
-                            )
-                            _this.$router.replace('/inicio')
-                        }
-                        })
-                        
-                    }
-            })
+            }).catch(function(error) {
+             var load = false;
+                setTimeout(() => {
+                    bus.$emit("load", {
+                    load
+                    });
+                });
+                swal(
+                    'Error',
+                    'Intente nuevamente, por favor',
+                    'warning'
+                    )
+        }) 
             this.disabled_selectedCL=true
             //this.SelectCC(id_cliente)
         }
-            
+         var load = true;
+                setTimeout(() => {
+                    bus.$emit("load", {
+                    load
+                    });
+                });   
         this.axios.get(urlservicios+"estados/")
         .then((response) => {
             this.estados=response.data
+            var load = false;
+                setTimeout(() => {
+                    bus.$emit("load", {
+                    load
+                    });
+                })
              //var vacio3=  { nombre: 'Por Favor Seleccione un Estado' ,disabled:true};
              //this.selected_state='Por Favor Seleccione un Estado'
              //this.estados.unshift(vacio3)
             //console.log(this.estados);
         })
+        .catch(function(error) {
+             var load = false;
+                setTimeout(() => {
+                    bus.$emit("load", {
+                    load
+                    });
+                });
+                swal(
+                    'Error',
+                    'Intente nuevamente, por favor',
+                    'warning'
+                    )
+        }) 
             
         
     },

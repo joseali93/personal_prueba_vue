@@ -6,7 +6,7 @@
             <b-row>
                 <b-table  :items="consulta" :fields="fields"
                 :per-page="5" :current-page="currentPage" :bordered="true"
-                thead-class=text-center tbody-class=text-center>
+                thead-class=text-center tbody-class="text-center text-capitalize">
                     <template slot="id" slot-scope="data">
                         {{data.item.consec}}
                     </template>
@@ -14,7 +14,7 @@
                         {{data.item.id}}
                     </template>
                     <template slot="fecha_creacion" slot-scope="data">
-                        {{data.item.fecha_estado |formatdate}}
+                       <p > {{data.item.fecha_estado |formatdate}}</p>
                     </template>
                     <template slot="productoslocal" slot-scope="data" >
                         {{data.item.productoslocal.nombre}}
@@ -308,7 +308,7 @@ export default {
     filters: {
         formatdate: function(value) {
         if (value) {
-            return moment(String(value)).format('MM/DD/YYYY')
+            return moment(String(value)).format('MM/DD/YYYY, h:mm:ss a')
         }
         }
     },
@@ -375,21 +375,34 @@ export default {
                 
                 this.axios.post(urlservicios+"EnviarCorreoImagen", objeto)
                 .then(response => {
-                this.respuesta = response.data;
-                console.log(response);
-                console.log(objeto);
-                var load=false
-                    setTimeout(() => {
-                        bus.$emit('load', {
-                            load
-                        })
-                        }, )
-                        this.acor=false
-                swal(
-                    "Excelente!",
-                    " " + this.respuesta,
-                    "success"
-                );
+                    this.respuesta = response.data;
+                    console.log(response);
+                    console.log(objeto);
+                    var load=false
+                        setTimeout(() => {
+                            bus.$emit('load', {
+                                load
+                            })
+                            }, )
+                            this.acor=false
+                    swal(
+                        "Excelente!",
+                        " " + this.respuesta,
+                        "success"
+                    );
+                })
+                .catch(function(error) {
+                  var load = false;
+                  setTimeout(() => {
+                    bus.$emit("load", {
+                      load
+                    });
+                  });
+                  swal(
+                    "Se presento un problema",
+                    "Intente nuevamente, por favor",
+                    "warning"
+                  );
                 });
                 console.log(objeto);
 
@@ -458,21 +471,34 @@ export default {
                 console.log(objeT);
                 this.axios.post(urlservicios+"EnviarCorreoImagen", objeT)
                     .then(response => {
-                    this.respuesta = response.data;
-                    console.log(response);
-                    //this.load=false
-                    var load=false
-                    setTimeout(() => {
-                        bus.$emit('load', {
+                        this.respuesta = response.data;
+                        console.log(response);
+                        //this.load=false
+                        var load=false
+                        setTimeout(() => {
+                            bus.$emit('load', {
+                                load
+                            })
+                            }, )
+                            this.showCollapse=false
+                        swal(
+                            "Excelente!",
+                            " " + this.respuesta,
+                            "success"
+                        );
+                    })
+                    .catch(function(error) {
+                        var load = false;
+                        setTimeout(() => {
+                            bus.$emit("load", {
                             load
-                        })
-                        }, )
-                        this.showCollapse=false
-                    swal(
-                        "Excelente!",
-                        " " + this.respuesta,
-                        "success"
-                    );
+                            });
+                        });
+                        swal(
+                            "Se presento un problema",
+                            "Intente nuevamente, por favor",
+                            "warning"
+                        );
                     });
             }
             this.emailT=''
@@ -566,22 +592,39 @@ export default {
             }
             console.log(urlservicios+"ConsultaExcel/"+test.id_OperadorLogistico._id+"/"+centro+"/"+cliente+"/"+orden+"/"+detalle+"/"+refere+"/"+inicio+"/"+fin+"/");
             
-            
+            var load=true
+                    setTimeout(() => {
+                        bus.$emit('load', {
+                            load
+                        })
+                        }, )
             this.axios.get(urlservicios+"ConsultaExcel/"+test.id_OperadorLogistico._id+"/"+centro+"/"+cliente+"/"+orden+"/"+detalle+"/"+refere+"/"+inicio+"/"+fin+"/")
             .then(response => {
+                var load=false
+                    setTimeout(() => {
+                        bus.$emit('load', {
+                            load
+                        })
+                        }, )
                 alasql.fn.fechas= function(date)
-            {
-              //console.log(response);
-            //console.log( moment(date).format('DD/MM/YYYY, h:mm:ss'));
-            //return date.toLocaleString()
-            return moment(date).format('DD/MM/YYYY, h:mm:ss')
-            }
+                {
+                //console.log(response);
+                //console.log( moment(date).format('DD/MM/YYYY, h:mm:ss'));
+                //return date.toLocaleString()
+                return moment(date).format('DD/MM/YYYY, h:mm:ss')
+                }
                 //console.log(response);
                 var consulta=response.data.select
                 this.resul=response.data.movilizadosobjet    
                 alasql(consulta,[this.resul])      
             })
             .catch(function(error){
+                var load=false
+                    setTimeout(() => {
+                        bus.$emit('load', {
+                            load
+                        })
+                        }, )
                 console.log(error);
                 swal(
                 'Error al descargar el reporte!',
@@ -633,11 +676,36 @@ export default {
             console.log(this.final);
             //this.$refs.myModalRef.show()
             //openModal();
+            var load = true;
+                  setTimeout(() => {
+                    bus.$emit("load", {
+                      load
+                    });
+                  });
             this.axios.get(urlservicios+"estructuraf/" +this.consultaactualizar.productoslocal._id +
             "/" +this.consultaactualizar.servicioslocal._id)   
             .then(response => {
-            this.inputs = response.data;
+                this.inputs = response.data;
+                var load = false;
+                  setTimeout(() => {
+                    bus.$emit("load", {
+                      load
+                    });
+                  });
             })
+            .catch(function(error) {
+                  var load = false;
+                  setTimeout(() => {
+                    bus.$emit("load", {
+                      load
+                    });
+                  });
+                  swal(
+                    "Se presento un problema",
+                    "Intente nuevamente, por favor",
+                    "warning"
+                  );
+                });
 
             var client=this.cliente
             var centro=this.centro

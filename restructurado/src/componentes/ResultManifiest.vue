@@ -33,7 +33,10 @@
         <b-pagination size="md" :total-rows="consulta.length" v-model="currentPage" :per-page="5">
         </b-pagination>
         <!-- Modal Component -->
-        <b-modal id="modal1" size="lg" ref="myModalRef" title="Información" class="text-primary">
+        <b-modal id="modal1" size="lg" ref="myModalRef" title="Información" class="text-primary"
+        
+        no-close-on-backdrop
+        no-close-on-esc>
             <div slot="modal-header" class="w-100">
                 <b-btn size="sm" class="float-left" variant="primary" @click="cerrarModal">
                 Cerrar
@@ -137,7 +140,7 @@ export default {
                 }
             ]
             console.log(items.length);
-            //console.log(items);
+            console.log(items);
             var normalizado
             var itemsmodal=[]
             for(var x=0;x<items.length;x++){
@@ -147,7 +150,7 @@ export default {
                     nombre:items[x].nombre_cliente,
                     nombre_centro:items[x].nombre_centro,
                     direccion_entrega:items[x].direccion_entrega,
-                    referencia:items[x].UnidadesObjeto,
+                    referencia:items[x].referencia,
                     numeroOrden:items[x].id_orden,
                     peso:items[x].peso,
                     unidades:items[x].unidades

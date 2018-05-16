@@ -41,7 +41,11 @@
                         {{data.value.nombre}}
                     </template>
                     <template slot="editar"  slot-scope="data">
+                        <i class="btn btn-success fa fa-pencil"  v-on:click="editar(data.index)" ></i>
+                        <!--
                         <i class="btn btn-success fa fa-pencil"  v-on:click="editar(data.index)" v-b-modal.modaleditar></i>
+
+                          -->
                     </template>
                 </b-table>
                 <b-pagination size="md" :total-rows="DetalleServicio.length" v-model="currentPage" :per-page="5">
@@ -119,14 +123,14 @@
 
                             <b-card-body>
                                     <b-row>
-                                    <b-col>
-                                        <label class="col col-form-label col-form-label-sm text-capitalize text-primary" >Documento Referencia:</label>
-                                    </b-col>
-                                    <b-col>
-                                        <b-form-input type="text" class="form-control form-control-sm " 
-                                                                placeholder="Referencia" v-model="detalles.referencia"
-                                                            :state="estado.referencia"></b-form-input>
-                                    </b-col>
+                                        <b-col>
+                                            <label class="col col-form-label col-form-label-sm text-capitalize text-primary" >Documento Referencia:</label>
+                                        </b-col>
+                                        <b-col>
+                                            <b-form-input type="text" class="form-control form-control-sm " 
+                                                                    placeholder="Referencia" v-model="detalles.referencia"
+                                                                :state="estado.referencia"></b-form-input>
+                                        </b-col>
                                     </b-row>
                                     
 
@@ -299,6 +303,27 @@
                 <b-container fluid>
                     <b-row class=" my-1">
                     <b-col>
+
+                    <v-select v-model="selectproductED" label="nombre" placeholder="Digite el Producto"
+                        :options="productosurlED" @input="seleccionarServicioED()"
+                        :disabled="true">
+                    </v-select>
+                        
+                    </b-col>
+                    <b-col>
+
+                    <v-select v-model="selectserviceED" label="nombre" placeholder="Digite el Servicio"
+                        :disabled="true"
+                        :options="serviciosurlED"  @input="camposNversionED()">
+                        <!--
+:options="serviciosurl" @input="camposNversion()">
+                          -->
+                    </v-select>
+                    </b-col>
+                </b-row>
+                    <!--
+                    <b-row class=" my-1">
+                    <b-col>
                         <small>Producto</small>
                         <b-form-select v-model="selectproduct" class="mb-3" 
                         :options="productosurl" text-field="nombre" value-field="_id" 
@@ -315,17 +340,27 @@
                     </b-col>
 
                     </b-row>
-
-            <b-card no-body v-show="selectservice" class=" w-100 cards"
+                    -->
+            <b-card no-body v-show="selectserviceED" class=" w-100 cards"
                     style="
                     padding-left: 0px;
                     padding-right: 0px;
                     padding-top: 0px;
                     padding-bottom: 0px;
                     ">
-                    <b-tabs card  v-show="selectservice" v-model="tabIndexED">
+                    <b-tabs card  v-show="selectserviceED" v-model="tabIndexED">
                         <b-tab  title="Información" >
                             <b-card-body>
+                                <b-row>
+                                        <b-col>
+                                            <label class="col col-form-label col-form-label-sm text-capitalize text-primary" >Documento Referencia:</label>
+                                        </b-col>
+                                        <b-col>
+                                            <b-form-input type="text" class="form-control form-control-sm " 
+                                                                    placeholder="Referencia" v-model="detalleseditar.referencia"
+                                                                :state="estado.referencia"></b-form-input>
+                                        </b-col>
+                                    </b-row>
                             <b-row  v-for="(data,indice) in inputsED.campos" class="my-2"> 
                                 <template v-if="data.type!='select'" >
                                 <template v-if="data.espieza==false">
@@ -360,7 +395,10 @@
                             </b-row>
                             </b-card-body>
                         </b-tab>
-                        <b-tab title="Detalle" :disabled="tabdinamico">
+                        <b-tab title="Detalle" :disabled="tabdinamicoED">
+                        <!--
+ <b-tab title="Detalle" :disabled="tabdinamicoED">
+                          -->
                             <b-row v-for="(data,indice) in inputsED.campos" v-show="camposdinamicos">
                             <template v-if="data.type!='select'" >
                                 <template v-if="data.espieza==true">
@@ -481,10 +519,10 @@ export default {
   },
   data() {
     return {
-      pruebas:{
-        'background-color': '#ebeaea',
-       ' border-bottom-color': '#495057',
-       ' border-top': 'none',
+      pruebas: {
+        "background-color": "#ebeaea",
+        " border-bottom-color": "#495057",
+        " border-top": "none"
       },
       tabIndexED: 0,
       tabdinamico: false,
@@ -540,8 +578,14 @@ export default {
       ],
       DetalleServicio: [],
       remitentes: [],
+      tabdinamicoED:false,
       productosurl: [],
       selectproducto: {},
+      productosurlED: [],
+      selectproductED:null,
+      selectserviceED:null,
+      serviciosurlED:[],
+      selectservice:null,
       serviciosurl: [],
       selectservice: null,
       selectproduct: null,
@@ -578,34 +622,50 @@ export default {
       inputsED: ""
     };
   },
-  watch: {
-    selectproduct(n, o) {},
-    selectservice(n, o) {}
-  },
+  watch: {},
   methods: {
-    abirmodal(){
-        this.selectservice= null
-        this.selectproduct= null
-        var login = localStorage.getItem("storedData");
-        var infologin = JSON.parse(login);
-        this.axios
+    abirmodal() {
+      this.selectservice = null;
+      this.selectproduct = null;
+      var login = localStorage.getItem("storedData");
+      var infologin = JSON.parse(login);
+      var load = true;
+      setTimeout(() => {
+        bus.$emit("load", {
+          load
+        });
+      });
+      this.axios
         .get(urlservicios + "productos/" + infologin.id_OperadorLogistico._id)
         .then(response => {
-            this.productosurl = response.data;
-            //this.productosurl.unshift(vacio);
+          this.productosurl = response.data;
+          //this.productosurl.unshift(vacio);
+          var load = false;
+          setTimeout(() => {
+            bus.$emit("load", {
+              load
+            });
+          });
+          this.$refs.Modal.show();
+        })
+        .catch(function(error) {
+          var load = false;
+          setTimeout(() => {
+            bus.$emit("load", {
+              load
+            });
+          });
+          swal("Error", "Intente nuevamente, por favor", "warning");
         });
-        this.$refs.Modal.show()
     },
     UpdateDinamico(value) {
       var objellaves = Object.keys(this.itemsdinamicos[0]);
-      //////console.log(objellaves);
       var tituloopciones = {};
 
       for (var x = 0; x < this.inputs.campos.length; x++) {
         if (this.inputs.campos[x].espieza == true) {
           for (var y = 0; y < objellaves.length; y++) {
             if (this.inputs.campos[x].vmodel == objellaves[y]) {
-              //////console.log(document.getElementById(this.inputs.campos[x].id).value);
               eval(
                 "this.objeto." +
                   this.inputs.campos[x].vmodel +
@@ -641,8 +701,6 @@ export default {
       this.ocultareditar = false;
     },
     UpdateDinamicoED(value) {
-      //////console.log("entro a update edi");
-      ////////console.log(this.DetalleServicio[this.indices].detalleslocal.infor);
       var objellaves = Object.keys(
         this.DetalleServicio[this.indices].detalleslocal.infor
       );
@@ -667,15 +725,11 @@ export default {
           }
         }
       }
-      //////console.log(this.DetalleServicio[this.indices].detalleslocal.infor);
       this.ocultardicionarED = true;
       this.ocultareditarED = false;
     },
     ActualizarRefED(value, value2) {
-      //////console.log("entro a cambiar ref")
-      //////console.log(value)
       this.indicedinamico = value2;
-      ////////console.log(this.currentPageRef)
       var objellaves = Object.keys(value.item);
       this.ocultardicionarED = false;
       this.ocultareditarED = true;
@@ -692,10 +746,7 @@ export default {
       }
     },
     ActualizarRef(value, value2) {
-      //////console.log("entro a cambiar ref")
-      ////////console.log(value2)
       this.indicedinamico = value2;
-      ////////console.log(this.currentPageRef)
       var objellaves = Object.keys(value.item);
       this.ocultardicionar = false;
       this.ocultareditar = true;
@@ -712,21 +763,14 @@ export default {
       }
     },
     eliminarRef(value) {
-      //////console.log("entro a eliminar");
-      //////console.log(value);
-
       this.itemsdinamicos.splice(value.index, 1);
     },
     adicionarRefED() {
-      //////console.log("ntro a adicionareditar");
-      ////////console.log(this.inputs);
-      ////////console.log(this.DetalleServicio[this.indices].detalleslocal.infor.objetoUnidades);
       var objetollaves = Object.keys(this.inputsED.objeto);
       var tituloopciones = {};
       var bandera = true;
       var resumen = this.DetalleServicio[this.indices].detalleslocal.infor
         .objetoUnidades;
-      //////console.log(this.DetalleServicio[this.indices].detalleslocal.infor);
       for (var x = 0; x < this.inputsED.campos.length; x++) {
         if (this.inputsED.campos[x].espieza == true) {
           for (var y = 0; y < objetollaves.length; y++) {
@@ -749,25 +793,18 @@ export default {
           }
         }
       }
-      //////console.log(bandera)
       if (bandera == false) {
         swal("Error!", "Revise los campos", "error");
       } else {
         bandera = true;
-        //////console.log(tituloopciones);
         this.itemsdinamicos.push(tituloopciones);
-        //////console.log(this.itemsdinamicos);
       }
     },
     adicionarRef() {
-      //////console.log("ntro a adicionar");
-      //////console.log(this.inputs);
       var objetollaves = Object.keys(this.inputs.objeto);
       var tituloopciones = {};
       var opciones = [];
       var bandera = true;
-      //console.log(this.objeto);
-      //console.log(objetollaves);
       for (var x = 0; x < this.inputs.campos.length; x++) {
         if (this.inputs.campos[x].espieza == true) {
           for (var y = 0; y < objetollaves.length; y++) {
@@ -776,7 +813,6 @@ export default {
               tituloopciones[objetollaves[y]] = eval(
                 "this.objeto." + objetollaves[y]
               );
-              //////console.log(document.getElementById(this.inputs.campos[x].id).value);
               if (
                 document.getElementById(this.inputs.campos[x].id).value == "" ||
                 document.getElementById(this.inputs.campos[x].id).value == null
@@ -785,12 +821,10 @@ export default {
               } else {
                 document.getElementById(this.inputs.campos[x].id).value = "";
                 eval("this.objeto." + this.inputs.campos[x].vmodel + '=""');
-                //////console.log("------------")
-                //////console.log(this.objeto)
+
                 /*
               
                   if(this.inputs.campos[x].vmodel=='unidades'){
-                  ////////console.log(this.itemsdinamicos.length);
                   if(this.itemsdinamicos.length==0)
                   {
                     eval('this.objeto.'+objetollaves[y]+'='+1)
@@ -799,7 +833,6 @@ export default {
                     eval('this.objeto.'+objetollaves[y]+'='+this.itemsdinamicos.length+ eval('this.objeto.'+objetollaves[y]))
                   }
                   
-                  ////////console.log(this.objeto.unidades);
                 }
                 */
               }
@@ -807,7 +840,6 @@ export default {
           }
         }
       }
-      //////console.log(bandera)
       if (bandera == false) {
         swal("Error !", "Revise los campos", "error");
       } else {
@@ -817,24 +849,25 @@ export default {
         fields.push("actualizar");
 
         this.fieldsdinamicos = fields;
-        ////////console.log(this.fieldsdinamicos);
         this.itemsdinamicos.push(tituloopciones);
-        //////console.log(this.itemsdinamicos);
       }
-      //console.log(this.objeto);
-      //console.log(this.itemsdinamicos);
     },
+
     buscar(accion) {
-      //////console.log("entro a buscar");
-      //////console.log(this.identificacion);
       if (accion == "nuevo") {
-        console.log("nuevo");
+        var load = true;
+        setTimeout(() => {
+          bus.$emit("load", {
+            load
+          });
+        });
+        var algo = this.prueba;
         this.axios
           .get(urlservicios + "obtenerDestinatario" + "/" + this.identificacion)
           .then(response => {
-            console.log(response.data);
             var destinatario = response.data.destinatarios;
             this.creaciondestinatarios = response.data.validar;
+
             if (response.data.validar == true) {
               this.detalles.destinatario.numero_identificacion =
                 destinatario.numero_identificacion;
@@ -849,12 +882,31 @@ export default {
               this.detalles.destinatario.direccion = "";
               this.detalles.destinatario.telefono = "";
             }
+            var load = false;
+            setTimeout(() => {
+              bus.$emit("load", {
+                load
+              });
+            });
             this.mostrardestinatario = true;
+          })
+          .catch(function(error) {
+            var load = false;
+            setTimeout(() => {
+              bus.$emit("load", {
+                load
+              });
+            });
+            swal("Advertencia", "Intente nuevamente, por favor", "warning");
           });
       }
       if (accion == "editar") {
-        console.log("editar");
-        console.log(this.detalleseditar.destinatario);
+        var load = true;
+        setTimeout(() => {
+          bus.$emit("load", {
+            load
+          });
+        });
         this.axios
           .get(
             urlservicios +
@@ -863,7 +915,6 @@ export default {
               this.detalleseditar.destinatario.numero_identificacion
           )
           .then(response => {
-            console.log(response.data);
             var destinatario = response.data.destinatarios;
             this.creaciondestinatarios = response.data.validar;
             if (response.data.validar == true) {
@@ -881,13 +932,26 @@ export default {
               this.detalleseditar.destinatario.direccion = "";
               this.detalleseditar.destinatario.telefono = "";
             }
+            var load = false;
+            setTimeout(() => {
+              bus.$emit("load", {
+                load
+              });
+            });
             this.mostrardestinatario = true;
+          })
+          .catch(function(error) {
+            var load = false;
+            setTimeout(() => {
+              bus.$emit("load", {
+                load
+              });
+            });
+            swal("Advertencia", "Intente nuevamente, por favor", "warning");
           });
       }
     },
     numeroseditar(valor) {
-      ////////console.log("entro a numeros editar");
-      ////////console.log(document.getElementById("telefonoedit").value)
       var a = document.getElementById("telefonoedit").value;
       //var x=check.which;
       //var x = a.charCode;
@@ -908,8 +972,6 @@ export default {
       }
     },
     numeros(valor) {
-      //////console.log("entro a numeros");
-      ////////console.log(document.getElementById("telefono").value)
       var a = document.getElementById("telefono").value;
       //var x=check.which;
       //var x = a.charCode;
@@ -930,13 +992,11 @@ export default {
       }
     },
     PresionoED(index) {
-      //////console.log("entro al presionar editar");
       this.validatecampo = "";
       var cero = "";
       setTimeout(
         function() {
           if (this.inputsED.campos[index].type == "text") {
-            //////console.log("es");
             if (
               document.getElementById(this.inputsED.campos[index].id).value ==
               ""
@@ -960,8 +1020,6 @@ export default {
               document.getElementById(this.inputsED.campos[index].id).value ==
               ""
             ) {
-              //////console.log(this.inputsED.campos[index].vmodel);
-
               eval(
                 "this.detalleseditar.infor." +
                   this.inputsED.campos[index].vmodel +
@@ -978,25 +1036,18 @@ export default {
           }
         }.bind(this)
       );
-      //////console.log(this.detalleseditar);
     },
     valores(dato) {
-      ////////console.log(this.detalleseditar)
-      ////////console.log(dato)
-      ////////console.log(eval("this.detalleseditar.infor." + dato));
       return eval("this.detalleseditar.infor." + dato);
     },
     actualizar() {
-      //////console.log("actualizar");
       this.validatecampoTel = "";
       var pivoteedi = false;
       this.estado.nombre = null;
       this.estado.direccion = null;
       this.estado.referencia = null;
-      //////console.log("detalles editar");
-      //////console.log(this.detalleseditar);
+
       if (this.detalleseditar.infor.objetoUnidades.length == 0) {
-        //////console.log("no hay dinamicos");
       } else {
         var objetollaves = Object.keys(this.detalleseditar.infor);
 
@@ -1006,9 +1057,7 @@ export default {
         var totales = {};
         var algo = 0;
 
-        //////console.log(this.itemsdinamicos);
         for (var y = 0; y < this.itemsdinamicos.length; y++) {
-          //////console.log(this.itemsdinamicos[y]);
           for (var x = 0; x < this.inputsED.campos.length; x++) {
             for (var z = 0; z < objdinamico.length; z++) {
               if (
@@ -1034,14 +1083,11 @@ export default {
                       );
 
                     totales[this.inputsED.campos[x].acumulaen] = anterior;
-                    //////console.log(totales[this.inputs.campos[x].acumulaen]);
                   }
                 }
 
                 //algo=algo+eval('this.itemsdinamicos[y].'+this.inputsED.campos[x].acumulaen)
-                //////console.log(algo);
                 //totales[this.inputsED.campos[x].acumulaen]=algo
-                ////////console.log(eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen));
                 //totales[this.inputs.campos[x].acumulaen]=eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen)+totales[this.inputs.campos[x].acumulaen]
               }
               if (
@@ -1049,18 +1095,14 @@ export default {
                 this.inputsED.campos[x].type == "text"
               ) {
                 //algo=algo+eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen)
-                ////////console.log(algo);
                 totales[
                   this.inputsED.campos[x].acumulaen
                 ] = this.itemsdinamicos.length;
-                //////console.log(totales)
-                ////////console.log(eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen));
                 //totales[this.inputs.campos[x].acumulaen]=eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen)+totales[this.inputs.campos[x].acumulaen]
               }
             }
           }
         }
-        //////console.log(totales);
         var objtotal = Object.keys(totales);
 
         for (var x = 0; x < objtotal.length; x++) {
@@ -1073,7 +1115,6 @@ export default {
         }
       }
 
-      ////////console.log(pivoteedi);
       if (
         this.detalleseditar.destinatario.nombre == "" ||
         this.detalleseditar.destinatario.direccion == "" ||
@@ -1096,7 +1137,6 @@ export default {
           swal("Oops...", "Falto algun campo por completar!", "error");
         }
       } else {
-        //////console.log(this.selectservicio);
         var detalleslocal = this.detalleseditar;
         var productoslocal = this.selectproducto;
         var servicioslocal = this.selectservicio;
@@ -1106,10 +1146,8 @@ export default {
           productoslocal: productoslocal,
           detalleslocal: detalleslocal
         };
-        ////////console.log((detalles));
         this.DetalleServicio.splice(this.indices, 1);
         this.DetalleServicio.splice(this.indices, 0, detalles);
-        ////console.log(this.DetalleServicio);
         (this.objeto = ""),
           (this.inputs = ""),
           toastr.success("Se edito exitosamente");
@@ -1130,7 +1168,35 @@ export default {
         (this.camposdinamicos = false),
           (this.fieldsdinamicos = []),
           (this.itemsdinamicos = []),
-          this.$refs.ModalEdit.hide();
+          (this.tabIndex = 0);
+        this.camposdinamicos = false;
+        this.fieldsdinamicos = [];
+        this.itemsdinamicos = [];
+        this.identificacion = "";
+        (this.habilitar = true),
+          (this.mostrardestinatario = false),
+          //pendiente para correcion error de cambio de servicio
+          //this.selectproducto=''
+          //this.selectservicio=''
+          (this.objeto = ""),
+          (this.inputs = ""),
+          // toastr.success("Se agrego exitosamente");
+          //this.selectservice = null
+          //this.selectproduct = null
+          //this.selectproducto=null
+          //this.selectservicio=null
+
+          (this.objeto = ""),
+          (this.detalles = {
+            destinatario: {
+              nombre: "",
+              direccion: "",
+              telefono: ""
+            },
+            infor: {},
+            observaciones: ""
+          });
+        this.$refs.ModalEdit.hide();
       }
     },
     eliminar: function(indice) {
@@ -1155,7 +1221,7 @@ export default {
       });
     },
     editar(index) {
-      ////////console.log(index);
+      //this.selectservice= null
       (this.tabIndexED = 0), (this.tabIndex = 0);
       this.validatecampo = "";
       this.validatecampoTel = "";
@@ -1163,52 +1229,80 @@ export default {
       this.estado.direccion = null;
       this.estado.referencia = null;
       this.indices = index;
-      //////console.log("entro al editar");
       this.detalleseditar = this.DetalleServicio[index].detalleslocal;
-      this.selectproduct = this.DetalleServicio[index].productoslocal._id;
+      this.selectproduct = this.DetalleServicio[index].productoslocal;
       this.selectproducto = this.DetalleServicio[index].productoslocal;
-      this.selectservice = this.DetalleServicio[index].servicioslocal._id;
+      this.selectservice = this.DetalleServicio[index].servicioslocal;
       this.selectservicio = this.DetalleServicio[index].servicioslocal;
-      ////////console.log(this.selectservice);
-      console.log(this.detalleseditar);
 
+      //this.detalleseditar = this.DetalleServicio[index].detalleslocal;
+      this.selectproductED = this.DetalleServicio[index].productoslocal;
+      this.selectproducto = this.DetalleServicio[index].productoslocal;
+      this.selectserviceED = this.DetalleServicio[index].servicioslocal;
+      this.selectservicio = this.DetalleServicio[index].servicioslocal;
+      this.seleccionarServicioED()
       this.itemsdinamicos = this.DetalleServicio[
         index
       ].detalleslocal.infor.objetoUnidades;
-      //////console.log(this.itemsdinamicos);
       if (this.itemsdinamicos.length == 0) {
-        //////console.log("no tiene dinamicos");
       } else {
         var fields = Object.keys(
           this.DetalleServicio[index].detalleslocal.infor.objetoUnidades[0]
         );
         fields.push("eliminar");
         fields.push("actualizar");
-        //////console.log(fields);
         this.fieldsdinamicos = fields;
       }
-
+      var load = true;
+      setTimeout(() => {
+        bus.$emit("load", {
+          load
+        });
+      });
+      
       this.axios
         .get(
           urlservicios +
             "estructuraf/" +
-            this.selectproduct +
+            this.selectproduct._id +
             "/" +
-            this.selectservice
+            this.selectservice._id
         )
         .then(response => {
           this.inputsED = response.data;
 
           for (var x = 0; x < this.inputsED.campos.length; x++) {
-            ////////console.log(this.inputsED.campos[x]);
             if (this.inputsED.campos[x].espieza == true) {
-              ////////console.log("algo dinamico");
               this.camposdinamicos = true;
+              this.tabdinamicoED=false
+            }
+            else{
+              this.camposdinamicos = true;
+              //this.tabdinamicoED=true
             }
           }
+          //this.camposNversion()
+          var load = false;
+          setTimeout(() => {
+            bus.$emit("load", {
+              load
+            });
+          });
+          this.$refs.ModalEdit.show();
+        })
+        .catch(function(error) {
+          var load = false;
+          setTimeout(() => {
+            bus.$emit("load", {
+              load
+            });
+          });
+          swal("Error", "Intente nuevamente, por favor", "warning");
         });
+        
     },
     hideModal() {
+     
       //this.tabIndexED=0,
       //this.tabIndex
       (this.habilitar = true),
@@ -1219,6 +1313,9 @@ export default {
         (this.identificacion = null),
         (this.objeto = ""),
         (this.inputs = ""),
+        //this.serviciosurl=null
+        //this.productosurl=null
+       // this.tabdinamico=false
         (this.selectservice = null);
       this.selectproduct = null;
       (this.objeto = ""),
@@ -1240,7 +1337,6 @@ export default {
       this.estado.direccion = null;
       this.estado.referencia = null;
       var pivote = false;
-      ////console.log(this.objeto);
       var inforemitente = localStorage.getItem("orden");
       var inforemi = JSON.parse(inforemitente);
 
@@ -1252,15 +1348,31 @@ export default {
           telefono: this.detalles.destinatario.telefono,
           id_cliente: inforemi.selected_client
         };
-        ////////console.log(objeto);
+        var load = true;
+        setTimeout(() => {
+          bus.$emit("load", {
+            load
+          });
+        });
         this.axios
           .post(urlservicios + "CrearDestinatario", objeto)
           .then(response => {
-            //////console.log(response);
+            var load = false;
+            setTimeout(() => {
+              bus.$emit("load", {
+                load
+              });
+            });
+          })
+          .catch(function(error) {
+            var load = false;
+            setTimeout(() => {
+              bus.$emit("load", {
+                load
+              });
+            });
           });
       } else {
-        ////////console.log("actualiza destinatario");
-        ////////console.log(this.detalles.destinatario);
         var objeto = {
           numero_identificacion: this.identificacion,
           direccion: this.detalles.destinatario.direccion,
@@ -1268,7 +1380,12 @@ export default {
           telefono: this.detalles.destinatario.telefono,
           id_cliente: inforemi.selected_client
         };
-        ////////console.log(objeto);
+        var load = true;
+        setTimeout(() => {
+          bus.$emit("load", {
+            load
+          });
+        });
         this.axios
           .post(
             urlservicios +
@@ -1278,25 +1395,38 @@ export default {
             objeto
           )
           .then(response => {
-            ////////console.log(response);
+            var load = false;
+            setTimeout(() => {
+              bus.$emit("load", {
+                load
+              });
+            });
+          })
+          .catch(function(error) {
+            var load = false;
+            setTimeout(() => {
+              bus.$emit("load", {
+                load
+              });
+            });
           });
       }
-      //console.log(this.objeto);
       if (this.objeto == undefined) {
-        ////console.log("objeto");
       } else {
+        var load = true;
+        setTimeout(() => {
+          bus.$emit("load", {
+            load
+          });
+        });
         var llaves = "";
         var objllaves;
         llaves = Object.keys(this.objeto);
-        //////console.log(this.objeto);
-        //////console.log(this.itemsdinamicos);
         if (this.itemsdinamicos.length > 0) {
           objllaves = Object.keys(this.itemsdinamicos[0]);
-          //console.log(objllaves);
           var totales = {};
           var algo = 0;
           var prsuma;
-          //console.log(this.objeto)
           for (var y = 0; y < this.itemsdinamicos.length; y++) {
             for (var x = 0; x < this.inputs.campos.length; x++) {
               for (var z = 0; z < objllaves.length; z++) {
@@ -1305,18 +1435,13 @@ export default {
                   this.inputs.campos[x].type == "number"
                 ) {
                   if (objllaves[z] == this.inputs.campos[x].vmodel) {
-                    //console.log(objllaves[z]);
-                    //console.log(this.inputs.campos[x].vmodel)
                     if (y == 0) {
-                      ////console.log(objllaves[z]);
-                      ////console.log(this.objeto);
                       algo = eval(
                         "this.itemsdinamicos[y]." +
                           this.inputs.campos[x].acumulaen
                       );
                       totales[this.inputs.campos[x].acumulaen] = algo;
                       algo = 0;
-                      ////console.log(totales);
                     } else {
                       var anterior = totales[this.inputs.campos[x].acumulaen];
 
@@ -1328,11 +1453,9 @@ export default {
                         );
 
                       totales[this.inputs.campos[x].acumulaen] = anterior;
-                      //////console.log(totales[this.inputs.campos[x].acumulaen]);
                     }
                   }
 
-                  ////////console.log(eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen));
                   //totales[this.inputs.campos[x].acumulaen]=eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen)+totales[this.inputs.campos[x].acumulaen]
                 }
                 if (
@@ -1340,79 +1463,62 @@ export default {
                   this.inputs.campos[x].type == "text"
                 ) {
                   //algo=algo+eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen)
-                  ////////console.log(algo);
                   totales[
                     this.inputs.campos[x].acumulaen
                   ] = this.itemsdinamicos.length;
-                  ////////console.log(eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen));
                   //totales[this.inputs.campos[x].acumulaen]=eval('this.itemsdinamicos[y].'+this.inputs.campos[x].acumulaen)+totales[this.inputs.campos[x].acumulaen]
                 }
               }
             }
           }
-          ////console.log(totales);
           var objtotales = Object.keys(totales);
           for (var x = 0; x < objtotales.length; x++) {
             eval("this.objeto." + objtotales[x] + "=" + totales[objtotales[x]]);
           }
 
           for (var x = 0; x < this.inputs.campos.length; x++) {
-            ////console.log(this.inputs.campos[x]);
             if (this.inputs.campos[x].espieza == false) {
-              ////console.log(
-              //eval("this.objeto." + this.inputs.campos[x].vmodel == null)
-              //);
-              ////console.log(this.objeto);
               if (
                 eval("this.objeto." + this.inputs.campos[x].vmodel) == "" ||
                 eval("this.objeto." + this.inputs.campos[x].vmodel == "null") ||
                 eval("this.objeto." + this.inputs.campos[x].vmodel == null)
               ) {
-                ////////console.log("");
-                //////console.log("pivote tru");
-                ////////console.log(eval('this.objeto.'+llaves[x]));
                 this.validatecampo = {
                   border: "1px solid  #ff8080"
                 };
                 pivote = true;
               } else {
-                ////console.log("pivote else");
               }
             }
           }
         } else {
           for (var x = 0; x < this.inputs.campos.length; x++) {
-            ////console.log(this.inputs.campos[x]);
             if (this.inputs.campos[x].espieza == false) {
-              ////console.log(
-              //eval("this.objeto." + this.inputs.campos[x].vmodel == null)
-              //);
               if (
                 eval("this.objeto." + this.inputs.campos[x].vmodel) == "" ||
                 eval("this.objeto." + this.inputs.campos[x].vmodel == "null") ||
                 eval("this.objeto." + this.inputs.campos[x].vmodel == null)
               ) {
-                ////////console.log("");
-                //////console.log("pivote tru");
-                ////////console.log(eval('this.objeto.'+llaves[x]));
                 this.validatecampo = {
                   border: "1px solid  #ff8080"
                 };
                 pivote = true;
               } else {
-                //////console.log("pivote else");
               }
             }
           }
         }
-        //////console.log(pivote);
-        ////console.log(this.objeto);
 
         if (pivote == false) {
           this.validatecampo = "";
         }
+        var load = false;
+        setTimeout(() => {
+          bus.$emit("load", {
+            load
+          });
+        });
       }
-      ////////console.log(pivote);
       if (
         this.selectproduct == "" ||
         this.selectservice == "" ||
@@ -1439,7 +1545,6 @@ export default {
 
         swal("Oops...", "Falto completar algun campo", "error");
       } else {
-        ////////console.log(this.objeto);
         this.objeto.objetoUnidades;
         this.objeto.objetoUnidades = this.itemsdinamicos;
         var servicioslocal = this.selectservicio;
@@ -1455,7 +1560,6 @@ export default {
           detalleslocal: detalleslocal
         };
         this.DetalleServicio.push(detalles);
-        //console.log(this.DetalleServicio);
         //BLANQUEAR DATOS
         this.tabIndex = 0;
         this.camposdinamicos = false;
@@ -1470,11 +1574,13 @@ export default {
           (this.objeto = ""),
           (this.inputs = ""),
           toastr.success("Se agrego exitosamente");
-        //this.selectservice = null
-         //this.selectproduct = null
-         //this.selectproducto=null
-         //this.selectservicio=null
-         
+        //this.selectservice = ""
+       // this.selectproduct = null
+        //this.selectproducto
+        //this.serviciosurl=""
+        //this.productosurl=""
+        //this.selectservicio=null
+
         (this.objeto = ""),
           (this.detalles = {
             destinatario: {
@@ -1489,7 +1595,6 @@ export default {
       }
     },
     Presiono(index) {
-      //console.log("entro al presionar");
       var cero = "";
       setTimeout(
         function() {
@@ -1553,64 +1658,51 @@ export default {
           }
         }.bind(this)
       );
-      ////////console.log(this.objeto)
     },
-    seleccionarServicio(){
-        console.log(this.selectproduct);
-        if(this.selectproduct==null||this.selectproduct=='null'|this.selectproduct==''){
-            this.habilitar = true;
-            this.serviciosurl = [];
-            this.selectservice = null; 
-        }
-        else{
-            var load = true;
-            setTimeout(() => {
-                bus.$emit("load", {
-                    load
-                });
+    seleccionarServicioED() {
+      this.axios
+        .get(urlservicios + "servicios/" + this.selectproducto._id)
+        .then(response => {
+          this.serviciosurlED = response.data;
+          //this.load=false
+          var load2 = false;
+          setTimeout(() => {
+            bus.$emit("load", {
+              load2
             });
-            //this.habilitar = false;
-            this.selectproducto=this.selectproduct
-            this.axios.get(urlservicios + "servicios/" + this.selectproducto._id)
-                .then(response => {
-                    this.serviciosurl = response.data;
-                    //this.load=false
-                    var load2 = false;
-                    setTimeout(() => {
-                    bus.$emit("load", {
-                        load2
-                    });
-                    });
-                    this.habilitar = false;
-                    ////////console.log(this.serviciosurl);
-                    
-                });
-
-        }
+          });
+          this.habilitar = false;
+        })
+        .catch(function(error) {
+          var load = false;
+          setTimeout(() => {
+            bus.$emit("load", {
+              load
+            });
+          });
+          swal("Advertencia", "Intente nuevamente, por favor", "warning");
+        });
     },
-    service(value) {
-      var vacio = { _id: null, nombre: "Por Favor Seleccione un Servicio" };
-
-      if (value.target.value == null || value.target.value == "") {
-        console.log("va vacio");
+    seleccionarServicio() {
+      if (
+        this.selectproduct == null ||
+        (this.selectproduct == "null") | (this.selectproduct == "")
+      ) {
         this.habilitar = true;
         this.serviciosurl = [];
         this.selectservice = null;
-        this.serviciosurl.unshift(vacio);
       } else {
-        //////console.log("entro a seleccion");
-        //this.load = true;
         var load = true;
         setTimeout(() => {
           bus.$emit("load", {
             load
           });
         });
-        for (var i = 0; i < this.productosurl.length; i++) {
-          if (this.productosurl[i]._id == value.target.value) {
-            this.selectproducto = this.productosurl[i];
-          }
-        }
+        this.habilitar = true;
+        this.serviciosurl = [];
+        this.selectservice = null;
+        //this.habilitar = false;
+        this.selectproducto = this.selectproduct;
         this.axios
           .get(urlservicios + "servicios/" + this.selectproducto._id)
           .then(response => {
@@ -1623,73 +1715,179 @@ export default {
               });
             });
             this.habilitar = false;
-            ////////console.log(this.serviciosurl);
-            this.serviciosurl.unshift(vacio);
+          })
+          .catch(function(error) {
+            var load = false;
+            setTimeout(() => {
+              bus.$emit("load", {
+                load
+              });
+            });
+            swal("Advertencia", "Intente nuevamente, por favor", "warning");
           });
       }
     },
-    camposNversion(){
-        console.log(this.selectservice); 
-        if(this.selectservice==null||this.selectservice==''||this.selectservice=='null'){
-            console.log("no hago nada");
-            this.inputs=''
-            this.objeto=''
-            this.tabdinamico=true
-        }
-        else{
-            this.selectservicio=this.selectservice
-            this.axios.get(urlservicios+"estructuraf/"+this.selectproducto._id+"/" +this.selectservicio._id)
-            .then(response => {
+    camposNversionED() {
+     
+      this.axios
+        .get(
+          urlservicios +
+            "estructuraf/" +
+            this.selectproductED._id +
+            "/" +
+            this.selectserviceED._id
+        )
+        .then(response => {
+          this.inputsED = response.data;
+
+          for (var x = 0; x < this.inputsED.campos.length; x++) {
+            if (this.inputsED.campos[x].espieza == true) {
+
+              this.camposdinamicos = true;
+              this.tabdinamicoED=false
+            }
+            else{
+              //this.tabdinamicoED=true
+            }
+          }
+          this.$refs.ModalEdit.show();
+        })
+      /*
+      if (
+        this.selectserviceED == null ||
+        this.selectserviceED == "" ||
+        this.selectserviceED == "null"
+      ) {
+        this.inputs = "";
+        this.objeto = "";
+        this.tabdinamico = true;
+      } else {
+        this.selectservicio = this.selectserviceED;
+        var load = true;
+        setTimeout(() => {
+          bus.$emit("load", {
+            load
+          });
+        });
+        this.axios
+          .get(
+            urlservicios +
+              "estructuraf/" +
+              this.selectproductoED._id +
+              "/" +
+              this.selectservicio._id
+          )
+          .then(response => {
             this.inputs = response.data;
 
-            ////console.log(this.inputs);
             this.objeto = this.inputs.objeto;
-            //////console.log(this.objeto)
+
             var bandera_dinamico = false;
             for (var x = 0; x < this.inputs.campos.length; x++) {
-                console.log(this.inputs.campos[x]);
-                if (this.inputs.campos[x].espieza == true) {
-                //console.log("algo dinamico");
-                bandera_dinamico=true
+              if (this.inputs.campos[x].espieza == true) {
+                bandera_dinamico = true;
                 this.camposdinamicos = true;
-                }
-                else{
-                  this.camposdinamicos = true;
-                 
-                }
+              } else {
+                this.camposdinamicos = true;
+              }
             }
-            if (this.camposdinamicos == true&&bandera_dinamico==true) {
-                console.log("algo dinamico");
-                this.tabdinamico = false;
+            if (this.camposdinamicos == true && bandera_dinamico == true) {
+              this.tabdinamico = false;
             } else {
-                this.camposdinamicos = false;
-                this.tabdinamico = true;
+              this.camposdinamicos = false;
+              this.tabdinamico = true;
             }
-            console.log(this.camposdinamicos);
-            console.log("----tab---");
-            console.log(this.tabdinamico);
             //this.load=false
             var load2 = false;
             setTimeout(() => {
-                bus.$emit("load", {
+              bus.$emit("load", {
                 load2
-                });
+              });
             });
-            })
-            .catch(function(error) {
-            ////////console.log("error estruc -> "+JSON.stringify(error));
+          })
+          .catch(function(error) {
+            var load = false;
+            setTimeout(() => {
+              bus.$emit("load", {
+                load
+              });
             });
-        }
-        
+            swal("Error", "Intente nuevamente, por favor", "warning");
+          });
+      }
+      */
     },
- 
+    camposNversion() {
+      if (
+        this.selectservice == null ||
+        this.selectservice == "" ||
+        this.selectservice == "null"
+      ) {
+        this.inputs = "";
+        this.objeto = "";
+        this.tabdinamico = true;
+      } else {
+        this.selectservicio = this.selectservice;
+        var load = true;
+        setTimeout(() => {
+          bus.$emit("load", {
+            load
+          });
+        });
+        this.axios
+          .get(
+            urlservicios +
+              "estructuraf/" +
+              this.selectproducto._id +
+              "/" +
+              this.selectservicio._id
+          )
+          .then(response => {
+            this.inputs = response.data;
+
+            this.objeto = this.inputs.objeto;
+
+            var bandera_dinamico = false;
+            for (var x = 0; x < this.inputs.campos.length; x++) {
+              if (this.inputs.campos[x].espieza == true) {
+                bandera_dinamico = true;
+                this.camposdinamicos = true;
+              } else {
+                this.camposdinamicos = true;
+              }
+            }
+            if (this.camposdinamicos == true && bandera_dinamico == true) {
+              this.tabdinamico = false;
+            } else {
+              this.camposdinamicos = false;
+              this.tabdinamico = true;
+            }
+            //this.load=false
+            var load2 = false;
+            setTimeout(() => {
+              bus.$emit("load", {
+                load2
+              });
+            });
+          })
+          .catch(function(error) {
+            var load = false;
+            setTimeout(() => {
+              bus.$emit("load", {
+                load
+              });
+            });
+            swal("Error", "Intente nuevamente, por favor", "warning");
+          });
+      }
+    },
+
     envioServicio() {
       if (
         this.DetalleServicio == "" ||
         this.DetalleServicio == null ||
         this.DetalleServicio == undefined
       ) {
-        //////console.log("no se envia");
         swal("Atencion!", "La Orden debe tener minimo un detalle ", "error");
       } else {
         var login = localStorage.getItem("storedData");
@@ -1732,23 +1930,39 @@ export default {
           },
           detalle: this.DetalleServicio
         };
-        console.log(JSON.stringify(objeto));
-        console.log(this.DetalleServicio);
+        var load = true;
+        setTimeout(() => {
+          bus.$emit("load", {
+            load
+          });
+        });
         this.axios
           .post(urlservicios + "GuardarOrden", objeto)
           .then(response => {
+            var load = false;
+            setTimeout(() => {
+              bus.$emit("load", {
+                load
+              });
+            });
             this.Documento = response.data.ducumento;
-            //////console.log(response);
-            //////console.log("-------");
-            ////////console.log(JSON.stringify(objeto));
             swal(
               "Excelente!",
               "La Orden de Servicio Generada es: " + this.Documento,
               "success"
             );
+            this.$router.replace("/inicio");
+            localStorage.removeItem("orden");
+          })
+          .catch(function(error) {
+            var load = false;
+            setTimeout(() => {
+              bus.$emit("load", {
+                load
+              });
+            });
+            swal("Error", "Intente nuevamente, por favor", "warning");
           });
-        this.$router.replace("/inicio");
-        localStorage.removeItem("orden");
       }
     }
   },
@@ -1769,7 +1983,6 @@ export default {
 </script>
 
 <style>
-
 .contenedorTotal {
   padding-top: 0px;
   padding-right: 0%;
@@ -1828,9 +2041,9 @@ export default {
   border-top: none;
 }
 */
-#tarjeta .card-header{
- background-color: #ebeaea !important;
-   
-    color: white;
+#tarjeta .card-header {
+  background-color: #ebeaea !important;
+
+  color: white;
 }
 </style>

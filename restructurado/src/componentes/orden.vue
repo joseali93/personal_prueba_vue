@@ -183,185 +183,191 @@ export default {
     },
     clienteSeleccionado() {
       //console.log(this.selected_client);
-       var orden = localStorage.getItem("orden");
-          var ordenjson = JSON.parse(orden);
-        if (this.disable_selected_client == true) {
-            console.log("cliente ");
-            if (this.selected_client) {
-                if (orden) {
-                    //console.log(ordenjson);
-                    console.log("entro a cargue");
-                    this.selected_cliente = Object.assign({},ordenjson.selected_client);
-                    this.selected_centro = Object.assign({}, ordenjson.selected_center);
-                    this.selected_center = Object.assign({}, this.selected_centro);
-                    localStorage.removeItem("orden");
+      var orden = localStorage.getItem("orden");
+      var ordenjson = JSON.parse(orden);
+      if (this.disable_selected_client == true) {
+        console.log("cliente ");
+        if (this.selected_client) {
+          if (orden) {
+            //console.log(ordenjson);
+            console.log("entro a cargue");
+            this.selected_cliente = Object.assign(
+              {},
+              ordenjson.selected_client
+            );
+            this.selected_centro = Object.assign({}, ordenjson.selected_center);
+            this.selected_center = Object.assign({}, this.selected_centro);
+            localStorage.removeItem("orden");
 
-                    var load = true;
-                    setTimeout(() => {
-                    bus.$emit("load", {
-                        load
-                    });
-                    });
-                    this.axios.get(urlservicios + "CentrosPorCliente/" + this.selected_client._id)
-                    .then(response => {
-                        this.centros = response.data;
+            var load = true;
+            setTimeout(() => {
+              bus.$emit("load", {
+                load
+              });
+            });
+            this.axios
+              .get(
+                urlservicios + "CentrosPorCliente/" + this.selected_client._id
+              )
+              .then(response => {
+                this.centros = response.data;
 
-                        //this.selected_centro = {};
-                        this.habilitar = false;
-                        //this.load=false
-                        var load = false;
-                        setTimeout(() => {
-                        bus.$emit("load", {
-                            load
-                        });
-                        });
-                    })
-                    .catch(error => {
-                        console.log(error.response)
-                    });
-                } else {
-                    console.log("entro");
-                    console.log(this.selected_client);
-                    this.selected_cliente = Object.assign({}, this.selected_client);
-                    this.selected_center = null;
-                    var load = true;
-                    setTimeout(() => {
-                    bus.$emit("load", {
-                        load
-                    });
-                    });
-                    console.log(
-                    urlservicios + "CentrosPorCliente/" + this.selected_client._id
-                    );
-                    this.axios.get(urlservicios + "CentrosPorCliente/" + this.selected_client._id)
-                    .then(response => {
-                        console.log(response);
-                        this.centros = response.data;
-
-                        this.selected_centro = {};
-                        this.habilitar = false;
-                        //this.load=false
-                        var load = false;
-                        setTimeout(() => {
-                        bus.$emit("load", {
-                            load
-                        });
-                        });
-                    })
-                    .catch(error => {
-                        console.log(error.response)
-                    });
-                }
-            } 
-            else {
-                var load = true;
-                setTimeout(() => {
-                    bus.$emit("load", {
-                    load
-                    });
-                });
-                console.log(this.selected_client);
-                this.selected_cliente = {};
-                this.selected_center = null;
-                this.habilitar = true;
-                this.centros = [];
+                //this.selected_centro = {};
+                this.habilitar = false;
+                //this.load=false
                 var load = false;
                 setTimeout(() => {
-                    bus.$emit("load", {
+                  bus.$emit("load", {
                     load
-                    });
+                  });
                 });
-            }
-        } 
-        else {
-            if (this.selected_client) {
-                if (orden) {
-                    //console.log(ordenjson);
-                    console.log("entro a cargue");
-                    this.selected_cliente = Object.assign(
-                    {},
-                    ordenjson.selected_client
-                    );
-                    this.selected_centro = Object.assign({}, ordenjson.selected_center);
-                    this.selected_center = Object.assign({}, this.selected_centro);
-                    localStorage.removeItem("orden");
+              })
+              .catch(error => {
+                console.log(error.response);
+              });
+          } else {
+            console.log("entro");
+            console.log(this.selected_client);
+            this.selected_cliente = Object.assign({}, this.selected_client);
+            this.selected_center = null;
+            var load = true;
+            setTimeout(() => {
+              bus.$emit("load", {
+                load
+              });
+            });
+            console.log(
+              urlservicios + "CentrosPorCliente/" + this.selected_client._id
+            );
+            this.axios
+              .get(
+                urlservicios + "CentrosPorCliente/" + this.selected_client._id
+              )
+              .then(response => {
+                console.log(response);
+                this.centros = response.data;
 
-                    var load = true;
-                    setTimeout(() => {
-                    bus.$emit("load", {
-                        load
-                    });
-                    });
-                    this.axios
-                    .get(
-                        urlservicios + "CentrosPorCliente/" + this.selected_client._id
-                    )
-                    .then(response => {
-                        this.centros = response.data;
-
-                        //this.selected_centro = {};
-                        this.habilitar = false;
-                        //this.load=false
-                        var load = false;
-                        setTimeout(() => {
-                        bus.$emit("load", {
-                            load
-                        });
-                        });
-                    });
-                } else {
-                    console.log("entro");
-                    console.log(this.selected_client);
-                    this.selected_cliente = Object.assign({}, this.selected_client);
-                    this.selected_center = null;
-                    var load = true;
-                    setTimeout(() => {
-                    bus.$emit("load", {
-                        load
-                    });
-                    });
-                    console.log(
-                    urlservicios + "CentrosPorCliente/" + this.selected_client._id
-                    );
-                    this.axios
-                    .get(
-                        urlservicios + "CentrosPorCliente/" + this.selected_client._id
-                    )
-                    .then(response => {
-                        console.log(response);
-                        this.centros = response.data;
-
-                        this.selected_centro = {};
-                        this.habilitar = false;
-                        //this.load=false
-                        var load = false;
-                        setTimeout(() => {
-                        bus.$emit("load", {
-                            load
-                        });
-                        });
-                    });
-                }
-            } 
-            else {
-                var load = true;
-                setTimeout(() => {
-                    bus.$emit("load", {
-                    load
-                    });
-                });
-                console.log(this.selected_client);
-                this.selected_cliente = {};
-                this.selected_center = null;
-                this.habilitar = true;
-                this.centros = [];
+                this.selected_centro = {};
+                this.habilitar = false;
+                //this.load=false
                 var load = false;
                 setTimeout(() => {
-                    bus.$emit("load", {
+                  bus.$emit("load", {
                     load
-                    });
+                  });
                 });
-            }
+              })
+              .catch(error => {
+                console.log(error.response);
+              });
+          }
+        } else {
+          var load = true;
+          setTimeout(() => {
+            bus.$emit("load", {
+              load
+            });
+          });
+          console.log(this.selected_client);
+          this.selected_cliente = {};
+          this.selected_center = null;
+          this.habilitar = true;
+          this.centros = [];
+          var load = false;
+          setTimeout(() => {
+            bus.$emit("load", {
+              load
+            });
+          });
+        }
+      } else {
+        if (this.selected_client) {
+          if (orden) {
+            //console.log(ordenjson);
+            console.log("entro a cargue");
+            this.selected_cliente = Object.assign(
+              {},
+              ordenjson.selected_client
+            );
+            this.selected_centro = Object.assign({}, ordenjson.selected_center);
+            this.selected_center = Object.assign({}, this.selected_centro);
+            localStorage.removeItem("orden");
+
+            var load = true;
+            setTimeout(() => {
+              bus.$emit("load", {
+                load
+              });
+            });
+            this.axios
+              .get(
+                urlservicios + "CentrosPorCliente/" + this.selected_client._id
+              )
+              .then(response => {
+                this.centros = response.data;
+
+                //this.selected_centro = {};
+                this.habilitar = false;
+                //this.load=false
+                var load = false;
+                setTimeout(() => {
+                  bus.$emit("load", {
+                    load
+                  });
+                });
+              });
+          } else {
+            console.log("entro");
+            console.log(this.selected_client);
+            this.selected_cliente = Object.assign({}, this.selected_client);
+            this.selected_center = null;
+            var load = true;
+            setTimeout(() => {
+              bus.$emit("load", {
+                load
+              });
+            });
+            console.log(
+              urlservicios + "CentrosPorCliente/" + this.selected_client._id
+            );
+            this.axios
+              .get(
+                urlservicios + "CentrosPorCliente/" + this.selected_client._id
+              )
+              .then(response => {
+                console.log(response);
+                this.centros = response.data;
+
+                this.selected_centro = {};
+                this.habilitar = false;
+                //this.load=false
+                var load = false;
+                setTimeout(() => {
+                  bus.$emit("load", {
+                    load
+                  });
+                });
+              });
+          }
+        } else {
+          var load = true;
+          setTimeout(() => {
+            bus.$emit("load", {
+              load
+            });
+          });
+          console.log(this.selected_client);
+          this.selected_cliente = {};
+          this.selected_center = null;
+          this.habilitar = true;
+          this.centros = [];
+          var load = false;
+          setTimeout(() => {
+            bus.$emit("load", {
+              load
+            });
+          });
+        }
       }
     },
     centrosseleccionado(seleccion) {
@@ -464,12 +470,20 @@ export default {
                     load
                   });
                 });
-              });
+              }).catch(function(error){
+                  
+              })
           }
         }
       }
     },
     actualizar: function() {
+      var load = true;
+      setTimeout(() => {
+        bus.$emit("load", {
+          load
+        });
+      });
       if (
         this.selected_client == "" ||
         this.selected_center == "" ||
@@ -501,7 +515,14 @@ export default {
         console.log(selecciones);
         //console.log("-----------");
         console.log(seleccionados);
+        
         this.$router.replace("/inicio/ordenservicio");
+        var load = false;
+      setTimeout(() => {
+        bus.$emit("load", {
+          load
+        });
+      });
       }
     }
   },
@@ -600,11 +621,11 @@ export default {
               load
             });
           });
-          if(error.response='""'){
+          if ((error.response = '""')) {
             console.log("error de conexion");
             swal({
-              title: "No hay Internet",
-              text: "Revise su conexion",
+              title: "Se presento un error",
+              text: "Si persiste comuniquese con soporte",
               type: "warning",
               showCancelButton: true,
               confirmButtonColor: "#3085d6",
@@ -614,14 +635,13 @@ export default {
               if (result.value) {
                 swal(
                   "Se Redireccionara a la pagina de inicio",
-                  "Buen Rato",
+                  "",
                   "warning"
                 );
                 _this.$router.replace("/inicio");
               }
             });
-          }
-          else{
+          } else {
             console.log("valdiacion");
             swal({
               title: "Dificultades en el Servicio",
@@ -651,20 +671,19 @@ export default {
           //this.$router.replace('/inicio')
 
           if (bandera == false) {
-            
           }
         });
     } else {
       console.log("tengo cliente");
       id_cliente = test.id_cliente;
       console.log(id_cliente);
-	  //console.log(urlservicios+"clientesOperador/"+test.id_OperadorLogistico+'/'+id_cliente);
-	  var load = true;
-          setTimeout(() => {
-            bus.$emit("load", {
-              load
-            });
-          });
+      //console.log(urlservicios+"clientesOperador/"+test.id_OperadorLogistico+'/'+id_cliente);
+      var load = true;
+      setTimeout(() => {
+        bus.$emit("load", {
+          load
+        });
+      });
       this.axios
         .get(
           urlservicios +
@@ -674,17 +693,17 @@ export default {
             id_cliente
         )
         .then(response => {
-			console.log(response);
-			var load = false;
-			setTimeout(() => {
-				bus.$emit("load", {
-				load
-				});
-			});
-				this.clientes = response.data;
-				this.selected_client=this.clientes[0]
-				this.selected_cliente=  Object.assign({},this.clientes[0])
-				 this.disable_selected_client = true;
+          console.log(response);
+          var load = false;
+          setTimeout(() => {
+            bus.$emit("load", {
+              load
+            });
+          });
+          this.clientes = response.data;
+          this.selected_client = this.clientes[0];
+          this.selected_cliente = Object.assign({}, this.clientes[0]);
+          this.disable_selected_client = true;
           /*
           this.clientes = response.data;
           this.selected_cliente.nombre = this.clientes[0].nombre;
@@ -792,8 +811,8 @@ export default {
   padding-bottom: 30px;
   border-color: 15px gray;
 }
-.dashboard-header section-padding{
-    padding-top: 1px;
-    padding-bottom: 01px;
+.dashboard-header section-padding {
+  padding-top: 1px;
+  padding-bottom: 01px;
 }
 </style>

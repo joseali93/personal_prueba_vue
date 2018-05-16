@@ -390,7 +390,7 @@ export default {
         filters: {
         formatdate: function(value) {
         if (value) {
-            return moment(String(value)).format('MM/DD/YYYY')
+            return moment(String(value)).format('MM/DD/YYYY, h:mm:ss a')
         }
         }
     },
@@ -463,19 +463,32 @@ export default {
                 console.log(objeT);
                 this.axios.post(urlservicios+"EnviarCorreoImagen", objeT)
                     .then(response => {
-                    this.respuesta = response.data;
-                    console.log(response);
-                    var load=false
-                    setTimeout(() => {
-                        bus.$emit('load', {
+                        this.respuesta = response.data;
+                        console.log(response);
+                        var load=false
+                        setTimeout(() => {
+                            bus.$emit('load', {
+                                load
+                            })
+                            }, )
+                        swal(
+                            "Excelente!",
+                            " " + this.respuesta,
+                            "success"
+                        );
+                    })
+                    .catch(function(error) {
+                        var load = false;
+                        setTimeout(() => {
+                            bus.$emit("load", {
                             load
-                        })
-                        }, )
-                    swal(
-                        "Excelente!",
-                        " " + this.respuesta,
-                        "success"
-                    );
+                            });
+                        });
+                        swal(
+                            "Se presento un problema",
+                            "Intente nuevamente, por favor",
+                            "warning"
+                        );
                     });
             }
         },
@@ -540,21 +553,34 @@ export default {
                 console.log(objeto);
                 this.axios.post(urlservicios+"EnviarCorreoImagen", objeto)
                 .then(response => {
-                this.respuesta = response.data;
-                console.log(response);
-                console.log(objeto);
-                var load=false
-                    setTimeout(() => {
-                        bus.$emit('load', {
+                    this.respuesta = response.data;
+                    console.log(response);
+                    console.log(objeto);
+                    var load=false
+                        setTimeout(() => {
+                            bus.$emit('load', {
+                                load
+                            })
+                            }, )
+                    swal(
+                        "Excelente!",
+                        " " + this.respuesta,
+                        "success"
+                    );
+                })
+                .catch(function(error) {
+                        var load = false;
+                        setTimeout(() => {
+                            bus.$emit("load", {
                             load
-                        })
-                        }, )
-                swal(
-                    "Excelente!",
-                    " " + this.respuesta,
-                    "success"
-                );
-                });
+                            });
+                        });
+                        swal(
+                            "Se presento un problema",
+                            "Intente nuevamente, por favor",
+                            "warning"
+                        );
+                    });
             }
 
 
