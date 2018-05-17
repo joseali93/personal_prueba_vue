@@ -852,7 +852,6 @@ export default {
         this.itemsdinamicos.push(tituloopciones);
       }
     },
-
     buscar(accion) {
       if (accion == "nuevo") {
         var load = true;
@@ -1545,6 +1544,7 @@ export default {
 
         swal("Oops...", "Falto completar algun campo", "error");
       } else {
+        
         this.objeto.objetoUnidades;
         this.objeto.objetoUnidades = this.itemsdinamicos;
         var servicioslocal = this.selectservicio;
@@ -1553,6 +1553,22 @@ export default {
         var productoslocal = this.selectproducto;
         var detalleslocal = this.detalles;
 
+        /*
+
+        cambios de immpresion
+        */
+        this.inputs.campos.forEach(element => {
+          if(element.esImprimible==true||element.esImprimible===true)
+          {
+            console.log(element);
+           detalleslocal.Imprime=element.acumulaen
+          }
+          else{
+            //detalleslocal.Imprime=''
+          }
+        });
+
+
         var detalles = {
           trazabilidad: [],
           servicioslocal: servicioslocal,
@@ -1560,6 +1576,8 @@ export default {
           detalleslocal: detalleslocal
         };
         this.DetalleServicio.push(detalles);
+        console.log('this.DetalleServicio: ', this.DetalleServicio);
+        
         //BLANQUEAR DATOS
         this.tabIndex = 0;
         this.camposdinamicos = false;
@@ -1568,18 +1586,11 @@ export default {
         this.identificacion = "";
         (this.habilitar = true),
           (this.mostrardestinatario = false),
-          //pendiente para correcion error de cambio de servicio
-          //this.selectproducto=''
-          //this.selectservicio=''
+ 
           (this.objeto = ""),
           (this.inputs = ""),
           toastr.success("Se agrego exitosamente");
-        //this.selectservice = ""
-       // this.selectproduct = null
-        //this.selectproducto
-        //this.serviciosurl=""
-        //this.productosurl=""
-        //this.selectservicio=null
+  
 
         (this.objeto = ""),
           (this.detalles = {
@@ -1752,70 +1763,7 @@ export default {
           }
           this.$refs.ModalEdit.show();
         })
-      /*
-      if (
-        this.selectserviceED == null ||
-        this.selectserviceED == "" ||
-        this.selectserviceED == "null"
-      ) {
-        this.inputs = "";
-        this.objeto = "";
-        this.tabdinamico = true;
-      } else {
-        this.selectservicio = this.selectserviceED;
-        var load = true;
-        setTimeout(() => {
-          bus.$emit("load", {
-            load
-          });
-        });
-        this.axios
-          .get(
-            urlservicios +
-              "estructuraf/" +
-              this.selectproductoED._id +
-              "/" +
-              this.selectservicio._id
-          )
-          .then(response => {
-            this.inputs = response.data;
-
-            this.objeto = this.inputs.objeto;
-
-            var bandera_dinamico = false;
-            for (var x = 0; x < this.inputs.campos.length; x++) {
-              if (this.inputs.campos[x].espieza == true) {
-                bandera_dinamico = true;
-                this.camposdinamicos = true;
-              } else {
-                this.camposdinamicos = true;
-              }
-            }
-            if (this.camposdinamicos == true && bandera_dinamico == true) {
-              this.tabdinamico = false;
-            } else {
-              this.camposdinamicos = false;
-              this.tabdinamico = true;
-            }
-            //this.load=false
-            var load2 = false;
-            setTimeout(() => {
-              bus.$emit("load", {
-                load2
-              });
-            });
-          })
-          .catch(function(error) {
-            var load = false;
-            setTimeout(() => {
-              bus.$emit("load", {
-                load
-              });
-            });
-            swal("Error", "Intente nuevamente, por favor", "warning");
-          });
-      }
-      */
+     
     },
     camposNversion() {
       if (
@@ -1936,6 +1884,7 @@ export default {
             load
           });
         });
+        console.log(objeto);
         this.axios
           .post(urlservicios + "GuardarOrden", objeto)
           .then(response => {

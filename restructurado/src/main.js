@@ -21,7 +21,7 @@ const enrutador = new VueRouter({
         mode: 'history'
     })
 //    export var urlservicios = 'http://200.116.52.29:3000/logistica/';
-//export var urlservicios = 'http://192.168.1.58:3000/logistica/';
+//export var urlservicios = 'http://192.168.1.87:3000/logistica/';
 //export var urlservicios = 'http://192.168.1.59:3000/logistica/';
 export var urlservicios = 'http://localhost:3000/logistica/';
 
