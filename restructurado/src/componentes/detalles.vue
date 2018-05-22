@@ -334,6 +334,7 @@
 							 @input="seleccionar(data)" :value="valueseleccion(data,indice)" 
 							 :disabled="selec_disable">
 							</b-form-select>
+              
 						</b-col>
 					</template>
 
@@ -418,14 +419,11 @@ export default {
   },
   methods: {
     vehic() {
-      console.log(this.currentUser);
-      console.log(typeof this.model_medios);
 
       var login = localStorage.getItem("storedData");
       var infologin = JSON.parse(login);
 
       if (typeof this.model_medios == "string") {
-        //console.log("es id");
         var load = true;
         setTimeout(() => {
           bus.$emit("load", {
@@ -441,11 +439,9 @@ export default {
                 load
               });
             });
-            console.log(response);
             this.medios = response.data;
             this.medios.forEach(element => {
               if (element._id == this.model_medios) {
-                //console.log("son iguales");
                 this.model_medios = element;
               }
             });
@@ -466,12 +462,10 @@ export default {
               .then(response2 => {
                 this.curiers = response2.data;
                 //this.selec_disable=false
-                console.log(this.curiers);
                 var nombre;
                 this.curiers.forEach(element2 => {
                   nombre = element2.nombre;
                   element2.nombre = nombre + " " + element2.apellido;
-                  console.log(element2);
                   if (element2._id == this.selected_curier) {
                     this.selected_curier = element2;
                   }
@@ -499,8 +493,6 @@ export default {
           });
       } else {
         if (this.model_medios != null) {
-          //console.log(this.medios);
-          //console.log("entro a vehiculos");
 
           var nombre;
           var load = true;
@@ -522,7 +514,6 @@ export default {
               this.curiers.forEach(element2 => {
                 nombre = element2.nombre;
                 element2.nombre = nombre + " " + element2.apellido;
-                console.log(element2);
                 if (element2._id == this.selected_curier) {
                   this.selected_curier = element2;
                 }
@@ -554,7 +545,6 @@ export default {
       }
     },
     desabilitarguardar() {
-      //console.log(this.info.estado);
       if (
         this.info.estado == "orden de servicio cancelada" ||
         this.info.estado == "Orden De Servicio Recogida"
@@ -566,33 +556,22 @@ export default {
       }
     },
     desabilitar(value) {
-      //console.log(value);
       if (this.selec_disable == true) {
-        //console.log("desabilito todo");
         return true;
       } else {
-        //console.log("no desabilito  todo");
         return value.requerido_edi;
       }
     },
     valueseleccion(datos, indices) {
-      //console.log(document.getElementById(datos.id).value);
-      //console.log(this.currentUser.detalle[0].detalleslocal.infor.trayectoobj.id_trayecto);
       for (var x = 0; x < this.currentUser.detalle.length; x++) {
         if (
           this.currentUser.detalle[this.indices].detalleslocal.infor
             .trayectoobj == undefined
         ) {
-          console.log("no tiene trayectos");
           return null;
         } else {
           var llaves = Object.keys(this.campos);
-          console.log(
-            eval(
-              "this.currentUser.detalle[this.indices].detalleslocal.infor.trayectoobj." +
-                llaves[indices]
-            )
-          );
+          
           return eval(
             "this.currentUser.detalle[this.indices].detalleslocal.infor.trayectoobj." +
               llaves[indices]
@@ -601,18 +580,15 @@ export default {
       }
     },
     seleccionar(value) {
-      console.log("entro a algo");
       var trayecto;
       var trayectoobj = {};
       var x = document.getElementById(value.id).value;
-      //console.log(x);
       if (
         x == "" ||
         x == null ||
         x == undefined ||
         x == "000000000000000000000000"
       ) {
-        console.log("no cambio");
       } else {
         eval("this.campos." + value.vmodel + "=" + "x");
         for (var x = 0; x < this.trayectos.length; x++) {
@@ -621,19 +597,13 @@ export default {
               id_trayecto: eval("this.campos." + value.vmodel),
               nombre: this.trayectos[x].nombre
             };
-            console.log(this.indices);
-            //console.log(typeof(this.currentUser.detalle[this.indices].detalleslocal.infor.trayectoobj));
-            console.log("----------------------");
-            console.log(
-              this.currentUser.detalle[this.indices].detalleslocal.infor
-            );
+            
             if (
               this.currentUser.detalle[this.indices].detalleslocal.infor
                 .trayecto == undefined ||
               this.currentUser.detalle[this.indices].detalleslocal.infor
                 .trayecto == null
             ) {
-              console.log("no tiene trayecto ");
               this.currentUser.detalle[
                 this.indices
               ].detalleslocal.infor.trayectoobj = {};
@@ -646,13 +616,10 @@ export default {
               trayecto = this.trayectos[x].nombre;
               this.$refs.table.refresh();
             } else {
-              console.log(" tiene trayecto ");
               this.currentUser.detalle[
                 this.indices
               ].detalleslocal.infor.trayectoobj = trayectoobj;
-              console.log(
-                this.currentUser.detalle[this.indices].detalleslocal.infor
-              );
+              
               this.currentUser.detalle[
                 this.indices
               ].detalleslocal.infor.trayecto = this.trayectos[x].nombre;
@@ -677,11 +644,9 @@ export default {
       this.$router.replace("/inicio/consultar/resultado");
     },
     selectcuriers(value) {
-      console.log(value);
       //this.selected_curier=value.target.value
     },
     Presiono(indi, dato) {
-      console.log("entro a presionar");
       if (
         document.getElementById(this.inputs.campos[indi].id).value == null ||
         document.getElementById(this.inputs.campos[indi].id).value == ""
@@ -716,18 +681,12 @@ export default {
           );
         }
       }
-      //console.log(this.campos);
     },
     values(dato) {
       console.log(dato);
       console.log(this.currentUser.detalle[this.indices].detalleslocal.infor);
-      eval(
-        "this.campos." +
-          dato +
-          "=" +
-          "this.currentUser.detalle[this.indices].detalleslocal.infor." +
-          dato
-      );
+      console.log(eval("this.campos." +dato +"=" +"this.currentUser.detalle[this.indices].detalleslocal.infor." +dato));
+      eval("this.campos." +dato +"=" +"this.currentUser.detalle[this.indices].detalleslocal.infor." +dato);
       return eval(
         "this.currentUser.detalle[this.indices].detalleslocal.infor." + dato
       );
@@ -746,12 +705,9 @@ export default {
       if (this.id_cliente_local != null) {
         this.$refs.ModalAct.hide();
       } else {
-        //console.log(this.campos);
         this.$refs.table.refresh();
-        //console.log(this.selection);
         var nombresel;
 
-        //console.log(this.currentUser.detalle[this.indices].detalleslocal.infor);
         if (this.info.estado == "orden de servicio cancelada") {
           swal("Cuidado!", "Orden de Servicio Cancelada", "warning");
         } else {
@@ -760,7 +716,6 @@ export default {
             this.selection == "" ||
             this.selection == "000000000000000000000000"
           ) {
-            console.log("no tiene nada no cambio");
             this.detallesactualizar = "";
             this.itemsvariables = "";
             this.inputs = "";
@@ -771,13 +726,11 @@ export default {
           } else {
             for (var x = 0; x < this.trayectos.length; x++) {
               if (this.trayectos[x]._id == this.selection) {
-                console.log("saco el nombre");
                 nombresel = this.trayectos[x].nombre;
               }
             }
             var prueba = this.currentUser.detalle[this.indices].detalleslocal
               .infor;
-            //console.log(prueba);
 
             var objeto = {
               id_trayecto: this.selection,
@@ -787,7 +740,6 @@ export default {
 
             this.$refs.table.refresh();
 
-            console.log(objeto);
             var load = true;
             setTimeout(() => {
               bus.$emit("load", {
@@ -811,19 +763,15 @@ export default {
                   indice: this.indices,
                   detalle: this.currentUser.detalle[this.indices].id
                 };
-                console.log(objeto2);
                 if (this.id_trayectos.length == 0) {
                   this.id_trayectos.push(objeto2);
                 } else {
                   this.id_trayectos.forEach((obj, ind) => {
-                    console.log(obj);
                     if (obj.indice == this.indices) {
                       this.id_trayectos.splice(obj, 1);
                       this.id_trayectos.push(objeto2);
 
-                      console.log(this.id_trayectos);
                     } else {
-                      console.log("se agrega");
                       this.id_trayectos.push(objeto2);
                     }
                   });
@@ -864,7 +812,6 @@ export default {
       }
     },
     asignarcurier(seleccionado) {
-      console.log("entro a seleccion final");
       if (
         seleccionado == "" ||
         seleccionado == "null" ||
@@ -880,7 +827,6 @@ export default {
           id_medio: this.model_medios._id
         };
         this.statuscourier = null;
-        console.log(obj);
         var load = true;
         setTimeout(() => {
           bus.$emit("load", {
@@ -896,7 +842,6 @@ export default {
                 load
               });
             });
-            //console.log(response);
             this.Documento = response.data;
             if (this.Documento.validacion == false) {
             } else {
@@ -919,9 +864,7 @@ export default {
       }
     },
     asignar(seleccionado) {
-      //console.log(this.id_cliente_local);
       if (this.id_cliente_local != null) {
-        console.log("tiene algo");
         var ocultar = true;
         var eliminar = this.vali;
         setTimeout(() => {
@@ -933,7 +876,6 @@ export default {
         //this.$router.go(-1)
         this.$router.replace("/inicio/consultar/resultado");
       } else {
-        console.log("entro a asignar");
         var banderasinT = false;
         var banderaconT = false;
         var contador = 0;
@@ -941,54 +883,34 @@ export default {
         var correcto = [];
 
         if (this.id_trayectos.length == 0) {
-          console.log("no ingreso nda");
           for (var x = 0; x < this.currentUser.detalle.length; x++) {
-            console.log(this.currentUser.detalle[x].detalleslocal.infor);
 
             var llavesinfor = Object.keys(
               this.currentUser.detalle[x].detalleslocal.infor
             );
             for (var y = 0; y < llavesinfor.length; y++) {
               if (llavesinfor[y] != "trayectoobj") {
-                console.log("entrooo");
               } else {
-                /*
-								if(typeof(eval('this.currentUser.detalle[x].detalleslocal.infor.'+llavesinfor[y]))!='object')
-								{
-									//console.log(x);
-								
-								}
-								*/
+                
                 banderasinT = true;
                 contador = contador + 1;
                 correcto.push(x);
-                //console.log(correcto);
               }
             }
             pendi.push(x);
           }
         } else {
-          console.log("hay trayectos");
-          console.log(this.id_trayectos);
           for (var x = 0; x < this.currentUser.detalle.length; x++) {
-            console.log(this.currentUser.detalle[x].detalleslocal.infor);
             var llavesinfor = Object.keys(
               this.currentUser.detalle[x].detalleslocal.infor
             );
             for (var y = 0; y < llavesinfor.length; y++) {
-              console.log(
-                eval(
-                  "this.currentUser.detalle[x].detalleslocal.infor." +
-                    llavesinfor[y]
-                )
-              );
+              
               if (llavesinfor[y] != "trayectoobj") {
-                // console.log("entrooo");
               } else {
                 /*
 								if(typeof(eval('this.currentUser.detalle[x].detalleslocal.infor.'+llavesinfor[y]))!='object')
 								{
-									console.log("entrooo");
 
 								}
 								*/
@@ -1001,16 +923,13 @@ export default {
           }
         }
         for (var o = 0; o < pendi.length; o++) {
-          //console.log(pendi[o]);
-          //
+
 
           pendi[o] = pendi[o]++;
           for (var p = 0; p < correcto.length; p++) {
             if (pendi[o] == correcto[p]) {
-              //console.log("son iguales");
 
               pendi.splice(o, 1);
-              //console.log(pendi);
             }
           }
         }
@@ -1018,13 +937,9 @@ export default {
           pendi[o]++;
         }
 
-        console.log(pendi);
-        console.log(correcto);
         if (contador == this.currentUser.detalle.length) {
-          //console.log("todos andan completos");
           this.asignarcurier(seleccionado);
         } else {
-          //console.log("no andan completos")
           swal(
             "Falta algo por completar!",
             "Los servicios " + pendi + " Aún no tienen asignado un trayecto",
@@ -1033,36 +948,53 @@ export default {
         }
       }
     },
+    
     actualizar(indice, consecutivo) {
-      this.indemodal = indice;
+      
+      
+      var produc 
+      var serv 
+      this.currentUser.detalle.forEach((element,i )=> {
+        if(element.id==consecutivo){
+          this.indemodal=i
+         
+          this.servicio =element.servicioslocal.nombre;
+          this.producto=element.productoslocal.nombre;
+          this.itemsvariables=element.detalleslocal.infor.objetoUnidades;
+          produc= element.productoslocal._id;
+          serv=element.servicioslocal._id
+          this.detallesactualizar=element.detalleslocal
+        }
+      });
+      //this.indemodal = indice;
       this.consecutivo = consecutivo;
+      
       var vacio = { _id: null, nombre: "Por Favor Seleccione un Trayecto" };
-      //console.log(this.info.estado);
       if (
         this.info.estado == "orden de servicio cancelada" ||
         this.info.estado == "Orden De Servicio Recogida" ||
-        this.info.estado == "Orden de servicio cerrada"
-      ) {
-        this.indices = indice;
-        this.detallesactualizar = this.currentUser.detalle[
-          indice
-        ].detalleslocal;
+        this.info.estado == "Orden de servicio cerrada") {
+        console.log("esta recogidao algo asi");
+        this.indices = this.indemodal;
+        /*
+        this.detallesactualizar = this.currentUser.detalle[indice].detalleslocal;
         this.servicio = this.currentUser.detalle[indice].servicioslocal.nombre;
         this.producto = this.currentUser.detalle[indice].productoslocal.nombre;
-        this.itemsvariables = this.currentUser.detalle[
-          indice
-        ].detalleslocal.infor.objetoUnidades;
+        this.itemsvariables = this.currentUser.detalle[indice].detalleslocal.infor.objetoUnidades;
         var produc = this.currentUser.detalle[indice].productoslocal._id;
         var serv = this.currentUser.detalle[indice].servicioslocal._id;
+        */
         var load = true;
+        this.selec_disable=true
         setTimeout(() => {
           bus.$emit("load", {
             load
           });
         });
-        this.axios
-          .get(urlservicios + "estructuraf/" + produc + "/" + serv)
+        this.axios.get(urlservicios + "estructuraf/" + produc + "/" + serv)
           .then(response => {
+            console.log("tengo estructura");
+            console.log(response);
             var load = false;
             setTimeout(() => {
               bus.$emit("load", {
@@ -1072,25 +1004,20 @@ export default {
             this.inputs = response.data;
             this.campos = response.data.objeto;
             for (var i = 0; i < this.inputs.campos.length; i++) {
+              console.log("2 peticion");
               this.inputs.campos[i].diseable = "true";
               if (this.inputs.campos[i].type == "select") {
+                console.log(this.inputs.campos[i]);
                 var login = localStorage.getItem("storedData");
                 var infologin = JSON.parse(login);
-                document.getElementById(this.inputs.campos[i].id).value = null;
+                //document.getElementById(this.inputs.campos[i].id).value = null;
+                
                 console.log(this.inputs.campos[i].urlobjeto);
-                var load = true;
-                setTimeout(() => {
-                  bus.$emit("load", {
-                    load
-                  });
-                });
-                this.axios
-                  .get(
-                    this.inputs.campos[i].urlobjeto +
-                      infologin.id_OperadorLogistico._id
-                  )
-                  .then(response => {
-                    this.trayectos = response.data;
+                this.axios.get(this.inputs.campos[i].urlobjeto +infologin.id_OperadorLogistico._id)
+                  .then(response22 => {
+                    console.log("trayectos");
+                    console.log(response22);
+                    this.trayectos = response22.data;
                     this.trayectos.unshift(vacio);
                     var load = false;
                     setTimeout(() => {
@@ -1114,23 +1041,14 @@ export default {
                   });
               } else {
               }
+               this.$refs.ModalAct.show();
             }
           })
-          .catch(function(error) {
-            var load = false;
-            setTimeout(() => {
-              bus.$emit("load", {
-                load
-              });
-            });
-            swal(
-              "Se presento un problema",
-              "Intente nuevamente, por favor",
-              "warning"
-            );
-          });
+          
+          
       } else {
-        this.indices = indice;
+        this.indices = this.indemodal;
+        /*
         this.detallesactualizar = this.currentUser.detalle[
           indice
         ].detalleslocal;
@@ -1139,25 +1057,25 @@ export default {
         ].detalleslocal.infor.objetoUnidades;
         this.servicio = this.currentUser.detalle[indice].servicioslocal.nombre;
         this.producto = this.currentUser.detalle[indice].productoslocal.nombre;
-        console.log(this.currentUser.detalle[indice].detalleslocal.infor);
         var produc = this.currentUser.detalle[indice].productoslocal._id;
         var serv = this.currentUser.detalle[indice].servicioslocal._id;
+        */
         var load = true;
         setTimeout(() => {
           bus.$emit("load", {
             load
           });
         });
-        this.axios
-          .get(urlservicios + "estructuraf/" + produc + "/" + serv)
+        this.axios.get(urlservicios + "estructuraf/" + produc + "/" + serv)
           .then(response => {
+                      console.log(response);
+            this.selec_disable=false
             var load = false;
             setTimeout(() => {
               bus.$emit("load", {
                 load
               });
             });
-            console.log(this.inputs);
             this.inputs = response.data;
             this.campos = response.data.objeto;
             this.campos.objetoUnidades = this.itemsvariables;
@@ -1165,21 +1083,14 @@ export default {
               if (this.inputs.campos[i].type == "select") {
                 var login = localStorage.getItem("storedData");
                 var infologin = JSON.parse(login);
-                console.log(
-                  this.inputs.campos[i].urlobjeto +
-                    infologin.id_OperadorLogistico._id
-                );
+                
                 var load = true;
                 setTimeout(() => {
                   bus.$emit("load", {
                     load
                   });
                 });
-                this.axios
-                  .get(
-                    this.inputs.campos[i].urlobjeto +
-                      infologin.id_OperadorLogistico._id
-                  )
+                this.axios.get(this.inputs.campos[i].urlobjeto +infologin.id_OperadorLogistico._id)
                   .then(response => {
                     this.trayectos = response.data;
                     this.trayectos.unshift(vacio);
@@ -1222,8 +1133,8 @@ export default {
             );
           });
       }
-      //console.log(this.currentUser.detalle[indice].detalleslocal.infor.trayectoobj)
       //this.$refs.ModalAct.show()
+      
     }
   },
   watch: {
@@ -1231,7 +1142,6 @@ export default {
     selection(n, o) {}
   },
   mounted: function() {
-    //console.log("montado");
     bus.$on(
       "ocultar",
       function(userObject) {
@@ -1240,13 +1150,9 @@ export default {
     );
     var login = localStorage.getItem("storedData");
     var infologin = JSON.parse(login);
-    //console.log(infologin.id_cliente);
     var id_cliente;
 
     if (infologin.id_cliente == undefined || infologin.id_cliente == null) {
-      //console.log("no hay cliente");
-    } else {
-      //console.log("hay cliente");
       this.selec_disable = true;
       this.id_cliente_local = infologin.id_cliente;
     }
@@ -1256,7 +1162,6 @@ export default {
       "thisEvent",
       function(userObject) {
         this.currentUser = userObject.inde.item;
-        //console.log(this.currentUser);
         if (this.currentUser.leido == true) {
           this.leido = "Si";
         }
@@ -1275,7 +1180,6 @@ export default {
       }.bind(this)
     );
 
-    //console.log(this.currentUser);
   },
   beforeCreate: function() {
     var vacio = { _id: null, nombre: "Por Favor Seleccione un Cliente" };
@@ -1297,11 +1201,7 @@ export default {
             load
           });
         });
-        console.log(response);
         this.medios = response.data;
-        //console.log(this.medios);
-        //this.curiers = response.data;
-        //this.curiers.unshift(vacio)
       })
       .catch(function(error) {
         var load = false;
