@@ -72,7 +72,7 @@
                     <h3 class="text-primary">Numero Orden de Servicio:</h3>
                 </b-col>
                 <b-col>
-                    <p>{{info.consec}}</p>
+                    <label class="font-weight-bold " style="    font-size: 25px;">{{info.consec}}</label>
                 </b-col>
             </b-row>
             <b-row>
@@ -80,7 +80,7 @@
                     <h3 class="text-primary">Numero de Movilizado:</h3>
                 </b-col>
                 <b-col>
-                    <p>{{info.id}}</p>
+                    <label class="font-weight-bold " style="    font-size: 25px;">{{info.id}}</label>
                 </b-col>
             </b-row>
             <b-row>

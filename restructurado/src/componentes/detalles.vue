@@ -836,6 +836,7 @@ export default {
         this.axios
           .post(urlservicios + "AsignarOrdenCurrier/", obj)
           .then(response => {
+            console.log(response);
             var load = false;
             setTimeout(() => {
               bus.$emit("load", {
