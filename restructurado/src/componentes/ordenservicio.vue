@@ -676,6 +676,7 @@ export default {
       this.detalles.destinatario.nombre=this.nombre_remitente.nombre
       this.detalles.destinatario.latitud=this.nombre_remitente.latitud
       this.detalles.destinatario.longitud=this.nombre_remitente.longitud
+      this.detalles.destinatario.codigo_postal=this.nombre_remitente.codigo_postal
     },
      onSearch(search) {
       //this.nombre_remitente=search
@@ -1474,6 +1475,7 @@ export default {
       var inforemi = JSON.parse(inforemitente);
 
       if (this.creaciondestinatarios == false) {
+        console.log(this.detalles.destinatario);
         var objeto = {
           numero_identificacion: this.identificacion,
           direccion: this.detalles.destinatario.direccion,
@@ -1681,7 +1683,7 @@ export default {
         this.detallesc.infor = this.objeto;
         var productoslocal = this.selectproducto;
         var detalleslocal = this.detalles;
-        this.detalles.destinatario=
+        //this.detalles.destinatario=
         /*
 
         cambios de immpresion
@@ -1976,8 +1978,9 @@ export default {
         var inforemitente = localStorage.getItem("infoorden");
         var inforemi = JSON.parse(inforemitente);
         var localremitente = localStorage.getItem("remitente");
-        var localremijson = JSON.parse(inforemitente);
+        var localremijson = JSON.parse(localremitente);
         console.log(localremitente);
+        console.log(localremijson);
         /*
         var objeto = {
           id_OperadorLogistico: infologin.id_OperadorLogistico._id,
@@ -2014,13 +2017,16 @@ export default {
           },
           detalle: this.DetalleServicio
         };
+        
         var load = true;
         setTimeout(() => {
           bus.$emit("load", {
             load
           });
         });
+        
         console.log(objeto);
+        
         this.axios
           .post(urlservicios + "GuardarOrden", objeto)
           .then(response => {
@@ -2048,6 +2054,7 @@ export default {
             });
             swal("Error", "Intente nuevamente, por favor", "warning");
           });
+          
       }
     }
   },
