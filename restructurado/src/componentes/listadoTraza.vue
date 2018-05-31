@@ -54,7 +54,9 @@
                        <h1>Centro de Costo :</h1>
                     </b-col>
                     <b-col >
-                        {{centro.nombre}}
+                        nombre centro de costo
+                       <!-- {{centro.nombre}}
+                       -->
                     </b-col>
                 </b-row>
                 <b-row>
@@ -133,7 +135,11 @@
         <!-- Modal Component 1 imagen -->
         <b-modal id="modalimagen" ref="ModalImaguni" title="Evidencia Digital" no-close-on-backdrop>
             <b-container>
-                <b-img :src="variableServidor+modalima.trazabilidad[0].imagenes[0].url" fluid alt="Fluid image" />
+                <!--
+                   <b-img :src="variableServidor+modalima.trazabilidad[0].imagenes[0].url" fluid alt="Fluid image" />
+
+                    -->
+                <b-img :src="funcionimagen()" fluid alt="Fluid image" />
             </b-container>
             <div slot="modal-header" class="w-100">
                 <b-btn @click="showCollapse = !showCollapse"
@@ -316,8 +322,21 @@ export default {
 
     },
     methods:{
+        funcionimagen(){
+            //console.log(this.modalima.trazabilidad[0].imagenes[0]);
+            if(this.modalima.trazabilidad[0].imagenes[0]==null|| 
+            this.modalima.trazabilidad[0].imagenes[0]==undefined||
+            this.modalima.trazabilidad[0].imagenes[0]==""|| 
+            this.modalima.trazabilidad[0].imagenes[0]=="undefined"){
+                //console.log("invoco url");
+                return null
+            }
+            else{
+                return this.modalima.trazabilidad[0].imagenes[0].url 
+            }
+        },
         algo(){
-            console.log("entr a algo");
+            //console.log("invoco");
         },
         validacorreo(value){
            if(value.length==0){
@@ -352,7 +371,6 @@ export default {
                     )
             }
             if(this.emailvalido==true){
-                console.log("email ok");
                 
                 var load=true
                     setTimeout(() => {
@@ -376,8 +394,6 @@ export default {
                 this.axios.post(urlservicios+"EnviarCorreoImagen", objeto)
                 .then(response => {
                     this.respuesta = response.data;
-                    console.log(response);
-                    console.log(objeto);
                     var load=false
                         setTimeout(() => {
                             bus.$emit('load', {
@@ -404,7 +420,6 @@ export default {
                     "warning"
                   );
                 });
-                console.log(objeto);
 
             }
             
@@ -426,8 +441,6 @@ export default {
                 return (this.estadoT=false)
         },
         enviarcorreoT(value){
-            console.log("entro a envio todo");
-            console.log(value);
             if(this.emailvalidoT==null||this.emailT==''){
                 swal(
                     'Falta Completar el Email',
@@ -450,11 +463,9 @@ export default {
                             load
                         })
                         }, )
-                console.log("email ok");
                 var objeto
                 var objetoimanes=[]
                 value.trazabilidad[0].imagenes.map((obj,ind)=>{
-                    console.log(obj);
                     objeto={
                         ruta:obj.ruta,
                         id:obj.id
@@ -468,11 +479,9 @@ export default {
                         nomproceso:this.modalima.nombre_proceso,
                         imagenes:objetoimanes
                 }
-                console.log(objeT);
                 this.axios.post(urlservicios+"EnviarCorreoImagen", objeT)
                     .then(response => {
                         this.respuesta = response.data;
-                        console.log(response);
                         //this.load=false
                         var load=false
                         setTimeout(() => {
@@ -508,8 +517,6 @@ export default {
             this.$refs.ModalImagenes.hide()            
         },
         cerrar(value){
-            console.log(value);
-            console.log("entro a cerrar");
             this.$refs.myModalRef.hide();
         },
         imagenmodal(data){
@@ -525,7 +532,6 @@ export default {
             }
         },
         image(value){
-            console.log(value);
             this.modalima=value
             if(this.modalima.trazabilidad[0].imagenes.length==0)
             {
@@ -549,12 +555,18 @@ export default {
             return eval("this.consultaactualizar.detalleslocal.infor."+value)
         },
         exportarxls(){
-            console.log(this.envios);
             var centro,cliente,inicio,fin,detalle,orden,refere
-            centro=this.envios.centro
+            //centro=this.envios.centro
             cliente=this.envios.cliente
             var test2 = localStorage.getItem("storedData");
             var test = JSON.parse(test2);
+            if(this.envios.centro==undefined||this.envios.centro==''
+                ||this.envios.centro===undefined){
+                centro='null'
+            }
+            else{
+                centro=this.envios.centro
+            }
             if(this.envios.inicio==undefined||this.envios.inicio==''
                 ||this.envios.inicio===undefined){
                 inicio='null'
@@ -590,7 +602,6 @@ export default {
             else{
                 detalle=this.envios.nmovilizado                                                                   
             }
-            console.log(urlservicios+"ConsultaExcel/"+test.id_OperadorLogistico._id+"/"+centro+"/"+cliente+"/"+orden+"/"+detalle+"/"+refere+"/"+inicio+"/"+fin+"/");
             
             var load=true
                     setTimeout(() => {
@@ -598,8 +609,10 @@ export default {
                             load
                         })
                         }, )
+        console.log(urlservicios+"ConsultaExcel/"+test.id_OperadorLogistico._id+"/"+centro+"/"+cliente+"/"+orden+"/"+detalle+"/"+refere+"/"+inicio+"/"+fin+"/");
             this.axios.get(urlservicios+"ConsultaExcel/"+test.id_OperadorLogistico._id+"/"+centro+"/"+cliente+"/"+orden+"/"+detalle+"/"+refere+"/"+inicio+"/"+fin+"/")
             .then(response => {
+                console.log(response);
                 var load=false
                     setTimeout(() => {
                         bus.$emit('load', {
@@ -608,12 +621,14 @@ export default {
                         }, )
                 alasql.fn.fechas= function(date)
                 {
-                //console.log(response);
-                //console.log( moment(date).format('DD/MM/YYYY, h:mm:ss'));
                 //return date.toLocaleString()
-                return moment(date).format('DD/MM/YYYY, h:mm:ss')
+                return moment(date).format('DD/MM/YYYY')
                 }
-                //console.log(response);
+                alasql.fn.horas= function(date)
+                {
+                //return date.toLocaleString()
+                return moment(date).format('h:mm:ss')
+                }
                 var consulta=response.data.select
                 this.resul=response.data.movilizadosobjet    
                 alasql(consulta,[this.resul])      
@@ -625,7 +640,6 @@ export default {
                             load
                         })
                         }, )
-                console.log(error);
                 swal(
                 'Error al descargar el reporte!',
                 'Intente Nuevamente',
@@ -637,7 +651,6 @@ export default {
         
         },
         actualizar(value){
-            console.log(value);
             this.consultaactualizar=value
             var llaves
             llaves=Object.keys(this.consultaactualizar.detalleslocal.infor)
@@ -645,9 +658,6 @@ export default {
             {
             llaves.map((obj,ind)=>{
                 if(typeof(eval('value.detalleslocal.infor.'+obj))=='object'){
-                    console.log("objeto");
-                    console.log(eval('value.detalleslocal.infor.'+obj));
-                    console.log(obj);
                     if(obj=='trayectoobj'){
                       var objetogrande={
                         nombre:'Trayecto',
@@ -672,8 +682,6 @@ export default {
             })
 
             }
-            console.log("---final----");
-            console.log(this.final);
             //this.$refs.myModalRef.show()
             //openModal();
             var load = true;
@@ -711,10 +719,9 @@ export default {
             var centro=this.centro
             var personal={
                 cliente:client,
-                centro:centro,
+                //centro:centro,
                 inputs:this.final
             }
-            //console.log(personal);
             setTimeout(() => {
                 bus.$emit('resultado', {
                     value ,personal
@@ -732,8 +739,6 @@ export default {
     mounted: function() {
     var servi =localStorage.getItem("servidor")
         var servicios = JSON.parse(servi)
-        console.log("----------------");
-        console.log(servicios);
         this.variableServidor=servicios
     },
     beforeCreate: function() {

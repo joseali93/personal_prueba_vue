@@ -2,22 +2,29 @@
 
 
   <b-container fluid>
-<b-btn @click="prue">
-  asda
-</b-btn>
+      <b-form-input v-model="text1"
+                  type="text"
+                  placeholder="Enter your name"
+                  @keyup.enter.native="localizar()"></b-form-input>
+
   </b-container>
 </template>
 
 <script>
 import {urlservicios} from '../main'
 import {bus} from '../main'
+    import VueGoogleAutocomplete from 'vue-google-autocomplete'
 
 export default {
+          components: { VueGoogleAutocomplete},
+
   data () {
     return {
+      text1:'',
+     address:'',
       selected:'',
       modal2:true,
-      algo:'',
+      algo:'calle 100 #49-97',
       clientes:[],
         
       items: [
@@ -34,44 +41,75 @@ export default {
     
   },
   methods:{
-   prue(){
-     console.log("eeeeeeeeeeeeeeeeeen");
-     
-     console.log("entro a prueba");
-     var dt = new Date('8/24/2009');
-     var prueba=[
-     ]
-     //console.log(this.clientes);
-     //console.log(this.clientes.length);
-     for(var z=0;z<this.clientes.length;z++)
-     {
-       (this.clientes[z].direccion=dt)
-     }
-     alasql.fn.prueba= function(date)
-     {
-       //console.log(date.toString());
-       date.setDateFormat="MM-dd-yyyy HH:mm:ss"
-
-     return date
-     }
-     console.log(this.clientes);
-    alasql('SELECT prueba(direccion) as Fecha INTO XLS("Data.xls",{headers:true}) FROM ?',[this.clientes]);
-    /*
-    var test2 = localStorage.getItem("storedData");
-    var test = JSON.parse(test2);
-    console.log(urlservicios +"ConsultaExcel/" +test.id_OperadorLogistico._id +"/5a11a8faee87f501080bce29/5a2052ea6535d593c73c815c/90/null/null/null/null/");
-    this.axios.get("http://192.168.1.58:3000/logistica/ConsultaExcel/5a2052ea6535d593c73c815c/5a11a8faee87f501080bce29/5a0496229a3714c4196351fb/97/162/9/null/null/")
-        .then(response => {
-          console.log(response);
-          var consulta=response.data.select
-          this.consulta=response.data.movilizadosobjet    
-           //alasql(consulta,[this.consulta])      
-        })
-
-      */ 
-           
-   }
-
+    localizar(){
+      console.log("enter");
+      var dir
+      dir=this.text1+', Colombia'
+      var geocoder = new google.maps.Geocoder();
+      geocoder.geocode({'address': dir, country: "CO" }, function(results, status) {
+			if (status === 'OK') {
+				var resultados = results[0].geometry.location,
+					resultados_lat = resultados.lat(),
+					resultados_long = resultados.lng();
+				
+				console.log(results);
+			} else {
+				var mensajeError = "";
+				if (status === "ZERO_RESULTS") {
+					mensajeError = "No hubo resultados para la dirección ingresada.";
+				} else if (status === "OVER_QUERY_LIMIT" || status === "REQUEST_DENIED" || status === "UNKNOWN_ERROR") {
+					mensajeError = "Error general del mapa.";
+				} else if (status === "INVALID_REQUEST") {
+					mensajeError = "Error de la web. Contacte con Name Agency.";
+				}
+				alert(mensajeError);
+			}
+		});
+    },
+    enterfuncion(){
+      console.log("entro a enter");
+      console.log(this.text1);
+      console.log(typeof(this.text1));
+      var geocoder = new google.maps.Geocoder();
+      geocoder.geocode({ 'address': this.text1}, this.geocodeResult());
+      //console.log(geocodeResult);
+    },
+     geocodeResult(results, status) {
+       console.log("entra a geo code");
+       console.log(results);
+    // Verificamos el estatus
+    if (status == 'OK') {
+        // Si hay resultados encontrados, centramos y repintamos el mapa
+        // esto para eliminar cualquier pin antes puesto
+       
+    } else {
+        // En caso de no haber resultados o que haya ocurrido un error
+        // lanzamos un mensaje con el error
+        alert("Geocoding no tuvo éxito debido a: " + status);
+    }
+},
+    update(valor){
+      console.log(valor);
+     // onchange(this.getAddressData)
+    },
+     /**
+            * When the location found
+            * @param {Object} addressData Data of the found location
+            * @param {Object} placeResultData PlaceResult object
+            * @param {String} id Input container ID
+            */
+            getAddressData: function (addressData, placeResultData, id) {
+              if(this.algo==''){
+                console.log("es vacio");
+              }
+              else{
+                console.log("no es vacio");
+              }
+              console.log("-------");
+              console.log(addressData);
+              console.log(placeResultData);
+                this.address = addressData;
+            }
     },
     mounted: function() {
        bus.$on('modalinfo', function (userObject) {
@@ -87,14 +125,6 @@ export default {
     beforeCreate: function(){
           ///var vacio = { _id: null, nombre: "Por Favor Seleccione un Cliente" };
 
-      var test2 = localStorage.getItem("storedData");
-    var test = JSON.parse(test2);
-    console.log(urlservicios +"ConsultaExcel/" +test.id_OperadorLogistico._id +"/5a11a8faee87f501080bce29/5a2052ea6535d593c73c815c/90/null/null/null/null/");
-    this.axios.get("http://192.168.1.58:3000/logistica/ConsultaExcel/5a2052ea6535d593c73c815c/5a11a8faee87f501080bce29/5a0496229a3714c4196351fb/null/null/null/2018-04-22/2018-04-25/")
-        .then(response => {
-          console.log(response);
-          this.consulta=response.data          
-        })
     },
   computed: {
   }

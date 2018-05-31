@@ -73,7 +73,7 @@
         <b-modal id="modalcrear" ref="Modal" title="Adicionar Registro" 
             no-close-on-backdrop
             no-close-on-esc
-            size="lg">
+            size="lg" >
             <div slot="modal-header" class="w-100">
                     <b-btn class="mt-3" variant="danger"  @click="hideModal">
                     <i class="fa fa-times-circle" aria-hidden="true">  </i>
@@ -181,8 +181,14 @@
                                         <label  class="col-sm col-form-label col-form-label-sm text-capitalize text-primary" :style="[data.style]" >{{data.placeholder}}: </label>
                                     </b-col>
                                     <b-col >
+                                      <!--
+                                        @keyup="Presiono(indice)"
+                                        -->
                                         <input focus class="form-control form-control-sm"  :maxlength="data.maxlength" :type="data.type" :id="data.id" :style="[data.style,validatecampo]" 
-                                        :max="data.max" :min="data.min" :placeholder="data.placeholder" @keyup="Presiono(indice)"   required>
+                                        :max="data.max" :min="data.min" :placeholder="data.placeholder"  @keyup="Presiono(indice)"
+                                         @keyup.enter.tab="adicionarRef"
+                                        @keydown.tab="adicionarRef"
+                                          required>
                                     </b-col>
                                     </template>
                 
@@ -222,38 +228,65 @@
                             </b-tab>
                             <b-tab title="Destinatario">
                             <b-card-body>
-                                <b-form-row v-show="selectservice" class="my-1">
+                              <b-form-row v-show="selectservice" class="my-1">
+                                <b-col>
+                                    <label  class="col-sm col-form-label col-form-label-sm text-primary">Nombre: </label>
+                                </b-col>
+                                <b-col cols="9">
+                                  <!--
+                                    <b-form-input type="text" class="form-control form-control-sm" 
+                                     placeholder="Nombre" v-model="detalles.destinatario.nombre"
+                                    :state="estado.nombre"></b-form-input>
+                                     <v-select label="nombre" :filterable="false" v-model=nombre_remitente
+                                        placeholder="Digite el remitente" :options="optionsremitentes"
+                                          @input="updateOption"
+                                          @search="onSearch">
+                                    -->
+                                      <v-select maxHeight="500px" label="nombre" :filterable="false" v-model=nombre_remitente
+                                        placeholder="Digite el remitente" :options="optionsremitentes"
+                                          @input="Seleccionado"
+                                          @search="onSearch">
+                                          <template slot="no-options">
+                                            <p @click="NuevoDestinatario(nombre_remitente)">Digite el nombre del remitente..</p>
+                                          </template>
+                                          <template slot="option" slot-scope="option">
+                                            <div class="d-center">
+                                              {{ option.nombre }}
+                                              </div>
+                                          </template>
+                                          <template slot="selected-option" scope="option">
+                                            <div class="selected d-center">
+                                              {{ option.nombre }}
+                                            </div>
+                                          </template>
+                                          
+                                        </v-select>
+                                        {{nombre_remitente}}
+                                </b-col>
+                            </b-form-row>
+                            <b-form-row v-show="selectservice&&mostrardestinatario" class="my-1">
                                 <b-col>
                                     <label  class="col-sm col-form-label col-form-label-sm text-primary"> Identificación: </label>
                                 </b-col>
                                 <b-col>
                                     <b-form-input type="number" class="form-control form-control-sm"  placeholder="Indentidicación"
-                                    v-model="identificacion"
-                                    @keyup.enter.tab.native="buscar('nuevo')"
-                                    @keydown.tab.native="buscar('nuevo')"
+                                    v-model="detalles.destinatario.identificacion"
+                                  
                                     :state="true"  v-b-popover.hover="'Se debe diligenciar sin puntos, en caso de NIT sin numero de validación, ni guion'" title="Num. Identificacion"></b-form-input>
                                     <!--<input type="text" class="form-control form-control-sm"  placeholder="Nombre" v-model="detalles.destinatario.nombre">
+                                     @keyup.enter.tab.native="buscar('nuevo')"
+                                    @keydown.tab.native="buscar('nuevo')"
                                     -->
                                 </b-col>
                             </b-form-row>
-                            
-                            
-                            <b-form-row v-show="selectservice&&mostrardestinatario" class="my-1">
-                                <b-col>
-                                    <label  class="col-sm col-form-label col-form-label-sm text-primary">Nombre: </label>
-                                </b-col>
-                                <b-col>
-                                    <b-form-input type="text" class="form-control form-control-sm"  placeholder="Nombre" v-model="detalles.destinatario.nombre"
-                                    :state="estado.nombre"></b-form-input>
-
-                                </b-col>
-                            </b-form-row>
+                  
                             <b-form-row v-show="selectservice&&mostrardestinatario " class="my-1">
                                 <b-col>
                                     <label  class="col-sm col-form-label col-form-label-sm text-primary">Dirección: </label>
                                 </b-col>
                                 <b-col>
-                                    <b-form-input type="text"  class="form-control form-control-sm"  :state="estado.direccion" placeholder="Direccion" v-model="detalles.destinatario.direccion"> </b-form-input>
+                                    <b-form-input type="text"  class="form-control form-control-sm"  :state="estado.direccion"
+                                     placeholder="Direccion" v-model="detalles.destinatario.direccion"> </b-form-input>
 
                                 </b-col>
                             </b-form-row>
@@ -263,10 +296,13 @@
                                 </b-col>
                                 <b-col>
 
-                                    <input type="text" :style="validatecampoTel"  class="form-control form-control-sm" id="telefono" @keyup="numeros(this)" placeholder="Telefono" v-model="detalles.destinatario.telefono">
+                                    <input type="text" :style="validatecampoTel"  class="form-control form-control-sm" 
+                                    id="telefono" @keyup="numeros(this)" placeholder="Telefono"
+                                     v-model="detalles.destinatario.telefono">
                                     
                                 </b-col>
                             </b-form-row>
+                            {{detalles.destinatario.telefono}}
                             </b-card-body>
                             </b-tab>
                     </b-tabs>  
@@ -316,7 +352,7 @@
                         :disabled="true"
                         :options="serviciosurlED"  @input="camposNversionED()">
                         <!--
-:options="serviciosurl" @input="camposNversion()">
+            :options="serviciosurl" @input="camposNversion()">
                           -->
                     </v-select>
                     </b-col>
@@ -397,7 +433,7 @@
                         </b-tab>
                         <b-tab title="Detalle" :disabled="tabdinamicoED">
                         <!--
- <b-tab title="Detalle" :disabled="tabdinamicoED">
+  
                           -->
                             <b-row v-for="(data,indice) in inputsED.campos" v-show="camposdinamicos">
                             <template v-if="data.type!='select'" >
@@ -519,6 +555,8 @@ export default {
   },
   data() {
     return {
+      nombre_remitente:'',
+      optionsremitentes:[],
       pruebas: {
         "background-color": "#ebeaea",
         " border-bottom-color": "#495057",
@@ -553,7 +591,7 @@ export default {
       itemsdinamicos: [],
       fieldsdinamicos: [],
       prueba: "",
-      mostrardestinatario: false,
+      mostrardestinatario: true,
       creaciondestinatarios: "",
       identificacion: "",
       estado: {
@@ -624,6 +662,101 @@ export default {
   },
   watch: {},
   methods: {
+    NuevoDestinatario(){
+      console.log("nuevo destinatario");
+      console.log(this.nombre_remitente);
+    },
+    Seleccionado(){
+      console.log("tengo un seleccionado");
+      
+      console.log(this.nombre_remitente);
+      this.detalles.destinatario.identificacion=this.nombre_remitente.numero_identificacion
+      this.detalles.destinatario.direccion=this.nombre_remitente.direccion
+      this.detalles.destinatario.telefono=this.nombre_remitente.telefono
+      this.detalles.destinatario.nombre=this.nombre_remitente.nombre
+      this.detalles.destinatario.latitud=this.nombre_remitente.latitud
+      this.detalles.destinatario.longitud=this.nombre_remitente.longitud
+    },
+     onSearch(search) {
+      //this.nombre_remitente=search
+        //loading(true);
+      this.search(search, this);
+      
+    },
+    
+  search(search){
+    var remi = localStorage.getItem("remitente");
+      var remijson = JSON.parse(remi);
+      if(remi==undefined||remi==''){
+        this.optionsdestinatarios=[]
+        setTimeout(function(){
+          /*
+          this.axios.get(`https://api.github.com/search/repositories?q=${escape(search)}`)
+        .then(response => {
+          this.optionsdestinatarios=response.data.items
+                  loading(false);
+
+        })
+        */
+        
+        this.axios.get(`http://192.168.1.59:3000/logistica//obtenerDestinatarioNombre/${escape(search)}`)
+        .then(response => {
+
+          this.optionsremitentes=response.data.destinatarios
+                  //loading(false);
+
+        })
+     
+      }.bind(this), 345);
+      }else{
+        //this.remitente=remijson.nombre
+        this.optionsdestinatarios=[]
+        setTimeout(function(){
+          /*
+          this.axios.get(`https://api.github.com/search/repositories?q=${escape(search)}`)
+        .then(response => {
+          this.optionsdestinatarios=response.data.items
+                  loading(false);
+
+        })
+        */
+        
+        this.axios.get(`http://192.168.1.59:3000/logistica//obtenerDestinatarioNombre/${escape(search)}`)
+        .then(response => {
+
+          this.optionsremitentes=response.data.destinatarios
+                  //loading(false);
+
+        })
+        
+          }.bind(this), 345);
+
+      }
+      /*
+    this.optionsdestinatarios=[]
+    setTimeout(function(){
+      /*
+      this.axios.get(`https://api.github.com/search/repositories?q=${escape(search)}`)
+     .then(response => {
+       this.optionsdestinatarios=response.data.items
+               loading(false);
+
+     })
+     
+    
+    this.axios.get(`http://192.168.1.59:3000/logistica//obtenerDestinatarioNombre/${escape(search)}`)
+     .then(response => {
+
+       this.optionsdestinatarios=response.data.destinatarios
+               loading(false);
+
+     })
+     
+      }.bind(this), 345);
+
+    */
+     
+  },
     abirmodal() {
       this.selectservice = null;
       this.selectproduct = null;
@@ -801,6 +934,7 @@ export default {
       }
     },
     adicionarRef() {
+      console.log("entro a adicionar");
       var objetollaves = Object.keys(this.inputs.objeto);
       var tituloopciones = {};
       var opciones = [];
@@ -887,7 +1021,7 @@ export default {
                 load
               });
             });
-            this.mostrardestinatario = true;
+            //this.mostrardestinatario = true;
           })
           .catch(function(error) {
             var load = false;
@@ -937,7 +1071,7 @@ export default {
                 load
               });
             });
-            this.mostrardestinatario = true;
+            //this.mostrardestinatario = true;
           })
           .catch(function(error) {
             var load = false;
@@ -1173,7 +1307,7 @@ export default {
         this.itemsdinamicos = [];
         this.identificacion = "";
         (this.habilitar = true),
-          (this.mostrardestinatario = false),
+          //this.mostrardestinatario = false),
           //pendiente para correcion error de cambio de servicio
           //this.selectproducto=''
           //this.selectservicio=''
@@ -1305,7 +1439,7 @@ export default {
       //this.tabIndexED=0,
       //this.tabIndex
       (this.habilitar = true),
-        (this.mostrardestinatario = false),
+        //(this.mostrardestinatario = false),
         (this.camposdinamicos = false),
         (this.fieldsdinamicos = []),
         (this.itemsdinamicos = []),
@@ -1372,6 +1506,7 @@ export default {
             });
           });
       } else {
+        /*
         var objeto = {
           numero_identificacion: this.identificacion,
           direccion: this.detalles.destinatario.direccion,
@@ -1385,14 +1520,7 @@ export default {
             load
           });
         });
-        this.axios
-          .post(
-            urlservicios +
-              "ActualizarDestinatario" +
-              "/" +
-              this.detalles.destinatario._id,
-            objeto
-          )
+        this.axios.post(urlservicios +"ActualizarDestinatario" +"/" +this.detalles.destinatario._id,objeto)
           .then(response => {
             var load = false;
             setTimeout(() => {
@@ -1409,6 +1537,7 @@ export default {
               });
             });
           });
+      */
       }
       if (this.objeto == undefined) {
       } else {
@@ -1521,9 +1650,9 @@ export default {
       if (
         this.selectproduct == "" ||
         this.selectservice == "" ||
-        this.detalles.destinatario.nombre == "" ||
-        this.detalles.destinatario.telefono == "" ||
-        this.detalles.destinatario.direccion == "" ||
+        //this.detalles.destinatario.nombre == "" ||
+        //this.detalles.destinatario.telefono == "" ||
+        //this.detalles.destinatario.direccion == "" ||
         pivote == true //  ||
         //this.detalles.referencia==''
       ) {
@@ -1552,7 +1681,7 @@ export default {
         this.detallesc.infor = this.objeto;
         var productoslocal = this.selectproducto;
         var detalleslocal = this.detalles;
-
+        this.detalles.destinatario=
         /*
 
         cambios de immpresion
@@ -1585,7 +1714,7 @@ export default {
         this.itemsdinamicos = [];
         this.identificacion = "";
         (this.habilitar = true),
-          (this.mostrardestinatario = false),
+         //(this.mostrardestinatario = false),
  
           (this.objeto = ""),
           (this.inputs = ""),
@@ -1624,6 +1753,7 @@ export default {
                   "=" +
                   "document.getElementById(this.inputs.campos[index].id).value"
               );
+              document.getElementById(this.inputs.campos[index].id).focus();
             }
           } else {
             if (
@@ -1845,7 +1975,9 @@ export default {
         var selecc = JSON.parse(selec);
         var inforemitente = localStorage.getItem("infoorden");
         var inforemi = JSON.parse(inforemitente);
-
+        var localremitente = localStorage.getItem("remitente");
+        var localremijson = JSON.parse(inforemitente);
+        console.log(localremitente);
         /*
         var objeto = {
           id_OperadorLogistico: infologin.id_OperadorLogistico._id,
@@ -1869,12 +2001,16 @@ export default {
           id_OperadorLogistico: infologin.id_OperadorLogistico._id,
           id_usuario: infologin._id,
           id_centro_costo: selecc.selected_center,
-
+          //fecha_crecion:
+          //fecha_real:
           id_cliente: selecc.selected_client,
           remitente: {
-            direccion_recogida: inforemi.infocentro.direccion,
-            telefono_contacto: inforemi.infocliente.telefono,
-            nombre_contacto: inforemi.infocliente.nombre
+            direccion_recogida: localremijson.direccion,
+            telefono_contacto: localremijson.telefono,
+            nombre_contacto: localremijson.nombre,
+            latitud:localremijson.latitud,
+            longitud:localremijson.longitud,
+            codigo_postal:localremijson.codigo_postal
           },
           detalle: this.DetalleServicio
         };

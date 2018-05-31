@@ -166,7 +166,8 @@
 					</b-form-select>
 					-->
 					<v-select v-model="model_medios" label="tipo" placeholder="Seleccione el Medio de Transporte"
-					  :options="medios" @input="vehic()"></v-select>
+					  :options="medios" @input="vehic()" 
+            :disabled="medios_disable"></v-select>
 				</b-col>
 				<b-col>
 					<h4 class="text-primary">Seleccione el Currier: </h4>
@@ -365,6 +366,7 @@ import moment from "moment";
 export default {
   data() {
     return {
+        medios_disable:false,
       leido: "",
       model_medios: null,
       medios: [],
@@ -547,9 +549,12 @@ export default {
     desabilitarguardar() {
       if (
         this.info.estado == "orden de servicio cancelada" ||
-        this.info.estado == "Orden De Servicio Recogida"
+        this.info.estado == "Orden De Servicio Recogida"||
+         this.info.estado == "Orden de servicio cerrada"
       ) {
+        //selec_disable
         this.selec_disable = true;
+        this.medios_disable=true
         return true;
       } else {
         return false;
@@ -683,9 +688,6 @@ export default {
       }
     },
     values(dato) {
-      console.log(dato);
-      console.log(this.currentUser.detalle[this.indices].detalleslocal.infor);
-      console.log(eval("this.campos." +dato +"=" +"this.currentUser.detalle[this.indices].detalleslocal.infor." +dato));
       eval("this.campos." +dato +"=" +"this.currentUser.detalle[this.indices].detalleslocal.infor." +dato);
       return eval(
         "this.currentUser.detalle[this.indices].detalleslocal.infor." + dato
@@ -836,7 +838,6 @@ export default {
         this.axios
           .post(urlservicios + "AsignarOrdenCurrier/", obj)
           .then(response => {
-            console.log(response);
             var load = false;
             setTimeout(() => {
               bus.$emit("load", {
@@ -975,7 +976,6 @@ export default {
         this.info.estado == "orden de servicio cancelada" ||
         this.info.estado == "Orden De Servicio Recogida" ||
         this.info.estado == "Orden de servicio cerrada") {
-        console.log("esta recogidao algo asi");
         this.indices = this.indemodal;
         /*
         this.detallesactualizar = this.currentUser.detalle[indice].detalleslocal;
@@ -986,7 +986,7 @@ export default {
         var serv = this.currentUser.detalle[indice].servicioslocal._id;
         */
         var load = true;
-        this.selec_disable=true
+        this.selec_disable=false
         setTimeout(() => {
           bus.$emit("load", {
             load
@@ -994,8 +994,6 @@ export default {
         });
         this.axios.get(urlservicios + "estructuraf/" + produc + "/" + serv)
           .then(response => {
-            console.log("tengo estructura");
-            console.log(response);
             var load = false;
             setTimeout(() => {
               bus.$emit("load", {
@@ -1005,19 +1003,14 @@ export default {
             this.inputs = response.data;
             this.campos = response.data.objeto;
             for (var i = 0; i < this.inputs.campos.length; i++) {
-              console.log("2 peticion");
               this.inputs.campos[i].diseable = "true";
               if (this.inputs.campos[i].type == "select") {
-                console.log(this.inputs.campos[i]);
                 var login = localStorage.getItem("storedData");
                 var infologin = JSON.parse(login);
                 //document.getElementById(this.inputs.campos[i].id).value = null;
                 
-                console.log(this.inputs.campos[i].urlobjeto);
                 this.axios.get(this.inputs.campos[i].urlobjeto +infologin.id_OperadorLogistico._id)
                   .then(response22 => {
-                    console.log("trayectos");
-                    console.log(response22);
                     this.trayectos = response22.data;
                     this.trayectos.unshift(vacio);
                     var load = false;
@@ -1069,7 +1062,6 @@ export default {
         });
         this.axios.get(urlservicios + "estructuraf/" + produc + "/" + serv)
           .then(response => {
-                      console.log(response);
             this.selec_disable=false
             var load = false;
             setTimeout(() => {
@@ -1154,7 +1146,7 @@ export default {
     var id_cliente;
 
     if (infologin.id_cliente == undefined || infologin.id_cliente == null) {
-      this.selec_disable = true;
+      this.selec_disable = false;
       this.id_cliente_local = infologin.id_cliente;
     }
   },

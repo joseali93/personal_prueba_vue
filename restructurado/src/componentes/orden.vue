@@ -25,6 +25,7 @@ DE LA ORDEN DE SERVICIO -->
                     </b-btn>
                 </a>
                 -->
+            
                 <b-col md="3" offset-md="10">
                   <b-btn class="rounded" variant="primary"   v-on:click="actualizar"
                   v-b-popover.hover="'Continuar'" >Continuar<i class="fa fa-arrow-right"></i>
@@ -39,8 +40,6 @@ DE LA ORDEN DE SERVICIO -->
                     :options="clientes" text-field="nombre" value-field="_id" @change.native="ClientesSelect"
                     :disabled="disable_selected_client" >  
                     </b-form-select>
-
-                    
                     -->
                      <v-select v-model="selected_client" label="nombre" placeholder="Seleccione el Cliente"
                       :options="clientes" @input="clienteSeleccionado()"
@@ -66,6 +65,40 @@ DE LA ORDEN DE SERVICIO -->
                     @input="centroSeleccionado()" :disabled="habilitar"
                       ></v-select>
                 </b-col>
+                
+            </b-row>
+            <b-row >
+                <b-col class=" my-2">
+                    <h3 class="text-primary">Digite el Remitente</h3>
+                    <!--
+                  <v-select v-model="selected_client" label="nombre" placeholder="Seleccione el remitente"
+                      :options="clientes" @input="clienteSeleccionado()"
+                       :disabled="disable_selected_client" ></v-select>
+
+
+                      v-model="remitente" 
+                    
+                    -->
+                     <v-select label="nombre" :filterable="false" v-model=remitente
+                     placeholder="Digite el remitente" :options="optionsdestinatarios"
+                      @input="updateOption"
+                      @search="onSearch">
+                      <template slot="no-options">
+                        Digite el nombre del remitente..
+                      </template>
+                      <template slot="option" slot-scope="option">
+                        <div class="d-center">
+                          {{ option.nombre }}
+                          </div>
+                      </template>
+                      <template slot="selected-option" scope="option">
+                        <div class="selected d-center">
+                          {{ option.nombre }}
+                        </div>
+                      </template>
+                      
+                    </v-select>
+                </b-col>
             </b-row>
             <b-row>
                     <b-col>
@@ -75,8 +108,9 @@ DE LA ORDEN DE SERVICIO -->
                             <b-form-input id="direccion"
                                 size="lg"
                                 type="text"
-                                v-model="selected_centro.direccion"
+                                v-model="remitente.direccion"
                                 required
+                                 @keyup.enter.native="localizar()"
                                 placeholder="Dirección"
                                 maxlength="100">
                             </b-form-input>
@@ -91,7 +125,7 @@ DE LA ORDEN DE SERVICIO -->
                             <b-form-input id="direccion"
                                 size="lg"
                                 type="text"
-                                v-model="selected_cliente.nombre"
+                                v-model="remitente.nombre"
                                 required
                                 placeholder="Nombre"
                                 maxlength="100"
@@ -109,7 +143,7 @@ DE LA ORDEN DE SERVICIO -->
                             size="lg"
                                 type="text"
                                 
-                                v-model="selected_cliente.telefono"
+                                v-model="remitente.telefono"
                                 required
                                 placeholder="Teléfono"
                                 maxlength="20">
@@ -140,13 +174,27 @@ export default {
   },
   watch: {
     clientprueba(newValue, oldValue) {
-      console.log(newValue);
-      console.log("------------");
-      console.log(oldValue);
+
     }
   },
   data() {
     return {
+      remit:{
+        nombre:'',
+        direccion:'',
+        telefono:''
+      },
+      lati:"",
+      longi:"",
+      posta:"",
+      remitente:'',
+      optionsdestinatarios:[],
+      selected: 'first',
+      radios: [
+        { text: 'Recoge en Centro de Costo', value: 'first' },
+        { text: 'Recoger en Remitente diferente', value: 'second' }
+      
+      ],
       items: [
         {
           text: "Inicio",
@@ -177,20 +225,142 @@ export default {
   },
 
   methods: {
+    updateOption(){
+        var remi = localStorage.getItem("remitente");
+        var remijson = JSON.parse(remi);
+         //this.remitente=remijson
+         this.onSearch(remijson.nombre)
+    },
+
+     localizar(){
+      var dir
+      var longi
+      var latit
+      var codpostal
+      dir=this.remitente.direccion +', Colombia'
+      var geocoder = new google.maps.Geocoder();
+      geocoder.geocode({'address': dir, country: "CO" }, function(results, status) {
+        if (status === 'OK') {
+          var resultados = results[0].geometry.location,
+            resultados_lat = resultados.lat(),
+            resultados_long = resultados.lng();
+          
+          longi=resultados_long
+          latit=resultados_lat
+          codpostal=results[0].address_components[7].long_name
+          /*
+          this.lati=resultados_lat
+          this.longi=resultados_long
+          this.posta=results[0].address_components[7].long_name
+          */
+          this.lati=latit
+        this.longi=longi
+        this.posta=codpostal
+            } else {
+              var mensajeError = "";
+              if (status === "ZERO_RESULTS") {
+                mensajeError = "No hubo resultados para la dirección ingresada.";
+              } else if (status === "OVER_QUERY_LIMIT" || status === "REQUEST_DENIED" || status === "UNKNOWN_ERROR") {
+                mensajeError = "Error general del mapa.";
+              } else if (status === "INVALID_REQUEST") {
+                mensajeError = "Error de la web. Contacte con Name Agency.";
+              }
+              alert(mensajeError);
+            }
+
+        }.bind(this));
+
+    },
+    onSearch(search) {
+
+        //loading(true);
+      this.search(search, this);
+      
+    },
+    
+  search(search){
+    var remi = localStorage.getItem("remitente");
+      var remijson = JSON.parse(remi);
+      if(remi==undefined||remi==''){
+        this.optionsdestinatarios=[]
+        setTimeout(function(){
+          /*
+          this.axios.get(`https://api.github.com/search/repositories?q=${escape(search)}`)
+        .then(response => {
+          this.optionsdestinatarios=response.data.items
+                  loading(false);
+
+        })
+        */
+        
+        this.axios.get(`http://192.168.1.59:3000/logistica//obtenerDestinatarioNombre/${escape(search)}`)
+        .then(response => {
+
+          this.optionsdestinatarios=response.data.destinatarios
+                  //loading(false);
+
+        })
+     
+      }.bind(this), 345);
+      }else{
+        //this.remitente=remijson.nombre
+        this.optionsdestinatarios=[]
+        setTimeout(function(){
+          /*
+          this.axios.get(`https://api.github.com/search/repositories?q=${escape(search)}`)
+        .then(response => {
+          this.optionsdestinatarios=response.data.items
+                  loading(false);
+
+        })
+        */
+        
+        this.axios.get(`http://192.168.1.59:3000/logistica//obtenerDestinatarioNombre/${escape(search)}`)
+        .then(response => {
+
+          this.optionsdestinatarios=response.data.destinatarios
+                  //loading(false);
+
+        })
+        
+          }.bind(this), 345);
+
+      }
+      /*
+    this.optionsdestinatarios=[]
+    setTimeout(function(){
+      /*
+      this.axios.get(`https://api.github.com/search/repositories?q=${escape(search)}`)
+     .then(response => {
+       this.optionsdestinatarios=response.data.items
+               loading(false);
+
+     })
+     
+    
+    this.axios.get(`http://192.168.1.59:3000/logistica//obtenerDestinatarioNombre/${escape(search)}`)
+     .then(response => {
+
+       this.optionsdestinatarios=response.data.destinatarios
+               loading(false);
+
+     })
+     
+      }.bind(this), 345);
+
+    */
+     
+  },
+
     centroSeleccionado() {
-      console.log("entro a centro");
       this.selected_centro = Object.assign({}, this.selected_center);
     },
     clienteSeleccionado() {
-      //console.log(this.selected_client);
       var orden = localStorage.getItem("orden");
       var ordenjson = JSON.parse(orden);
       if (this.disable_selected_client == true) {
-        console.log("cliente ");
         if (this.selected_client) {
           if (orden) {
-            //console.log(ordenjson);
-            console.log("entro a cargue");
             this.selected_cliente = Object.assign(
               {},
               ordenjson.selected_client
@@ -223,11 +393,8 @@ export default {
                 });
               })
               .catch(error => {
-                console.log(error.response);
               });
           } else {
-            console.log("entro");
-            console.log(this.selected_client);
             this.selected_cliente = Object.assign({}, this.selected_client);
             this.selected_center = null;
             var load = true;
@@ -236,18 +403,12 @@ export default {
                 load
               });
             });
-            console.log(
-              urlservicios + "CentrosPorCliente/" + this.selected_client._id
-            );
             this.axios
-              .get(
-                urlservicios + "CentrosPorCliente/" + this.selected_client._id
-              )
+              .get(urlservicios + "CentrosPorCliente/" + this.selected_client._id)
               .then(response => {
-                console.log(response);
                 this.centros = response.data;
 
-                this.selected_centro = {};
+                //this.selected_centro = {};
                 this.habilitar = false;
                 //this.load=false
                 var load = false;
@@ -258,7 +419,6 @@ export default {
                 });
               })
               .catch(error => {
-                console.log(error.response);
               });
           }
         } else {
@@ -268,7 +428,6 @@ export default {
               load
             });
           });
-          console.log(this.selected_client);
           this.selected_cliente = {};
           this.selected_center = null;
           this.habilitar = true;
@@ -283,12 +442,7 @@ export default {
       } else {
         if (this.selected_client) {
           if (orden) {
-            //console.log(ordenjson);
-            console.log("entro a cargue");
-            this.selected_cliente = Object.assign(
-              {},
-              ordenjson.selected_client
-            );
+            this.selected_cliente = Object.assign({},ordenjson.selected_client);
             this.selected_centro = Object.assign({}, ordenjson.selected_center);
             this.selected_center = Object.assign({}, this.selected_centro);
             localStorage.removeItem("orden");
@@ -317,9 +471,7 @@ export default {
                 });
               });
           } else {
-            console.log("entro");
-            console.log(this.selected_client);
-            this.selected_cliente = Object.assign({}, this.selected_client);
+          this.selected_cliente = Object.assign({}, this.selected_client);
             this.selected_center = null;
             var load = true;
             setTimeout(() => {
@@ -327,18 +479,15 @@ export default {
                 load
               });
             });
-            console.log(
-              urlservicios + "CentrosPorCliente/" + this.selected_client._id
-            );
+           
             this.axios
               .get(
                 urlservicios + "CentrosPorCliente/" + this.selected_client._id
               )
               .then(response => {
-                console.log(response);
                 this.centros = response.data;
 
-                this.selected_centro = {};
+                //this.selected_centro = {};
                 this.habilitar = false;
                 //this.load=false
                 var load = false;
@@ -356,8 +505,7 @@ export default {
               load
             });
           });
-          console.log(this.selected_client);
-          this.selected_cliente = {};
+          //this.selected_cliente = {};
           this.selected_center = null;
           this.habilitar = true;
           this.centros = [];
@@ -370,29 +518,12 @@ export default {
         }
       }
     },
-    centrosseleccionado(seleccion) {
-      /*
-                FUNCION DEL CUAL OBTENEMOS EL CENTRO QUE FUE SELECCIONADO SEGUN EL CLIENTE
-            */
-      /*
-      if (seleccion.target.value == "" || seleccion.target.value == null) {
-        this.selected_centro = {};
-        this.selected_center = null;
-      } else {
-        for (var i = 0; i < this.centros.length; i++) {
-          if (this.centros[i]._id == seleccion.target.value) {
-            this.selected_centro = this.centros[i];
-          }
-        }
-      }
-      */
-    },
+
     ClientesSelect(seleccion) {
       /*
                 FUNCION DEL CUAL OBTENEMOS EL CLIENTE QUE FUE SELECCIONADO 
             */
 
-      console.log("entro a seleccion clientes");
       if (this.disable_selected_client == true) {
         var id_cliente;
         this.selected_center = null;
@@ -445,7 +576,7 @@ export default {
             if (this.clientes[i]._id == seleccion.target.value) {
               this.selected_cliente = Object.assign({}, this.clientes[i]);
 
-              //this.clientprueba=Object.assign({},this.selected_cliente)
+              this.clientprueba=Object.assign({},this.selected_cliente)
             }
           }
           this.selected_center = null;
@@ -460,8 +591,8 @@ export default {
               .get(urlservicios + "CentrosPorCliente/" + seleccion.target.value)
               .then(response => {
                 this.centros = response.data;
-                this.centros.unshift(vacio);
-                this.selected_centro = {};
+                //this.centros.unshift(vacio);
+                //this.selected_centro = {};
                 this.habilitar = false;
                 //this.load=false
                 var load = false;
@@ -492,7 +623,13 @@ export default {
         this.selected_client == "null" ||
         this.selected_center == "null"
       ) {
-        swal("Cuidado", "Se deben completar todos los campos !", "error");
+        var load = false;
+      setTimeout(() => {
+        bus.$emit("load", {
+          load
+        });
+      });
+        swal("Cuidado", "Se deben completar todos los campos !", "warning");
       } else {
         var selected_client = this.selected_cliente;
         var selected_center = this.selected_centro;
@@ -504,7 +641,7 @@ export default {
           idcliente: selected_client._id,
           idcentro: selected_center._id,
           infocliente: this.selected_cliente,
-          infocentro: this.selected_centro
+          infocentro: this.selected_center
         };
         /*
                     SE CREA UN LOCALSTORAGE EL CUAL PERMITE LA OBTENER LO QUE FUE SELECCIONADO PREVIAMENTE
@@ -512,10 +649,57 @@ export default {
         bus.$emit("remitente", seleccionados);
         localStorage.setItem("orden", JSON.stringify(seleccionados));
         localStorage.setItem("infoorden", JSON.stringify(selecciones));
-        console.log(selecciones);
-        //console.log("-----------");
-        console.log(seleccionados);
-        
+         var objetoremitente
+        if(this.longi==null||this.longi===null||this.longi==''||
+       this.lati==null||this.lati===null||this.lati==''){
+         objetoremitente = {
+          numero_identificacion: this.remitente.numero_identificacion,
+          direccion: this.remitente.direccion,
+          nombre: this.remitente.nombre,
+          telefono: this.remitente.telefono,
+          id_cliente: this.remitente.id_cliente,
+          //latitud: this.lati,
+          //longitud:this.longi,
+          //codigo_postal:this.posta
+        };
+        }else{
+          objetoremitente = {
+          numero_identificacion: this.remitente.numero_identificacion,
+          direccion: this.remitente.direccion,
+          nombre: this.remitente.nombre,
+          telefono: this.remitente.telefono,
+          id_cliente: this.remitente.id_cliente,
+          latitud: this.lati,
+          longitud:this.longi,
+          codigo_postal:this.posta
+          };
+        }
+        /*
+       objetoremitente = {
+          numero_identificacion: this.remitente.numero_identificacion,
+          direccion: this.remitente.direccion,
+          nombre: this.remitente.nombre,
+          telefono: this.remitente.telefono,
+          id_cliente: this.remitente.id_cliente,
+          latitud: this.lati,
+          longitud:this.longi,
+          codigo_postal:this.posta
+        };
+        */
+       localStorage.setItem("remitente", JSON.stringify(this.remitente));
+      this.axios.post(urlservicios +"ActualizarDestinatario" +"/" +this.remitente._id,objetoremitente)
+          .then(response => {
+            var load = false;
+            setTimeout(() => {
+              bus.$emit("load", {
+                load
+              });
+            });
+          })
+          .catch(function(error) {
+
+          })
+
         this.$router.replace("/inicio/ordenservicio");
         var load = false;
       setTimeout(() => {
@@ -526,48 +710,12 @@ export default {
       }
     }
   },
-
-  mounted: function() {
-    /*
-    if (orden == null || orden == "null" || orden == "") {
-    } else {
-      this.selected_client = ordenjson.selected_client;
-      this.selected_center = ordenjson.selected_center;
-      this.axios
-        .get(urlservicios + "CentrosPorCliente/" + this.selected_client._id)
-        .then(response => {
-          this.centros = response.data;
-          console.log(this.centros);
-          console.log(this.selected_center);
-          //this.selected_centro.direccion=this.centros.direccion
-          this.habilitar = false;
-          this.selected_centro = Object.assign({}, this.selected_center)
-          var load = false;
-          setTimeout(() => {
-            bus.$emit("load", {
-              load
-            });
-          });
-        });
-      var test2 = localStorage.getItem("storedData");
-      var test = JSON.parse(test2);
-      console.log("errr");
-      this.axios.get(urlservicios +"clientesOperador/" +test.id_OperadorLogistico._id +"/null")
-        .then(response => {
-          this.clientes = response.data;
-          this.selected_cliente ==Object.assign({}, this.selected_client)
-        });
-        
-    }
-    */
-  },
   created: function() {
     var _this = this;
 
     // -------------------------------
     var test2 = localStorage.getItem("storedData");
     var test = JSON.parse(test2);
-    //console.log(test.id_cliente);
 
     var id_cliente;
     if (test.id_cliente == undefined || test.id_cliente == null) {
@@ -589,21 +737,24 @@ export default {
             id_cliente
         )
         .then(response => {
-          //console.log(response);
           this.clientes = response.data;
           var orden = localStorage.getItem("orden");
           var ordenjson = JSON.parse(orden);
-
+          
           if (orden) {
-            //console.log(ordenjson);
             this.selected_cliente = ordenjson.selected_client;
             this.selected_centro = ordenjson.selected_center;
             this.clientes.forEach(element => {
               if (element._id == this.selected_cliente._id) {
-                //console.log("son iguales");
                 this.selected_client = element;
               }
             });
+          }
+          var remi = localStorage.getItem("remitente");
+          var remijson = JSON.parse(remi);
+          if(remi){
+            this.remitente=remijson
+            //this.onSearch(remijson.nombre, loading)
           }
           //this.clientes.unshift(vacio);
           var load = false;
@@ -622,7 +773,6 @@ export default {
             });
           });
           if ((error.response = '""')) {
-            console.log("error de conexion");
             swal({
               title: "Se presento un error",
               text: "Si persiste comuniquese con soporte",
@@ -642,7 +792,6 @@ export default {
               }
             });
           } else {
-            console.log("valdiacion");
             swal({
               title: "Dificultades en el Servicio",
               text: "Intente nuevamente",
@@ -664,20 +813,15 @@ export default {
           }
           /*
           if(error.response.status==500){
-            console.log("error 500");
           }
           */
-          console.log(JSON.stringify(error));
           //this.$router.replace('/inicio')
 
           if (bandera == false) {
           }
         });
     } else {
-      console.log("tengo cliente");
       id_cliente = test.id_cliente;
-      console.log(id_cliente);
-      //console.log(urlservicios+"clientesOperador/"+test.id_OperadorLogistico+'/'+id_cliente);
       var load = true;
       setTimeout(() => {
         bus.$emit("load", {
@@ -693,7 +837,6 @@ export default {
             id_cliente
         )
         .then(response => {
-          console.log(response);
           var load = false;
           setTimeout(() => {
             bus.$emit("load", {

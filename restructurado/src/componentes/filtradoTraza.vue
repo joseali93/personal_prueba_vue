@@ -35,12 +35,13 @@
                               class="text-primary"
                             label="Centro de Costo">
                                 <!--
-                                <b-form-select v-model="selectedCC" id="costoselect"  v-bind:style="validatecampo" class="mb-3" :options="centros" 
-                                text-field="nombre" value-field="_id" required :disabled="disable">
-                                </b-form-select>
+                               <v-select v-model="selectedCC" label="nombre_concatenado" 
+                                v-bind:style="validatecampo" :disabled="disable"
+                                placeholder="Seleccione el Centro de Costos" id="costoselect"
+                                :options="centros"></v-select>
                                 -->
                                 <v-select v-model="selectedCC" label="nombre_concatenado" 
-                                v-bind:style="validatecampo" :disabled="disable"
+                               :disabled="disable"
                                 placeholder="Seleccione el Centro de Costos" id="costoselect"
                                 :options="centros"></v-select>
                             </b-form-group>
@@ -59,6 +60,7 @@
                         
                                         :options="options"
                                         name="radiosSm"
+
                                         >
                         </b-form-radio-group>
 
@@ -78,8 +80,10 @@
                           class="text-primary"
                           label="Rango de Fechas" >
                             <date-picker disabled="true" id="fecha" width="430" 
+                             @keyup.enter.native="consultar()"
                             v-model="time1" placeholder="Rango de Fechas" range lang="en"
-                             :shortcuts="shortcuts" :confirm="true"></date-picker>
+                             :shortcuts="shortcuts" :confirm="true"
+                             @confirm="consultar()" ></date-picker>
                         </b-form-group>
                     </b-col>
             </b-row>
@@ -87,21 +91,24 @@
                     <b-col>
                         <b-form-group label="Orden de Servicio" class="mb-3 text-primary">
                         <b-input-group>
-                        <b-form-input v-model="orden" class="mb-3" type="number" id="orden" @input.native="ordenes"  placeholder="Orden de Servicio" />
+                        <b-form-input v-model="orden" class="mb-3" type="number" id="orden" @input.native="ordenes"
+                         @keyup.enter.native="consultar()"  placeholder="Orden de Servicio" />
                         </b-input-group>
                         </b-form-group>
                     </b-col>
                     <b-col>
                         <b-form-group label="Referencia" class="mb-3 text-primary">
                         <b-input-group>
-                        <b-form-input v-model="referencia" class="mb-3" type="text" id="referencia" @input.native="referencias"  placeholder="Referencia" />
+                        <b-form-input v-model="referencia" class="mb-3" type="text" id="referencia" @input.native="referencias"
+                         @keyup.enter.native="consultar()"  placeholder="Referencia" />
                         </b-input-group>
                         </b-form-group>
                     </b-col>
                     <b-col>
                         <b-form-group label="N° Movilizado" class="mb-3 text-primary">
                         <b-input-group>
-                        <b-form-input v-model="nmovilizado" class="mb-3" type="number" id="nmovilizado" @input.native="movilizado" placeholder="Num. Movilizado" />
+                        <b-form-input v-model="nmovilizado" class="mb-3" type="number" id="nmovilizado" @input.native="movilizado"
+                         placeholder="Num. Movilizado"  @keyup.enter.native="consultar()"/>
                         </b-input-group>
                         </b-form-group>
                     </b-col>
@@ -225,7 +232,6 @@ export default {
             //this.axios.get(urlservicios+"centros/")
             .then(response => {
               this.centros = response.data;
-              //console.log(this.centros)
               this.load = false;
               var load = false;
               setTimeout(() => {
@@ -267,7 +273,6 @@ export default {
             //this.axios.get(urlservicios+"centros/")
             .then(response => {
               this.centros = response.data;
-              //console.log(this.centros)
               this.load = false;
               var load = false;
               setTimeout(() => {
@@ -300,7 +305,6 @@ export default {
     },
     centrosSelec() {},
     limpiarfiltro() {
-      console.log("entro a limpiar filtro");
       (this.time1 = ""),
         (this.referencia = ""),
         (this.nmovilizado = ""),
@@ -315,7 +319,6 @@ export default {
       this.$router.replace("/inicio/trazabilidad");
     },
     consultar() {
-      //console.log("entro a consultar");
       var inicio, fin;
       var fecha = new Date();
       var _this = this;
@@ -334,15 +337,11 @@ export default {
       var finalfinal = moment(this.time1[1]);
 
       var cantidaddias = finalfinal.diff(fechainicial, "days");
-      console.log(mana);
-      console.log(ant);
-      console.log(cantidaddias);
-      console.log(this.time1);
       if (
         this.selectedCL == "" ||
-        this.selectedCC == "" ||
-        this.selectedCL == null ||
-        this.selectedCC == null
+        /*this.selectedCC == "" ||*/
+        this.selectedCL == null/* ||
+        this.selectedCC == null*/
       ) {
         this.validatecampo = {
           border: "2px solid red"
@@ -365,7 +364,6 @@ export default {
           }
         }
         if (this.prueba == "first") {
-          console.log("tengo tiempo");
           this.orden = "";
           this.referencia = "";
           this.nmovilizado = "";
@@ -380,7 +378,6 @@ export default {
               this.$router.replace("/inicio/trazabilidad");
             }
             if (this.time1 == "") {
-              console.log("es vacio fecha");
 
               swal(
                 "Oops...",
@@ -400,26 +397,30 @@ export default {
                 load
               });
             });
-            console.log(
-              urlservicios +
-                "/ObtenerOrdenesFiltradoDetalle/" +
-                this.selectedCC._id +
-                "/" +
-                this.selectedCL._id +
-                "/null/null/null/" +
-                inicio +
-                "/" +
-                fin +
-                ""
-            );
-            this.axios
-              .get(
-                urlservicios +
-                  "/ObtenerOrdenesFiltradoDetalle/" +
-                  this.selectedCC._id +
-                  "/" +
-                  this.selectedCL._id +
-                  "/null/null/null/" +
+            var centocosto
+            var envio
+            if(this.selectedCC==undefined||this.selectedCC=='' ||this.selectedCC==null
+            ||this.selectedCC=="null"){
+              centocosto="null"
+              envio={
+                //centro: this.selectedCC._id,
+                  cliente: this.selectedCL._id,
+                  inicio: inicio,
+                  fin: fin
+              }
+
+            }
+            else{
+              envio={
+                  centro: this.selectedCC._id,
+                  cliente: this.selectedCL._id,
+                  inicio: inicio,
+                  fin: fin
+              }
+              centocosto=this.selectedCC._id
+            }
+                
+            this.axios.get(urlservicios +"/ObtenerOrdenesFiltradoDetalle/" +centocosto +"/" +this.selectedCL._id +"/null/null/null/" +
                   inicio +
                   "/" +
                   fin +
@@ -427,13 +428,12 @@ export default {
               )
               .then(response => {
                 this.consulta = response.data;
-                console.log(this.consulta);
                 if (this.consulta == "") {
                   swal("Oops...", "No se encontro ninguna Orden!", "error");
                   //this.load = false;
                 }
                 var envio = {
-                  centro: this.selectedCC._id,
+                  //centro: this.selectedCC._id,
                   cliente: this.selectedCL._id,
                   inicio: inicio,
                   fin: fin
@@ -473,7 +473,6 @@ export default {
             swal("Oops...", "Debe completar algun campo!", "error");
           } else {
             if (this.orden == null || this.orden == "") {
-              console.log("entro orden vacio");
             } else {
               this.load = true;
               var load = true;
@@ -482,11 +481,29 @@ export default {
                   load
                 });
               });
+               if(this.selectedCC==undefined||this.selectedCC=='' ||this.selectedCC==null
+            ||this.selectedCC=="null"){
+              centocosto="null"
+               envio = {
+                    //centro: this.selectedCC._id,
+                    cliente: this.selectedCL._id,
+                    orden: this.orden
+                  };
+
+            }
+            else{
+               envio = {
+                    centro: this.selectedCC._id,
+                    cliente: this.selectedCL._id,
+                    orden: this.orden
+                  };
+              centocosto=this.selectedCC._id
+            }
               this.axios
                 .get(
                   urlservicios +
                     "/ObtenerOrdenesFiltradoDetalle/" +
-                    this.selectedCC._id +
+                    centocosto +
                     "/" +
                     this.selectedCL._id +
                     "/" +
@@ -505,11 +522,7 @@ export default {
                       });
                     });
                   }
-                  var envio = {
-                    centro: this.selectedCC._id,
-                    cliente: this.selectedCL._id,
-                    orden: this.orden
-                  };
+                  
                   this.envio = envio;
                   this.load = false;
                   var load = false;
@@ -527,6 +540,7 @@ export default {
                       load
                     });
                   });
+                  console.log(error);
                   swal(
                     "Se presento un problema",
                     "Intente nuevamente, por favor",
@@ -535,9 +549,7 @@ export default {
                 });
             }
             if (this.referencia == "" || this.referencia == null) {
-              //console.log("referencia vacio");
             } else {
-              console.log("tiene algo");
               this.load = true;
               var load = true;
               setTimeout(() => {
@@ -545,15 +557,26 @@ export default {
                   load
                 });
               });
+               if(this.selectedCC==undefined||this.selectedCC=='' ||this.selectedCC==null
+            ||this.selectedCC=="null"){
+              centocosto="null"
+               envio = {
+                    //centro: this.selectedCC._id,
+                    cliente: this.selectedCL._id,
+                    referencia: this.referencia
+                  };
+
+            }
+            else{
+                envio = {
+                    centro: this.selectedCC._id,
+                    cliente: this.selectedCL._id,
+                    referencia: this.referencia
+                  };
+              centocosto=this.selectedCC._id
+            }
               this.axios
-                .get(
-                  urlservicios +
-                    "/ObtenerOrdenesFiltradoDetalle/" +
-                    this.selectedCC._id +
-                    "/" +
-                    this.selectedCL._id +
-                    "/null/null/" +
-                    this.referencia +
+                .get(urlservicios +"/ObtenerOrdenesFiltradoDetalle/" +centocosto +"/" +this.selectedCL._id +"/null/null/" +this.referencia +
                     "/null/null"
                 )
                 .then(response => {
@@ -569,13 +592,8 @@ export default {
                       });
                     });
                   }
-                  var envio = {
-                    centro: this.selectedCC._id,
-                    cliente: this.selectedCL._id,
-                    referencia: this.referencia
-                  };
+                  
                   this.envio = envio;
-                  //console.log(this.consulta);
                   this.load = false;
                   var load = false;
                   setTimeout(() => {
@@ -608,13 +626,29 @@ export default {
                   load
                 });
               });
-              //console.log("movilizado");
-              //console.log(this.nmovilizado);
+               if(this.selectedCC==undefined||this.selectedCC=='' ||this.selectedCC==null
+            ||this.selectedCC=="null"){
+              centocosto="null"
+                 envio = {
+                      //centro: this.selectedCC._id,
+                      cliente: this.selectedCL._id,
+                      nmovilizado: this.nmovilizado
+                    };
+
+            }
+            else{
+                  envio = {
+                      centro: this.selectedCC._id,
+                      cliente: this.selectedCL._id,
+                      nmovilizado: this.nmovilizado
+                    };
+              centocosto=this.selectedCC._id
+            }
               this.axios
                 .get(
                   urlservicios +
                     "ObtenerOrdenesFiltradoDetalle/" +
-                    this.selectedCC._id +
+                    centocosto +
                     "/" +
                     this.selectedCL._id +
                     "/null/" +
@@ -633,11 +667,7 @@ export default {
                       });
                     });
                   } else {
-                    var envio = {
-                      centro: this.selectedCC._id,
-                      cliente: this.selectedCL._id,
-                      nmovilizado: this.nmovilizado
-                    };
+                   
                     this.envio = envio;
                     this.load = false;
                     var load = false;
@@ -662,7 +692,6 @@ export default {
                     "warning"
                   );
                 });
-              //console.log(this.consulta);
             }
           }
         }
@@ -674,7 +703,6 @@ export default {
     SelectCC(value){
         var vacio=  { _id: null, nombre: 'Por Favor Seleccione un Centro de Costo' };
         if(this.disabled_selectedCL==true){
-            console.log(value);
             this.selectedCL=value
              var load=true
                     setTimeout(() => {
@@ -712,7 +740,6 @@ export default {
                 this.centros=response.data
                 this.centros.unshift(vacio)
 
-                //console.log(this.centros)
                 this.load=false
                 var load=false
                         setTimeout(() => {
@@ -811,10 +838,8 @@ export default {
     var bandera = true;
     var _this = this;
 
-    console.log("montado");
     var login = localStorage.getItem("storedData");
     var infologin = JSON.parse(login);
-    //console.log(infologin.id_OperadorLogistico)
     if (infologin.id_cliente == undefined || infologin.id_cliente == null) {
       var id_cliente = "null";
       var load = true;
@@ -840,7 +865,6 @@ export default {
           });
           this.clientes = response.data;
 
-          //console.log(this.clientes)
         })
         .catch(function(error) {
           bandera = false;
@@ -890,7 +914,6 @@ export default {
             id_cliente
         )
         .then(response => {
-          console.log(response);
           var load = false;
           setTimeout(() => {
             bus.$emit("load", {
@@ -910,7 +933,6 @@ export default {
                             load 
                         })
                 }, )
-                //console.log(this.clientes)
                 this.SelectCC(id_cliente)
                 */
         })

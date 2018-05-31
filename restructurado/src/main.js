@@ -14,16 +14,17 @@ Vue.use(VueMomentJS, moment);
 Vue.use(VueRouter);
 Vue.use(BootstrapVue);
 Vue.use(VueAxios, axios)
+import VueGoogleAutocomplete from 'vue-google-autocomplete'
 
 
 const enrutador = new VueRouter({
         routes: rutas,
         mode: 'history'
     })
-//    export var urlservicios = 'http://200.116.52.29:3000/logistica/';
+//export var urlservicios = 'http://200.116.52.29:3000/logistica/';
 //export var urlservicios = 'http://192.168.1.87:3000/logistica/';
-//export var urlservicios = 'http://192.168.1.59:3000/logistica/';
-export var urlservicios = 'http://18.220.107.151:3000/logistica/';
+export var urlservicios = 'http://192.168.1.59:3000/logistica/';
+//export var urlservicios = 'http://18.220.107.151:3000/logistica/';
 //export var urlservicios = 'http://localhost:3000/logistica/';
 
 //export var urlservicios = 'http://18.220.107.151:3000/logistica/';
