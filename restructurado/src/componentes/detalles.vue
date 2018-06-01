@@ -176,10 +176,17 @@
 					value-field="_id" :state="statuscourier"
 					@change.native="selectcuriers" :disabled="selec_disable">
 					</b-form-select>
+           @input="updatecourier()" 
+            @search="onSearch"
 					-->
 					<v-select v-model="selected_curier" label="nombre" placeholder="Seleccione el Courier"
 					  :options="curiers"  
-					  :disabled="selec_disable"></v-select>
+					  :disabled="selec_disable"
+            @onChange="pruebacambio"
+             @input="updatecourier()" 
+            @search="onSearch"
+            :resetOnOptionsChange="true"
+           ></v-select>
 				</b-col>
 				
 			</b-row>
@@ -362,11 +369,13 @@
 import { bus } from "../main";
 import { urlservicios } from "../main";
 import moment from "moment";
-
+import io from 'socket.io-client'
+import { CreateSocket } from './utils/socket'
 export default {
   data() {
     return {
-        medios_disable:false,
+      socket: null,
+      medios_disable:false,
       leido: "",
       model_medios: null,
       medios: [],
@@ -420,12 +429,43 @@ export default {
     }
   },
   methods: {
+    pruebacambio(){
+      console.log("entro a cambios");
+    },
+    updatecourier(){
+      console.log(this.selected_curier);
+      console.log("emito!");
+        this.socket.on('CouriersActivos', (connectionList) => {
+            console.log(connectionList);
+
+            this.curiers=connectionList
+          });
+    },
+    onSearch(search) {
+
+        //loading(true);
+      this.search(search, this);
+      
+    },
+    
+  search(search){
+ console.log(search);
+ console.log("emito en searchs");
+ this.socket.on('CouriersActivos', (connectionList) => {
+   console.log("emitio correcto");
+            //console.log(connectionList);
+            this.curiers=connectionList
+          });
+
+     
+  },
     vehic() {
 
       var login = localStorage.getItem("storedData");
       var infologin = JSON.parse(login);
 
       if (typeof this.model_medios == "string") {
+        console.log(this.model_medios);
         var load = true;
         setTimeout(() => {
           bus.$emit("load", {
@@ -441,35 +481,44 @@ export default {
                 load
               });
             });
+
             this.medios = response.data;
             this.medios.forEach(element => {
               if (element._id == this.model_medios) {
                 this.model_medios = element;
+
               }
+
             });
-            var load = true;
+            
+            var load = false;
             setTimeout(() => {
               bus.$emit("load", {
                 load
               });
             });
-            this.axios
-              .get(
-                urlservicios +
-                  "UsuariosCurier/" +
+
+            /*
+            this.axios.get(
+                urlservicios +"UsuariosCurier/" +
                   infologin.id_OperadorLogistico._id +
-                  "/" +
-                  this.model_medios._id
-              )
+                  "/" +this.model_medios._id)
               .then(response2 => {
+                console.log("hacemos peticion de courier");
                 this.curiers = response2.data;
+                console.log(response2);
                 //this.selec_disable=false
                 var nombre;
+                console.log(this.curiers);
                 this.curiers.forEach(element2 => {
+                  console.log("tenemos segundo courier");
                   nombre = element2.nombre;
                   element2.nombre = nombre + " " + element2.apellido;
+                  console.log(element2);
                   if (element2._id == this.selected_curier) {
                     this.selected_curier = element2;
+                    console.log("-----------------");
+                    console.log(element2);
                   }
                   var load = false;
                   setTimeout(() => {
@@ -479,6 +528,7 @@ export default {
                   });
                 });
               });
+              */
           })
           .catch(function(error) {
             var load = false;
@@ -493,16 +543,31 @@ export default {
               "warning"
             );
           });
+          
       } else {
         if (this.model_medios != null) {
-
+          console.log("no tengo medios");
           var nombre;
+          console.log("emito"); 
+          this.socket.emit('MedioCourier', {
+            id_operadorlogistico:infologin.id_OperadorLogistico._id,
+            id_cliente:infologin._id,
+            medio_transporte: this.model_medios._id
+          });
+
+          this.socket.on('CouriersActivos', (connectionList) => {
+            //console.log(connectionList);
+            this.curiers=connectionList
+          });
+          /*
           var load = true;
           setTimeout(() => {
             bus.$emit("load", {
               load
             });
           });
+          */
+          /*
           this.axios
             .get(
               urlservicios +
@@ -541,8 +606,10 @@ export default {
                 "warning"
               );
             });
+            */
         } else {
           //this.selec_disable=true
+           console.log("no tiene medios");
         }
       }
     },
@@ -813,7 +880,10 @@ export default {
         }
       }
     },
+    
     asignarcurier(seleccionado) {
+      var login = localStorage.getItem("storedData");
+    var infologin = JSON.parse(login);
       if (
         seleccionado == "" ||
         seleccionado == "null" ||
@@ -823,11 +893,45 @@ export default {
         seleccionado = "null";
         this.statuscourier = false;
       } else {
+        console.log();
+        var objson ={
+          id_operador:infologin.id_OperadorLogistico._id,//per logistico
+          id_origen:infologin._id,//id usuario
+          id_destino:seleccionado._id,//id courier seleccionado
+          mensaje :{
+            contacto:this.currentUser.remitente.nombre_contacto,//nombre remitente
+            direccion:this.currentUser.remitente.direccion_recogida,//direccion remitente
+            observaciones:this.currentUser.remitente.direccion_recogida,
+            num_movilizados:this.currentUser.detalle.length,//cantidad movilizados orden
+            tipo_proceso:1
+          }
+        }
+        console.log("emito");
+        console.log(objson);
+        this.socket.emit('new-message', {
+          idOperador:infologin.id_OperadorLogistico._id,//per logistico
+          idOrigen:infologin._id,//id usuario
+          idDestino:seleccionado._id,//id courier seleccionado
+          mensaje :{
+              contacto:this.currentUser.remitente.nombre_contacto,//nombre remitente
+              direccion:this.currentUser.remitente.direccion_recogida,//direccion remitente
+              observaciones:this.currentUser.remitente.direccion_recogida,
+              num_movilizados:this.currentUser.detalle.length,//cantidad movilizados orden
+              tipo_proceso:1
+            }
+          })
+          var load = true;
+          setTimeout(() => {
+            bus.$emit("load", {
+              load
+            });
+          });
         var obj = {
           id_orden: this.currentUser._id,
           id_curier: seleccionado._id,
           id_medio: this.model_medios._id
         };
+        /*
         this.statuscourier = null;
         var load = true;
         setTimeout(() => {
@@ -863,7 +967,9 @@ export default {
               "warning"
             );
           });
+          */
       }
+      
     },
     asignar(seleccionado) {
       if (this.id_cliente_local != null) {
@@ -1128,6 +1234,100 @@ export default {
       }
       //this.$refs.ModalAct.show()
       
+    },
+    asignarfinal(data){
+      console.log("entro a asignar final");
+      console.log(data);
+      if(data.mensaje.respuesta=="true"){
+        var obj = {
+          id_orden: this.currentUser._id,
+          id_curier: data.idOrigen,
+          id_medio: this.model_medios._id
+        };
+        this.statuscourier = null;
+        var load = true;
+        setTimeout(() => {
+          bus.$emit("load", {
+            load
+          });
+        });
+        this.axios
+          .post(urlservicios + "AsignarOrdenCurrier/", obj)
+          .then(response => {
+            var load = false;
+            setTimeout(() => {
+              bus.$emit("load", {
+                load
+              });
+            });
+            this.Documento = response.data;
+            if (this.Documento.validacion == false) {
+            } else {
+              swal("Excelente!", "" + this.Documento.message, "success");
+            }
+          })
+          .catch(function(error) {
+            var load = false;
+            setTimeout(() => {
+              bus.$emit("load", {
+                load
+              });
+            });
+            swal(
+              "Se presento un problema",
+              "Intente nuevamente, por favor",
+              "warning"
+            );
+          });
+          
+      }
+      else{
+        console.log("no hago nada");
+      }
+      /*
+      var obj = {
+          id_orden: this.currentUser._id,
+          id_curier: seleccionado._id,
+          id_medio: this.model_medios._id
+        };
+        
+        this.statuscourier = null;
+        var load = true;
+        setTimeout(() => {
+          bus.$emit("load", {
+            load
+          });
+        });
+        this.axios
+          .post(urlservicios + "AsignarOrdenCurrier/", obj)
+          .then(response => {
+            var load = false;
+            setTimeout(() => {
+              bus.$emit("load", {
+                load
+              });
+            });
+            this.Documento = response.data;
+            if (this.Documento.validacion == false) {
+            } else {
+              swal("Excelente!", "" + this.Documento.message, "success");
+            }
+          })
+          .catch(function(error) {
+            var load = false;
+            setTimeout(() => {
+              bus.$emit("load", {
+                load
+              });
+            });
+            swal(
+              "Se presento un problema",
+              "Intente nuevamente, por favor",
+              "warning"
+            );
+          });
+          */
+          
     }
   },
   watch: {
@@ -1154,7 +1354,9 @@ export default {
     bus.$on(
       "thisEvent",
       function(userObject) {
+
         this.currentUser = userObject.inde.item;
+        console.log(this.currentUser);
         if (this.currentUser.leido == true) {
           this.leido = "Si";
         }
@@ -1172,6 +1374,37 @@ export default {
         this.inputstotales = userObject.inputstotales;
       }.bind(this)
     );
+    var login = localStorage.getItem("storedData");
+    var infologin = JSON.parse(login);
+    //console.log(infologin);
+      this.socket = (new CreateSocket({
+
+        id_cliente: infologin._id,
+
+        id_operador: infologin.id_OperadorLogistico._id
+
+      }));
+      this.socket.on('connect', () => {
+        //console.log('conectado!!');
+        //console.log(this.socket.instance.id);
+      })
+      this.socket.on('messages', (data) => {
+
+        //$.cbSpinner("hide");
+        console.log('------------------------------------');
+        console.log(data);
+        console.log('------------------------------------');
+        this.asignarfinal(data)
+        //this.message = (data.mensaje);
+        var load = false;
+          setTimeout(() => {
+            bus.$emit("load", {
+              load
+            });
+            // this.socket.instance.disconnect(true);
+          });
+      });
+
 
   },
   beforeCreate: function() {

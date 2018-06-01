@@ -2044,6 +2044,8 @@ export default {
             );
             this.$router.replace("/inicio");
             localStorage.removeItem("orden");
+            localStorage.removeItem("remitente");
+
           })
           .catch(function(error) {
             var load = false;

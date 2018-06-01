@@ -228,8 +228,15 @@ export default {
     updateOption(){
         var remi = localStorage.getItem("remitente");
         var remijson = JSON.parse(remi);
-         //this.remitente=remijson
+        if(remi){
+          console.log("exite");
          this.onSearch(remijson.nombre)
+          
+        }
+        else{
+          console.log("no existe");
+        }
+         //this.remitente=remijson
     },
 
      localizar(){
@@ -241,7 +248,12 @@ export default {
       var geocoder = new google.maps.Geocoder();
       geocoder.geocode({'address': dir, country: "CO" }, function(results, status) {
         if (status === 'OK') {
+          console.log(results[0]);
+          results[0].address_components.forEach(element => {
+            console.log(element);
+          });
           var resultados = results[0].geometry.location,
+          
             resultados_lat = resultados.lat(),
             resultados_long = resultados.lng();
           
