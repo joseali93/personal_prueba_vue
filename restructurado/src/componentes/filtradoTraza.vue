@@ -130,7 +130,8 @@
                 -->
                 <router-view :consulta="consulta" :centro="selectedCC" 
                     :cliente="selectedCL"
-                    :envios="envio" >
+                    :envios="envio" 
+                    :procesosLogisticos="procesosLogisticos">
                 </router-view>
            </b-card>
         </b-container>
@@ -152,6 +153,7 @@ export default {
   },
   data() {
     return {
+      procesosLogisticos:{},
       shortcuts: [
         {
           text: "Hoy",
@@ -427,7 +429,9 @@ export default {
                   ""
               )
               .then(response => {
-                this.consulta = response.data;
+                console.log(response.data);
+                this.consulta = response.data.detalles;
+                this.procesosLogisticos = response.data.proceso
                 if (this.consulta == "") {
                   swal("Oops...", "No se encontro ninguna Orden!", "error");
                   //this.load = false;
@@ -511,7 +515,10 @@ export default {
                     "/null/null/null/null"
                 )
                 .then(response => {
-                  this.consulta = response.data;
+                  console.log(response);
+                  this.consulta = response.data.detalles;
+                  this.procesosLogisticos = response.data.proceso
+                  console.log(this.procesosLogisticos);
                   if (this.consulta == "") {
                     swal("Oops...", "No se encontro ninguna Orden!", "error");
                     this.load = false;
@@ -580,7 +587,8 @@ export default {
                     "/null/null"
                 )
                 .then(response => {
-                  this.consulta = response.data;
+                  this.consulta = response.data.detalles;
+                this.procesosLogisticos = response.data.proceso
 
                   if (this.consulta == "") {
                     swal("Oops...", "No se encontro ninguna Orden!", "error");
@@ -656,7 +664,9 @@ export default {
                     "/null/null/null"
                 )
                 .then(response => {
-                  this.consulta = response.data;
+                  this.consulta = response.data.detalles;
+                                  this.procesosLogisticos = response.data.proceso
+
                   if (this.consulta == "") {
                     swal("Oops...", "No se encontro ninguna Orden!", "error");
                     this.load = false;

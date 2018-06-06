@@ -609,7 +609,7 @@ export default {
                             load
                         })
                         }, )
-        console.log(urlservicios+"ConsultaExcel/"+test.id_OperadorLogistico._id+"/"+centro+"/"+cliente+"/"+orden+"/"+detalle+"/"+refere+"/"+inicio+"/"+fin+"/");
+            console.log(urlservicios+"ConsultaExcel/"+test.id_OperadorLogistico._id+"/"+centro+"/"+cliente+"/"+orden+"/"+detalle+"/"+refere+"/"+inicio+"/"+fin+"/");
             this.axios.get(urlservicios+"ConsultaExcel/"+test.id_OperadorLogistico._id+"/"+centro+"/"+cliente+"/"+orden+"/"+detalle+"/"+refere+"/"+inicio+"/"+fin+"/")
             .then(response => {
                 console.log(response);
@@ -722,9 +722,10 @@ export default {
                 //centro:centro,
                 inputs:this.final
             }
+            var proce = this.procesosLogisticos
             setTimeout(() => {
                 bus.$emit('resultado', {
-                    value ,personal
+                    value ,personal,proce
                 })
                 }, )
             this.$router.replace('/inicio/trazabilidad/resultado')
@@ -744,9 +745,10 @@ export default {
     beforeCreate: function() {
        
     },
-    props:['consulta','centro','cliente', 'envios'],
+    props:['consulta','centro','cliente', 'envios','procesosLogisticos'],
     data () {
         return {
+            procesosLogisticos:'',
             variableServidor:'',
             resul:[],
             acor:false,

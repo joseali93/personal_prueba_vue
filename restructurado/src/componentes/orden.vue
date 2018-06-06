@@ -112,29 +112,13 @@ DE LA ORDEN DE SERVICIO -->
             </b-row>
             <b-row>
                     <b-col>
-                      <vue-google-autocomplete
-                  id="map"
-                  classname="form-control"
-                  placeholder="Start typing"
-                  v-on:placechanged="getAddressData"
-                                  country="co"
-
-              >
-              </vue-google-autocomplete>
-                      <!--
                     <b-form-group id="exampleInputGroup1"
                       class="text-primary"
                         label="Dirección ">
                             <b-form-input id="direccion"
                                 size="lg"
                                 type="text"
-                                v-model="<vue-google-autocomplete
-    id="map"
-    classname="form-control"
-    placeholder="Start typing"
-    v-on:placechanged="getAddressData"
->
-</vue-google-autocomplete>"
+                                v-model="remitente.direccion"
                                 required
                                 @keypress="localizar()"
                                  @keyup.enter.native="localizar()"
@@ -142,7 +126,6 @@ DE LA ORDEN DE SERVICIO -->
                                 maxlength="100">
                             </b-form-input>
                     </b-form-group>
-                    -->
                     </b-col>
                 </b-row>
                 <b-row>
@@ -223,11 +206,11 @@ import Preload from "../componentes/preload.vue";
 import { bus } from "../main";
 import { urlservicios } from "../main";
 import axios from "axios";
-import VueGoogleAutocomplete from 'vue-google-autocomplete'
+
 export default {
   components: {
     Preload,
-    VueGoogleAutocomplete,
+    
   },
   watch: {
     clientprueba(newValue, oldValue) {
@@ -289,23 +272,11 @@ export default {
       clientes: [],
       centros: [],
       load: false,
-      habilitar: true,
-      addressData:''
+      habilitar: true
     };
   },
 
   methods: {
-    /**
-      * When the location found
-      * @param {Object} addressData Data of the found location
-      * @param {Object} placeResultData PlaceResult object
-      * @param {String} id Input container ID
-      */
-      getAddressData: function (addressData, placeResultData, id) {
-        console.log(addressData);
-        console.log("entro");
-          this.address = addressData;
-      },
     cambio(){
       if(this.prueba=='second'){
             this.fecha=''

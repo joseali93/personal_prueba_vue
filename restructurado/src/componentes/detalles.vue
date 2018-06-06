@@ -546,28 +546,31 @@ export default {
           
       } else {
         if (this.model_medios != null) {
-          console.log("no tengo medios");
-          var nombre;
-          console.log("emito"); 
-          this.socket.emit('MedioCourier', {
-            id_operadorlogistico:infologin.id_OperadorLogistico._id,
-            id_cliente:infologin._id,
-            medio_transporte: this.model_medios._id
-          });
+           if(infologin.id_OperadorLogistico.confirmacionSocket==true){
+             console.log("no tengo medios");
+            var nombre;
+            console.log("emito"); 
+            this.socket.emit('MedioCourier', {
+              id_operadorlogistico:infologin.id_OperadorLogistico._id,
+              id_cliente:infologin._id,
+              medio_transporte: this.model_medios._id
+            });
 
-          this.socket.on('CouriersActivos', (connectionList) => {
-            //console.log(connectionList);
-            this.curiers=connectionList
-          });
-          /*
-          var load = true;
+            this.socket.on('CouriersActivos', (connectionList) => {
+              //console.log(connectionList);
+              this.curiers=connectionList
+            });
+           }
+          
+          else{
+            
+            var load = true;
           setTimeout(() => {
             bus.$emit("load", {
               load
             });
           });
-          */
-          /*
+        
           this.axios
             .get(
               urlservicios +
@@ -606,7 +609,9 @@ export default {
                 "warning"
               );
             });
-            */
+          }
+          
+            
         } else {
           //this.selec_disable=true
            console.log("no tiene medios");

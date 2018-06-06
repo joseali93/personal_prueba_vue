@@ -15,17 +15,16 @@
       {{prueba}}
 
 
-      
+        <input id="searchTextField" type="text" size="50">
+
   </b-container>
 </template>
 
 <script>
 import {urlservicios} from '../main'
 import {bus} from '../main'
-import VueGoogleAutocomplete from 'vue-google-autocomplete'
 
 export default {
-        components: { VueGoogleAutocomplete },
 
   data () {
     return {
@@ -123,7 +122,14 @@ export default {
 
     },
   computed: {
-  }
+  },
+  updated:{
+     initialize() {
+  var input = document.getElementById('searchTextField');
+  new google.maps.places.Autocomplete(input);
+}
+
+  },
 }
 </script>
 <style>

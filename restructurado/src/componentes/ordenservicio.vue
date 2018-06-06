@@ -693,30 +693,23 @@ export default {
   watch: {},
   methods: {
       algo(){
-          console.log("entro a algo");
       },
     localizarED(){
-        console.log("entro a localizar");
-        console.log(this.detalles.destinatario.direccion);
       var dir
       var longi
       var latit
       var codpostal
       if(this.detalleseditar.destinatario.direccion==undefined||this.detalleseditar.destinatario.direccion=='')
       {
-          console.log("no hace nada");
       }
       else{
-          console.log("hace peticion");
           setTimeout(function(){ 
               dir=this.detalleseditar.destinatario.direccion +', Colombia'
             var geocoder = new google.maps.Geocoder();
                 geocoder.geocode({'address': dir, country: "CO" }, function(results, status) {
                     if (status === 'OK') {
-                        console.log(results[0]);
                         results[0].address_components.forEach(element => {
                         if(element.types[0]=='postal_code'){
-                        //console.log("tenemos codigo postal");
                         codpostal=results[0].address_components[7].long_name
                         }
                         });
@@ -727,8 +720,6 @@ export default {
                     
                     longi=resultados_long
                     latit=resultados_lat
-                    console.log(longi);
-                    console.log(latit);
                     //codpostal=results[0].address_components[7].long_name
                     /*
                     this.lati=resultados_lat
@@ -758,10 +749,7 @@ export default {
 
     },
     SeleccionadoED() {
-      console.log("tengo un seleccionado");
-        console.log(this.detalleseditar.destinatario);
         /*
-      console.log(this.nombre_remitente);
       this.detalleseditar.destinatario.identificacion = this.nombre_remitente.numero_identificacion;
       this.detalleseditar.destinatario.direccion = this.nombre_remitente.direccion;
       this.detalleseditar.destinatario.telefono = this.nombre_remitente.telefono;
@@ -777,20 +765,16 @@ export default {
       this.searchED(search, this);
     },
     searchED(search) {
-        console.log("hacemos peticion");
         setTimeout(function(){
         this.axios.get(urlservicios+`/obtenerDestinatarioNombre/${escape(search)}`)
         .then(response => {
-            console.log(response.data);
                 if(response.data.destinatarios.length==0)
                 {
                 this.optionsremitentes=[]
                 //this.remitente={}
-                //console.log(typeof(this.remitente));
                 this.detalleseditar.destinatario.nombre=search
                 }
                 else{
-                    console.log("tenemos");
                 this.optionsremitentes=response.data.destinatarios 
                 }
                 /*
@@ -804,28 +788,21 @@ export default {
     
     },
     localizar(){
-        console.log("entro a localizar");
-        console.log(this.detalles.destinatario.direccion);
       var dir
       var longi
       var latit
       var codpostal
       if(this.detalles.destinatario.direccion==undefined||this.detalles.destinatario.direccion=='')
       {
-          console.log("no hace nada");
       }
       else{
-          console.log("hace peticion");
           setTimeout(function(){ 
               dir=this.detalles.destinatario.direccion +', Colombia'
             var geocoder = new google.maps.Geocoder();
                 geocoder.geocode({'address': dir, country: "CO" }, function(results, status) {
                     if (status === 'OK') {
-                        console.log(results[0]);
                         results[0].address_components.forEach(element => {
-                        console.log(element);
                         if(element.types[0]=='postal_code'){
-                        console.log("tenemos codigo postal");
                         codpostal=results[0].address_components[7].long_name
                         }
                         });
@@ -836,8 +813,6 @@ export default {
                     
                     longi=resultados_long
                     latit=resultados_lat
-                    console.log(longi);
-                    console.log(latit);
                     //codpostal=results[0].address_components[7].long_name
                     /*
                     this.lati=resultados_lat
@@ -867,9 +842,7 @@ export default {
 
     },
     Seleccionado() {
-      console.log("tengo un seleccionado");
 
-      console.log(this.nombre_remitente);
       this.detalles.destinatario.identificacion = this.nombre_remitente.numero_identificacion;
       this.detalles.destinatario.direccion = this.nombre_remitente.direccion;
       this.detalles.destinatario.telefono = this.nombre_remitente.telefono;
@@ -886,21 +859,16 @@ export default {
     },
 
     search(search) {
-        console.log("hacemos peticion");
         setTimeout(function(){
         this.axios.get(urlservicios+`/obtenerDestinatarioNombre/${escape(search)}`)
         .then(response => {
-            console.log(response.data);
             if(response.data.destinatarios.length==0)
                 {
                 this.optionsremitentes=[]
                 this.remitente={}
-                //console.log(typeof(this.remitente));
                 this.detalles.destinatario.nombre=search
-                console.log(this.detalles.destinatario);
                 }
                 else{
-                    console.log("tenemos");
                 this.optionsremitentes=response.data.destinatarios 
                 }
                 /*
@@ -1090,7 +1058,6 @@ export default {
       }
     },
     adicionarRef() {
-      console.log("entro a adicionar");
       var objetollaves = Object.keys(this.inputs.objeto);
       var tituloopciones = {};
       var opciones = [];
@@ -1437,7 +1404,6 @@ export default {
         };
         this.DetalleServicio.splice(this.indices, 1);
         this.DetalleServicio.splice(this.indices, 0, detalles);
-        console.log(this.DetalleServicio[this.indices]);
         (this.objeto = ""),
           (this.inputs = ""),
           toastr.success("Se edito exitosamente");
@@ -1625,8 +1591,6 @@ export default {
     ingresarOrden() {
         //var inforemitente = localStorage.getItem("orden");
         //var inforemi = JSON.parse(inforemitente);
-        console.log("-------------");
-        console.log(this.detalles.destinatario);
       this.validatecampoTel = "";
       this.estado.nombre = null;
       this.estado.direccion = null;
@@ -1646,8 +1610,6 @@ export default {
                     codigo_postal:this.posta,
                     id_cliente: inforemi.selected_client._id
                     };
-         console.log("creoooo");
-         console.log(objetocrear);
          this.axios.post(urlservicios + "CrearDestinatario", objetocrear)
           .then(response => {
             var load = false;
@@ -1660,10 +1622,7 @@ export default {
           })
          }
          else{
-             console.log("---Actualizo---");
-             console.log(this.detalles.destinatario);
             //detallepr=Object.assign({},this.detalles.destinatario);
-             console.log(this.nombre_remitente);
              var objetoactualizar = {
                     numero_identificacion: this.detalles.destinatario.identificacion,
                     direccion: this.detalles.destinatario.direccion,
@@ -1675,7 +1634,6 @@ export default {
                     codigo_postal:this.posta,
                     id_cliente: inforemi.selected_client._id
                     };
-                    console.log(objetoactualizar);
             this.axios.post(urlservicios +"ActualizarDestinatario" +"/" +this.nombre_remitente._id,objetoactualizar)
             .then(response => {
                 var load = false;
@@ -1696,7 +1654,6 @@ export default {
          }
          /*
       if (this.creaciondestinatarios == false) {
-        console.log(this.detalles.destinatario);
         var objeto = {
           numero_identificacion: this.identificacion,
           direccion: this.detalles.destinatario.direccion,
@@ -1911,7 +1868,6 @@ export default {
         */
         this.inputs.campos.forEach(element => {
           if (element.esImprimible == true || element.esImprimible === true) {
-            console.log(element);
             detalleslocal.Imprime = element.acumulaen;
           } else {
             //detalleslocal.Imprime=''
@@ -1925,7 +1881,6 @@ export default {
           detalleslocal: detalleslocal
         };
         this.DetalleServicio.push(detalles);
-        console.log("this.DetalleServicio: ", this.DetalleServicio);
 
         //BLANQUEAR DATOS
         this.optionsremitentes=[]
@@ -2196,8 +2151,6 @@ export default {
         var localremijson = JSON.parse(localremitente);
         var obserOrden = localStorage.getItem("observaciones_orden");
         var observacionesOrden = JSON.parse(obserOrden);
-        console.log("-.-------------");
-        console.log(observacionesOrden);
         /*
         var objeto = {
           id_OperadorLogistico: infologin.id_OperadorLogistico._id,
@@ -2221,8 +2174,6 @@ export default {
         var jsonfechareal = JSON.parse(fechareal);
         
         if(jsonfechareal.fecha==''){
-            console.log("existe");
-            console.log(jsonfechareal);
             var objeto = {
           id_OperadorLogistico: infologin.id_OperadorLogistico._id,
           id_usuario: infologin._id,
@@ -2245,7 +2196,6 @@ export default {
         };
            
         }else{
-            console.log("no existe");
              var objeto = {
           id_OperadorLogistico: infologin.id_OperadorLogistico._id,
           id_usuario: infologin._id,
@@ -2274,14 +2224,9 @@ export default {
             load
           });
         });
-        console.log("-------------------objeto");
-        console.log(objeto);
-        console.log("hora normla");
-        console.log(Date.parse(objeto.fecha_creacion));
         this.axios
           .post(urlservicios + "GuardarOrden", objeto)
           .then(response => {
-            console.log(response);
             var load = false;
             setTimeout(() => {
               bus.$emit("load", {
