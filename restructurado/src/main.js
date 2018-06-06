@@ -15,6 +15,13 @@ Vue.use(VueRouter);
 Vue.use(BootstrapVue);
 Vue.use(VueAxios, axios)
 import VueGoogleAutocomplete from 'vue-google-autocomplete'
+import VueGmaps from 'vue-gmaps'
+
+Vue.use(VueGmaps, {
+  key: 'AIzaSyCg0ofGR4zUE78qeSw8iEVNwWpWXWXvQjA'
+})
+
+
 
 
 const enrutador = new VueRouter({

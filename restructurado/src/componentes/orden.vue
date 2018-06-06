@@ -16,16 +16,23 @@ DE LA ORDEN DE SERVICIO -->
                 <b-card class="cards">
             
              <b-row>
-                 <!--
-                <a  v-on:click="actualizar" > 
-                    <b-btn v-on:click="actualizar" variant="primary" >
+               <b-form-group 
+                    
+                        label="Fecha y Hora de recolección"
+                        label-size="lg">
+                        <b-form-radio-group v-model="prueba"
                         
-                        Continuar
-                        <i class="fa fa-arrow-right" aria-hidden="true"></i>
-                    </b-btn>
-                </a>
-                -->
-            
+                                        :options="radios"
+                                        name="radiosSm"
+                                        @change="cambio"
+                                        >
+                        </b-form-radio-group>
+
+                    </b-form-group>
+              <b-col v-show="prueba=='second'" >
+                 <h3 class="text-primary">Seleccione el Cliente</h3>
+                 <b-form-input  type="date" v-model="fecha"></b-form-input>
+              </b-col>
                 <b-col md="3" offset-md="10">
                   <b-btn class="rounded" variant="primary"   v-on:click="actualizar"
                   v-b-popover.hover="'Continuar'" >Continuar<i class="fa fa-arrow-right"></i>
@@ -83,7 +90,7 @@ DE LA ORDEN DE SERVICIO -->
                      placeholder="Digite el remitente" :options="optionsdestinatarios"
                       @input="updateOption"
                       @search="onSearch">
-                      <template slot="no-options">
+                      <template slot="no-options" >
                         Digite el nombre del remitente..
                       </template>
                       <template slot="option" slot-scope="option">
@@ -95,6 +102,9 @@ DE LA ORDEN DE SERVICIO -->
                         <div class="selected d-center">
                           {{ option.nombre }}
                         </div>
+                        <template slot="no-options" >
+                        no se encontro nada.
+                      </template>
                       </template>
                       
                     </v-select>
@@ -102,19 +112,37 @@ DE LA ORDEN DE SERVICIO -->
             </b-row>
             <b-row>
                     <b-col>
+                      <vue-google-autocomplete
+                  id="map"
+                  classname="form-control"
+                  placeholder="Start typing"
+                  v-on:placechanged="getAddressData"
+                                  country="co"
+
+              >
+              </vue-google-autocomplete>
+                      <!--
                     <b-form-group id="exampleInputGroup1"
                       class="text-primary"
                         label="Dirección ">
                             <b-form-input id="direccion"
                                 size="lg"
                                 type="text"
-                                v-model="remitente.direccion"
+                                v-model="<vue-google-autocomplete
+    id="map"
+    classname="form-control"
+    placeholder="Start typing"
+    v-on:placechanged="getAddressData"
+>
+</vue-google-autocomplete>"
                                 required
+                                @keypress="localizar()"
                                  @keyup.enter.native="localizar()"
                                 placeholder="Dirección"
                                 maxlength="100">
                             </b-form-input>
                     </b-form-group>
+                    -->
                     </b-col>
                 </b-row>
                 <b-row>
@@ -128,6 +156,23 @@ DE LA ORDEN DE SERVICIO -->
                                 v-model="remitente.nombre"
                                 required
                                 placeholder="Nombre"
+                                maxlength="100"
+                                >
+                            </b-form-input>
+                    </b-form-group>
+                    </b-col>
+                </b-row>
+                <b-row>
+                    <b-col>
+                    <b-form-group id="exampleInputGroup2"
+                    class="text-primary"
+                        label="Num Identificacion ">
+                            <b-form-input id="direccion"
+                                size="lg"
+                                type="text"
+                                v-model="remitente.numero_identificacion"
+                                required
+                                placeholder="Digite numero de identificacion"
                                 maxlength="100"
                                 >
                             </b-form-input>
@@ -151,6 +196,17 @@ DE LA ORDEN DE SERVICIO -->
                     </b-form-group>
                     </b-col>
                 </b-row>
+                <b-row>
+                  <b-col>
+                    <b-form-textarea id="textarea1"
+                        v-model="observaciones"
+                        placeholder="Ingrese las observaciones necesarias"
+                        :rows="3"
+                        :max-rows="6"
+                        >
+                    </b-form-textarea>
+                  </b-col>
+                </b-row>
         </b-card>
         </b-container> 
 
@@ -167,10 +223,11 @@ import Preload from "../componentes/preload.vue";
 import { bus } from "../main";
 import { urlservicios } from "../main";
 import axios from "axios";
-
+import VueGoogleAutocomplete from 'vue-google-autocomplete'
 export default {
   components: {
-    Preload
+    Preload,
+    VueGoogleAutocomplete,
   },
   watch: {
     clientprueba(newValue, oldValue) {
@@ -178,7 +235,11 @@ export default {
     }
   },
   data() {
+    
     return {
+      prueba:'first',
+      fecha:'',
+      observaciones:'',
       remit:{
         nombre:'',
         direccion:'',
@@ -188,11 +249,19 @@ export default {
       longi:"",
       posta:"",
       remitente:'',
+      /*
+      remitente:{
+        nombre:'',
+        direccion:'',
+        telefono:'',
+        numero_identificacion:'',
+      },
+      */
       optionsdestinatarios:[],
       selected: 'first',
       radios: [
-        { text: 'Recoge en Centro de Costo', value: 'first' },
-        { text: 'Recoger en Remitente diferente', value: 'second' }
+        { text: 'Hoy, cualquier horario', value: 'first' },
+        { text: 'Programar Recolección', value: 'second' }
       
       ],
       items: [
@@ -220,21 +289,40 @@ export default {
       clientes: [],
       centros: [],
       load: false,
-      habilitar: true
+      habilitar: true,
+      addressData:''
     };
   },
 
   methods: {
+    /**
+      * When the location found
+      * @param {Object} addressData Data of the found location
+      * @param {Object} placeResultData PlaceResult object
+      * @param {String} id Input container ID
+      */
+      getAddressData: function (addressData, placeResultData, id) {
+        console.log(addressData);
+        console.log("entro");
+          this.address = addressData;
+      },
+    cambio(){
+      if(this.prueba=='second'){
+            this.fecha=''
+      }
+  
+    },
     updateOption(){
         var remi = localStorage.getItem("remitente");
         var remijson = JSON.parse(remi);
+        console.log("--entro a crear");
         if(remi){
           console.log("exite");
          this.onSearch(remijson.nombre)
           
         }
         else{
-          console.log("no existe");
+          //console.log("no existe");
         }
          //this.remitente=remijson
     },
@@ -250,7 +338,11 @@ export default {
         if (status === 'OK') {
           console.log(results[0]);
           results[0].address_components.forEach(element => {
-            console.log(element);
+            console.log(element.types[0]);
+            if(element.types[0]=='postal_code'){
+              console.log("tenemos codigo postal");
+              codpostal=results[0].address_components[7].long_name
+            }
           });
           var resultados = results[0].geometry.location,
           
@@ -259,15 +351,17 @@ export default {
           
           longi=resultados_long
           latit=resultados_lat
-          codpostal=results[0].address_components[7].long_name
+          console.log(longi);
+          console.log(latit);
+          //codpostal=results[0].address_components[7].long_name
           /*
           this.lati=resultados_lat
           this.longi=resultados_long
           this.posta=results[0].address_components[7].long_name
           */
           this.lati=latit
-        this.longi=longi
-        this.posta=codpostal
+          this.longi=longi
+          this.posta=codpostal
             } else {
               var mensajeError = "";
               if (status === "ZERO_RESULTS") {
@@ -290,79 +384,91 @@ export default {
       
     },
     
-  search(search){
-    var remi = localStorage.getItem("remitente");
-      var remijson = JSON.parse(remi);
-      if(remi==undefined||remi==''){
-        this.optionsdestinatarios=[]
-        setTimeout(function(){
-          /*
-          this.axios.get(`https://api.github.com/search/repositories?q=${escape(search)}`)
-        .then(response => {
-          this.optionsdestinatarios=response.data.items
-                  loading(false);
+    search(search){
+      var remi = localStorage.getItem("remitente");
+        var remijson = JSON.parse(remi);
+        if(remi==undefined||remi==''){
+          this.optionsdestinatarios=[]
+          setTimeout(function(){
+            /*
+            this.axios.get(`https://api.github.com/search/repositories?q=${escape(search)}`)
+          .then(response => {
+            this.optionsdestinatarios=response.data.items
+                    loading(false);
 
-        })
-        */
-        
-        this.axios.get(`http://192.168.1.59:3000/logistica//obtenerDestinatarioNombre/${escape(search)}`)
-        .then(response => {
+          })
+          */
+          console.log("-------hacemos peticion---------");
+          this.axios.get(urlservicios+`/obtenerDestinatarioNombre/${escape(search)}`)
+          .then(response => {
+            console.log("tenemos algo");
+            console.log(response.data);
+            if(response.data.destinatarios.length==0)
+            {
+              this.optionsdestinatarios=[]
+              this.remitente={}
+              //console.log(typeof(this.remitente));
+              this.remitente.nombre=search
+            }
+            else{
+              this.optionsdestinatarios=response.data.destinatarios 
+            }
+            //this.optionsdestinatarios=response.data.destinatarios
+                    //loading(false);
 
-          this.optionsdestinatarios=response.data.destinatarios
-                  //loading(false);
+          })
+      
+        }.bind(this), 345);
+        }else{
+          //this.remitente=remijson.nombre
+          this.optionsdestinatarios=[]
+          setTimeout(function(){
+            /*
+            this.axios.get(`https://api.github.com/search/repositories?q=${escape(search)}`)
+          .then(response => {
+            this.optionsdestinatarios=response.data.items
+                    loading(false);
 
-        })
-     
-      }.bind(this), 345);
-      }else{
-        //this.remitente=remijson.nombre
-        this.optionsdestinatarios=[]
-        setTimeout(function(){
-          /*
-          this.axios.get(`https://api.github.com/search/repositories?q=${escape(search)}`)
-        .then(response => {
-          this.optionsdestinatarios=response.data.items
-                  loading(false);
+          })
+          */
+          
+          this.axios.get(urlservicios+`/obtenerDestinatarioNombre/${escape(search)}`)
+          .then(response => {
+            console.log("tenemos algo 2");
 
-        })
-        */
-        
-        this.axios.get(`http://192.168.1.59:3000/logistica//obtenerDestinatarioNombre/${escape(search)}`)
-        .then(response => {
+            this.optionsdestinatarios=response.data.destinatarios
+                    //loading(false);
 
-          this.optionsdestinatarios=response.data.destinatarios
-                  //loading(false);
+          })
+          
+            }.bind(this), 345);
 
-        })
-        
-          }.bind(this), 345);
+        }
+        /*
+      this.optionsdestinatarios=[]
+      setTimeout(function(){
+        /*
+        this.axios.get(`https://api.github.com/search/repositories?q=${escape(search)}`)
+      .then(response => {
+        this.optionsdestinatarios=response.data.items
+                loading(false);
 
-      }
-      /*
-    this.optionsdestinatarios=[]
-    setTimeout(function(){
-      /*
-      this.axios.get(`https://api.github.com/search/repositories?q=${escape(search)}`)
-     .then(response => {
-       this.optionsdestinatarios=response.data.items
-               loading(false);
+      })
+      
+      
+      this.axios.get(`http://192.168.1.59:3000/logistica//obtenerDestinatarioNombre/${escape(search)}`)
+      .then(response => {
 
-     })
-     
-    
-    this.axios.get(`http://192.168.1.59:3000/logistica//obtenerDestinatarioNombre/${escape(search)}`)
-     .then(response => {
+        this.optionsdestinatarios=response.data.destinatarios
+                loading(false);
 
-       this.optionsdestinatarios=response.data.destinatarios
-               loading(false);
+      })
+      
+        }.bind(this), 345);
 
-     })
-     
-      }.bind(this), 345);
-
-    */
-     
-  },
+      */
+      
+    },
 
     centroSeleccionado() {
       this.selected_centro = Object.assign({}, this.selected_center);
@@ -621,6 +727,9 @@ export default {
       }
     },
     actualizar: function() {
+      console.log("---- this.remitente----");
+      console.log(this.remitente);
+     
       var load = true;
       setTimeout(() => {
         bus.$emit("load", {
@@ -633,16 +742,44 @@ export default {
         this.selected_client == null ||
         this.selected_center == null ||
         this.selected_client == "null" ||
-        this.selected_center == "null"
+        this.selected_center == "null" ||
+        this.remitente == null ||
+        this.remitente == "null" ||
+        this.remitente == '' ||
+        (this.prueba == 'second'&&this.fecha=='')
+
       ) {
-        var load = false;
-      setTimeout(() => {
-        bus.$emit("load", {
-          load
-        });
-      });
+        console.log("entro al if");
+        console.log(this.prueba);
+        if(this.prueba=='second'){
+          var load = false;
+          setTimeout(() => {
+            bus.$emit("load", {
+              load
+            });
+          });
+          if(this.fecha==''){
+             swal("Cuidado", "Se deben completar la fecha de recolección de la orden", "warning");
+          }
+          
+            
+        }
+        else{
+         
+          var load = false;
+          setTimeout(() => {
+            bus.$emit("load", {
+              load
+            });
+          });
         swal("Cuidado", "Se deben completar todos los campos !", "warning");
+        }
+
       } else {
+         var fecha={
+              fecha:this.fecha
+            }
+              localStorage.setItem("fecha_orden", JSON.stringify(fecha));
         var selected_client = this.selected_cliente;
         var selected_center = this.selected_centro;
         var seleccionados = {
@@ -658,6 +795,13 @@ export default {
         /*
                     SE CREA UN LOCALSTORAGE EL CUAL PERMITE LA OBTENER LO QUE FUE SELECCIONADO PREVIAMENTE
                 */
+
+        
+      var observacionesOrden={
+        observacion:this.observaciones
+      }
+      localStorage.setItem("observaciones_orden", JSON.stringify(observacionesOrden));
+
         bus.$emit("remitente", seleccionados);
         localStorage.setItem("orden", JSON.stringify(seleccionados));
         localStorage.setItem("infoorden", JSON.stringify(selecciones));
@@ -699,6 +843,59 @@ export default {
         };
         */
        localStorage.setItem("remitente", JSON.stringify(this.remitente));
+       console.log(this.optionsdestinatarios);
+       if(this.optionsdestinatarios.length==0)
+       {
+          var objetocrear = {
+          numero_identificacion: this.remitente.numero_identificacion,
+          direccion: this.remitente.direccion,
+          nombre: this.remitente.nombre,
+          telefono: this.remitente.telefono,
+          id_cliente: this.remitente.id_cliente,
+          latitud: this.lati,
+          longitud:this.longi,
+          codigo_postal:this.posta,
+           id_cliente: this.selected_cliente._id
+        };
+         console.log("creoooo");
+         console.log(objetocrear);
+         this.axios.post(urlservicios + "CrearDestinatario", objetocrear)
+          .then(response => {
+            var load = false;
+            setTimeout(() => {
+              bus.$emit("load", {
+                load
+              });
+
+            });
+            this.$router.replace("/inicio/ordenservicio");
+          })
+          .catch(function(error) {
+            var load = false;
+            setTimeout(() => {
+              bus.$emit("load", {
+                load
+              });
+            });
+          });
+       }
+       else{
+         console.log("actualizo");
+         this.axios.post(urlservicios +"ActualizarDestinatario" +"/" +this.remitente._id,objetoremitente)
+          .then(response => {
+            var load = false;
+            setTimeout(() => {
+              bus.$emit("load", {
+                load
+              });
+            });
+            this.$router.replace("/inicio/ordenservicio");
+          })
+          .catch(function(error) {
+
+          })
+       }
+       /*
       this.axios.post(urlservicios +"ActualizarDestinatario" +"/" +this.remitente._id,objetoremitente)
           .then(response => {
             var load = false;
@@ -711,8 +908,8 @@ export default {
           .catch(function(error) {
 
           })
-
-        this.$router.replace("/inicio/ordenservicio");
+        */
+        //this.$router.replace("/inicio/ordenservicio");
         var load = false;
       setTimeout(() => {
         bus.$emit("load", {

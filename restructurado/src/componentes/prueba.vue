@@ -2,45 +2,46 @@
 
 
   <b-container fluid>
-      <b-form-input v-model="text1"
-                  type="text"
-                  placeholder="Enter your name"
-                  @keyup.enter.native="localizar()"></b-form-input>
+      <vue-google-autocomplete
+            ref="address"
+            id="map"
+            v-model="prueba"
+            classname="form-control"
+            placeholder="Please type your address"
+            v-on:placechanged="getAddressData"
+            country="co"
+        >
+                </vue-google-autocomplete>
+      {{prueba}}
 
+
+      
   </b-container>
 </template>
 
 <script>
 import {urlservicios} from '../main'
 import {bus} from '../main'
-    import VueGoogleAutocomplete from 'vue-google-autocomplete'
+import VueGoogleAutocomplete from 'vue-google-autocomplete'
 
 export default {
-          components: { VueGoogleAutocomplete},
+        components: { VueGoogleAutocomplete },
 
   data () {
     return {
-      text1:'',
-     address:'',
-      selected:'',
-      modal2:true,
-      algo:'calle 100 #49-97',
-      clientes:[],
-        
-      items: [
-        
-         {nmovilizado: 123, cliente: 'Macdonalds'
-       },
-         {nmovilizado: 123, cliente: '1111111111'
-        }
-         
-        
-      ],
+      searchPlace:'',
+     prueba:'Calle 100 #49-97',
+     address:''
+      
      
     }
     
   },
   methods:{
+    pruebas(){
+      console.log("entro a prueba");
+      console.log(addressData);
+    },
     localizar(){
       console.log("enter");
       var dir
@@ -77,17 +78,17 @@ export default {
      geocodeResult(results, status) {
        console.log("entra a geo code");
        console.log(results);
-    // Verificamos el estatus
-    if (status == 'OK') {
-        // Si hay resultados encontrados, centramos y repintamos el mapa
-        // esto para eliminar cualquier pin antes puesto
-       
-    } else {
-        // En caso de no haber resultados o que haya ocurrido un error
-        // lanzamos un mensaje con el error
-        alert("Geocoding no tuvo éxito debido a: " + status);
-    }
-},
+      // Verificamos el estatus
+      if (status == 'OK') {
+          // Si hay resultados encontrados, centramos y repintamos el mapa
+          // esto para eliminar cualquier pin antes puesto
+        
+      } else {
+          // En caso de no haber resultados o que haya ocurrido un error
+          // lanzamos un mensaje con el error
+          alert("Geocoding no tuvo éxito debido a: " + status);
+      }
+    },
     update(valor){
       console.log(valor);
      // onchange(this.getAddressData)
@@ -99,19 +100,14 @@ export default {
             * @param {String} id Input container ID
             */
             getAddressData: function (addressData, placeResultData, id) {
-              if(this.algo==''){
-                console.log("es vacio");
-              }
-              else{
-                console.log("no es vacio");
-              }
-              console.log("-------");
-              console.log(addressData);
-              console.log(placeResultData);
+                console.log(addressData);
+                console.log(placeResultData);
                 this.address = addressData;
             }
     },
     mounted: function() {
+                  this.$refs.address.focus();
+
        bus.$on('modalinfo', function (userObject) {
      
         this.algo = userObject.itemsmodal

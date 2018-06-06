@@ -447,6 +447,7 @@ export default {
                 listadoMovilizados:varios,
                 infoManifiesto:this.objeto,
                 id_procesoLogistico:this.processSelected._id,
+                //procesoSistena:5,
                 id_courier:this.curier
             }
             }

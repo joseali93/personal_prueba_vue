@@ -893,22 +893,8 @@ export default {
         seleccionado = "null";
         this.statuscourier = false;
       } else {
-        console.log();
-        var objson ={
-          id_operador:infologin.id_OperadorLogistico._id,//per logistico
-          id_origen:infologin._id,//id usuario
-          id_destino:seleccionado._id,//id courier seleccionado
-          mensaje :{
-            contacto:this.currentUser.remitente.nombre_contacto,//nombre remitente
-            direccion:this.currentUser.remitente.direccion_recogida,//direccion remitente
-            observaciones:this.currentUser.remitente.direccion_recogida,
-            num_movilizados:this.currentUser.detalle.length,//cantidad movilizados orden
-            tipo_proceso:1
-          }
-        }
-        console.log("emito");
-        console.log(objson);
-        this.socket.emit('new-message', {
+        if(infologin.id_OperadorLogistico.confirmacionSocket==true){
+          this.socket.emit('new-message', {
           idOperador:infologin.id_OperadorLogistico._id,//per logistico
           idOrigen:infologin._id,//id usuario
           idDestino:seleccionado._id,//id courier seleccionado
@@ -926,12 +912,14 @@ export default {
               load
             });
           });
-        var obj = {
+        }
+        else{
+          var obj = {
           id_orden: this.currentUser._id,
           id_curier: seleccionado._id,
           id_medio: this.model_medios._id
         };
-        /*
+        
         this.statuscourier = null;
         var load = true;
         setTimeout(() => {
@@ -967,7 +955,24 @@ export default {
               "warning"
             );
           });
-          */
+        }
+        /*
+        var objson ={
+          id_operador:infologin.id_OperadorLogistico._id,//per logistico
+          id_origen:infologin._id,//id usuario
+          id_destino:seleccionado._id,//id courier seleccionado
+          mensaje :{
+            contacto:this.currentUser.remitente.nombre_contacto,//nombre remitente
+            direccion:this.currentUser.remitente.direccion_recogida+"pruebaaaaaaaaa",//direccion remitente
+            observaciones:"observaciones de pruebas observaciones de pruebas observaciones de pruebas observaciones de pruebas observaciones de pruebas observaciones de pruebas observaciones de pruebas observaciones de pruebas observaciones de pruebas observaciones de pruebas observaciones de pruebas observaciones de pruebas observaciones de pruebas observaciones de pruebas observaciones de pruebas observaciones de pruebas ",
+            num_movilizados:this.currentUser.detalle.length,//cantidad movilizados orden
+            tipo_proceso:1
+          }
+        }
+        */
+       
+        
+          
       }
       
     },

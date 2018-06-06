@@ -85,23 +85,12 @@
                 <b-container fluid>
                 <b-row class=" my-1">
                     <b-col>
-                    <!--
-                    <b-form-select v-model="selectproduct"   id="produ" 
-                    :options="productosurl" text-field="nombre" value-field="_id"  @change.native="service">
-                    </b-form-select>
-                    -->
                     <v-select v-model="selectproduct" label="nombre" placeholder="Digite el Producto"
                         :options="productosurl" @input="seleccionarServicio()">
                     </v-select>
                         
                     </b-col>
                     <b-col>
-                    <!--
-                    <b-form-select v-model="selectservice"  :options="serviciosurl"
-                    @change.native="campos"
-                    text-field="nombre" value-field="_id"  :disabled="habilitar" >
-                    </b-form-select>
-                    -->
                     <v-select v-model="selectservice" label="nombre" placeholder="Digite el Servicio"
                         :disabled="habilitar"
                         :options="serviciosurl" @input="camposNversion()">
@@ -247,7 +236,7 @@
                                           @input="Seleccionado"
                                           @search="onSearch">
                                           <template slot="no-options">
-                                            <p @click="NuevoDestinatario(nombre_remitente)">Digite el nombre del remitente..</p>
+                                            <p >Digite el nombre del remitente..</p>
                                           </template>
                                           <template slot="option" slot-scope="option">
                                             <div class="d-center">
@@ -261,7 +250,18 @@
                                           </template>
                                           
                                         </v-select>
-                                        {{nombre_remitente}}
+                                </b-col>
+                            </b-form-row>
+                            <b-form-row v-show="selectservice&&mostrardestinatario" class="my-1">
+                                <b-col>
+                                    <label  class="col-sm col-form-label col-form-label-sm text-primary"> Nombre: </label>
+                                </b-col>
+                                <b-col>
+                                    <b-form-input type="text" class="form-control form-control-sm"  placeholder="Nombre"
+                                    v-model="detalles.destinatario.nombre"
+                                  
+                                    :state="true" 
+                                    title="Num. Identificacion"></b-form-input>
                                 </b-col>
                             </b-form-row>
                             <b-form-row v-show="selectservice&&mostrardestinatario" class="my-1">
@@ -272,7 +272,8 @@
                                     <b-form-input type="number" class="form-control form-control-sm"  placeholder="Indentidicación"
                                     v-model="detalles.destinatario.identificacion"
                                   
-                                    :state="true"  v-b-popover.hover="'Se debe diligenciar sin puntos, en caso de NIT sin numero de validación, ni guion'" title="Num. Identificacion"></b-form-input>
+                                     v-b-popover.hover="'Se debe diligenciar sin puntos, en caso de NIT sin numero de validación, ni guion'" 
+                                    title="Num. Identificacion"></b-form-input>
                                     <!--<input type="text" class="form-control form-control-sm"  placeholder="Nombre" v-model="detalles.destinatario.nombre">
                                      @keyup.enter.tab.native="buscar('nuevo')"
                                     @keydown.tab.native="buscar('nuevo')"
@@ -286,7 +287,12 @@
                                 </b-col>
                                 <b-col>
                                     <b-form-input type="text"  class="form-control form-control-sm"  :state="estado.direccion"
-                                     placeholder="Direccion" v-model="detalles.destinatario.direccion"> </b-form-input>
+                                     placeholder="Direccion" v-model="detalles.destinatario.direccion"
+                                     @input="localizar()"> </b-form-input>
+                                     <!-- 
+                                        @keypress="localizar()"
+                                     @keyup="algo()"
+                                     -->
 
                                 </b-col>
                             </b-form-row>
@@ -302,7 +308,6 @@
                                     
                                 </b-col>
                             </b-form-row>
-                            {{detalles.destinatario.telefono}}
                             </b-card-body>
                             </b-tab>
                     </b-tabs>  
@@ -357,26 +362,7 @@
                     </v-select>
                     </b-col>
                 </b-row>
-                    <!--
-                    <b-row class=" my-1">
-                    <b-col>
-                        <small>Producto</small>
-                        <b-form-select v-model="selectproduct" class="mb-3" 
-                        :options="productosurl" text-field="nombre" value-field="_id" 
-                        @change.native="service"
-                        disabled>
-                        </b-form-select>
-                    </b-col>
-                    <b-col>
-                        <small>Servicio</small>
-                        <b-form-select v-model="selectservice" class="mb-3" 
-                        :options="serviciosurl" @change.native="campos" text-field="nombre"
-                        disabled value-field="_id">
-                        </b-form-select>
-                    </b-col>
 
-                    </b-row>
-                    -->
             <b-card no-body v-show="selectserviceED" class=" w-100 cards"
                     style="
                     padding-left: 0px;
@@ -483,17 +469,47 @@
                         </b-tab>
                         <b-tab title="Destinatario">
                         <b-card-body>
-                            <b-form-row v-show="selectservice" class="my-1">
+                            <b-form-row  class="my-1">
+                                <b-col>
+                                    <label  class="col-sm col-form-label col-form-label-sm text-primary">Nombre: </label>
+                                </b-col>
+                                <b-col cols="9">
+                                      <v-select maxHeight="500px" label="nombre" :filterable="false" v-model=destinatarioED
+                                        placeholder="Digite el remitente" :options="optionsremitentes"
+                                          @input="SeleccionadoED"
+                                          @search="onSearchED">
+                                          <template slot="no-options">
+                                            <p >Digite el nombre del remitente..</p>
+                                          </template>
+                                          <template slot="option" slot-scope="option">
+                                            <div class="d-center">
+                                              {{ option.nombre }}
+                                              </div>
+                                          </template>
+                                          <template slot="selected-option" scope="option">
+                                            <div class="selected d-center">
+                                              {{ option.nombre }}
+                                            </div>
+                                          </template>
+                                          
+                                        </v-select>
+
+                                </b-col>
+                            </b-form-row>
+                            <b-form-row  class="my-1">
                                 <b-col>
                                     <label  class="col-sm col-form-label col-form-label-sm"> Identificación: </label>
                                 </b-col>
                                 <b-col>
                                     <b-form-input type="number" class="form-control form-control-sm"  placeholder="Indentidicación"
-                                    v-model="detalleseditar.destinatario.numero_identificacion"
-                                    @keyup.enter.tab.native="buscar('editar')"
-                                    @keydown.tab.native="buscar('editar')"
+                                    v-model="detalleseditar.destinatario.identificacion"
+                                   
                                     :state="true"  v-b-popover.hover="'Se debe diligenciar sin puntos, en caso de NIT sin numero de validación, ni guion'" title="Num. Identificacion"></b-form-input>
-                                    <!--<input type="text" class="form-control form-control-sm"  placeholder="Nombre" v-model="detalles.destinatario.nombre">
+                                    <!--<input type="text" 
+                                     @keyup.enter.tab.native="buscar('editar')"
+                                    @keydown.tab.native="buscar('editar')"
+                                    class="form-control form-control-sm"  
+                                    placeholder="Nombre" v-model="detalles.destinatario.nombre">
                                     -->
                                 </b-col>
                             </b-form-row>
@@ -549,14 +565,22 @@
 import { bus } from "../main";
 import { urlservicios } from "../main";
 import Preload from "../componentes/preload.vue";
+let detallepr;
+import moment from 'moment'
+import moment2 from 'moment-timezone';
 export default {
   components: {
     Preload
   },
   data() {
     return {
-      nombre_remitente:'',
-      optionsremitentes:[],
+        
+    destinatarioED:"",
+         lati:'',
+          longi:'',
+          posta:'',
+      nombre_remitente: "",
+      optionsremitentes: [],
       pruebas: {
         "background-color": "#ebeaea",
         " border-bottom-color": "#495057",
@@ -616,14 +640,14 @@ export default {
       ],
       DetalleServicio: [],
       remitentes: [],
-      tabdinamicoED:false,
+      tabdinamicoED: false,
       productosurl: [],
       selectproducto: {},
       productosurlED: [],
-      selectproductED:null,
-      selectserviceED:null,
-      serviciosurlED:[],
-      selectservice:null,
+      selectproductED: null,
+      selectserviceED: null,
+      serviciosurlED: [],
+      selectservice: null,
       serviciosurl: [],
       selectservice: null,
       selectproduct: null,
@@ -637,7 +661,10 @@ export default {
           _id: "",
           nombre: "",
           direccion: "",
-          telefono: ""
+          telefono: "",
+          latitud:'',
+          longitud:'',
+          codigo_postal:''
         },
         infor: {},
         referencia: "",
@@ -650,7 +677,10 @@ export default {
           _id: "",
           nombre: "",
           direccion: "",
-          telefono: ""
+          telefono: "",
+           latitud:'',
+          longitud:'',
+          codigo_postal:''
         },
         infor: {},
         referencia: "",
@@ -662,102 +692,227 @@ export default {
   },
   watch: {},
   methods: {
-    NuevoDestinatario(){
-      console.log("nuevo destinatario");
-      console.log(this.nombre_remitente);
-    },
-    Seleccionado(){
-      console.log("tengo un seleccionado");
-      
-      console.log(this.nombre_remitente);
-      this.detalles.destinatario.identificacion=this.nombre_remitente.numero_identificacion
-      this.detalles.destinatario.direccion=this.nombre_remitente.direccion
-      this.detalles.destinatario.telefono=this.nombre_remitente.telefono
-      this.detalles.destinatario.nombre=this.nombre_remitente.nombre
-      this.detalles.destinatario.latitud=this.nombre_remitente.latitud
-      this.detalles.destinatario.longitud=this.nombre_remitente.longitud
-      this.detalles.destinatario.codigo_postal=this.nombre_remitente.codigo_postal
-    },
-     onSearch(search) {
-      //this.nombre_remitente=search
-        //loading(true);
-      this.search(search, this);
-      
-    },
-    
-  search(search){
-    var remi = localStorage.getItem("remitente");
-      var remijson = JSON.parse(remi);
-      if(remi==undefined||remi==''){
-        this.optionsdestinatarios=[]
-        setTimeout(function(){
-          /*
-          this.axios.get(`https://api.github.com/search/repositories?q=${escape(search)}`)
-        .then(response => {
-          this.optionsdestinatarios=response.data.items
-                  loading(false);
-
-        })
-        */
-        
-        this.axios.get(`http://192.168.1.59:3000/logistica//obtenerDestinatarioNombre/${escape(search)}`)
-        .then(response => {
-
-          this.optionsremitentes=response.data.destinatarios
-                  //loading(false);
-
-        })
-     
-      }.bind(this), 345);
-      }else{
-        //this.remitente=remijson.nombre
-        this.optionsdestinatarios=[]
-        setTimeout(function(){
-          /*
-          this.axios.get(`https://api.github.com/search/repositories?q=${escape(search)}`)
-        .then(response => {
-          this.optionsdestinatarios=response.data.items
-                  loading(false);
-
-        })
-        */
-        
-        this.axios.get(`http://192.168.1.59:3000/logistica//obtenerDestinatarioNombre/${escape(search)}`)
-        .then(response => {
-
-          this.optionsremitentes=response.data.destinatarios
-                  //loading(false);
-
-        })
-        
-          }.bind(this), 345);
-
+      algo(){
+          console.log("entro a algo");
+      },
+    localizarED(){
+        console.log("entro a localizar");
+        console.log(this.detalles.destinatario.direccion);
+      var dir
+      var longi
+      var latit
+      var codpostal
+      if(this.detalleseditar.destinatario.direccion==undefined||this.detalleseditar.destinatario.direccion=='')
+      {
+          console.log("no hace nada");
       }
-      /*
-    this.optionsdestinatarios=[]
-    setTimeout(function(){
-      /*
-      this.axios.get(`https://api.github.com/search/repositories?q=${escape(search)}`)
-     .then(response => {
-       this.optionsdestinatarios=response.data.items
-               loading(false);
+      else{
+          console.log("hace peticion");
+          setTimeout(function(){ 
+              dir=this.detalleseditar.destinatario.direccion +', Colombia'
+            var geocoder = new google.maps.Geocoder();
+                geocoder.geocode({'address': dir, country: "CO" }, function(results, status) {
+                    if (status === 'OK') {
+                        console.log(results[0]);
+                        results[0].address_components.forEach(element => {
+                        if(element.types[0]=='postal_code'){
+                        //console.log("tenemos codigo postal");
+                        codpostal=results[0].address_components[7].long_name
+                        }
+                        });
+                    var resultados = results[0].geometry.location,
+                    
+                        resultados_lat = resultados.lat(),
+                        resultados_long = resultados.lng();
+                    
+                    longi=resultados_long
+                    latit=resultados_lat
+                    console.log(longi);
+                    console.log(latit);
+                    //codpostal=results[0].address_components[7].long_name
+                    /*
+                    this.lati=resultados_lat
+                    this.longi=resultados_long
+                    this.posta=results[0].address_components[7].long_name
+                    */
+                    this.lati=latit
+                    this.longi=longi
+                    this.posta=codpostal
+                    } else {
+                    var mensajeError = "";
+                    if (status === "ZERO_RESULTS") {
+                        mensajeError = "No hubo resultados para la dirección ingresada.";
+                    } else if (status === "OVER_QUERY_LIMIT" || status === "REQUEST_DENIED" || status === "UNKNOWN_ERROR") {
+                        mensajeError = "Error general del mapa.";
+                    } else if (status === "INVALID_REQUEST") {
+                        mensajeError = "Error de la web. Contacte con Name Agency.";
+                    }
+                    alert(mensajeError);
+                    }
 
-     })
-     
+                }.bind(this));
+            }.bind(this), 399)
+      }
+      
+      
+
+    },
+    SeleccionadoED() {
+      console.log("tengo un seleccionado");
+        console.log(this.detalleseditar.destinatario);
+        /*
+      console.log(this.nombre_remitente);
+      this.detalleseditar.destinatario.identificacion = this.nombre_remitente.numero_identificacion;
+      this.detalleseditar.destinatario.direccion = this.nombre_remitente.direccion;
+      this.detalleseditar.destinatario.telefono = this.nombre_remitente.telefono;
+      this.detalleseditar.destinatario.nombre = this.nombre_remitente.nombre;
+      this.detalleseditar.destinatario.latitud = this.nombre_remitente.latitud;
+      this.detalleseditar.destinatario.longitud = this.nombre_remitente.longitud;
+      this.detalleseditar.destinatario.codigo_postal = this.nombre_remitente.codigo_postal;
+      */
+    },
+    onSearchED(search) {
+      //this.nombre_remitente=search
+      //loading(true);
+      this.searchED(search, this);
+    },
+    searchED(search) {
+        console.log("hacemos peticion");
+        setTimeout(function(){
+        this.axios.get(urlservicios+`/obtenerDestinatarioNombre/${escape(search)}`)
+        .then(response => {
+            console.log(response.data);
+                if(response.data.destinatarios.length==0)
+                {
+                this.optionsremitentes=[]
+                //this.remitente={}
+                //console.log(typeof(this.remitente));
+                this.detalleseditar.destinatario.nombre=search
+                }
+                else{
+                    console.log("tenemos");
+                this.optionsremitentes=response.data.destinatarios 
+                }
+                /*
+                this.optionsdestinatarios=response.data.destinatarios
+                loading(false);
+                */
+        })
+        
+        }.bind(this), 1000);
+
     
-    this.axios.get(`http://192.168.1.59:3000/logistica//obtenerDestinatarioNombre/${escape(search)}`)
-     .then(response => {
+    },
+    localizar(){
+        console.log("entro a localizar");
+        console.log(this.detalles.destinatario.direccion);
+      var dir
+      var longi
+      var latit
+      var codpostal
+      if(this.detalles.destinatario.direccion==undefined||this.detalles.destinatario.direccion=='')
+      {
+          console.log("no hace nada");
+      }
+      else{
+          console.log("hace peticion");
+          setTimeout(function(){ 
+              dir=this.detalles.destinatario.direccion +', Colombia'
+            var geocoder = new google.maps.Geocoder();
+                geocoder.geocode({'address': dir, country: "CO" }, function(results, status) {
+                    if (status === 'OK') {
+                        console.log(results[0]);
+                        results[0].address_components.forEach(element => {
+                        console.log(element);
+                        if(element.types[0]=='postal_code'){
+                        console.log("tenemos codigo postal");
+                        codpostal=results[0].address_components[7].long_name
+                        }
+                        });
+                    var resultados = results[0].geometry.location,
+                    
+                        resultados_lat = resultados.lat(),
+                        resultados_long = resultados.lng();
+                    
+                    longi=resultados_long
+                    latit=resultados_lat
+                    console.log(longi);
+                    console.log(latit);
+                    //codpostal=results[0].address_components[7].long_name
+                    /*
+                    this.lati=resultados_lat
+                    this.longi=resultados_long
+                    this.posta=results[0].address_components[7].long_name
+                    */
+                    this.lati=latit
+                    this.longi=longi
+                    this.posta=codpostal
+                    } else {
+                    var mensajeError = "";
+                    if (status === "ZERO_RESULTS") {
+                        mensajeError = "No hubo resultados para la dirección ingresada.";
+                    } else if (status === "OVER_QUERY_LIMIT" || status === "REQUEST_DENIED" || status === "UNKNOWN_ERROR") {
+                        mensajeError = "Error general del mapa.";
+                    } else if (status === "INVALID_REQUEST") {
+                        mensajeError = "Error de la web. Contacte con Name Agency.";
+                    }
+                    alert(mensajeError);
+                    }
 
-       this.optionsdestinatarios=response.data.destinatarios
-               loading(false);
+                }.bind(this));
+            }.bind(this), 300)
+      }
+      
+      
 
-     })
-     
-      }.bind(this), 345);
+    },
+    Seleccionado() {
+      console.log("tengo un seleccionado");
 
-    */
-     
-  },
+      console.log(this.nombre_remitente);
+      this.detalles.destinatario.identificacion = this.nombre_remitente.numero_identificacion;
+      this.detalles.destinatario.direccion = this.nombre_remitente.direccion;
+      this.detalles.destinatario.telefono = this.nombre_remitente.telefono;
+      this.detalles.destinatario.nombre = this.nombre_remitente.nombre;
+      this.detalles.destinatario.latitud = this.nombre_remitente.latitud;
+      this.detalles.destinatario.longitud = this.nombre_remitente.longitud;
+      this.detalles.destinatario.codigo_postal = this.nombre_remitente.codigo_postal;
+       this.detalles.destinatario._id =this.nombre_remitente._id
+    },
+    onSearch(search) {
+      //this.nombre_remitente=search
+      //loading(true);
+      this.search(search, this);
+    },
+
+    search(search) {
+        console.log("hacemos peticion");
+        setTimeout(function(){
+        this.axios.get(urlservicios+`/obtenerDestinatarioNombre/${escape(search)}`)
+        .then(response => {
+            console.log(response.data);
+            if(response.data.destinatarios.length==0)
+                {
+                this.optionsremitentes=[]
+                this.remitente={}
+                //console.log(typeof(this.remitente));
+                this.detalles.destinatario.nombre=search
+                console.log(this.detalles.destinatario);
+                }
+                else{
+                    console.log("tenemos");
+                this.optionsremitentes=response.data.destinatarios 
+                }
+                /*
+                this.optionsdestinatarios=response.data.destinatarios
+                loading(false);
+                */
+        })
+        
+        }.bind(this), 1000);
+
+    
+    },
     abirmodal() {
       this.selectservice = null;
       this.selectproduct = null;
@@ -1005,13 +1160,13 @@ export default {
             if (response.data.validar == true) {
               this.detalles.destinatario.numero_identificacion =
                 destinatario.numero_identificacion;
-              this.detalles.destinatario._id = destinatario._id;
+              //this.detalles.destinatario._id = destinatario._id;
               this.detalles.destinatario.nombre = destinatario.nombre;
               this.detalles.destinatario.direccion = destinatario.direccion;
               this.detalles.destinatario.telefono = destinatario.telefono;
             } else {
               this.detalles.destinatario.numero_identificacion = this.identificacion;
-              this.detalles.destinatario._id = "";
+              //this.detalles.destinatario._id = "";
               this.detalles.destinatario.nombre = "";
               this.detalles.destinatario.direccion = "";
               this.detalles.destinatario.telefono = "";
@@ -1061,7 +1216,7 @@ export default {
               this.detalleseditar.destinatario.telefono = destinatario.telefono;
             } else {
               this.detalleseditar.destinatario.numero_identificacion = this.identificacion;
-              this.detalleseditar.destinatario._id = "";
+             // this.detalleseditar.destinatario._id = "";
               this.detalleseditar.destinatario.nombre = "";
               this.detalleseditar.destinatario.direccion = "";
               this.detalleseditar.destinatario.telefono = "";
@@ -1282,6 +1437,7 @@ export default {
         };
         this.DetalleServicio.splice(this.indices, 1);
         this.DetalleServicio.splice(this.indices, 0, detalles);
+        console.log(this.DetalleServicio[this.indices]);
         (this.objeto = ""),
           (this.inputs = ""),
           toastr.success("Se edito exitosamente");
@@ -1355,7 +1511,8 @@ export default {
       });
     },
     editar(index) {
-      //this.selectservice= null
+
+
       (this.tabIndexED = 0), (this.tabIndex = 0);
       this.validatecampo = "";
       this.validatecampoTel = "";
@@ -1365,6 +1522,7 @@ export default {
       this.indices = index;
       this.detalleseditar = this.DetalleServicio[index].detalleslocal;
       this.selectproduct = this.DetalleServicio[index].productoslocal;
+      this.destinatarioED=this.detalleseditar.destinatario
       this.selectproducto = this.DetalleServicio[index].productoslocal;
       this.selectservice = this.DetalleServicio[index].servicioslocal;
       this.selectservicio = this.DetalleServicio[index].servicioslocal;
@@ -1374,10 +1532,12 @@ export default {
       this.selectproducto = this.DetalleServicio[index].productoslocal;
       this.selectserviceED = this.DetalleServicio[index].servicioslocal;
       this.selectservicio = this.DetalleServicio[index].servicioslocal;
-      this.seleccionarServicioED()
+      this.seleccionarServicioED();
       this.itemsdinamicos = this.DetalleServicio[
+       
         index
       ].detalleslocal.infor.objetoUnidades;
+       //this.selectservice=true
       if (this.itemsdinamicos.length == 0) {
       } else {
         var fields = Object.keys(
@@ -1393,7 +1553,7 @@ export default {
           load
         });
       });
-      
+
       this.axios
         .get(
           urlservicios +
@@ -1408,9 +1568,8 @@ export default {
           for (var x = 0; x < this.inputsED.campos.length; x++) {
             if (this.inputsED.campos[x].espieza == true) {
               this.camposdinamicos = true;
-              this.tabdinamicoED=false
-            }
-            else{
+              this.tabdinamicoED = false;
+            } else {
               this.camposdinamicos = true;
               //this.tabdinamicoED=true
             }
@@ -1433,10 +1592,8 @@ export default {
           });
           swal("Error", "Intente nuevamente, por favor", "warning");
         });
-        
     },
     hideModal() {
-     
       //this.tabIndexED=0,
       //this.tabIndex
       (this.habilitar = true),
@@ -1449,7 +1606,7 @@ export default {
         (this.inputs = ""),
         //this.serviciosurl=null
         //this.productosurl=null
-       // this.tabdinamico=false
+        // this.tabdinamico=false
         (this.selectservice = null);
       this.selectproduct = null;
       (this.objeto = ""),
@@ -1466,6 +1623,10 @@ export default {
       this.$refs.ModalEdit.hide();
     },
     ingresarOrden() {
+        //var inforemitente = localStorage.getItem("orden");
+        //var inforemi = JSON.parse(inforemitente);
+        console.log("-------------");
+        console.log(this.detalles.destinatario);
       this.validatecampoTel = "";
       this.estado.nombre = null;
       this.estado.direccion = null;
@@ -1473,7 +1634,67 @@ export default {
       var pivote = false;
       var inforemitente = localStorage.getItem("orden");
       var inforemi = JSON.parse(inforemitente);
+         if(this.optionsremitentes.length==0){
+             var objetocrear = {
+                    numero_identificacion: this.detalles.destinatario.identificacion,
+                    direccion: this.detalles.destinatario.direccion,
+                    nombre: this.detalles.destinatario.nombre,
+                    telefono: this.detalles.destinatario.telefono,
+                    //id_cliente: this.remitente.id_cliente,
+                    latitud: this.lati,
+                    longitud:this.longi,
+                    codigo_postal:this.posta,
+                    id_cliente: inforemi.selected_client._id
+                    };
+         console.log("creoooo");
+         console.log(objetocrear);
+         this.axios.post(urlservicios + "CrearDestinatario", objetocrear)
+          .then(response => {
+            var load = false;
+            setTimeout(() => {
+              bus.$emit("load", {
+                load
+              });
 
+            });
+          })
+         }
+         else{
+             console.log("---Actualizo---");
+             console.log(this.detalles.destinatario);
+            //detallepr=Object.assign({},this.detalles.destinatario);
+             console.log(this.nombre_remitente);
+             var objetoactualizar = {
+                    numero_identificacion: this.detalles.destinatario.identificacion,
+                    direccion: this.detalles.destinatario.direccion,
+                    nombre: this.detalles.destinatario.nombre,
+                    telefono: this.detalles.destinatario.telefono,
+                    //id_cliente: this.remitente.id_cliente,
+                    latitud: this.lati,
+                    longitud:this.longi,
+                    codigo_postal:this.posta,
+                    id_cliente: inforemi.selected_client._id
+                    };
+                    console.log(objetoactualizar);
+            this.axios.post(urlservicios +"ActualizarDestinatario" +"/" +this.nombre_remitente._id,objetoactualizar)
+            .then(response => {
+                var load = false;
+                setTimeout(() => {
+                bus.$emit("load", {
+                    load
+                });
+                });
+            })
+            .catch(function(error) {
+                var load = false;
+                setTimeout(() => {
+                bus.$emit("load", {
+                    load
+                });
+                });
+            });
+         }
+         /*
       if (this.creaciondestinatarios == false) {
         console.log(this.detalles.destinatario);
         var objeto = {
@@ -1539,8 +1760,9 @@ export default {
               });
             });
           });
-      */
+      
       }
+      */
       if (this.objeto == undefined) {
       } else {
         var load = true;
@@ -1675,7 +1897,6 @@ export default {
 
         swal("Oops...", "Falto completar algun campo", "error");
       } else {
-        
         this.objeto.objetoUnidades;
         this.objeto.objetoUnidades = this.itemsdinamicos;
         var servicioslocal = this.selectservicio;
@@ -1689,16 +1910,13 @@ export default {
         cambios de immpresion
         */
         this.inputs.campos.forEach(element => {
-          if(element.esImprimible==true||element.esImprimible===true)
-          {
+          if (element.esImprimible == true || element.esImprimible === true) {
             console.log(element);
-           detalleslocal.Imprime=element.acumulaen
-          }
-          else{
+            detalleslocal.Imprime = element.acumulaen;
+          } else {
             //detalleslocal.Imprime=''
           }
         });
-
 
         var detalles = {
           trazabilidad: [],
@@ -1707,21 +1925,22 @@ export default {
           detalleslocal: detalleslocal
         };
         this.DetalleServicio.push(detalles);
-        console.log('this.DetalleServicio: ', this.DetalleServicio);
-        
+        console.log("this.DetalleServicio: ", this.DetalleServicio);
+
         //BLANQUEAR DATOS
+        this.optionsremitentes=[]
+        this.nombre_remitente=''
         this.tabIndex = 0;
         this.camposdinamicos = false;
         this.fieldsdinamicos = [];
         this.itemsdinamicos = [];
         this.identificacion = "";
         (this.habilitar = true),
-         //(this.mostrardestinatario = false),
- 
+          //(this.mostrardestinatario = false),
+
           (this.objeto = ""),
           (this.inputs = ""),
           toastr.success("Se agrego exitosamente");
-  
 
         (this.objeto = ""),
           (this.detalles = {
@@ -1871,7 +2090,6 @@ export default {
       }
     },
     camposNversionED() {
-     
       this.axios
         .get(
           urlservicios +
@@ -1885,17 +2103,14 @@ export default {
 
           for (var x = 0; x < this.inputsED.campos.length; x++) {
             if (this.inputsED.campos[x].espieza == true) {
-
               this.camposdinamicos = true;
-              this.tabdinamicoED=false
-            }
-            else{
+              this.tabdinamicoED = false;
+            } else {
               //this.tabdinamicoED=true
             }
           }
           this.$refs.ModalEdit.show();
-        })
-     
+        });
     },
     camposNversion() {
       if (
@@ -1979,8 +2194,10 @@ export default {
         var inforemi = JSON.parse(inforemitente);
         var localremitente = localStorage.getItem("remitente");
         var localremijson = JSON.parse(localremitente);
-        console.log(localremitente);
-        console.log(localremijson);
+        var obserOrden = localStorage.getItem("observaciones_orden");
+        var observacionesOrden = JSON.parse(obserOrden);
+        console.log("-.-------------");
+        console.log(observacionesOrden);
         /*
         var objeto = {
           id_OperadorLogistico: infologin.id_OperadorLogistico._id,
@@ -2000,36 +2217,71 @@ export default {
           detalle: this.DetalleServicio
         };
         */
-        var objeto = {
+        var fechareal = localStorage.getItem("fecha_orden");
+        var jsonfechareal = JSON.parse(fechareal);
+        
+        if(jsonfechareal.fecha==''){
+            console.log("existe");
+            console.log(jsonfechareal);
+            var objeto = {
           id_OperadorLogistico: infologin.id_OperadorLogistico._id,
           id_usuario: infologin._id,
           id_centro_costo: selecc.selected_center,
-          //fecha_crecion:
-          //fecha_real:
+          fecha_creacion: new Date().toISOString(),
+            //fecha_creacion:moment().tz('America/Bogota').format('MMMM DD YYYY, hh:mm:ss'),
+            //fecha_real:
+            //fecha_creacion: today.toISOString(),
           id_cliente: selecc.selected_client,
           remitente: {
             direccion_recogida: localremijson.direccion,
             telefono_contacto: localremijson.telefono,
             nombre_contacto: localremijson.nombre,
-            latitud:localremijson.latitud,
-            longitud:localremijson.longitud,
-            codigo_postal:localremijson.codigo_postal
+            latitud: localremijson.latitud,
+            longitud: localremijson.longitud,
+            codigo_postal: localremijson.codigo_postal
           },
+          observaciones:observacionesOrden.observacion,
           detalle: this.DetalleServicio
         };
+           
+        }else{
+            console.log("no existe");
+             var objeto = {
+          id_OperadorLogistico: infologin.id_OperadorLogistico._id,
+          id_usuario: infologin._id,
+          id_centro_costo: selecc.selected_center,
+            fecha_creacion:jsonfechareal.fecha+" 00:00:00.000Z UTC",
+            //fecha_real:
+            //fecha_creacion: today.toISOString(),
+          id_cliente: selecc.selected_client,
+          remitente: {
+            direccion_recogida: localremijson.direccion,
+            telefono_contacto: localremijson.telefono,
+            nombre_contacto: localremijson.nombre,
+            latitud: localremijson.latitud,
+            longitud: localremijson.longitud,
+            codigo_postal: localremijson.codigo_postal
+          },
+          observaciones:observacionesOrden.observacion,
+          detalle: this.DetalleServicio
+        };
+        }
         
+
         var load = true;
         setTimeout(() => {
           bus.$emit("load", {
             load
           });
         });
-        
+        console.log("-------------------objeto");
         console.log(objeto);
-        
+        console.log("hora normla");
+        console.log(Date.parse(objeto.fecha_creacion));
         this.axios
           .post(urlservicios + "GuardarOrden", objeto)
           .then(response => {
+            console.log(response);
             var load = false;
             setTimeout(() => {
               bus.$emit("load", {
@@ -2044,8 +2296,10 @@ export default {
             );
             this.$router.replace("/inicio");
             localStorage.removeItem("orden");
+            localStorage.removeItem("observaciones_orden");
             localStorage.removeItem("remitente");
-
+            localStorage.removeItem("fecha_orden");
+            
           })
           .catch(function(error) {
             var load = false;
@@ -2056,7 +2310,6 @@ export default {
             });
             swal("Error", "Intente nuevamente, por favor", "warning");
           });
-          
       }
     }
   },
