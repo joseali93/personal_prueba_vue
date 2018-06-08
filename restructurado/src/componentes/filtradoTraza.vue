@@ -654,6 +654,8 @@ export default {
               
             }
             console.log("MOVILIZADOO");
+                      //ObtenerOrdenesFiltradoDetalle/:id_centro/:id_cliente/:consecutivo/:detalle/:referencia/:fecha_inicio/:fecha_final"
+
             console.log(urlservicios+"ObtenerOrdenesFiltradoDetalle/" +centocosto +"/" +this.selectedCL._id +"/null/" +this.nmovilizado +"/null/null/null");
               this.axios
                 .get(urlservicios+"ObtenerOrdenesFiltradoDetalle/" +centocosto +"/" +this.selectedCL._id +"/null/" +this.nmovilizado +"/null/null/null")

@@ -32,7 +32,7 @@
                 <b-table :fields="fields" :per-page="5" :current-page="currentPage" :items="DetalleServicio">
 
                     <template slot="eliminar" slot-scope="data" >
-                        <i class="btn btn-danger fa fa-trash" v-on:click="eliminar(index)" ></i>
+                        <i class="btn btn-danger fa fa-trash" v-on:click="eliminar(data.index)" ></i>
                     </template>
                     <template slot="productoslocal"  slot-scope="data">
                         {{data.value.nombre}}         
@@ -42,6 +42,7 @@
                     </template>
                     <template slot="editar"  slot-scope="data">
                         <i class="btn btn-success fa fa-pencil"  v-on:click="editar(data.index)" ></i>
+
                         <!--
                         <i class="btn btn-success fa fa-pencil"  v-on:click="editar(data.index)" v-b-modal.modaleditar></i>
 
@@ -68,6 +69,7 @@
             </b-row>
             -->
         </b-card>
+        
        </b-container>
         <!-- Modal Adicionar -->
         <b-modal id="modalcrear" ref="Modal" title="Adicionar Registro" 
@@ -222,20 +224,11 @@
                                     <label  class="col-sm col-form-label col-form-label-sm text-primary">Nombre: </label>
                                 </b-col>
                                 <b-col cols="9">
-                                  <!--
-                                    <b-form-input type="text" class="form-control form-control-sm" 
-                                     placeholder="Nombre" v-model="detalles.destinatario.nombre"
-                                    :state="estado.nombre"></b-form-input>
-                                     <v-select label="nombre" :filterable="false" v-model=nombre_remitente
-                                        placeholder="Digite el remitente" :options="optionsremitentes"
-                                          @input="updateOption"
-                                          @search="onSearch">
-                                    -->
                                       <v-select maxHeight="500px" label="nombre" :filterable="false" v-model=nombre_remitente
                                         placeholder="Digite el remitente" :options="optionsremitentes"
-                                          @input="Seleccionado"
+                                          @input="Seleccionado" v-show="MostrarFiltro"
                                           @search="onSearch">
-                                          <template slot="no-options">
+                                          <template slot="no-options" > 
                                             <p >Digite el nombre del remitente..</p>
                                           </template>
                                           <template slot="option" slot-scope="option">
@@ -252,25 +245,27 @@
                                         </v-select>
                                 </b-col>
                             </b-form-row>
-                            <b-form-row v-show="selectservice&&mostrardestinatario" class="my-1">
+                            <!--
+                            <b-form-row v-show="selectservice&&mostrardestinatario&&monstrarNombre" class="my-1">
                                 <b-col>
                                     <label  class="col-sm col-form-label col-form-label-sm text-primary"> Nombre: </label>
                                 </b-col>
-                                <b-col>
+                                <b-col  cols="9">
                                     <b-form-input type="text" class="form-control form-control-sm"  placeholder="Nombre"
                                     v-model="detalles.destinatario.nombre"
                                   
-                                    :state="true" 
+                                    :state="null" 
                                     title="Num. Identificacion"></b-form-input>
                                 </b-col>
                             </b-form-row>
+                            -->
                             <b-form-row v-show="selectservice&&mostrardestinatario" class="my-1">
                                 <b-col>
                                     <label  class="col-sm col-form-label col-form-label-sm text-primary"> Identificación: </label>
                                 </b-col>
-                                <b-col>
+                                <b-col  cols="9">
                                     <b-form-input type="number" class="form-control form-control-sm"  placeholder="Indentidicación"
-                                    v-model="detalles.destinatario.identificacion"
+                                    v-model="detalles.destinatario.numero_identificacion"
                                   
                                      v-b-popover.hover="'Se debe diligenciar sin puntos, en caso de NIT sin numero de validación, ni guion'" 
                                     title="Num. Identificacion"></b-form-input>
@@ -288,22 +283,21 @@
                                 <b-col>
                                     <label  class="col-sm col-form-label col-form-label-sm text-primary">Dirección: </label>
                                 </b-col>
-                                <b-col>
+                                <b-col  cols="9">
                                     <b-form-input  id="direccionGoogle2" 
-                                    size="lg"
-                                      type="text"
+                                          type="text"
                                      placeholder="Dirección"
                                      required
                                      maxlength="100"
                                      v-model="detalles.destinatario.direccion" 
                                      class="form-control form-control-sm" 
                                         :state="estado.direccion"
-                                        @input="localizar()"
-                                        @keypress="localizar()"
+                                      
                                     > </b-form-input>
                                     
-                                    {{detalles.destinatario.direccion}}
                                      <!-- 
+                                         @input="localizar()"
+                                        @keypress="localizar()"
                                                   v-model="detalles.destinatario.direccion"                            
 
                                         class="form-control form-control-sm" 
@@ -320,7 +314,7 @@
                                 <b-col>
                                     <label  class="col-sm col-form-label col-form-label-sm text-primary">Telefono: </label>
                                 </b-col>
-                                <b-col>
+                                <b-col  cols="9">
 
                                     <input type="text" :style="validatecampoTel"  class="form-control form-control-sm" 
                                     id="telefono" @keyup="numeros(this)" placeholder="Telefono"
@@ -390,7 +384,7 @@
                     padding-top: 0px;
                     padding-bottom: 0px;
                     ">
-                    <b-tabs card  v-show="selectserviceED" v-model="tabIndexED">
+                    <b-tabs card  v-show="selectserviceED" v-model="tabIndexED" @input="cambiotab">
                         <b-tab  title="Información" >
                             <b-card-body>
                                 <b-row>
@@ -522,7 +516,7 @@
                                 </b-col>
                                 <b-col>
                                     <b-form-input type="number" class="form-control form-control-sm"  placeholder="Indentidicación"
-                                    v-model="detalleseditar.destinatario.identificacion"
+                                    v-model="detalleseditar.destinatario.numero_identificacion"
                                    
                                     :state="true"  v-b-popover.hover="'Se debe diligenciar sin puntos, en caso de NIT sin numero de validación, ni guion'" title="Num. Identificacion"></b-form-input>
                                     <!--<input type="text" 
@@ -533,6 +527,7 @@
                                     -->
                                 </b-col>
                             </b-form-row>
+                            <!--
                             <b-form-row class="my-1">
                                 <b-col>
                                     <label  class="col-sm col-form-label col-form-label-sm">Nombre: </label>
@@ -540,17 +535,17 @@
                                 <b-col>
                                 <b-form-input type="text" class="form-control form-control-sm"  placeholder="Nombre" v-model="detalleseditar.destinatario.nombre"
                                     :state="estado.nombre"></b-form-input>
-                                    <!--
-                                    <input type="text" class="form-control form-control-sm" id="editarnombre"  placeholder="Nombre" v-model="detalleseditar.destinatario.nombre">
-                                    -->
+                                   
+                                    
                                 </b-col>
+                                -->
                             </b-form-row>
                             <b-form-row class="my-1">
                                 <b-col>
                                     <label  class="col-sm col-form-label col-form-label-sm">Dirección: </label>
                                 </b-col>
                                 <b-col>
-                                <b-form-input type="text" class="form-control form-control-sm"  placeholder="Direccion" v-model="detalleseditar.destinatario.direccion"
+                                <b-form-input id="direccionGoogle3" type="text" class="form-control form-control-sm"  placeholder="Direccion" v-model="detalleseditar.destinatario.direccion"
                                     :state="estado.direccion"></b-form-input>
                                     <!--
                                     <input type="text" class="form-control form-control-sm" id="editardire" placeholder="Direccion" v-model="detalleseditar.destinatario.direccion">
@@ -594,12 +589,24 @@ export default {
   },
   data() {
     return {
-        
+      MostrarFiltro:true,
+      monstrarNombre:true,
     destinatarioED:"",
          lati:'',
           longi:'',
           posta:'',
-      nombre_remitente: "",
+      nombre_remitente: {
+            _id : (""),
+        numero_identificacion : '',
+        direccion : "",
+        nombre : "",
+        telefono : "",
+        id_cliente :'',
+        __v : 0,
+        latitud : '',
+        longitud : '',
+        codigo_postal : ""
+      },
       optionsremitentes: [],
       pruebas: {
         "background-color": "#ebeaea",
@@ -677,7 +684,7 @@ export default {
       detallesc: "",
       detalles: {
         destinatario: {
-          identificacion: "",
+          numero_identificacion: "",
           _id: "",
           nombre: "",
           direccion: "",
@@ -693,7 +700,7 @@ export default {
       },
       detalleseditar: {
         destinatario: {
-          identificacion: "",
+          numero_identificacion: "",
           _id: "",
           nombre: "",
           direccion: "",
@@ -712,18 +719,25 @@ export default {
   },
   watch: {},
   methods: {
-    initAutocomplete(){
+    cambiotab(tabIndex){
+      console.log("cambio tab");
+
+      console.log(tabIndex);
+      this.initAutocomplete()
+
+    },
+    initAutocompleteED(){
+       var options = {
+        componentRestrictions: {country: 'co'}
+      };
       var longi
       var latit
       var codpostal
-      console.log("entro a init");
-       var input = document.getElementById('direccionGoogle2');
-       console.log(input);
-                var searchBox = new google.maps.places.SearchBox(input);
-                console.log("search");
-                console.log(searchBox);
+       var input = document.getElementById('direccionGoogle3');
+                var searchBox = new google.maps.places.SearchBox(input,options);
+               //console.log(searchBox);
                 searchBox.addListener('places_changed', function() {
-                  //input.value=input.value.split(',')[0]; 
+                  input.value=input.value.split(',')[0]; 
                     var places = searchBox.getPlaces();
                     
                     if(places.length == 0){
@@ -744,7 +758,7 @@ export default {
                         for (var i = 0; i < place.address_components.length; i++) {
                         for (var j = 0; j < place.address_components[i].types.length; j++) {
                             if (place.address_components[i].types[j] == "postal_code") {
-                            this.posta = place.address_components[i].long_name;
+                          //  this.posta = place.address_components[i].long_name;
 
                             }
                         }
@@ -764,9 +778,58 @@ export default {
       
       
     },
-      algo(){
-      },
+    initAutocomplete(){
+       var options = {
+        componentRestrictions: {country: 'co'}
+      };
+      var longi
+      var latit
+      var codpostal
+       var input = document.getElementById('direccionGoogle2');
+                var searchBox = new google.maps.places.SearchBox(input,options);
+               //console.log(searchBox);
+                searchBox.addListener('places_changed', function() {
+                  input.value=input.value.split(',')[0]; 
+                    var places = searchBox.getPlaces();
+                    
+                    if(places.length == 0){
+                        return;
+                    }
+                    places.forEach(function(place){
+                        if(!place.geometry) {
+                            return;
+                        }
+                        console.log(place);
+                        console.log("----------------");
+                        latit=place.geometry.location.lat()
+                        longi=place.geometry.location.lng()
+                        
+                        //this.lati=place.geometry.location.lat()
+                        //this.longi=place.geometry.location.lng()
+                        //this.posta
+                        for (var i = 0; i < place.address_components.length; i++) {
+                        for (var j = 0; j < place.address_components[i].types.length; j++) {
+                            if (place.address_components[i].types[j] == "postal_code") {
+                          //  this.posta = place.address_components[i].long_name;
+
+                            }
+                        }
+                        }
+                        console.log("-----------");
+                        console.log(latit);
+                        console.log(longi);
+                        console.log(this.posta);
+                        this.lati=latit
+                        this.longi=longi
+
+                       // document.getElementById('lat').innerHTML = place.geometry.location.lat();
+                        //document.getElementById('lng').innerHTML = place.geometry.location.lng();
+                    }.bind(this));
+                }.bind(this));
+                //input.value=input.value.split(',')[0];
       
+      
+    },      
     localizarED(){
       var dir
       var longi
@@ -819,6 +882,8 @@ export default {
     },
     
     SeleccionadoED() {
+      console.log(this.nombre_remitente);
+      this.detalleseditar.destinatario=this.destinatarioED
         /*
       this.detalleseditar.destinatario.identificacion = this.nombre_remitente.numero_identificacion;
       this.detalleseditar.destinatario.direccion = this.nombre_remitente.direccion;
@@ -841,10 +906,12 @@ export default {
                 if(response.data.destinatarios.length==0)
                 {
                 this.optionsremitentes=[]
+                
                 //this.remitente={}
                 this.detalleseditar.destinatario.nombre=search
                 }
                 else{
+               
                 this.optionsremitentes=response.data.destinatarios 
                 }
                 /*
@@ -910,15 +977,18 @@ export default {
     },
     
     Seleccionado() {
-
-      this.detalles.destinatario.identificacion = this.nombre_remitente.numero_identificacion;
+      console.log(this.nombre_remitente);
+       this.detalles.destinatario=this.nombre_remitente
+       /*
+      this.detalles.destinatario.numero_identificacion = this.nombre_remitente.numero_identificacion;
       this.detalles.destinatario.direccion = this.nombre_remitente.direccion;
       this.detalles.destinatario.telefono = this.nombre_remitente.telefono;
-      this.detalles.destinatario.nombre = this.nombre_remitente.nombre;
+      //this.detalles.destinatario.nombre = this.nombre_remitente.nombre;
       this.detalles.destinatario.latitud = this.nombre_remitente.latitud;
       this.detalles.destinatario.longitud = this.nombre_remitente.longitud;
       this.detalles.destinatario.codigo_postal = this.nombre_remitente.codigo_postal;
        this.detalles.destinatario._id =this.nombre_remitente._id
+       */
     },
     onSearch(search) {
       //this.nombre_remitente=search
@@ -933,11 +1003,17 @@ export default {
             if(response.data.destinatarios.length==0)
                 {
                 this.optionsremitentes=[]
-                this.remitente={}
-                this.detalles.destinatario.nombre=search
+                this.nombre_remitente.nombre=search
+                //this.remitente={}
+               //this.detalles.destinatario.nombre=search
+                   //this.monstrarNombre=true
+                   //this.MostrarFiltro=false
+                //this.nombre_remitente=search
                 }
                 else{
                 this.optionsremitentes=response.data.destinatarios 
+                   //this.monstrarNombre=false
+                   //his.MostrarFiltro=true
                 }
                 /*
                 this.optionsdestinatarios=response.data.destinatarios
@@ -954,6 +1030,7 @@ export default {
       this.selectproduct = null;
       var login = localStorage.getItem("storedData");
       var infologin = JSON.parse(login);
+
       var load = true;
       setTimeout(() => {
         bus.$emit("load", {
@@ -971,6 +1048,7 @@ export default {
               load
             });
           });
+          
           this.$refs.Modal.show();
         })
         .catch(function(error) {
@@ -1177,6 +1255,7 @@ export default {
         this.itemsdinamicos.push(tituloopciones);
       }
     },
+    /*
     buscar(accion) {
       if (accion == "nuevo") {
         var load = true;
@@ -1275,6 +1354,7 @@ export default {
           });
       }
     },
+    */
     numeroseditar(valor) {
       var a = document.getElementById("telefonoedit").value;
       //var x=check.which;
@@ -1524,15 +1604,25 @@ export default {
       }
     },
     eliminar: function(indice) {
+      console.log(indice);
       swal({
         title: "Esta seguro ?",
         text: "No podrá recuperarlo después de realizado",
+         icon: "warning",
         type: "warning",
+        /*
+        buttons: {
+          cancel: true,
+          confirm: true,
+        },
+        */
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
         confirmButtonText: "Si"
-      }).then(result => {
+      }
+      ).then(result => {
+        console.log(result.value);
         if (result.value) {
           this.DetalleServicio.splice(indice, 1);
           toastr.error("Se elmino exitosamente");
@@ -1573,6 +1663,7 @@ export default {
       ].detalleslocal.infor.objetoUnidades;
        //this.selectservice=true
       if (this.itemsdinamicos.length == 0) {
+        this.tabdinamicoED=true
       } else {
         var fields = Object.keys(
           this.DetalleServicio[index].detalleslocal.infor.objetoUnidades[0]
@@ -1949,6 +2040,7 @@ export default {
           detalleslocal: detalleslocal
         };
         this.DetalleServicio.push(detalles);
+          
 
         //BLANQUEAR DATOS
         this.optionsremitentes=[]
@@ -2180,6 +2272,7 @@ export default {
               this.camposdinamicos = false;
               this.tabdinamico = true;
             }
+            
             //this.load=false
             var load2 = false;
             setTimeout(() => {
@@ -2295,6 +2388,7 @@ export default {
         this.axios
           .post(urlservicios+ "GuardarOrden", objeto)
           .then(response => {
+            console.log(response);
             var load = false;
             setTimeout(() => {
               bus.$emit("load", {
@@ -2409,4 +2503,32 @@ export default {
 
   color: white;
 }
+.pac-container {
+   z-index: 100000 !important;
+   border-color: aqua
+    }
+    .pac-controls {
+        display: inline-block;
+        padding: 5px 11px;
+         border-color: red
+      }
+
+      .pac-controls label {
+        font-family: Roboto;
+        font-size: 13px;
+        font-weight: 300;
+         border-color: red
+      }
+
+      #pac-input {
+        background-color: #fff;
+        font-family: Roboto;
+        font-size: 15px;
+        font-weight: 300;
+        margin-left: 12px;
+        padding: 0 11px 0 13px;
+        text-overflow: ellipsis;
+        width: 400px;
+      }
+
 </style>

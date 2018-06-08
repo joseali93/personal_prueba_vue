@@ -126,14 +126,18 @@ DE LA ORDEN DE SERVICIO -->
                                 type="text"
                                 v-model="remitente.direccion"
                                 required
-                               
+                               @change="initAutocomplete()"
                                 placeholder="Dirección"
                                 maxlength="100">
                             </b-form-input>
                             <!--
+                               @change="localizar()"
                               @keypress="localizar()"
                                  @keyup.enter.native="localizar()"
                               -->
+                              {{lati}}
+                              <br>
+                              {{longi}}
                     </b-form-group>
                     </b-col>
                 </b-row>
@@ -304,9 +308,7 @@ export default {
       var longi
       var latit
       var codpostal
-      //console.log(this.lati);
        var input = document.getElementById('direccionGoogle');
-      // console.log(input);
                 var searchBox = new google.maps.places.SearchBox(input);
                 searchBox.addListener('places_changed', function() {
                   input.value=input.value.split(',')[0]; 
@@ -319,8 +321,6 @@ export default {
                         if(!place.geometry) {
                             return;
                         }
-                        console.log(place);
-                        console.log("----------------");
                         latit=place.geometry.location.lat()
                         longi=place.geometry.location.lng()
                         
@@ -335,10 +335,6 @@ export default {
                             }
                         }
                         }
-                        console.log("-----------");
-                        console.log(latit);
-                        console.log(longi);
-                        console.log(this.posta);
                         this.lati=latit
                         this.longi=longi
 
@@ -357,14 +353,11 @@ export default {
     updateOption(){
         var remi = localStorage.getItem("remitente");
         var remijson = JSON.parse(remi);
-        console.log("--entro a crear");
         if(remi){
-          console.log("exite");
          this.onSearch(remijson.nombre)
           
         }
         else{
-          //console.log("no existe");
         }
          //this.remitente=remijson
     },
@@ -378,11 +371,8 @@ export default {
       var geocoder = new google.maps.Geocoder();
       geocoder.geocode({'address': dir, country: "CO" }, function(results, status) {
         if (status === 'OK') {
-          console.log(results[0]);
           results[0].address_components.forEach(element => {
-            console.log(element.types[0]);
             if(element.types[0]=='postal_code'){
-              console.log("tenemos codigo postal");
               codpostal=results[0].address_components[7].long_name
             }
           });
@@ -393,8 +383,6 @@ export default {
           
           longi=resultados_long
           latit=resultados_lat
-          console.log(longi);
-          console.log(latit);
           //codpostal=results[0].address_components[7].long_name
           /*
           this.lati=resultados_lat
@@ -440,16 +428,12 @@ export default {
 
           })
           */
-          console.log("-------hacemos peticion---------");
           this.axios.get(urlservicios+`/obtenerDestinatarioNombre/${escape(search)}`)
           .then(response => {
-            console.log("tenemos algo");
-            console.log(response.data);
             if(response.data.destinatarios.length==0)
             {
               this.optionsdestinatarios=[]
               this.remitente={}
-              //console.log(typeof(this.remitente));
               this.remitente.nombre=search
             }
             else{
@@ -476,7 +460,6 @@ export default {
           
           this.axios.get(urlservicios+`/obtenerDestinatarioNombre/${escape(search)}`)
           .then(response => {
-            console.log("tenemos algo 2");
 
             this.optionsdestinatarios=response.data.destinatarios
                     //loading(false);
@@ -769,8 +752,6 @@ export default {
       }
     },
     actualizar: function() {
-      console.log("---- this.remitente----");
-      console.log(this.remitente);
      
       var load = true;
       setTimeout(() => {
@@ -791,8 +772,6 @@ export default {
         (this.prueba == 'second'&&this.fecha=='')
 
       ) {
-        console.log("entro al if");
-        console.log(this.prueba);
         if(this.prueba=='second'){
           var load = false;
           setTimeout(() => {
@@ -885,7 +864,6 @@ export default {
         };
         */
        localStorage.setItem("remitente", JSON.stringify(this.remitente));
-       console.log(this.optionsdestinatarios);
        if(this.optionsdestinatarios.length==0)
        {
           var objetocrear = {
@@ -899,8 +877,6 @@ export default {
           codigo_postal:this.posta,
            id_cliente: this.selected_cliente._id
         };
-         console.log("creoooo");
-         console.log(objetocrear);
          this.axios.post(urlservicios+ "CrearDestinatario", objetocrear)
           .then(response => {
             var load = false;
@@ -922,7 +898,6 @@ export default {
           });
        }
        else{
-         console.log("actualizo");
          this.axios.post(urlservicios+"ActualizarDestinatario" +"/" +this.remitente._id,objetoremitente)
           .then(response => {
             var load = false;

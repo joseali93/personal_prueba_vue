@@ -1,6 +1,6 @@
 <template>
     <div class="center ">
-        <img src="https://www.ole.com.ar/static/OLEOleV2/images/loading.gif"  class="imagen ">                        
+        <img src="https://www.ole.com.ar/static/OLEOleV2/images/loading.gif"  class="imagen ">
     </div>
 </template>
 
