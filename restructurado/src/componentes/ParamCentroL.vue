@@ -245,7 +245,7 @@ export default {
         console.log(objeto);
         this.axios
           .post(
-            urlservicios + "ActualizaCentrosLogisticos/" + this.ModalEdit._id,
+            urlservicios+ "ActualizaCentrosLogisticos/" + this.ModalEdit._id,
             objeto
           )
           .then(response => {
@@ -410,7 +410,7 @@ export default {
       id_cliente = "null";
       this.axios
         .get(
-          urlservicios + "centroslogisticos/" + test.id_OperadorLogistico._id
+          urlservicios+ "centroslogisticos/" + test.id_OperadorLogistico._id
         )
         .then(response => {
           console.log(response);
@@ -481,7 +481,7 @@ export default {
         console.log(objenvio);
 
         this.axios
-          .post(urlservicios + "CrearCentrosLogisticos", objenvio)
+          .post(urlservicios+ "CrearCentrosLogisticos", objenvio)
           .then(response => {
             console.log(response);
             if (response.data.validar == true) {
@@ -511,7 +511,7 @@ export default {
     id_cliente = "null";
 
     this.axios
-      .get(urlservicios + "centroslogisticos/" + test.id_OperadorLogistico._id)
+      .get(urlservicios+ "centroslogisticos/" + test.id_OperadorLogistico._id)
       .then(response => {
         console.log(response.data);
         this.centrosLogisticos = response.data;

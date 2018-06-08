@@ -230,7 +230,7 @@ export default {
             });
           });
           this.axios
-            .get(urlservicios + "CentrosPorCliente/" + this.selectedCL._id)
+            .get(urlservicios+ "CentrosPorCliente/" + this.selectedCL._id)
             //this.axios.get(urlservicios+"centros/")
             .then(response => {
               this.centros = response.data;
@@ -271,7 +271,7 @@ export default {
             });
           });
           this.axios
-            .get(urlservicios + "CentrosPorCliente/" + this.selectedCL._id)
+            .get(urlservicios+ "CentrosPorCliente/" + this.selectedCL._id)
             //this.axios.get(urlservicios+"centros/")
             .then(response => {
               this.centros = response.data;
@@ -422,7 +422,7 @@ export default {
               centocosto=this.selectedCC._id
             }
                 
-            this.axios.get(urlservicios +"/ObtenerOrdenesFiltradoDetalle/" +centocosto +"/" +this.selectedCL._id +"/null/null/null/" +
+            this.axios.get(urlservicios+"/ObtenerOrdenesFiltradoDetalle/" +centocosto +"/" +this.selectedCL._id +"/null/null/null/" +
                   inicio +
                   "/" +
                   fin +
@@ -505,7 +505,7 @@ export default {
             }
               this.axios
                 .get(
-                  urlservicios +
+                  urlservicios+
                     "/ObtenerOrdenesFiltradoDetalle/" +
                     centocosto +
                     "/" +
@@ -583,7 +583,7 @@ export default {
               centocosto=this.selectedCC._id
             }
               this.axios
-                .get(urlservicios +"/ObtenerOrdenesFiltradoDetalle/" +centocosto +"/" +this.selectedCL._id +"/null/null/" +this.referencia +
+                .get(urlservicios+"/ObtenerOrdenesFiltradoDetalle/" +centocosto +"/" +this.selectedCL._id +"/null/null/" +this.referencia +
                     "/null/null"
                 )
                 .then(response => {
@@ -651,19 +651,14 @@ export default {
                       nmovilizado: this.nmovilizado
                     };
               centocosto=this.selectedCC._id
+              
             }
+            console.log("MOVILIZADOO");
+            console.log(urlservicios+"ObtenerOrdenesFiltradoDetalle/" +centocosto +"/" +this.selectedCL._id +"/null/" +this.nmovilizado +"/null/null/null");
               this.axios
-                .get(
-                  urlservicios +
-                    "ObtenerOrdenesFiltradoDetalle/" +
-                    centocosto +
-                    "/" +
-                    this.selectedCL._id +
-                    "/null/" +
-                    this.nmovilizado +
-                    "/null/null/null"
-                )
+                .get(urlservicios+"ObtenerOrdenesFiltradoDetalle/" +centocosto +"/" +this.selectedCL._id +"/null/" +this.nmovilizado +"/null/null/null")
                 .then(response => {
+                  console.log(response);
                   this.consulta = response.data.detalles;
                                   this.procesosLogisticos = response.data.proceso
 
@@ -860,7 +855,7 @@ export default {
       });
       this.axios
         .get(
-          urlservicios +
+          urlservicios+
             "clientesOperador/" +
             infologin.id_OperadorLogistico._id +
             "/" +
@@ -917,7 +912,7 @@ export default {
       id_cliente = infologin.id_cliente;
       this.axios
         .get(
-          urlservicios +
+          urlservicios+
             "clientesOperador/" +
             infologin.id_OperadorLogistico._id +
             "/" +

@@ -126,7 +126,10 @@
                     <h3 class="text-primary">Courier:</h3>
                     </b-col>
                     <b-col>
+                        <p :value="curieractualFun()">{{curieractualFinal}}</p>
+                        <!--
                         {{curier.nombre}} {{curier.apellido}}
+                        -->
                     </b-col>
                 </b-row>
                 
@@ -352,6 +355,8 @@ import {urlservicios} from '../main'
 export default {
     data () {
         return {
+            curieractualFinal:'',
+            curieractual:'',
             procesos:{},
             variableServidor:'',
             concepto:'',
@@ -402,6 +407,21 @@ export default {
         }
     },
     methods: {
+        curieractualFun(){
+            console.log("entro a curier actual");
+            console.log(this.curieractual);
+            if(this.curieractual==''||this.curieractual==undefined||this.curieractual=='undefined'){
+                this.curieractualFinal='No tiene curier actual asignado'
+            }
+            else{
+                var apellido,nombre
+                apellido=this.curieractual.apellido
+                nombre=this.curieractual.nombre
+                this.curieractualFinal=this.curieractual.nombre+ ' ' +this.curieractual.apellido
+            }
+            
+            
+        },
         valorestabla(){
             var arreglos={}
             this.info.trazabilidad
@@ -643,10 +663,13 @@ export default {
         bus.$on('resultado', function (userObject) {
         this.info=userObject.value
         this.otro=this.info
+        console.log(userObject.value);
         //this.otro=userObject.personal
         this.procesos=userObject.proce
         this.inputs=userObject.personal.inputs
         this.curier=userObject.value.courier
+        this.curieractual=userObject.value.id_courier_actual
+
         if(this.curier==undefined||this.curier=='undefined'||
             this.curier==''){
                 this.curier={}

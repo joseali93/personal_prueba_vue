@@ -280,21 +280,41 @@
                                     -->
                                 </b-col>
                             </b-form-row>
-                  
-                            <b-form-row v-show="selectservice&&mostrardestinatario " class="my-1">
+                            
+                            <b-form-row v-show="selectservice&&mostrardestinatario " >
+                             
+                          
+                              
                                 <b-col>
                                     <label  class="col-sm col-form-label col-form-label-sm text-primary">Dirección: </label>
                                 </b-col>
                                 <b-col>
-                                    <b-form-input type="text"  class="form-control form-control-sm"  :state="estado.direccion"
-                                     placeholder="Direccion" v-model="detalles.destinatario.direccion"
-                                     @input="localizar()"> </b-form-input>
+                                    <b-form-input  id="direccionGoogle2" 
+                                    size="lg"
+                                      type="text"
+                                     placeholder="Dirección"
+                                     required
+                                     maxlength="100"
+                                     v-model="detalles.destinatario.direccion" 
+                                     class="form-control form-control-sm" 
+                                        :state="estado.direccion"
+                                        @input="localizar()"
+                                        @keypress="localizar()"
+                                    > </b-form-input>
+                                    
+                                    {{detalles.destinatario.direccion}}
                                      <!-- 
+                                                  v-model="detalles.destinatario.direccion"                            
+
+                                        class="form-control form-control-sm" 
+                                        :state="estado.direccion"
+                                        @input="localizar()"
                                         @keypress="localizar()"
                                      @keyup="algo()"
                                      -->
 
                                 </b-col>
+                                
                             </b-form-row>
                             <b-form-row v-show="selectservice&&mostrardestinatario" class="my-1">
                                 <b-col>
@@ -692,8 +712,61 @@ export default {
   },
   watch: {},
   methods: {
+    initAutocomplete(){
+      var longi
+      var latit
+      var codpostal
+      console.log("entro a init");
+       var input = document.getElementById('direccionGoogle2');
+       console.log(input);
+                var searchBox = new google.maps.places.SearchBox(input);
+                console.log("search");
+                console.log(searchBox);
+                searchBox.addListener('places_changed', function() {
+                  //input.value=input.value.split(',')[0]; 
+                    var places = searchBox.getPlaces();
+                    
+                    if(places.length == 0){
+                        return;
+                    }
+                    places.forEach(function(place){
+                        if(!place.geometry) {
+                            return;
+                        }
+                        console.log(place);
+                        console.log("----------------");
+                        latit=place.geometry.location.lat()
+                        longi=place.geometry.location.lng()
+                        
+                        //this.lati=place.geometry.location.lat()
+                        //this.longi=place.geometry.location.lng()
+                        //this.posta
+                        for (var i = 0; i < place.address_components.length; i++) {
+                        for (var j = 0; j < place.address_components[i].types.length; j++) {
+                            if (place.address_components[i].types[j] == "postal_code") {
+                            this.posta = place.address_components[i].long_name;
+
+                            }
+                        }
+                        }
+                        console.log("-----------");
+                        console.log(latit);
+                        console.log(longi);
+                        console.log(this.posta);
+                        this.lati=latit
+                        this.longi=longi
+
+                       // document.getElementById('lat').innerHTML = place.geometry.location.lat();
+                        //document.getElementById('lng').innerHTML = place.geometry.location.lng();
+                    }.bind(this));
+                }.bind(this));
+                //input.value=input.value.split(',')[0];
+      
+      
+    },
       algo(){
       },
+      
     localizarED(){
       var dir
       var longi
@@ -721,11 +794,7 @@ export default {
                     longi=resultados_long
                     latit=resultados_lat
                     //codpostal=results[0].address_components[7].long_name
-                    /*
-                    this.lati=resultados_lat
-                    this.longi=resultados_long
-                    this.posta=results[0].address_components[7].long_name
-                    */
+                    
                     this.lati=latit
                     this.longi=longi
                     this.posta=codpostal
@@ -748,6 +817,7 @@ export default {
       
 
     },
+    
     SeleccionadoED() {
         /*
       this.detalleseditar.destinatario.identificacion = this.nombre_remitente.numero_identificacion;
@@ -787,6 +857,7 @@ export default {
 
     
     },
+    
     localizar(){
       var dir
       var longi
@@ -814,11 +885,7 @@ export default {
                     longi=resultados_long
                     latit=resultados_lat
                     //codpostal=results[0].address_components[7].long_name
-                    /*
-                    this.lati=resultados_lat
-                    this.longi=resultados_long
-                    this.posta=results[0].address_components[7].long_name
-                    */
+                    
                     this.lati=latit
                     this.longi=longi
                     this.posta=codpostal
@@ -841,6 +908,7 @@ export default {
       
 
     },
+    
     Seleccionado() {
 
       this.detalles.destinatario.identificacion = this.nombre_remitente.numero_identificacion;
@@ -893,7 +961,7 @@ export default {
         });
       });
       this.axios
-        .get(urlservicios + "productos/" + infologin.id_OperadorLogistico._id)
+        .get(urlservicios+ "productos/" + infologin.id_OperadorLogistico._id)
         .then(response => {
           this.productosurl = response.data;
           //this.productosurl.unshift(vacio);
@@ -1119,7 +1187,7 @@ export default {
         });
         var algo = this.prueba;
         this.axios
-          .get(urlservicios + "obtenerDestinatario" + "/" + this.identificacion)
+          .get(urlservicios+ "obtenerDestinatario" + "/" + this.identificacion)
           .then(response => {
             var destinatario = response.data.destinatarios;
             this.creaciondestinatarios = response.data.validar;
@@ -1165,7 +1233,7 @@ export default {
         });
         this.axios
           .get(
-            urlservicios +
+            urlservicios+
               "obtenerDestinatario" +
               "/" +
               this.detalleseditar.destinatario.numero_identificacion
@@ -1522,7 +1590,7 @@ export default {
 
       this.axios
         .get(
-          urlservicios +
+          urlservicios+
             "estructuraf/" +
             this.selectproduct._id +
             "/" +
@@ -1610,7 +1678,7 @@ export default {
                     codigo_postal:this.posta,
                     id_cliente: inforemi.selected_client._id
                     };
-         this.axios.post(urlservicios + "CrearDestinatario", objetocrear)
+         this.axios.post(urlservicios+ "CrearDestinatario", objetocrear)
           .then(response => {
             var load = false;
             setTimeout(() => {
@@ -1634,7 +1702,7 @@ export default {
                     codigo_postal:this.posta,
                     id_cliente: inforemi.selected_client._id
                     };
-            this.axios.post(urlservicios +"ActualizarDestinatario" +"/" +this.nombre_remitente._id,objetoactualizar)
+            this.axios.post(urlservicios+"ActualizarDestinatario" +"/" +this.nombre_remitente._id,objetoactualizar)
             .then(response => {
                 var load = false;
                 setTimeout(() => {
@@ -1668,7 +1736,7 @@ export default {
           });
         });
         this.axios
-          .post(urlservicios + "CrearDestinatario", objeto)
+          .post(urlservicios+ "CrearDestinatario", objeto)
           .then(response => {
             var load = false;
             setTimeout(() => {
@@ -1700,7 +1768,7 @@ export default {
             load
           });
         });
-        this.axios.post(urlservicios +"ActualizarDestinatario" +"/" +this.detalles.destinatario._id,objeto)
+        this.axios.post(urlservicios+"ActualizarDestinatario" +"/" +this.detalles.destinatario._id,objeto)
           .then(response => {
             var load = false;
             setTimeout(() => {
@@ -1978,7 +2046,7 @@ export default {
     },
     seleccionarServicioED() {
       this.axios
-        .get(urlservicios + "servicios/" + this.selectproducto._id)
+        .get(urlservicios+ "servicios/" + this.selectproducto._id)
         .then(response => {
           this.serviciosurlED = response.data;
           //this.load=false
@@ -2021,7 +2089,7 @@ export default {
         //this.habilitar = false;
         this.selectproducto = this.selectproduct;
         this.axios
-          .get(urlservicios + "servicios/" + this.selectproducto._id)
+          .get(urlservicios+ "servicios/" + this.selectproducto._id)
           .then(response => {
             this.serviciosurl = response.data;
             //this.load=false
@@ -2047,7 +2115,7 @@ export default {
     camposNversionED() {
       this.axios
         .get(
-          urlservicios +
+          urlservicios+
             "estructuraf/" +
             this.selectproductED._id +
             "/" +
@@ -2086,7 +2154,7 @@ export default {
         });
         this.axios
           .get(
-            urlservicios +
+            urlservicios+
               "estructuraf/" +
               this.selectproducto._id +
               "/" +
@@ -2225,7 +2293,7 @@ export default {
           });
         });
         this.axios
-          .post(urlservicios + "GuardarOrden", objeto)
+          .post(urlservicios+ "GuardarOrden", objeto)
           .then(response => {
             var load = false;
             setTimeout(() => {
@@ -2258,13 +2326,16 @@ export default {
       }
     }
   },
+  updated: function(){
+    this.initAutocomplete();
+  },
   created: function() {},
   beforeCreate: function() {
     /*
     var login = localStorage.getItem("storedData");
     var infologin = JSON.parse(login);
     this.axios
-      .get(urlservicios + "productos/" + infologin.id_OperadorLogistico._id)
+      .get(urlservicios+ "productos/" + infologin.id_OperadorLogistico._id)
       .then(response => {
         this.productosurl = response.data;
         //this.productosurl.unshift(vacio);

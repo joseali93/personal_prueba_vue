@@ -42,6 +42,7 @@
                     </b-form-input>
             </template>
             <template v-if="data.type=='select'">
+              
                 <h3 class=" text-primary">Seleccione el {{data.placeholder}}</h3>
                 
                  <b-form-select :id="data.id"  :value="valores(indice,data)"  text-field="nombre" value-field="_id" 
@@ -52,9 +53,13 @@
         </template>
         </b-row>
         <b-row v-show="proceSeleccionado.atencion_courier==true">
+
+          <b-col>
             <b-form-select v-model="curier" text-field="nombre" value-field="_id" :options="curiers2" class="mb-3" 
             :state="Scurier">
             </b-form-select>
+          </b-col>
+            
         </b-row>
         <b-row class="my-1 text-primary">
             <b-col class="my-3">
@@ -153,10 +158,14 @@
 import { bus } from "../main";
 import { urlservicios } from "../main";
 import Preload from "../componentes/preload.vue";
+import io from 'socket.io-client'
+import { CreateSocket } from './utils/socket'
 
 export default {
   data() {
     return {
+      observacionesManifiesto:'',
+            socket: null,
       manifiesto:false,
       itemsbr: [
         {
@@ -170,6 +179,8 @@ export default {
         },
 
       ],
+      medios:[],
+      model_medios:'',
       errores:[],
       bandera: 0,
       value: [],
@@ -211,29 +222,23 @@ export default {
     };
   },
   methods: {
+    
     metodo(errores){
-      console.log("llamo funcion externa");
-      console.log(errores);
-      console.log(this.itemsmovilizados);
       for(var o=0;o< this.itemsmovilizados.length;o++){
         for(var x=0;x<errores.length;x++){
           if(errores[x].id==this.itemsmovilizados[o].id){
-            console.log("elimino");
             this.itemsmovilizados.splice(o,1)
           }
         }
       }
     },
     valores(valores, inputs) {
-      //console.log("entro a valores");
-      //console.log(valores);
       var guardadoManifiesto = localStorage.getItem("Manifiesto");
       var infoguardadoManifiesto = JSON.parse(guardadoManifiesto);
       //this.objeto=infoguardadoManifiesto.inputs
       if (infoguardadoManifiesto == null || infoguardadoManifiesto == "null") {
         return null;
       } else {
-        //console.log(infoguardadoManifiesto.inputs);
         var llaves = Object.keys(infoguardadoManifiesto.inputs);
         if (this.bandera == 0 || this.bandera == 1) {
           this.bandera = this.bandera + 1;
@@ -252,18 +257,13 @@ export default {
     },
     MostrarModal() {
       var bandera;
-      console.log("entro a mostar modal");
       if (this.objeto == undefined || this.objeto == "") {
         if (this.inputs == "") {
-          console.log("no tiene items");
-          console.log(this.curier);
           if (this.curier == "null" || this.curier == null) {
-            console.log("hay curier vacio");
             swal("Debe completarse", "Seleccione los campos previos", "error", {
               allowEnterKey: true
             });
           } else {
-            console.log("curier tiene valores");
             this.$refs.myModalRef.show();
           }
         } else {
@@ -279,12 +279,10 @@ export default {
             eval("this.objeto." + llaves[x]) == "null" ||
             eval("this.objeto." + llaves[x]) == null
           ) {
-            console.log("andavacio");
             bandera = true;
           }
         }
         if (bandera == true) {
-          console.log("no muesto 2");
           swal(
             "Debe completarse",
             "Algun Campo esta pendiente de Seleccionar",
@@ -303,7 +301,6 @@ export default {
       if (this.itemsmovilizados.length <= 0) {
         return 0;
       } else {
-        //console.log(this.itemsmovilizados);
         for (var x = 0; x < this.itemsmovilizados.length; x++) {
           if (
             this.itemsmovilizados[x].unidades == 0 ||
@@ -320,31 +317,24 @@ export default {
       }
     },
     borrar(value) {
-      console.log("entro a borrar");
-      console.log(value);
       this.itemsmovilizados.splice(value.index, 1);
     },
     generarManifiesto() {
-                  console.log("entro a generar");
-            this.Scurier=null
-            console.log(this.objeto);
-            console.log(this.curier);
-            console.log(this.curiers2);
+      var login = localStorage.getItem("storedData");
+      var infologin = JSON.parse(login);
+            this.Scurier
             var objvario=[
               {},
               {}
             ]
             if(this.objeto==undefined){
-                console.log("no hago nada");
                 this.objeto=[]
                 for(var j=0;j<this.curiers2.length;j++){
-                  console.log(this.curiers2[j]._id);
                   if(this.curier==this.curiers2[j]._id){
                     objvario[0]=[null]
                     objvario[1]=this.curiers2[j]
                   }
                 }
-              console.log(objvario);
             }
             else{
                 var llaves=Object.keys(this.objeto)
@@ -364,22 +354,16 @@ export default {
                         bandera=true
                     }
                 }
-                //console.log(this.objeto);
                 if(bandera==true)
                 {
-                    //console.log("no hacemos peticion");
                 }
                 else
                 {
-                    //console.log("hacemos peticion");
-                    //console.log(this.itemsmovilizados);
                 }
             }
             
             var inforinputs=[]    
-            //console.log(this.objeto);
             if(this.objeto==undefined){
-                //console.log("no me llegan inputs variables");
                 this.objeto=[]
             }else{
                 for(var x=0;x<this.opciones.length;x++){
@@ -388,31 +372,26 @@ export default {
                 {
                     if(this.opciones[x][y]._id==eval('this.objeto.'+llaves[x]))
                     {
-                        //console.log("obtengo la info");
                         inforinputs[x]=this.opciones[x][y]
                     }
                 }
                 }
             }
-           console.log("inforinputs");
            var inforvaria
            if(inforinputs.length==0){
             inforvaria=objvario
            }else{
              inforvaria=inforinputs
            }
-                            console.log(inforvaria);
             
             var itemsmodal=this.itemsmovilizados
             var varios=[]
             var listMovilizados={
             }
             for(var x=0;x<this.itemsmovilizados.length;x++){
-                //console.log(x);
                 if(this.itemsmovilizados[x].concepto._id==null||
                 this.itemsmovilizados[x].concepto._id==undefined)
                 {
-                    //console.log(this.itemsmovilizados[x].id)
                      var listMovilizados={
                      numeroMovilizado:this.itemsmovilizados[x].id
                      }
@@ -426,9 +405,8 @@ export default {
                      }
                                      varios.push(listMovilizados)
                 }
-                //console.log(listMovilizados);
             }
-            
+            /*
             if(this.proceSeleccionado.atencion_courier==true){
                
                 if(this.curier!="null"&&this.curier!=''&&this.curier!=null)
@@ -443,41 +421,152 @@ export default {
                         });
                     this.Scurier=false
                 }
-            var envio ={
-                listadoMovilizados:varios,
-                infoManifiesto:this.objeto,
-                id_procesoLogistico:this.processSelected._id,
-                //procesoSistena:5,
-                id_courier:this.curier
-            }
+              var envio ={
+                  listadoMovilizados:varios,
+                  infoManifiesto:this.objeto,
+                  id_procesoLogistico:this.processSelected._id,
+                  //procesoSistena:5,
+                  id_courier:this.curier
+              }
             }
             else{
-                var envio ={
+                
+            }
+            var validacion
+            */
+          if(infologin.id_OperadorLogistico.confirmacionSocket==true&&this.proceSeleccionado.atencion_courier==true){
+            if(this.curier!="null"&&this.curier!=''&&this.curier!=null)
+                {
+                   this.Scurier=null
+                }
+                else{
+                    swal("Debe completarse", 
+                        "Seleccione un curier",
+                        "error",{
+                              allowEnterKey: true,
+                        });
+                    this.Scurier=false
+                }
+            var load = true;
+            setTimeout(() => {
+              bus.$emit("load", {
+                load
+              });
+            });
+            const swalWithBootstrapButtons = swal.mixin({
+              confirmButtonClass: 'btn btn-success',
+              cancelButtonClass: 'btn btn-danger',
+              buttonsStyling: true,
+            })
+             var load = false;
+            setTimeout(() => {
+              bus.$emit("load", {
+                load
+              });
+            });
+            swalWithBootstrapButtons({
+              //title: 'Desea adicionar un comentario extra para el courier',
+              text: "Desea adicionar un comentario extra para el courier",
+              type: 'info',
+              showCancelButton: true,
+              confirmButtonText: 'Si',
+              cancelButtonText: 'No',
+              reverseButtons: false
+            }).then((result) => {
+              if (result.value) {
+
+                      swal({
+                  title: 'digite observaciones al courier',
+                  input: 'text',
+                  inputAttributes: {
+                    autocapitalize: 'on'
+                  },
+                  showCancelButton: false,
+                  confirmButtonText: 'Aceptar',
+                  showLoaderOnConfirm: true,
+                  preConfirm: (login) => {
+                    
+                  },
+                  allowOutsideClick: () => !swal.isLoading()
+                }).then((result) => {
+                  var load = true;
+                  setTimeout(() => {
+                    bus.$emit("load", {
+                      load
+                    });
+                  });
+                  this.socket.emit('new-message', {
+                    idOperador:infologin.id_OperadorLogistico._id,//per logistico
+                    idOrigen:infologin._id,//id usuario
+                    idDestino:this.curier,//id courier seleccionado
+                    mensaje :{
+                        contacto:"this.currentUser.remitente.nombre_contacto",//nombre remitente
+                        direccion:"this.currentUser.remitente.direccion_recogida",//direccion remitente
+                        observaciones:result.value,
+                        num_movilizados:varios.length,//cantidad movilizados orden
+                        tipo_proceso:2
+                      }
+                  })
+
+                })
+
+              } else if (
+                // Read more about handling dismissals
+                result.dismiss === swal.DismissReason.cancel
+              ) {
+                  var load = true;
+                  setTimeout(() => {
+                    bus.$emit("load", {
+                      load
+                    });
+                  });
+                this.socket.emit('new-message', {
+                    idOperador:infologin.id_OperadorLogistico._id,//per logistico
+                    idOrigen:infologin._id,//id usuario
+                    idDestino:this.curier,//id courier seleccionado
+                    mensaje :{
+                        contacto:"",//nombre remitente
+                        direccion:"",//direccion remitente
+                        observaciones:'',
+                        num_movilizados:varios.length,//cantidad movilizados orden
+                        tipo_proceso:2
+                      }
+                  })
+              }
+            })
+            /*
+            this.socket.emit('new-message', {
+              idOperador:infologin.id_OperadorLogistico._id,//per logistico
+              idOrigen:infologin._id,//id usuario
+              idDestino:this.curier,//id courier seleccionado
+              mensaje :{
+                  contacto:"this.currentUser.remitente.nombre_contacto",//nombre remitente
+                  direccion:"this.currentUser.remitente.direccion_recogida",//direccion remitente
+                  observaciones:"this.currentUser.remitente.direccion_recogida",
+                  num_movilizados:varios.length,//cantidad movilizados orden
+                  tipo_proceso:2
+                }
+            })*/
+          }
+          else {
+            var envio ={
                 listadoMovilizados:varios,
                 infoManifiesto:this.objeto,
                 id_procesoLogistico:this.processSelected._id
             }
-            }
-            //console.log(this.processSelected.modal)
-            console.log(envio);
-            var validacion
             var load = true;
                         setTimeout(() => {
                             bus.$emit("load", {
                             load
                             });
                         });
+            
             this.axios
             .post(urlservicios+"GenerarManifiestoWeb", envio)
             .then(response => {
-                console.log(response);
                 if(response.data.validacion==true){
                   this.manifiesto=true
-                  console.log("se creo correctamente");
                    localStorage.removeItem('Manifiesto');
-                    console.log("mostramos modal");
-                    console.log(itemsmodal);
-                    console.log(inforvaria);
                     var nmanifiesto=response.data.manifiesto
                     setTimeout(() => {
                         bus.$emit('modalinfo', {
@@ -489,13 +578,10 @@ export default {
                 }
                 if(response.data.validacion==false){
                   this.manifiesto=false
-                  console.log("no se creoo");
-                  console.log(response.data.listaMovilizadoConManifiesto);
                   var Movilizados=response.data.listaMovilizadoConManifiesto
                   this.errores=response.data.listaMovilizadoConManifiesto
                   var n_movilizados=''
                   for(var o=0;o<Movilizados.length;o++){
-                    console.log(Movilizados[o].id)
                     if(o==Movilizados.length-1){
                       n_movilizados=n_movilizados+ Movilizados[o].id
                     }
@@ -506,8 +592,6 @@ export default {
 
                   }
                   this.errores=Movilizados
-                  console.log(n_movilizados);
-                  console.log(this.errores);
                   //this.$refs.myModalRef2.show()
                   var titulo1_inicio='<div class="prueba"><ul>'
                   var conten_1=''
@@ -522,7 +606,6 @@ export default {
                   
                 }
               total=titulo1_inicio+conten_1+titulo1_fin
-                    console.log(total);
                                     swal({
                 title: 'El manifiesto no se puede generar por que los movilizados ya se encuentran procesados',
                 type: 'info',
@@ -564,13 +647,15 @@ export default {
                             "Intente nuevamente, por favor",
                             "warning"
                         );
-                    });
+            });
+            
+          }
+            
             
     },
     digitar(value) {
       setTimeout(
         function() {
-          console.log("entro a digitar");
           var x = document.getElementById(value.id).value;
           if (x == "" || x == null || x == "") {
             eval("this.objeto." + value.vmodel + "=" + value.min);
@@ -585,24 +670,18 @@ export default {
           }
         }.bind(this)
       );
-      console.log(this.objeto);
     },
     seleccionado(value) {
-      console.log("entro a seleccionado");
 
       var x = document.getElementById(value.id).value;
-      console.log(x);
       eval("this.objeto." + value.vmodel + "=" + "x");
-      console.log(this.objeto);
     },
     adicionar(value) {
-      console.log(this.objeto);
       var agregar = true;
       var infoconcepto;
       var algo;
 
       if (this.concepto == null) {
-        console.log("hay concepto nulo");
         infoconcepto = {};
       } else {
         for (var x = 0; x < this.listadoconcepto.length; x++) {
@@ -612,7 +691,6 @@ export default {
         }
       }
       if (value == null || value == "") {
-        console.log("va vacio");
 
         swal({
           title: "Error!",
@@ -632,16 +710,10 @@ export default {
             load
           });
         });
-        console.log(
-          urlservicios +
-            "MovilizadoProcesosLogistico/" +
-            value +
-            "/" +
-            this.selected
-        );
+
         this.axios
           .get(
-            urlservicios +
+            urlservicios+
               "MovilizadoProcesosLogistico/" +
               value +
               "/" +
@@ -649,7 +721,6 @@ export default {
           )
           .then(response => {
             
-            console.log(response);
             this.mensaje = response.data;
             if (this.mensaje.message) {
               swal({
@@ -673,13 +744,9 @@ export default {
                   showConfirmButton: false,
                   timer: 1000
                 });
-                console.log(this.mensaje);
                 this.text1 = "";
                 this.mensaje.concepto = infoconcepto;
                 this.itemsmovilizados.push(this.mensaje);
-                console.log(this.itemsmovilizados);
-                console.log(this.objeto);
-                console.log(this.curier);
                 var guardado = {
                   itemsmovilizados: this.itemsmovilizados,
                   inputs: this.objeto,
@@ -712,9 +779,6 @@ export default {
                   this.mensaje.concepto = infoconcepto;
                   this.itemsmovilizados.push(this.mensaje);
                   this.text1 = "";
-                  console.log(this.itemsmovilizados);
-                  console.log(this.objeto);
-                  console.log(this.curier);
                   var guardado = {
                     itemsmovilizados: this.itemsmovilizados,
                     inputs: this.objeto,
@@ -727,7 +791,6 @@ export default {
             }
             if (this.mensaje.estado == false) {
               if(this.mensaje.message=="esta en ruta"){
-                console.log("tengo mensaje en ruta");
                 swal({
                 title: "Error!",
                 text:
@@ -787,15 +850,12 @@ export default {
       var guardadoManifiesto = localStorage.getItem("Manifiesto");
       var infoguardadoManifiesto = JSON.parse(guardadoManifiesto);
 
-      console.log("cambio");
       this.manifiesto=false
       if (infoguardadoManifiesto == null || infoguardadoManifiesto == "null") {
-        console.log("no hay items paa cargar");
         var nvacio = { _id: null, nombre: "Por Favor Seleccione un Concepto" };
         this.selected = value;
         this.itemsmovilizados = [];
         this.listadoconcepto = [];
-        // console.log(this.procesosLog);
         if (this.selected == null) {
         } else {
           for (var x = 0; x < this.procesosLog.length; x++) {
@@ -805,7 +865,6 @@ export default {
                 this.procesosLog[x].conceptos == null ||
                 this.procesosLog[x].conceptos == undefined
               ) {
-                //console.log(this.procesosLog[x].conceptos);
                 this.listadoconcepto.unshift(nvacio);
               } else {
                 this.listadoconcepto = this.procesosLog[x].conceptos;
@@ -815,12 +874,10 @@ export default {
           }
         }
       } else {
-        console.log("hay itempara cargar");
         this.itemsmovilizados = infoguardadoManifiesto.itemsmovilizados;
         var nvacio = { _id: null, nombre: "Por Favor Seleccione un Concepto" };
         this.selected = value;
         this.listadoconcepto = [];
-        // console.log(this.procesosLog);
         if (this.selected == null) {
         } else {
           for (var x = 0; x < this.procesosLog.length; x++) {
@@ -830,7 +887,6 @@ export default {
                 this.procesosLog[x].conceptos == null ||
                 this.procesosLog[x].conceptos == undefined
               ) {
-                //console.log(this.procesosLog[x].conceptos);
                 this.listadoconcepto.unshift(nvacio);
               } else {
                 this.listadoconcepto = this.procesosLog[x].conceptos;
@@ -843,36 +899,25 @@ export default {
 
       var login = localStorage.getItem("storedData");
       var infologin = JSON.parse(login);
-      //console.log(infologin.id_OperadorLogistico);
       var load = true;
       setTimeout(() => {
         bus.$emit("load", {
           load
         });
       });
-      this.axios
-        .get(
-          urlservicios +
-            "CamposProcesoLogisticosOperadores/" +
-            infologin.id_OperadorLogistico._id +
-            "/" +
-            this.selected
-        )
-        .then(response => {
+      console.log(urlservicios+"CamposProcesoLogisticosOperadores/" +infologin.id_OperadorLogistico._id +"/" +this.selected);
+      this.axios.get(urlservicios+"CamposProcesoLogisticosOperadores/" +infologin.id_OperadorLogistico._id +"/" +this.selected)
+      .then(response => {
          
           this.inputs = response.data;
           this.objeto = this.inputs.objeto;
-          console.log(this.inputs);
-          //console.log(this.objeto);
           if (this.objeto == undefined || this.objeto == "undefined") {
           } else {
-            //console.log("hago peticiones");
             var llaves = Object.keys(this.objeto);
             //llaves.forEach(ele=>{
             var errore
             this.inputs.campos.forEach((element, indice) => {
               if (element.urlobjeto == undefined) {
-                console.log("no se hace peticion de url");
               } else {
                 setTimeout(function(){
                   this.axios
@@ -886,10 +931,8 @@ export default {
                       var respuesta = resp1.data;
                       respuesta.unshift(vacio);
                       this.opciones.push(respuesta);
-                      console.log(this.opciones);
                     })
                     .catch(e => {
-                      console.log(e);
                       /*
                       swal({
                       type: 'error',
@@ -942,33 +985,314 @@ export default {
           if (this.proceSeleccionado.atencion_courier == true) {
             var login = localStorage.getItem("storedData");
             var infologin = JSON.parse(login);
+            var load = true;
+            setTimeout(() => {
+              bus.$emit("load", {
+                load
+              });
+            });
+            var jose={
+              id_operadorlogistico:infologin.id_OperadorLogistico._id,
+              id_cliente:infologin._id,
+              medio_transporte: "",
+              descripcion:'manifiesto'
+            }
+            console.log(jose);
+            if(infologin.id_OperadorLogistico.confirmacionSocket==true){
+              this.socket.emit('MedioCourier', {
+              id_operadorlogistico:infologin.id_OperadorLogistico._id,
+              id_cliente:infologin._id,
+              medio_transporte: "5adf56ce6034679c466fc9dd",
+              descripcion:'manifiesto'
+            });
+
+              this.socket.on('CouriersActivos', (connectionList) => {
+                this.curiers2=connectionList
+              });
+              var load = false;
+              setTimeout(() => {
+                bus.$emit("load", {
+                  load
+                });
+              });
+            }
+            else{
+              
              var load = true;
                         setTimeout(() => {
                             bus.$emit("load", {
                             load
                             });
                         });
-            this.axios
-              .get(
-                urlservicios +
-                  "UsuariosCurierOperador/" +
-                  infologin.id_OperadorLogistico._id
-              )
-              .then(response => {
-                this.curiers2 = response.data;
-                var vacio = {
-                  _id: "null",
-                  nombre: "Por Favor Seleccione un Curier"
-                };
-                this.curiers2.unshift(vacio);
-                 var load = false;
+              this.axios
+                .get(
+                  urlservicios+
+                    "UsuariosCurierOperador/" +
+                    infologin.id_OperadorLogistico._id
+                )
+                .then(response => {
+                  this.curiers2 = response.data;
+                  var vacio = {
+                    _id: "null",
+                    nombre: "Por Favor Seleccione un Curier"
+                  };
+                  this.curiers2.unshift(vacio);
+                  var load = false;
+                          setTimeout(() => {
+                              bus.$emit("load", {
+                              load
+                              });
+                          });
+                })
+                .catch(function(error) {
+                          var load = false;
+                          setTimeout(() => {
+                              bus.$emit("load", {
+                              load
+                              });
+                          });
+                          swal(
+                              "Se presento un problema",
+                              "Intente nuevamente, por favor",
+                              "warning"
+                          );
+                      });
+              }
+            /*
+              var load = true;
+                          setTimeout(() => {
+                              bus.$emit("load", {
+                              load
+                              });
+                          });
+              this.axios
+                .get(
+                  urlservicios+
+                    "UsuariosCurierOperador/" +
+                    infologin.id_OperadorLogistico._id
+                )
+                .then(response => {
+                  this.curiers2 = response.data;
+                  var vacio = {
+                    _id: "null",
+                    nombre: "Por Favor Seleccione un Curier"
+                  };
+                  this.curiers2.unshift(vacio);
+                  var load = false;
+                          setTimeout(() => {
+                              bus.$emit("load", {
+                              load
+                              });
+                          });
+                })
+                .catch(function(error) {
+                          var load = false;
+                          setTimeout(() => {
+                              bus.$emit("load", {
+                              load
+                              });
+                          });
+                          swal(
+                              "Se presento un problema",
+                              "Intente nuevamente, por favor",
+                              "warning"
+                          );
+                      });
+            */
+          }
+        }
+      }
+      
+    },
+    generarManifiestoFinal(value, final){
+       if(value.mensaje.respuesta=="true"){
+         this.Scurier=null
+            var objvario=[
+              {},
+              {}
+            ]
+            if(this.objeto==undefined){
+                this.objeto=[]
+                for(var j=0;j<this.curiers2.length;j++){
+                  if(this.curier==this.curiers2[j]._id){
+                    objvario[0]=[null]
+                    objvario[1]=this.curiers2[j]
+                  }
+                }
+            }
+            else{
+                var llaves=Object.keys(this.objeto)
+                var bandera
+                for(var x=0;x<llaves.length;x++){
+                this.inputs.campos[x].estado=null
+                }
+                for(var x=0;x<llaves.length;x++){
+                    if(eval('this.objeto.'+llaves[x])==''||eval('this.objeto.'+llaves[x])==null)
+                    {   
+                        this.inputs.campos[x].estado=false
+                        /*
+                        swal("Debe completarse", 
+                        "Seleccione "+this.inputs.campos[x].placeholder,
+                        "error",{
+                              allowEnterKey: true,
+                        });
+                        */
+                        bandera=true
+                    }
+                }
+               
+            }
+            
+            var inforinputs=[]    
+            if(this.objeto==undefined){
+                this.objeto=[]
+            }else{
+                for(var x=0;x<this.opciones.length;x++){
+                var llaves=Object.keys(this.objeto)
+                for(var y=0;y<this.opciones[x].length;y++)
+                {
+                    if(this.opciones[x][y]._id==eval('this.objeto.'+llaves[x]))
+                    {
+                        inforinputs[x]=this.opciones[x][y]
+                    }
+                }
+                }
+            }
+           var inforvaria
+           if(inforinputs.length==0){
+            inforvaria=objvario
+           }else{
+             inforvaria=inforinputs
+           }
+            
+            var itemsmodal=this.itemsmovilizados
+            var varios=[]
+            var listMovilizados={
+            }
+            for(var x=0;x<this.itemsmovilizados.length;x++){
+                if(this.itemsmovilizados[x].concepto._id==null||
+                this.itemsmovilizados[x].concepto._id==undefined)
+                {
+                     var listMovilizados={
+                     numeroMovilizado:this.itemsmovilizados[x].id
+                     }
+                    varios.push(listMovilizados)
+                }
+                else{
+                     var listMovilizados={
+                         nombre_concepto:this.itemsmovilizados[x].concepto.nombre,
+                    id_concepto:this.itemsmovilizados[x].concepto._id,
+                    numeroMovilizado:this.itemsmovilizados[x].id
+                     }
+                                     varios.push(listMovilizados)
+                }
+            }
+            
+            if(this.proceSeleccionado.atencion_courier==true){
+               
+                if(this.curier!="null"&&this.curier!=''&&this.curier!=null)
+                {
+                   this.Scurier=null
+                }
+                else{
+                    swal("Debe completarse", 
+                        "Seleccione un curier",
+                        "error",{
+                              allowEnterKey: true,
+                        });
+                    this.Scurier=false
+                }
+            var envio ={
+                listadoMovilizados:varios,
+                infoManifiesto:this.objeto,
+                id_procesoLogistico:this.processSelected._id,
+                //procesoSistena:5,
+                id_courier:this.curier
+            }
+             var load = true;
                         setTimeout(() => {
                             bus.$emit("load", {
                             load
                             });
                         });
-              })
-              .catch(function(error) {
+            
+            this.axios
+            .post(urlservicios+"GenerarManifiestoWeb", envio)
+            .then(response => {
+                if(response.data.validacion==true){
+                  this.manifiesto=true
+                   localStorage.removeItem('Manifiesto');
+                    var nmanifiesto=response.data.manifiesto
+                    setTimeout(() => {
+                        bus.$emit('modalinfo', {
+                            itemsmodal,inforvaria,nmanifiesto
+                        })
+                        }, )
+                    this.$router.push(this.processSelected.modal)
+                }
+                if(response.data.validacion==false){
+                  console.log('------------------------------------');
+                  console.log(response.data);
+                  console.log('------------------------------------');
+                  this.manifiesto=false
+                  var Movilizados=response.data.listaMovilizadoConManifiesto
+                  this.errores=response.data.listaMovilizadoConManifiesto
+                  var n_movilizados=''
+                  for(var o=0;o<Movilizados.length;o++){
+                    if(o==Movilizados.length-1){
+                      n_movilizados=n_movilizados+ Movilizados[o].id
+                    }
+                    else{
+                    n_movilizados=n_movilizados+ Movilizados[o].id+', '
+
+                    }
+
+                  }
+                  this.errores=Movilizados
+                  //this.$refs.myModalRef2.show()
+                  var titulo1_inicio='<div class="prueba"><ul>'
+                  var conten_1=''
+                  var conten_2=''
+                  var titulo1_fin='</ul></div><br><h3><strong>Desea Retirarlos del Manifiesto?</strong></h3>'
+                  var prueba
+                  var total
+                   for(var y=0;y<this.errores.length;y++){
+                  conten_1=conten_1+'<li>'+this.errores[y].id+' - '+this.errores[y].NombreProceso+'</li>'
+                  conten_2=conten_2+'<li>'+this.errores[y].NombreProceso+'</li>'
+                  
+                  
+                }
+              total=titulo1_inicio+conten_1+titulo1_fin
+                                    swal({
+                title: 'El manifiesto no se puede generar por que los movilizados ya se encuentran procesados',
+                type: 'info',
+                html: total,
+                showCloseButton: true,
+                showCancelButton: true,
+                focusConfirm: false,
+                confirmButtonText:
+                  'Si',
+                confirmButtonAriaLabel: '',
+                cancelButtonText:
+                'No',
+                cancelButtonAriaLabel: '',
+              }).then((result)=> {
+                if(result.value){
+                this.metodo(this.errores); // this should execute now
+
+                }
+
+              });
+
+                }  
+                var load = false;
+                        setTimeout(() => {
+                            bus.$emit("load", {
+                            load
+                            });
+                        });  
+            })
+            .catch(function(error) {
                         var load = false;
                         setTimeout(() => {
                             bus.$emit("load", {
@@ -980,11 +1304,27 @@ export default {
                             "Intente nuevamente, por favor",
                             "warning"
                         );
-                    });
-          }
-        }
-      }
-      
+            });
+            }
+            else{
+                var envio ={
+                listadoMovilizados:varios,
+                infoManifiesto:this.objeto,
+                id_procesoLogistico:this.processSelected._id
+            }
+            }
+            var validacion
+       }
+       else{
+          swal(
+          'Advertencia',
+          'El curier no respondio',
+          'warning'
+        )
+       }
+       if(final){
+
+       }
     }
   },
   beforeCreate: function() {
@@ -998,10 +1338,8 @@ export default {
     var infologin = JSON.parse(login);
     var guardadoManifiesto = localStorage.getItem("Manifiesto");
     var infoguardadoManifiesto = JSON.parse(guardadoManifiesto);
-    console.log(infoguardadoManifiesto);
 
     if (infoguardadoManifiesto == null || infoguardadoManifiesto == "null") {
-      console.log("no hay previo");
       var load = true;
       setTimeout(() => {
         bus.$emit("load", {
@@ -1009,9 +1347,8 @@ export default {
         });
       });
       this.axios
-        .get(urlservicios + "Procesos/" + infologin.id_OperadorLogistico._id)
+        .get(urlservicios+ "Procesos/" + infologin.id_OperadorLogistico._id)
         .then(response => {
-          console.log(response);
           var load = false;
           setTimeout(() => {
             bus.$emit("load", {
@@ -1020,7 +1357,6 @@ export default {
           });
           this.procesosLog = response.data;
           this.procesosLog.unshift(vacio);
-          console.log(this.procesosLog);
         })
         .catch(function(error) {
           bandera = false;
@@ -1061,9 +1397,8 @@ export default {
         });
       });
       this.axios
-        .get(urlservicios + "Procesos/" + infologin.id_OperadorLogistico._id)
+        .get(urlservicios+ "Procesos/" + infologin.id_OperadorLogistico._id)
         .then(response => {
-          console.log(response);
           var load = false;
           setTimeout(() => {
             bus.$emit("load", {
@@ -1072,7 +1407,6 @@ export default {
           });
           this.procesosLog = response.data;
           this.procesosLog.unshift(vacio);
-          console.log(this.procesosLog);
         })
         .catch(function(error) {
           bandera = false;
@@ -1124,6 +1458,34 @@ export default {
         }
       });
     }
+    
+  },
+  created: function(){
+    var login = localStorage.getItem("storedData");
+    var infologin = JSON.parse(login);
+      this.socket = (new CreateSocket({
+
+        id_cliente: infologin._id,
+
+        id_operador: infologin.id_OperadorLogistico._id
+
+      }));
+      this.socket.on('connect', () => {
+      })
+      this.socket.on('messages', (data) => {
+
+        //$.cbSpinner("hide");
+        this.generarManifiestoFinal(data)
+        //this.message = (data.mensaje);
+        var load = false;
+          setTimeout(() => {
+            bus.$emit("load", {
+              load
+            });
+            // this.socket.instance.disconnect(true);
+          });
+      });   
+ 
   }
 };
 </script>

@@ -17,6 +17,8 @@
 
         <input id="searchTextField" type="text" size="50">
 
+
+  <b-btn @click="sweet"> asasdasd</b-btn>
   </b-container>
 </template>
 
@@ -37,6 +39,31 @@ export default {
     
   },
   methods:{
+    sweet(){
+      swal({
+  title: 'digite observaciones al courier',
+  input: 'text',
+  inputAttributes: {
+    autocapitalize: 'on'
+  },
+  showCancelButton: true,
+  confirmButtonText: 'Look up',
+  showLoaderOnConfirm: true,
+  preConfirm: (login) => {
+    console.log(login);
+    
+  },
+  allowOutsideClick: () => !swal.isLoading()
+}).then((result) => {
+  console.log(result);
+  if (result.value) {
+    swal({
+      title: `${result.value}'s avatar`,
+      //imageUrl: result.value.avatar_url
+    })
+  }
+})
+    },
     pruebas(){
       console.log("entro a prueba");
       console.log(addressData);

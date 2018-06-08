@@ -1,6 +1,7 @@
 import io from 'socket.io-client';
+//import { urlsocket } from './';
 
- 
+
 
 class CreateSocket {
 
@@ -14,7 +15,8 @@ class CreateSocket {
 
     this.params = (params);
 
-    this.instance = (io.connect('http://192.168.1.59:8080', {
+    //this.instance = (io.connect(urlsocket, {
+      this.instance = (io.connect('http://192.168.1.59:8080', {
 
       query: params,
 

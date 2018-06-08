@@ -69,7 +69,243 @@ export default {
         }
     },
     methods: {
-        
+        cancelarOrden(value){
+            console.log(value);
+            var login = localStorage.getItem("storedData");
+            var infologin =JSON.parse(login);
+            console.log(infologin.id_cliente);
+            console.log(this.consulta);
+            if (infologin.id_cliente == undefined || infologin.id_cliente == null) {
+              if (typeof value.item === 'object') {
+                const { _id, estado, id_OperadorLogistico } = (value.item);
+                if (/^(Orden De Servicio Creada|Orden De Servicio Asignada)$/i.test(estado)) {
+                  const url = (`${urlservicios}ConceptoProcesoSistema/${id_OperadorLogistico}/2`);
+                  this.axios.get(url).then((response) => {
+                    const { conceptos } = (response.data);
+                    if (!conceptos || conceptos && !conceptos.length) {
+                      swal({
+                        icon: 'error',
+                        title: 'No se encontraron conceptos',
+                        text: 'Comunicarse con soporte',
+                        buttons: false,
+                        closeOnEsc: false,
+                        closeOnClickOutside: false,
+                        timer: 5000
+                      });
+                    } else {
+                      (function conceptList() {
+                        this.conceptos = (conceptos);
+                        const list = ($('<div class="list-group">'));
+                        let currentConcept = (null);
+                        this.conceptos.forEach((c) => {
+                          const concepto = ($(`
+                            <a href="javascript:void(0)"
+                              class="rounded-0 list-group-item list-group-item-action p-2">
+                                ${c.nombre}
+                            </a>
+                          `));
+                          concepto.hover(() => {
+                            concepto.not('.active').css('background-color', 'lightcyan');
+                          }, () => {
+                            concepto.not('.active').css('background-color', 'white');
+                          }).click((event) => {
+                            if (currentConcept !== c) {
+                              concepto.css('background-color', '');
+                              list.children().filter('.active')
+                                .removeClass('active');
+                              concepto.addClass('active');
+                              currentConcept = (c);
+                            }
+                          });
+                          list.append(concepto);
+                        });
+                        const content = ($(`
+                          <div class="card">
+                            <div class="card-body text-white bg-primary p-2">
+                              <div class="card-title mb-0">
+                                <h5 class="mb-0">Conceptos</h5>
+                              </div>
+                            </div>
+                          </div>
+                        `));
+                        content.append(list);
+                        swal({
+                          content: content.get(0),
+                          button: {
+                            text: 'Continuar',
+                            value: true,
+                            closeModal: false
+                          }
+                        }).then((next) => {
+                          if (next && !currentConcept) {
+                            swal('Concepto no seleccionado', '', 'error', {
+                              buttons: false,
+                              closeOnEsc: false,
+                              closeOnClickOutside: false,
+                              className: 'swal-padding',
+                              timer: 2000
+                            }).then(() => {
+                              conceptList.call(this);
+                            });
+                          } else if (next && currentConcept) {
+                            const { id_concepto } = (currentConcept);
+                            const url = (`${urlservicios}CancelarOrden/${_id}/${id_concepto}`);
+                            this.axios.get(url).then((response) => {
+                              const { message } = (response.data);
+                              swal(message, '', 'info', {
+                                button: 'Cerrar'
+                              });
+                              // const index = (this.consulta.findIndex((c) => (c._id === _id)));
+                              // if (index >= 0)
+                              //     this.consulta.splice(index, 1);
+                              setTimeout(() => {
+                                value.item.estado = ('orden de servicio cancelada');
+                              }, 10);
+                            }, (error) => {
+                              swal('Ocurrió un error en el servicio CancelarOrden',
+                                JSON.stringify(error, null, 1), 'error', {
+                                button: 'Cerrar'
+                              }).then(() => {
+                                conceptList.call(this);
+                              });
+                            });
+                          } else {
+                            currentConcept = (null);
+                          }
+                        });
+                        setTimeout(() => {
+                          if (list.height() >= 150) {
+                            list.css({
+                              display: 'block',
+                              maxHeight: '150px',
+                              overflowY: 'scroll',
+                              overflowX: 'hidden'
+                            });
+                          }
+                        }, 10);
+                      }).call(this);
+                    }
+                  }, (error) => {
+                    swal('Ocurrió un error en el servicio ConceptoProcesoSistema',
+                      JSON.stringify(error, null, 1), 'error', {
+                      button: 'Cerrar'
+                    });
+                  });
+                } else {
+                  swal('No se puede Cancelar', 'Porque el estado actual de la Orden no lo permite',
+                    'error', {
+                    button: 'Cerrar'
+                  });
+                }
+              }
+                // swal({
+                // title: 'Esta seguro que desea Cancelar la orden de servicio? ',
+                // text: "Luego no se podrá revertir el estado de la orden",
+                // type: 'warning',
+                // showCancelButton: true,
+                // confirmButtonColor: '#3085d6',
+                // cancelButtonColor: '#d33',
+                // cancelButtonText:'Salir',
+                // confirmButtonText: 'Confirmar'
+                // }).then((result) => {
+                //     if (result.value) {
+                //         console.log("elimino");
+                //         this.consulta.map((obj,ind)=>{
+                //     if(obj.id==value.item.id)
+                //         {
+                //             if(obj.estado=="Orden De Servicio Creada"||obj.estado=="Orden De Servicio Asignada")
+                //             {
+                //                 this.axios.get(urlservicios+"CancelarOrden/"+value.item._id)
+                //                     .then((response) => {
+                //                         console.log(response.data);
+                //                         if(response.data.message=="orden de servicio actualizada")
+                //                         {
+                //                             swal("Orden de servicio Cancelada!",'', "success");
+
+                //                         }
+                //                     })
+                //                 this.consulta.splice(ind,1)
+                //             }
+                //             else
+                //             {
+                //                 swal(
+                //                     "No se puede Eliminar",
+                //                     "Por que el estado actual de la Orden no lo permite",
+                //                     "error"
+                //                 );
+                //             }
+                //         }
+                //         })
+                //     }
+                //     else{
+                //         console.log("no elimino");
+                //     }
+                //     })
+            }
+            else{
+                console.log("hay cliente");
+                swal({
+                title: 'Esta seguro ?',
+                text: "Luego no se podra revertir el estado de la orden!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                cancelButtonText:'Cancelar',
+                confirmButtonText: 'Confirmar'
+                }).then((result) => {
+                    if (result.value) {
+                        console.log("elimino");
+                        this.consulta.map((obj,ind)=>{
+                    if(obj.id==value.item.id)
+                        {
+                            if(obj.estado=="Orden De Servicio Creada")
+                            {
+                                this.axios.get(urlservicios+"CancelarOrden/"+value.item._id)
+                                    .then((response) => {
+                                        console.log(response.data);
+                                        if(response.data.message=="orden de servicio actualizada")
+                                        {
+                                            this.consulta.splice(ind,1)
+                                            swal("Orden Eliminada!", "Orden de Servicio Cancelada!", "success");
+
+                                        }
+                                    })
+                                    .catch(function(error) {
+                                        var load = false;
+                                            setTimeout(() => {
+                                                bus.$emit("load", {
+                                                load
+                                                });
+                                            });
+                                            swal(
+                                                'Se presento un problema',
+                                                'Intente nuevamente, por favor',
+                                                'warning'
+                                                )
+                                    })
+
+                            }
+                            else
+                            {
+                                swal(
+                                    "No se puede Eliminar",
+                                    "Por que el estado actual de la Orden no lo permite",
+                                    "error"
+                                );
+                            }
+                        }
+                        })
+                    }
+                    else{
+                        console.log("no elimino");
+                    }
+                    })
+            }
+
+
+        },
+        /*
         cancelarOrden(value){
             console.log(value);
             var login = localStorage.getItem("storedData");
@@ -185,6 +421,7 @@ export default {
             
  
         },
+        */
         actualizar(inde){
             //$('#jose').removeClass('cards')
             var ocultar=false

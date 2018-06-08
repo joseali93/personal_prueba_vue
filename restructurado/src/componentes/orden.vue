@@ -13,13 +13,23 @@ DE LA ORDEN DE SERVICIO -->
                 <h3>Generación Orden de Servicio</h3>
                     
                 </header> 
-                <b-card class="cards">
+                <b-row>
+                   <b-col md="3" offset-md="10" class=" my-1">
+                  <b-btn class="rounded" variant="primary"   v-on:click="actualizar"
+                  v-b-popover.hover="'Continuar'" >Continuar<i class="fa fa-arrow-right"></i>
+                  </b-btn>
+              </b-col>
+                </b-row>
+    <b-card no-body class="">
+    <b-tabs  card>
+      <b-tab  title="Informacion de Recolección" >
+        <b-card  class="cards">
             
              <b-row>
                <b-form-group 
                     
                         label="Fecha y Hora de recolección"
-                        label-size="lg">
+                        label-size="">
                         <b-form-radio-group v-model="prueba"
                         
                                         :options="radios"
@@ -33,11 +43,7 @@ DE LA ORDEN DE SERVICIO -->
                  <h3 class="text-primary">Seleccione el Cliente</h3>
                  <b-form-input  type="date" v-model="fecha"></b-form-input>
               </b-col>
-                <b-col md="3" offset-md="10">
-                  <b-btn class="rounded" variant="primary"   v-on:click="actualizar"
-                  v-b-popover.hover="'Continuar'" >Continuar<i class="fa fa-arrow-right"></i>
-                  </b-btn>
-              </b-col>
+               
             </b-row>
             <b-row>
                 <b-col>
@@ -115,16 +121,19 @@ DE LA ORDEN DE SERVICIO -->
                     <b-form-group id="exampleInputGroup1"
                       class="text-primary"
                         label="Dirección ">
-                            <b-form-input id="direccion"
-                                size="lg"
+                            <b-form-input id="direccionGoogle"
+                                size=""
                                 type="text"
                                 v-model="remitente.direccion"
                                 required
-                                @keypress="localizar()"
-                                 @keyup.enter.native="localizar()"
+                               
                                 placeholder="Dirección"
                                 maxlength="100">
                             </b-form-input>
+                            <!--
+                              @keypress="localizar()"
+                                 @keyup.enter.native="localizar()"
+                              -->
                     </b-form-group>
                     </b-col>
                 </b-row>
@@ -133,8 +142,8 @@ DE LA ORDEN DE SERVICIO -->
                     <b-form-group id="exampleInputGroup2"
                     class="text-primary"
                         label="Contacto ">
-                            <b-form-input id="direccion"
-                                size="lg"
+                            <b-form-input id="nombre"
+                                size=""
                                 type="text"
                                 v-model="remitente.nombre"
                                 required
@@ -150,8 +159,8 @@ DE LA ORDEN DE SERVICIO -->
                     <b-form-group id="exampleInputGroup2"
                     class="text-primary"
                         label="Num Identificacion ">
-                            <b-form-input id="direccion"
-                                size="lg"
+                            <b-form-input id="identificacion"
+                                size=""
                                 type="text"
                                 v-model="remitente.numero_identificacion"
                                 required
@@ -168,7 +177,7 @@ DE LA ORDEN DE SERVICIO -->
                     class="text-primary"
                         label="Teléfono " >
                             <b-form-input id="telefono"
-                            size="lg"
+                            size=""
                                 type="text"
                                 
                                 v-model="remitente.telefono"
@@ -179,19 +188,33 @@ DE LA ORDEN DE SERVICIO -->
                     </b-form-group>
                     </b-col>
                 </b-row>
-                <b-row>
+                
+          </b-card>
+      </b-tab>
+      <b-tab title="Observaciones de Recolección">
+        <b-card class="cards">
+          <b-row>
                   <b-col>
+                    <b-form-group 
+                        class="text-primary"
+                        label="Observaciones para la Orden de Servicio"
+                        label-size="">
                     <b-form-textarea id="textarea1"
                         v-model="observaciones"
-                        placeholder="Ingrese las observaciones necesarias"
+                        placeholder="Digita las observaciones para tener en cuenta al momento de la recolección "
                         :rows="3"
                         :max-rows="6"
                         >
                     </b-form-textarea>
+                    </b-form-group>
                   </b-col>
                 </b-row>
         </b-card>
-        </b-container> 
+      </b-tab>
+    </b-tabs>
+  </b-card>
+          
+      </b-container> 
 
     </b-container>
 </template>
@@ -277,6 +300,54 @@ export default {
   },
 
   methods: {
+    initAutocomplete(){
+      var longi
+      var latit
+      var codpostal
+      //console.log(this.lati);
+       var input = document.getElementById('direccionGoogle');
+      // console.log(input);
+                var searchBox = new google.maps.places.SearchBox(input);
+                searchBox.addListener('places_changed', function() {
+                  input.value=input.value.split(',')[0]; 
+                    var places = searchBox.getPlaces();
+                    
+                    if(places.length == 0){
+                        return;
+                    }
+                    places.forEach(function(place){
+                        if(!place.geometry) {
+                            return;
+                        }
+                        console.log(place);
+                        console.log("----------------");
+                        latit=place.geometry.location.lat()
+                        longi=place.geometry.location.lng()
+                        
+                        //this.lati=place.geometry.location.lat()
+                        //this.longi=place.geometry.location.lng()
+                        //this.posta
+                        for (var i = 0; i < place.address_components.length; i++) {
+                        for (var j = 0; j < place.address_components[i].types.length; j++) {
+                            if (place.address_components[i].types[j] == "postal_code") {
+                            this.posta = place.address_components[i].long_name;
+
+                            }
+                        }
+                        }
+                        console.log("-----------");
+                        console.log(latit);
+                        console.log(longi);
+                        console.log(this.posta);
+                        this.lati=latit
+                        this.longi=longi
+
+                       // document.getElementById('lat').innerHTML = place.geometry.location.lat();
+                        //document.getElementById('lng').innerHTML = place.geometry.location.lng();
+                    }.bind(this));
+                }.bind(this));
+                //input.value=input.value.split(',')[0];
+    },
     cambio(){
       if(this.prueba=='second'){
             this.fecha=''
@@ -466,7 +537,7 @@ export default {
             });
             this.axios
               .get(
-                urlservicios + "CentrosPorCliente/" + this.selected_client._id
+                urlservicios+ "CentrosPorCliente/" + this.selected_client._id
               )
               .then(response => {
                 this.centros = response.data;
@@ -493,7 +564,7 @@ export default {
               });
             });
             this.axios
-              .get(urlservicios + "CentrosPorCliente/" + this.selected_client._id)
+              .get(urlservicios+ "CentrosPorCliente/" + this.selected_client._id)
               .then(response => {
                 this.centros = response.data;
 
@@ -544,7 +615,7 @@ export default {
             });
             this.axios
               .get(
-                urlservicios + "CentrosPorCliente/" + this.selected_client._id
+                urlservicios+ "CentrosPorCliente/" + this.selected_client._id
               )
               .then(response => {
                 this.centros = response.data;
@@ -571,7 +642,7 @@ export default {
            
             this.axios
               .get(
-                urlservicios + "CentrosPorCliente/" + this.selected_client._id
+                urlservicios+ "CentrosPorCliente/" + this.selected_client._id
               )
               .then(response => {
                 this.centros = response.data;
@@ -635,7 +706,7 @@ export default {
         });
         if (seleccion !== undefined) {
           this.axios
-            .get(urlservicios + "CentrosPorCliente/" + id_cliente)
+            .get(urlservicios+ "CentrosPorCliente/" + id_cliente)
             .then(response => {
               this.centros = response.data;
               this.centros.unshift(vacio);
@@ -677,7 +748,7 @@ export default {
           });
           if (seleccion !== undefined) {
             this.axios
-              .get(urlservicios + "CentrosPorCliente/" + seleccion.target.value)
+              .get(urlservicios+ "CentrosPorCliente/" + seleccion.target.value)
               .then(response => {
                 this.centros = response.data;
                 //this.centros.unshift(vacio);
@@ -830,7 +901,7 @@ export default {
         };
          console.log("creoooo");
          console.log(objetocrear);
-         this.axios.post(urlservicios + "CrearDestinatario", objetocrear)
+         this.axios.post(urlservicios+ "CrearDestinatario", objetocrear)
           .then(response => {
             var load = false;
             setTimeout(() => {
@@ -852,7 +923,7 @@ export default {
        }
        else{
          console.log("actualizo");
-         this.axios.post(urlservicios +"ActualizarDestinatario" +"/" +this.remitente._id,objetoremitente)
+         this.axios.post(urlservicios+"ActualizarDestinatario" +"/" +this.remitente._id,objetoremitente)
           .then(response => {
             var load = false;
             setTimeout(() => {
@@ -867,7 +938,7 @@ export default {
           })
        }
        /*
-      this.axios.post(urlservicios +"ActualizarDestinatario" +"/" +this.remitente._id,objetoremitente)
+      this.axios.post(urlservicios+"ActualizarDestinatario" +"/" +this.remitente._id,objetoremitente)
           .then(response => {
             var load = false;
             setTimeout(() => {
@@ -891,6 +962,7 @@ export default {
     }
   },
   created: function() {
+    
     var _this = this;
 
     // -------------------------------
@@ -910,7 +982,7 @@ export default {
 
       this.axios
         .get(
-          urlservicios +
+          urlservicios+
             "clientesOperador/" +
             test.id_OperadorLogistico._id +
             "/" +
@@ -1010,7 +1082,7 @@ export default {
       });
       this.axios
         .get(
-          urlservicios +
+          urlservicios+
             "clientesOperador/" +
             test.id_OperadorLogistico._id +
             "/" +
@@ -1073,6 +1145,9 @@ export default {
     this.nombreusu;
     bus.$emit("remitente");
   },
+  updated: function(){
+    this.initAutocomplete()
+  },
   beforeCreate: function() {
     var items;
     items = [
@@ -1099,6 +1174,25 @@ export default {
 .card-header{
     background-color: #ebeaea ;
     color: white;
+}
+*/
+.nav-tabs .nav-link{
+  
+  background-color: #ebeaea;
+  
+}
+/*
+.nav-tabs{
+  background-color: #ebeaea !important;
+}
+*/
+.card-header{
+      background-color: #4db35a !important;
+    color: white;
+}
+/*
+.card-header-tabs {
+  background-color: #ebeaea;
 }
 */
 .contenedorTotal {
