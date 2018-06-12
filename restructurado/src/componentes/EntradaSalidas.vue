@@ -4,36 +4,36 @@
         <b-breadcrumb :items="itemsbr" />
       </div>
       <b-container fluid class="contenedorInterno">
-        
+
       <b-card class="cards">
         <b-row class="my-1 ">
             <b-col class="float-right">
                 <b-btn class="float-right rounded"  variant="success" @click="MostrarModal()" >
-                    <i class="fa fa-plus-square-o" aria-hidden="true"></i> Adicionar Movilizados
+                    <i class="fa fa-plus-square-o" aria-hidden="true"></i> Movilizados
                 </b-btn>
             </b-col>
         </b-row>
         <b-row>
-            <h3 class="text-primary">Seleccione el Proceso Logistico</h3>
-            <b-form-select v-model="selected"  text-field="nombre" value-field="_id" 
+            <h3 class="text-primary">Proceso Logistico</h3>
+            <b-form-select v-model="selected"  text-field="nombre" value-field="_id"
             :options="procesosLog" class="mb-3" @input="procesoseleccionado">
             </b-form-select>
         </b-row>
-        <b-row class="my-1"> 
+        <b-row class="my-1">
         <template v-for="(data,indice) in inputs.campos">
-            <template v-if="data.type=='text'">   
-                    <label class=" text-primary">Ingrese {{ data.placeholder }}:</label>   
-                    <b-form-input 
+            <template v-if="data.type=='text'">
+                    <label class=" text-primary">{{ data.placeholder }}:</label>
+                    <b-form-input
                     :id="data.id"
                     :type="data.type"
                     :placeholder="data.placeholder"
                     @input="digitar(data)"
                     :state="data.estado"></b-form-input>
-    
+
             </template>
             <template v-if="data.type=='number'">
-                    <label class=" text-primary">Ingrese {{ data.placeholder }}:</label>
-                    <b-form-input 
+                    <label class=" text-primary">{{ data.placeholder }}:</label>
+                    <b-form-input
                     :id="data.id"
                     :type="data.type"
                     :placeholder="data.placeholder"
@@ -42,10 +42,10 @@
                     </b-form-input>
             </template>
             <template v-if="data.type=='select'">
-              
-                <h3 class=" text-primary">Seleccione el {{data.placeholder}}</h3>
-                
-                 <b-form-select :id="data.id"  :value="valores(indice,data)"  text-field="nombre" value-field="_id" 
+
+                <h3 class=" text-primary">{{data.placeholder}}</h3>
+
+                 <b-form-select :id="data.id"  :value="valores(indice,data)"  text-field="nombre" value-field="_id"
                  :options="opciones[indice]" @change="seleccionado(data)" class="mb-3"
                  :state="data.estado">
                 </b-form-select>
@@ -55,11 +55,11 @@
         <b-row v-show="proceSeleccionado.atencion_courier==true">
 
           <b-col>
-            <b-form-select v-model="curier" text-field="nombre" value-field="_id" :options="curiers2" class="mb-3" 
+            <b-form-select v-model="curier" text-field="nombre" value-field="_id" :options="curiers2" class="mb-3"
             :state="Scurier">
             </b-form-select>
           </b-col>
-            
+
         </b-row>
         <b-row class="my-1 text-primary">
             <b-col class="my-3">
@@ -82,8 +82,8 @@
         </b-row>
       </b-card>
       </b-container>
-        
-        
+
+
 
         <router-view></router-view>
         <!-- Modal Component -->
@@ -102,12 +102,12 @@
                         class="float-left"
                         type="number"
                         id="nmovilizado"
-                        placeholder="Ingrese N° Movilizado" @keyup.enter.native="adicionar(text1)"
-                        v-b-tooltip.hover title="Digite el N de Movilizado!"></b-form-input>
-                        
+                        placeholder="Número Movilizado" @keyup.enter.native="adicionar(text1)"
+                        v-b-tooltip.hover title="Número de Movilizado!"></b-form-input>
+
                     </b-col>
                 </b-row>
-               
+
                 <b-row class="my-1 text-primary">
                     <b-col class="my-3 ">
                       <h3 ></h3>
@@ -125,7 +125,7 @@
                 </b-row>
                 <b-row>
                     <b-col>
-                        <h3 class="text-primary">Listado de Movilizados:</h3> 
+                        <h3 class="text-primary">Listado de Movilizados:</h3>
                             <b-table striped hover :fields="fields" :items="itemsmovilizados"
                             :per-page="5" :current-page="currentPage">
                                 <template slot="elimnar" slot-scope="data">
@@ -146,7 +146,7 @@
                             <b-pagination size="md" :total-rows="itemsmovilizados.length"
                             v-model="currentPage" :per-page="5">
                             </b-pagination>
-                    </b-col>    
+                    </b-col>
                 </b-row>
             </b-container>
         </b-modal>
@@ -222,7 +222,7 @@ export default {
     };
   },
   methods: {
-    
+
     metodo(errores){
       for(var o=0;o< this.itemsmovilizados.length;o++){
         for(var x=0;x<errores.length;x++){
@@ -344,9 +344,9 @@ export default {
                 }
                 for(var x=0;x<llaves.length;x++){
                     if(eval('this.objeto.'+llaves[x])==''||eval('this.objeto.'+llaves[x])==null)
-                    {   
+                    {
                         this.inputs.campos[x].estado=false
-                        swal("Debe completarse", 
+                        swal("Debe completarse",
                         "Seleccione "+this.inputs.campos[x].placeholder,
                         "error",{
                               allowEnterKey: true,
@@ -361,8 +361,8 @@ export default {
                 {
                 }
             }
-            
-            var inforinputs=[]    
+
+            var inforinputs=[]
             if(this.objeto==undefined){
                 this.objeto=[]
             }else{
@@ -383,7 +383,7 @@ export default {
            }else{
              inforvaria=inforinputs
            }
-            
+
             var itemsmodal=this.itemsmovilizados
             var varios=[]
             var listMovilizados={
@@ -408,13 +408,13 @@ export default {
             }
             /*
             if(this.proceSeleccionado.atencion_courier==true){
-               
+
                 if(this.curier!="null"&&this.curier!=''&&this.curier!=null)
                 {
                    this.Scurier=null
                 }
                 else{
-                    swal("Debe completarse", 
+                    swal("Debe completarse",
                         "Seleccione un curier",
                         "error",{
                               allowEnterKey: true,
@@ -430,7 +430,7 @@ export default {
               }
             }
             else{
-                
+
             }
             var validacion
             */
@@ -440,7 +440,7 @@ export default {
                    this.Scurier=null
                 }
                 else{
-                    swal("Debe completarse", 
+                    swal("Debe completarse",
                         "Seleccione un curier",
                         "error",{
                               allowEnterKey: true,
@@ -476,7 +476,7 @@ export default {
               if (result.value) {
 
                       swal({
-                  title: 'digite observaciones al courier',
+                  title: 'Observaciones al courier',
                   input: 'text',
                   inputAttributes: {
                     autocapitalize: 'on'
@@ -485,7 +485,7 @@ export default {
                   confirmButtonText: 'Aceptar',
                   showLoaderOnConfirm: true,
                   preConfirm: (login) => {
-                    
+
                   },
                   allowOutsideClick: () => !swal.isLoading()
                 }).then((result) => {
@@ -560,7 +560,7 @@ export default {
                             load
                             });
                         });
-            
+
             this.axios
             .post(urlservicios+"GenerarManifiestoWeb", envio)
             .then(response => {
@@ -573,7 +573,7 @@ export default {
                             itemsmodal,inforvaria,nmanifiesto
                         })
                         }, )
-            
+
                     this.$router.push(this.processSelected.modal)
                 }
                 if(response.data.validacion==false){
@@ -602,8 +602,8 @@ export default {
                    for(var y=0;y<this.errores.length;y++){
                   conten_1=conten_1+'<li>'+this.errores[y].id+' - '+this.errores[y].NombreProceso+'</li>'
                   conten_2=conten_2+'<li>'+this.errores[y].NombreProceso+'</li>'
-                  
-                  
+
+
                 }
               total=titulo1_inicio+conten_1+titulo1_fin
                                     swal({
@@ -627,13 +627,13 @@ export default {
 
               });
 
-                }  
+                }
                 var load = false;
                         setTimeout(() => {
                             bus.$emit("load", {
                             load
                             });
-                        });  
+                        });
             })
             .catch(function(error) {
                         var load = false;
@@ -648,10 +648,10 @@ export default {
                             "warning"
                         );
             });
-            
+
           }
-            
-            
+
+
     },
     digitar(value) {
       setTimeout(
@@ -720,7 +720,7 @@ export default {
               this.selected
           )
           .then(response => {
-            
+
             this.mensaje = response.data;
             if (this.mensaje.message) {
               swal({
@@ -822,7 +822,7 @@ export default {
                 timer: 4000
               });
               }
-              
+
             }
             var load = false;
             setTimeout(() => {
@@ -908,7 +908,7 @@ export default {
       console.log(urlservicios+"CamposProcesoLogisticosOperadores/" +infologin.id_OperadorLogistico._id +"/" +this.selected);
       this.axios.get(urlservicios+"CamposProcesoLogisticosOperadores/" +infologin.id_OperadorLogistico._id +"/" +this.selected)
       .then(response => {
-         
+
           this.inputs = response.data;
           this.objeto = this.inputs.objeto;
           if (this.objeto == undefined || this.objeto == "undefined") {
@@ -951,8 +951,8 @@ export default {
                     })
                 }.bind(this),10)
 
-                
-                  
+
+
 
               }
             });
@@ -978,7 +978,7 @@ export default {
                             "warning"
                         );
                     });
-      
+
       for (var x = 0; x < this.procesosLog.length; x++) {
         if (this.procesosLog[x]._id == this.selected) {
           this.proceSeleccionado = this.procesosLog[x];
@@ -1017,7 +1017,7 @@ export default {
               });
             }
             else{
-              
+
              var load = true;
                         setTimeout(() => {
                             bus.$emit("load", {
@@ -1102,7 +1102,7 @@ export default {
           }
         }
       }
-      
+
     },
     generarManifiestoFinal(value, final){
        if(value.mensaje.respuesta=="true"){
@@ -1128,10 +1128,10 @@ export default {
                 }
                 for(var x=0;x<llaves.length;x++){
                     if(eval('this.objeto.'+llaves[x])==''||eval('this.objeto.'+llaves[x])==null)
-                    {   
+                    {
                         this.inputs.campos[x].estado=false
                         /*
-                        swal("Debe completarse", 
+                        swal("Debe completarse",
                         "Seleccione "+this.inputs.campos[x].placeholder,
                         "error",{
                               allowEnterKey: true,
@@ -1140,10 +1140,10 @@ export default {
                         bandera=true
                     }
                 }
-               
+
             }
-            
-            var inforinputs=[]    
+
+            var inforinputs=[]
             if(this.objeto==undefined){
                 this.objeto=[]
             }else{
@@ -1164,7 +1164,7 @@ export default {
            }else{
              inforvaria=inforinputs
            }
-            
+
             var itemsmodal=this.itemsmovilizados
             var varios=[]
             var listMovilizados={
@@ -1187,15 +1187,15 @@ export default {
                                      varios.push(listMovilizados)
                 }
             }
-            
+
             if(this.proceSeleccionado.atencion_courier==true){
-               
+
                 if(this.curier!="null"&&this.curier!=''&&this.curier!=null)
                 {
                    this.Scurier=null
                 }
                 else{
-                    swal("Debe completarse", 
+                    swal("Debe completarse",
                         "Seleccione un curier",
                         "error",{
                               allowEnterKey: true,
@@ -1215,7 +1215,7 @@ export default {
                             load
                             });
                         });
-            
+
             this.axios
             .post(urlservicios+"GenerarManifiestoWeb", envio)
             .then(response => {
@@ -1259,8 +1259,8 @@ export default {
                    for(var y=0;y<this.errores.length;y++){
                   conten_1=conten_1+'<li>'+this.errores[y].id+' - '+this.errores[y].NombreProceso+'</li>'
                   conten_2=conten_2+'<li>'+this.errores[y].NombreProceso+'</li>'
-                  
-                  
+
+
                 }
               total=titulo1_inicio+conten_1+titulo1_fin
                                     swal({
@@ -1284,13 +1284,13 @@ export default {
 
               });
 
-                }  
+                }
                 var load = false;
                         setTimeout(() => {
                             bus.$emit("load", {
                             load
                             });
-                        });  
+                        });
             })
             .catch(function(error) {
                         var load = false;
@@ -1458,7 +1458,7 @@ export default {
         }
       });
     }
-    
+
   },
   created: function(){
     var login = localStorage.getItem("storedData");
@@ -1484,8 +1484,8 @@ export default {
             });
             // this.socket.instance.disconnect(true);
           });
-      });   
- 
+      });
+
   }
 };
 </script>

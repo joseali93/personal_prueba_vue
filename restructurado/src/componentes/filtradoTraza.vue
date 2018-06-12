@@ -4,45 +4,45 @@
         <div class="breadPersonalizado">
             <b-breadcrumb :items="items" />
         </div>
-       
-        
+
+
         <b-container fluid class="contenedorInterno">
             <header class="content-heading" slot="header">
-                <h3>Consultar Trazabilidad</h3>                
+                <h3>Consultar Trazabilidad</h3>
             </header>
             <b-card class="cards" v-show="ocultartra">
-               
+
                  <b-row>
                         <b-col>
-                            <b-form-group 
+                            <b-form-group
                               class="text-primary"
                             label="Clientes">
                                 <!--
-                                <b-form-select v-model="selectedCL" id="clienteselect" v-bind:style="validatecampo" :options="clientes"  
+                                <b-form-select v-model="selectedCL" id="clienteselect" v-bind:style="validatecampo" :options="clientes"
                                 text-field="nombre" value-field="_id" @change.native="SelectCC" required
                                 :disabled="disabled_selectedCL" >
                                 </b-form-select>
                                 -->
-                                <v-select v-model="selectedCL" label="nombre" 
+                                <v-select v-model="selectedCL" label="nombre"
                                 v-bind:style="validatecampo"
                                 :disabled="disabled_selectedCL"
-                                placeholder="Seleccione el Cliente" id="clienteselect"
+                                placeholder="Cliente" id="clienteselect"
                                 :options="clientes" @input="clienteSelec()"></v-select>
                             </b-form-group>
                         </b-col>
                         <b-col>
-                            <b-form-group 
+                            <b-form-group
                               class="text-primary"
                             label="Centro de Costo">
                                 <!--
-                               <v-select v-model="selectedCC" label="nombre_concatenado" 
+                               <v-select v-model="selectedCC" label="nombre_concatenado"
                                 v-bind:style="validatecampo" :disabled="disable"
                                 placeholder="Seleccione el Centro de Costos" id="costoselect"
                                 :options="centros"></v-select>
                                 -->
-                                <v-select v-model="selectedCC" label="nombre_concatenado" 
+                                <v-select v-model="selectedCC" label="nombre_concatenado"
                                :disabled="disable"
-                                placeholder="Seleccione el Centro de Costos" id="costoselect"
+                                placeholder="Centro de Costos" id="costoselect"
                                 :options="centros"></v-select>
                             </b-form-group>
                         </b-col>
@@ -52,12 +52,12 @@
         <b-card class="cards"  v-show="ocultartra">
             <b-row>
                 <b-col>
-                    <b-form-group 
-                    
-                        label="Por Favor seleccione como desea filtrar:"
+                    <b-form-group
+
+                        label="Filtro:"
                         label-size="lg">
                         <b-form-radio-group v-model="prueba"
-                        
+
                                         :options="options"
                                         name="radiosSm"
 
@@ -65,7 +65,7 @@
                         </b-form-radio-group>
 
                     </b-form-group>
-                    
+
                 </b-col>
                 <b-col >
                     <b-btn active-class class="float-right rounded" @click="limpiarfiltro">
@@ -76,10 +76,10 @@
             </b-row>
             <b-row v-show="prueba=='first'">
                     <b-col>
-                        <b-form-group 
+                        <b-form-group
                           class="text-primary"
                           label="Rango de Fechas" >
-                            <date-picker disabled="true" id="fecha" width="430" 
+                            <date-picker disabled="true" id="fecha" width="430"
                              @keyup.enter.native="consultar()"
                             v-model="time1" placeholder="Rango de Fechas" range lang="en"
                              :shortcuts="shortcuts" :confirm="true"
@@ -125,17 +125,17 @@
         <br>
            <b-card class="cards"  v-show="mostrarcard">
                <!--
-                    <router-view :consulta="consulta" :centro="selectedCC" 
+                    <router-view :consulta="consulta" :centro="selectedCC"
                     :cliente="selectedCL">
                 -->
-                <router-view :consulta="consulta" :centro="selectedCC" 
+                <router-view :consulta="consulta" :centro="selectedCC"
                     :cliente="selectedCL"
-                    :envios="envio" 
+                    :envios="envio"
                     :procesosLogisticos="procesosLogisticos">
                 </router-view>
            </b-card>
         </b-container>
-        
+
     </b-container>
 </template>
 
@@ -421,7 +421,7 @@ export default {
               }
               centocosto=this.selectedCC._id
             }
-                
+
             this.axios.get(urlservicios+"/ObtenerOrdenesFiltradoDetalle/" +centocosto +"/" +this.selectedCL._id +"/null/null/null/" +
                   inicio +
                   "/" +
@@ -529,7 +529,7 @@ export default {
                       });
                     });
                   }
-                  
+
                   this.envio = envio;
                   this.load = false;
                   var load = false;
@@ -600,7 +600,7 @@ export default {
                       });
                     });
                   }
-                  
+
                   this.envio = envio;
                   this.load = false;
                   var load = false;
@@ -651,7 +651,7 @@ export default {
                       nmovilizado: this.nmovilizado
                     };
               centocosto=this.selectedCC._id
-              
+
             }
             console.log("MOVILIZADOO");
                       //ObtenerOrdenesFiltradoDetalle/:id_centro/:id_cliente/:consecutivo/:detalle/:referencia/:fecha_inicio/:fecha_final"
@@ -674,7 +674,7 @@ export default {
                       });
                     });
                   } else {
-                   
+
                     this.envio = envio;
                     this.load = false;
                     var load = false;
@@ -717,12 +717,12 @@ export default {
                             load
                         })
                         }, )
-            this.axios.get(urlservicios+"CentrosPorCliente/"+this.selectedCL)            
+            this.axios.get(urlservicios+"CentrosPorCliente/"+this.selectedCL)
             .then((response) => {
                 this.centros=response.data
                 this.centros.unshift(vacio)
 
-            
+
             var load=false
                     setTimeout(() => {
                         bus.$emit('load', {
@@ -741,7 +741,7 @@ export default {
                                 load
                             })
                             }, )
-                this.axios.get(urlservicios+"CentrosPorCliente/"+value.target.value)            
+                this.axios.get(urlservicios+"CentrosPorCliente/"+value.target.value)
                 //this.axios.get(urlservicios+"centros/")
                 .then((response) => {
                 this.centros=response.data
@@ -937,7 +937,7 @@ export default {
                 var load=false
                     setTimeout(() => {
                         bus.$emit('load', {
-                            load 
+                            load
                         })
                 }, )
                 this.SelectCC(id_cliente)

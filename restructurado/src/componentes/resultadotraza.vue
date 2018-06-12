@@ -1,11 +1,11 @@
 <template>
     <b-container fluid class=" w-100">
-       
+
                 <b-btn @click="volver" variant="success" class=" mb-3">
                     <i class="fa fa-chevron-left" aria-hidden="true"></i>
                     Volver
                 </b-btn>
-        
+
         <b-card  fluid    class="mb-2 borderC"
                >
                <div slot="header" class="w-100">
@@ -29,18 +29,18 @@
                     </b-col>
                     <b-col>
                         <p>{{otro.centro_costos.nombre}}</p>
-                        
+
                     </b-col>
                 </b-row>
         </b-card>
-        <b-card fluid    class="mb-2 borderC"  >    
+        <b-card fluid    class="mb-2 borderC"  >
              <div slot="header" class="w-100">
                     <strong class="float-left ">Información de Destinatario </strong>
                 </div>
                 <!--
                  <header class="content-heading" slot="header">
                     <h3>Información Destinatario</h3>
-                    
+
                 </header>
                 -->
                     <b-row>
@@ -60,7 +60,7 @@
                     </b-col>
                 </b-row>
         </b-card>
-   
+
             <b-card fluid    class="mb-2 borderC"   >
                 <div slot="header" class="w-100">
                     <strong class="float-left ">Detalle  Movilizado</strong>
@@ -103,13 +103,13 @@
 
             </b-col>
         </b-row>
-       
+
         <b-row v-for="(data,indice) in inputs" class="my-1">
-          
+
                         <b-col cols="5">
                             <label  class="col-sm col-form-label col-form-label-sm text-capitalize text-primary">{{data.nombre}}: </label>
                         </b-col>
-                    
+
                         <template >
                             <b-col cols="6">
                                 <b-form-input  :value="data.valores"
@@ -119,7 +119,7 @@
                             </b-col>
                         </template>
         </b-row>
-         
+
                 <hr>
                 <b-row>
                      <b-col>
@@ -132,24 +132,24 @@
                         -->
                     </b-col>
                 </b-row>
-                
+
                 <b-row>
                     <b-col>
                      <b-table striped hover :items="info.detalleslocal.infor.objetoUnidades" ></b-table>
 
                     </b-col>
                 </b-row>
-                
+
         </b-col>
             </b-card>
   <b-card fluid    class="mb-2 borderC"   >
                 <div slot="header" class="w-100">
                     <strong class="float-left ">Seguimiento del Detalle:</strong>
                 </div>
-       
+
         <b-row>
-            
-            
+
+
             <b-table :items="valorestabla" :fields="campostra" thead-class=text-center tbody-class=text-center>
                         <template slot="fecha" slot-scope="data" >
                             {{data.item.fecha |formatdate}}
@@ -159,24 +159,24 @@
                         </template>
                         <template slot="imagen" slot-scope="data">
                                 <i class="btn btn-success fa fa-picture-o" @click="imagenmodal(data.item)" v-show="data.item.imagenes.length>0">
-                                </i>   
+                                </i>
                         </template>
                          <template slot="recibido" slot-scope="data">
                             <i class="btn btn-success fa fa-address-card-o" @click="contactoModal(data.item)" v-show="data.item.datosRecibidos">
-                            
-                            </i> 
-                                
+
+                            </i>
+
                         </template>
                         <template slot="conceptos" slot-scope="data">
                             <i class="btn btn-success fa fa-info text-center" @click="conceptoModal(data.item)" v-show="data.item.conceptos">
-                            
-                            </i> 
-                                
+
+                            </i>
+
                         </template>
                     </b-table>
                     <!--
                     <b-table :items="valorestabla()" :fields="campostra" thead-class=text-center tbody-class=text-center>
-                        
+
                     </b-table>
                     -->
         </b-row>
@@ -198,7 +198,7 @@
                         <p>{{concepto}}</p>
                     </b-col>
                 </b-row>
-               
+
             </b-container>
             <div slot="modal-footer" class="w-100">
                  <b-btn size="sm" class="float-right " variant="danger" @click="closemodal">
@@ -259,7 +259,7 @@
                                  <b-form inline>
                                 <b-form-input v-model="emailT"
                                     type="email"
-                                    placeholder="Ingrese su email"
+                                    placeholder="Email"
                                     @input="validacorreoT" :state="estadoT"></b-form-input>
                                     <b-btn  active-class class="fa fa-arrow-right algo" @click="enviarcorreoT(imgmodal)" >
                                     </b-btn>
@@ -273,7 +273,7 @@
         </b-modal>
         <!-- Modal Component 2 imagenes modal  -->
         <b-modal id="modalimagenes" ref="ModalImagenesdetalle" title="Evidencia Digital"
-            data-toggle="modal" lazy> 
+            data-toggle="modal" lazy>
             <b-container>
                 <template v-for="(data,indice) in imgmodal.imagenes">
                     <b-card no-body class="mb-1">
@@ -307,7 +307,7 @@
                                  <b-form inline>
                                 <b-form-input v-model="email"
                                     type="email"
-                                    placeholder="Ingrese su email"
+                                    placeholder="Email"
                                     @input="validacorreo" :state="estado"></b-form-input>
                                     <b-btn  active-class class="fa fa-arrow-right algo" @click="enviarcorreo(data)" v-b-toggle="data.email">
                                     </b-btn>
@@ -316,7 +316,7 @@
                     </b-collapse>
                     </b-card>
                 </template>
-                
+
             </b-container>
             <div slot="modal-header" class="w-100">
                 <b-btn size="sm" class="float-left" variant="success" v-b-toggle.todo>
@@ -327,7 +327,7 @@
                                  <b-form inline>
                                 <b-form-input v-model="emailT"
                                     type="email"
-                                    placeholder="Ingrese su email"
+                                    placeholder="Email"
                                     @input="validacorreoT" :state="estadoT"></b-form-input>
                                     <b-btn  active-class class="fa fa-arrow-right algo" @click="enviarcorreoT(imgmodal)" >
                                     </b-btn>
@@ -336,13 +336,13 @@
                     </b-collapse>
             </div>
            <div slot="modal-footer" class="w-100">
-                
+
                 <b-btn size="sm" class="float-right" variant="danger" @click="closemodal">
                 Cerrar
                 </b-btn>
             </div>
         </b-modal>
-        
+
     </b-container>
 </template>
 
@@ -369,10 +369,10 @@ export default {
                   email:'',
                   emailT:'',
                   emailvalido: null,
-                  emailvalidoT: null,                  
+                  emailvalidoT: null,
                   estado:null,
                   estadoT:null,
-                  
+
             info: '',
             curier:{},
             otro:'',
@@ -383,7 +383,7 @@ export default {
                 { key: "imagen", label: "Imágenes" },
                 {key:"conceptos",label:"Concepto"},
                 {key:"recibido",label:"Recibido"}
-                
+
             ],
             imgmodal: {
                 fecha:'',
@@ -419,8 +419,8 @@ export default {
                 nombre=this.curieractual.nombre
                 this.curieractualFinal=this.curieractual.nombre+ ' ' +this.curieractual.apellido
             }
-            
-            
+
+
         },
         valorestabla(){
             var arreglos={}
@@ -442,7 +442,7 @@ export default {
                 if(this.info.trazabilidad[o].EsVisible==true){
                    prueba.push(this.info.trazabilidad[o])
                 }
-                
+
             }
             return prueba
             /*
@@ -467,7 +467,7 @@ export default {
                return(this.estadoT=null)
            }
            if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value))
-            {   
+            {
                 this.emailvalidoT=true
                 return (this.estadoT=true)
             }
@@ -555,13 +555,13 @@ export default {
                return(this.estado=null)
            }
            if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value))
-            {   
+            {
                 this.emailvalido=true
                 return (this.estado=true)
             }
                 this.emailvalido=false
                 return (this.estado=false)
-            
+
 
        },
         enviarcorreo(value){
@@ -596,7 +596,7 @@ export default {
                         ruta:value.ruta,
                         id:value.id
                     }]
-                    
+
                 }
                 this.axios.post(urlservicios+"EnviarCorreoImagen", objeto)
                 .then(response => {
@@ -646,7 +646,7 @@ export default {
             var ocultartra=true
             setTimeout(() => {
                 bus.$emit('ocultartra', {
-                    ocultartra 
+                    ocultartra
                 })
                 }, )
             this.$router.replace('/inicio/trazabilidad/listado')
@@ -659,7 +659,7 @@ export default {
         this.variableServidor=servicios
     },
     beforeCreate: function() {
-         
+
         bus.$on('resultado', function (userObject) {
         this.info=userObject.value
         this.otro=this.info

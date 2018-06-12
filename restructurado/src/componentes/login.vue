@@ -15,7 +15,7 @@
                   :state="estadoT"
                   type="text"
                   @input="ValidarCorreo"
-                  placeholder="Ingrese su Correo Electronico"></b-form-input>                
+                  placeholder="Correo Electronico"></b-form-input>
               </div>
               <div class="form-group">
                 <label for="login-password">Contraseña</label>
@@ -23,12 +23,12 @@
                   id="login-password"
                   type="password"
                   autocomplete
-                  
-                  placeholder="Ingrese su contraseña"
+
+                  placeholder="Contraseña"
                   :state="estadoClave"
                   @input="ValidarClave"
                   v-b-popover.hover="'Debe contener letras o numeros unicamente'" title="Estructura Valida"
-                  ></b-form-input> 
+                  ></b-form-input>
               </div>
               <a  v-on:click="autenticar" class="btn btn-lg btn-success btn-block"> <span class="boton">Ingresar</span> </a>
             </form>
@@ -57,35 +57,35 @@ export default {
         estado: '',
         msg: '',
       usuario: {
-        
+
       },
       }
   },
-  methods:{  
+  methods:{
     ValidarCorreo: function(value){
       if(value.length==0){
                return(this.estadoT=null)
            }
            if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value))
-            {   
+            {
                 return (this.estadoT=true)
             }
                 return (this.estadoT=false)
-        
-    }, 
+
+    },
      ValidarClave: function(value){
       if(value.length==0){
                return(this.estadoClave=null)
            }
            if (/^[-_\w\.]+$/i.test(value))
-            {   
+            {
                 return (this.estadoClave=true)
             }
                 return (this.estadoClave=false)
-        
-    }, 
+
+    },
       autenticar: function(){
-       
+
         if(this.password==''||this.correo=='' ||this.estadoT==false
           ||this.estadoClave==false){
             if(this.estadoClave==false){
@@ -109,11 +109,11 @@ export default {
               'error'
             )
             }
-            
+
           }else{
-            
+
             /*
-              Se realiza la validacion de los servicios 
+              Se realiza la validacion de los servicios
               usando un password y correo para el login
             */
             //urlservicios
@@ -128,7 +128,7 @@ export default {
             .then((response) => {
               console.log(response);
               console.log(response.status);
-              
+
               this.usuario=response.data.objeto;
               //console.log(' this.usuario: ',  this.usuario);
               this.estado= response.data.estado;
@@ -146,11 +146,11 @@ export default {
                   'Oops...',
                   ''+this.msg,
                   'error'
-                )     
+                )
                 this.correo ='',
-                this.password= ''    
+                this.password= ''
                  }
-                 
+
             }).catch(function(error){
                 console.log(JSON.stringify(error));
                 console.log(error.response);
@@ -162,22 +162,22 @@ export default {
                     'Oops...',
                     'Usuario o Contraseña incorrectos',
                     'warning'
-                  )     
+                  )
                 }
                 if(error.response.status==500)
                 {
                     console.log("no esta autorizado");
                 }
                 */
-                
+
               if(error.response){
                 // The request was made and the server responded with a status code
-                // that falls out of the range of 2xx    
+                // that falls out of the range of 2xx
                 swal(
                     'Oops...',
                     'El servidor nos dice  '+error.response.data,
                     'error'
-                  ) 
+                  )
               }else if(error.request){
                 // The request was made but no response was received
                 // `error.request` is an instance of XMLHttpRequest in the browser and an instance of
@@ -186,21 +186,21 @@ export default {
                     'Oops...',
                     'El servidor nos dice  '+error,
                     'error'
-                  ) 
+                  )
               }else{
                 swal(
                     'Oops...',
                     'El servidor nos dice  '+error.message,
                     'error'
-                  )                 
+                  )
               }
               //console.log("error de config"+JSON.stringify(error.config));
-                
+
             })
 
           }
       }
-  }, 
+  },
 
   }
 </script>
@@ -211,13 +211,13 @@ export default {
   margin-top: 100px;
   }
 
-   
+
 .icono {
       margin: auto;
     width: 60%;
     padding: 10px;
-    width:180px; 
-    line-height: 180px;     
+    width:180px;
+    line-height: 180px;
     text-align: center;
 }
 .form-actions {

@@ -1,21 +1,21 @@
 <template>
-    
+
     <b-container fluid class="contenedorTotal">
         <div >
             <b-breadcrumb :items="items" />
         </div>
 
-        <b-container fluid> 
+        <b-container fluid>
             <b-card class="cards"
             >
                 <b-card-body>
 
-                    <v-select class="mb-3" v-model="Cliente" label="nombre" placeholder="Digite el Cliente"
+                    <v-select class="mb-3" v-model="Cliente" label="nombre" placeholder="Cliente"
                                 :options="clientes" @input="SelectedClient()"></v-select>
                     <b-input-group class="mb-3">
                     <b-form-input v-model="Centro"
                     type="text"
-                    placeholder="Ingrese el nombre del Centro de Costo">
+                    placeholder="Nombre del Centro de Costo">
                     </b-form-input>
                     <b-btn variant="outline-success" v-show="Centro!=''&&Cliente!=null" @click="nuevocc">
                     <i class="fa fa-plus"></i>
@@ -38,7 +38,7 @@
             </b-card>
         </b-container>
         <!-- Modal Crear Centro logistico -->
-        <b-modal id="modalNuevo" ref="modalNuevo" size="lg" 
+        <b-modal id="modalNuevo" ref="modalNuevo" size="lg"
         no-close-on-backdrop
         no-close-on-esc>
             <b-container fluid>
@@ -50,16 +50,16 @@
                      @change="esPadre()">
                     Es Centro de Costo Padre
                 </b-form-checkbox>
-                <v-select 
+                <v-select
                     v-show="status=='not_accepted'"
-                    v-model="centrocostopadre" label="nombre" placeholder="Digite el Centro de Costo Padre"
+                    v-model="centrocostopadre" label="nombre" placeholder="Centro de Costo Padre"
 
-                    :options="CentrosPadre" ></v-select> 
+                    :options="CentrosPadre" ></v-select>
                 <b-form-group id="fieldsetHorizontal"
                         horizontal
                         :label-cols="4"
                         breakpoint="md"
-                        description="Digite nombre del Centro de Costo"
+                        description="Nombre del Centro de Costo"
                         label="Nombre"
                         label-for="nombreCentroC">
                             <b-form-input id="nombreCentroC" v-model="ModalNew.nombre"
@@ -71,7 +71,7 @@
                         horizontal
                         :label-cols="4"
                         breakpoint="md"
-                        description="Digite dirección del Centro de Costo"
+                        description="Dirección del Centro de Costo"
                         label="Dirección Centro de Costo"
                         label-for="direccionCC">
                             <b-form-input id="direccionCC" v-model="ModalNew.direccion"
@@ -83,7 +83,7 @@
                         horizontal
                         :label-cols="4"
                         breakpoint="md"
-                        description="Digite codigo Centro de Costo x Cliente"
+                        description="Codigo Centro de Costo x Cliente"
                         label="Codigo Centro de Costo   "
                         label-for="CCxCliente">
                             <b-form-input id="CCxCliente" v-model="ModalNew.CCxCliente"
@@ -95,18 +95,18 @@
                         horizontal
                         :label-cols="4"
                         breakpoint="md"
-                        description="Digite la descripción del Centro de Costo"
+                        description="Descripción del Centro de Costo"
                         label="Descripción"
                         label-for="descripcionCC">
                         <b-form-textarea id="descripcionCC"
                             v-model="ModalNew.descripcion"
-                            placeholder="Ingrese la descripción del centro de costo"
+                            placeholder="Descripción del centro de costo"
                             :rows="3"
                             :max-rows="6"
                             :state="statusdescripcion"
                             maxlength="400"
                             @input="ValidarTexto('descripcionCC','nuevo')">
-                        </b-form-textarea>      
+                        </b-form-textarea>
                 </b-form-group>
             </b-container>
             <div slot="modal-footer" class="w-100">
@@ -131,15 +131,15 @@
                      @change="esPadreEditar()">
                     Es Centro de Costo Padre
                 </b-form-checkbox>
-                <v-select 
+                <v-select
                     v-show="status_editar=='not_accepted'"
-                    v-model="centrocostopadreEditar" label="nombre" placeholder="Digite el Centro de Costo Padre"
-                    :options="CentrosPadreEditar" ></v-select> 
+                    v-model="centrocostopadreEditar" label="nombre" placeholder="Centro de Costo Padre"
+                    :options="CentrosPadreEditar" ></v-select>
             <b-form-group id="fieldsetHorizontal"
                     horizontal
                     :label-cols="4"
                     breakpoint="md"
-                    description="Digite nombre del Centro de Costo"
+                    description="Nombre del Centro de Costo"
                     label="Nombre"
                     label-for="nombreCentroCED">
                         <b-form-input id="nombreCentroCED" v-model="ModalEdit.nombre"
@@ -151,7 +151,7 @@
                     horizontal
                     :label-cols="4"
                     breakpoint="md"
-                    description="Digite dirección del Centro de Costo"
+                    description="Dirección del Centro de Costo"
                     label="Dirección Centro de Costo"
                     label-for="direccionCCED">
                         <b-form-input id="direccionCCED" v-model="ModalEdit.direccion"
@@ -163,7 +163,7 @@
                         horizontal
                         :label-cols="4"
                         breakpoint="md"
-                        description="Digite codigo Centro de Costo x Cliente"
+                        description="Codigo Centro de Costo x Cliente"
                         label="Codigo Centro de Costo   "
                         label-for="direccionCC">
                             <b-form-input id="CCxCliente" v-model="ModalEdit.codigo_cc"
@@ -175,18 +175,18 @@
                     horizontal
                     :label-cols="4"
                     breakpoint="md"
-                    description="Digite la descripción del Centro de Costo"
+                    description="Descripción del Centro de Costo"
                     label="Descripción"
                     label-for="descripcionCCED">
                     <b-form-textarea id="descripcionCCED"
                         v-model="ModalEdit.descripcion"
                         :state="statusdescripcion"
-                        placeholder="Digite la descripción del Centro de Costo"
+                        placeholder="Descripción del Centro de Costo"
                         :rows="3"
                         :max-rows="6"
                         maxlength="400"
                         @input="ValidarTexto('descripcionCCED','editar')">
-                    </b-form-textarea>      
+                    </b-form-textarea>
             </b-form-group>
             </b-container>
             <div slot="modal-footer" class="w-100">
@@ -251,7 +251,7 @@ export default {
         statusnombre:null,
         statusdireccion:null,
         statusdescripcion:null
-    }    
+    }
     },
     methods:{
         esPadreEditar(){
@@ -261,9 +261,9 @@ export default {
                 this.axios.get(urlservicios+"CentrosPorClientePadre/"+this.Cliente._id)
                 .then((response) => {
                     console.log(response);
-                    this.CentrosPadreEditar=response.data  
+                    this.CentrosPadreEditar=response.data
                 })
-            }  
+            }
         },
         esPadre(){
             console.log(this.status);
@@ -271,7 +271,7 @@ export default {
                 this.axios.get(urlservicios+"CentrosPorClientePadre/"+this.Cliente._id)
                 .then((response) => {
                     console.log(response);
-                    this.CentrosPadre=response.data  
+                    this.CentrosPadre=response.data
                 })
             }
         },
@@ -279,13 +279,13 @@ export default {
             var key,tecla,tecla_especial,letras,especiales
             var e = document.getElementById(eval('id')).value;
             ////console.log(id);
-           
+
             if(accion=='nuevo')
             {
                     if(id=='direccionCC')
                 {
                     if(e.match(/^[0-9a-zA-Z\s\#\-]+$/)){
-                        
+
                         if(e.length>=100){
                             this.statusdireccion=false
                         }
@@ -316,7 +316,7 @@ export default {
                             this.statusnombre=null
                         }
                     }
-                
+
                     if(id=='descripcionCC')
                     {
                         if(e.length>400){
@@ -332,7 +332,7 @@ export default {
                     {
                         this.statusnombre=false
                     }
-                
+
                     if(id=='descripcionCC')
                     {
                         this.statusdescripcion=false
@@ -400,8 +400,8 @@ export default {
                 }
 
             }
-            
-            
+
+
       },
       nuevocc(){
         console.log("entro a nuevo cc");
@@ -468,7 +468,7 @@ export default {
                 direccion:this.ModalNew.direccion,
                 nombre_concatenado:this.centrocostopadre.nombre+' - '+this.ModalNew.CCxCliente+' - '+this.ModalNew.nombre
             }
-            
+
         }
         if(this.status=='accepted'){
             console.log("sera papa");
@@ -482,9 +482,9 @@ export default {
                 nombre_concatenado:this.ModalNew.nombre
             }
         }
-         
+
         console.log(objeto);
-        
+
         this.axios.post(urlservicios+"CreacionCentrosCostos/",objeto)
                 .then((response) => {
                     console.log(response);
@@ -504,10 +504,10 @@ export default {
                         timer: 1000,
                         type:'error'})
                     }
-                    
+
                 })
-                
-        
+
+
        //this.$refs.modalNuevo.hide()
         }
       },
@@ -592,9 +592,9 @@ export default {
 
                 }
                 }
-                 
+
                 console.log(objeto);
-                
+
                 console.log(urlservicios+"ActualizarCentroCostos/"+this.ModalEdit._id);
                 this.axios.post(urlservicios+"ActualizarCentroCostos/"+this.ModalEdit._id,objeto)
                         .then((response) => {
@@ -617,10 +617,10 @@ export default {
                                 type:'error'})
                             }
                         })
-                    
+
                 //this.$refs.modalEditar.hide()
             }
-       
+
 
       },
       editar(value){
@@ -641,7 +641,7 @@ export default {
             this.axios.get(urlservicios+"CentrosPorClientePadre/"+this.Cliente._id)
                 .then((response) => {
                     //console.log(response);
-                    this.CentrosPadreEditar=response.data  
+                    this.CentrosPadreEditar=response.data
                     this.CentrosPadreEditar.forEach(element => {
                         //console.log(element);
                         if(this.ModalEdit.id_padre==element._id){
@@ -652,20 +652,20 @@ export default {
                 })
             this.$refs.modalEditar.show()
         }
-        
+
       },
       SelectedClient(){
         if(this.Cliente==null||this.Cliente=='null'||this.Cliente==''){
             this.CentrosTabla=[]
-            
+
         }
         else{
             this.axios.get(urlservicios+"CentrosTodosPorCliente/"+this.Cliente._id)
                 .then((response) => {
-                    this.CentrosTabla=response.data  
+                    this.CentrosTabla=response.data
                 })
-        }   
-        /*  
+        }
+        /*
         if(this.Cliente==null)
         {
         console.log("no hago peticion");
@@ -675,10 +675,10 @@ export default {
         {
         this.axios.get(urlservicios+"CentrosPorCliente/"+this.Cliente)
                     .then((response) => {
-                        this.CentrosTabla=response.data  
+                        this.CentrosTabla=response.data
                     })
         }
-        */ 
+        */
         }
     },
     created: function(){
