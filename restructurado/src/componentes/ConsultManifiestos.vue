@@ -17,28 +17,28 @@
                     <b-col>
                         <b-btn class="float-right rounded" variant="success" @click="limpiar">
                             <i class="fa fa-eraser"></i>
-                            
+
                         </b-btn>
                     </b-col>
                 </b-row>
                 <b-row>
                     <b-col>
-                        <b-form-group class="text-primary" label="Numero de Manifiesto" >
+                        <b-form-group class="text-primary" label="Número de Manifiesto" >
                             <b-form-input v-model="nmanifiesto"
                             :state="nmanifiestoestado"
                             type="number"
-                            placeholder="Ingrese el numero de Manifiesto"
+                            placeholder="Número manifiesto"
                             v-on:keyup.enter.native="consultar()"></b-form-input>
                         </b-form-group>
                     </b-col>
                 </b-row>
                 <b-row>
                     <b-col>
-                        <b-form-group 
+                        <b-form-group
                         class="text-primary"
-                        label="Seleccione un Proceso Logistico">
-                            <b-form-select v-model="procelogistica"  text-field="nombre" 
-                            :state="procelogisticaestado" value-field="_id" 
+                        label="Proceso Logístico">
+                            <b-form-select v-model="procelogistica"  text-field="nombre"
+                            :state="procelogisticaestado" value-field="_id"
                             :options="procesosLog" @input="procesoseleccionado">
                             </b-form-select>
                         </b-form-group>
@@ -46,8 +46,8 @@
                 </b-row>
                 <b-row>
                     <b-col>
-                    
-                            <b-form-group 
+
+                            <b-form-group
                             class="text-primary"
                             label="Rango de Fechas" c>
                                 <date-picker disabled="true" id="fecha" width="500" v-model="time1" placeholder="Rango de Fechas" range lang="en"></date-picker>
@@ -67,9 +67,9 @@
             <b-card class="cards">
                 <router-view :consulta="consulta"></router-view>
             </b-card>
-            
+
         </b-container>
-        
+
     </b-container>
 </template>
 
@@ -150,13 +150,13 @@ export default {
                 var load=true
                     setTimeout(() => {
                         bus.$emit('load', {
-                            load 
+                            load
                         })
                         }, )
                 console.log(urlservicios+"ConsultaManifiestos/"+nmanifiesto+'/'+idproce+'/'+fecha[0]+'/'+fecha[1]);
                 this.axios.get(urlservicios+"ConsultaManifiestos/"+nmanifiesto+'/'+idproce+'/'+fecha[0]+'/'+fecha[1])
                         .then((response) => {
-                            
+
                              var load=false
                             setTimeout(() => {
                                 bus.$emit('load', {
@@ -184,10 +184,10 @@ export default {
                             "warning"
                         );
                     });
-                
+
             }
-            
-            
+
+
         },
         limpiar(){
             console.log("entro a limpiar");
@@ -218,7 +218,7 @@ export default {
         var load=true
                     setTimeout(() => {
                         bus.$emit('load', {
-                            load 
+                            load
                         })
                 }, )
         this.axios
@@ -230,7 +230,7 @@ export default {
             var load=false
                     setTimeout(() => {
                         bus.$emit('load', {
-                            load 
+                            load
                         })
                 }, )
             this.procesosLog = response.data;
@@ -242,7 +242,7 @@ export default {
                     var load=false
                     setTimeout(() => {
                         bus.$emit('load', {
-                            load 
+                            load
                         })
                 }, )
                     //onsole.log(JSON.stringify(error));
@@ -258,7 +258,7 @@ export default {
                         confirmButtonText: 'Ok, Entiendo'
                         }).then((result) => {
                         if (result.value) {
-                            
+
                             swal(
                             'Se Redireccionara a la pagina de inicio',
                             'Buen Rato',
@@ -267,10 +267,10 @@ export default {
                             _this.$router.replace('/inicio')
                         }
                         })
-                        
+
                     }
             })
-        
+
     }
 
 }

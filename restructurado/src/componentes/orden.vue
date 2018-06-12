@@ -1,18 +1,18 @@
 <template>
-<!-- SE PERMITE LA SELECCION DE LOS CLIENTE Y CENTRO DE COSTO QUE CORRESPONDA PARA LA REALIZACION 
+<!-- SE PERMITE LA SELECCION DE LOS CLIENTE Y CENTRO DE COSTO QUE CORRESPONDA PARA LA REALIZACION
 DE LA ORDEN DE SERVICIO -->
 
     <b-container fluid class="contenedorTotal">
       <div class="breadPersonalizado">
          <b-breadcrumb :items="items" />
       </div>
-       
+
 
       <b-container fluid class="contenedorInterno">
                 <header class="content-heading" slot="header">
                 <h3>Generación Orden de Servicio</h3>
-                    
-                </header> 
+
+                </header>
                 <b-row>
                   <b-col md="3" offset-md="10" class=" my-1">
                     <b-btn class="rounded" variant="primary"   v-on:click="actualizar"
@@ -23,7 +23,7 @@ DE LA ORDEN DE SERVICIO -->
     <b-card>
         <b-card class="cards" >
            <b-row>
-               <b-form-group 
+               <b-form-group
                       class=" text-primary"
                         label="Fecha y Hora de recolección"
                         label-size="">
@@ -40,21 +40,21 @@ DE LA ORDEN DE SERVICIO -->
                  <h3 class="text-primary"> Fecha </h3>
                  <b-form-input  type="date" v-model="fecha"></b-form-input>
               </b-col>
-               
+
             </b-row>
             <b-row>
                 <b-col>
                     <h3 class="text-primary">Cliente</h3>
                     <!--
-                    <b-form-select v-model="selected_client" class="mb-3"  
+                    <b-form-select v-model="selected_client" class="mb-3"
                     :options="clientes" text-field="nombre" value-field="_id" @change.native="ClientesSelect"
-                    :disabled="disable_selected_client" >  
+                    :disabled="disable_selected_client" >
                     </b-form-select>
                     -->
                      <v-select v-model="selected_client" label="nombre" placeholder="Cliente"
                       :options="clientes" @input="clienteSeleccionado()"
                        :disabled="disable_selected_client" ></v-select>
-                      
+
                 </b-col>
                 <b-col>
                     <h3 class="text-primary">Centro de Costos</h3>
@@ -65,22 +65,22 @@ DE LA ORDEN DE SERVICIO -->
                      @change.native="centrosseleccionado" :disabled="habilitar" v-else >
                     </b-form-select>
 
-                    <v-select v-model="selected_center" label="nombre" 
-                    placeholder="Seleccione el Centro de Costo" :options="centros" 
+                    <v-select v-model="selected_center" label="nombre"
+                    placeholder="Seleccione el Centro de Costo" :options="centros"
                     @input="centroSeleccionado()" :disabled="habilitar"
                       ></v-select>
                     -->
-                    <v-select v-model="selected_center" label="nombre_concatenado" 
-                    placeholder=" Centro de Costo" :options="centros" 
+                    <v-select v-model="selected_center" label="nombre_concatenado"
+                    placeholder=" Centro de Costo" :options="centros"
                     @input="centroSeleccionado()" :disabled="habilitar"
                       ></v-select>
                 </b-col>
-                
+
             </b-row>
         </b-card>
         <b-card  class="cards" style="top: 34px;">
-            
-            
+
+
             <b-row >
                 <b-col class=" my-2">
                     <h3 class="text-primary">Remitente</h3>
@@ -90,15 +90,15 @@ DE LA ORDEN DE SERVICIO -->
                        :disabled="disable_selected_client" ></v-select>
 
 
-                      v-model="remitente" 
-                    
+                      v-model="remitente"
+
                     -->
                      <v-select label="nombre" :filterable="false" v-model=remitente
-                     placeholder=" Remitente " :options="optionsdestinatarios" 
+                     placeholder=" Remitente " :options="optionsdestinatarios"
                       @input="updateOption"
                       @search="onSearch">
                       <template slot="no-options" >
-                        Digite el nombre del remitente..
+                        Nombre del remitente..
                       </template>
                       <template slot="option" slot-scope="option">
                         <div class="d-center">
@@ -113,7 +113,7 @@ DE LA ORDEN DE SERVICIO -->
                         no se encontro nada.
                       </template>
                       </template>
-                      
+
                     </v-select>
                 </b-col>
             </b-row>
@@ -185,7 +185,7 @@ DE LA ORDEN DE SERVICIO -->
                             <b-form-input id="telefono"
                             size=""
                                 type="text"
-                                
+
                                 v-model="remit.telefono"
                                 required
                                 placeholder="Teléfono"
@@ -194,15 +194,15 @@ DE LA ORDEN DE SERVICIO -->
                     </b-form-group>
                     </b-col>
                 </b-row>
-                
-          
-          
+
+
+
         </b-card>
         <!--
         <b-card class="cards">
           <b-row>
                   <b-col>
-                    <b-form-group 
+                    <b-form-group
                         class="text-primary"
                         label="Observaciones para la Orden de Servicio"
                         label-size="">
@@ -219,8 +219,8 @@ DE LA ORDEN DE SERVICIO -->
         </b-card>
         -->
   </b-card>
-          
-      </b-container> 
+
+      </b-container>
 
     </b-container>
 </template>
@@ -239,7 +239,7 @@ import axios from "axios";
 export default {
   components: {
     Preload,
-    
+
   },
   watch: {
     clientprueba(newValue, oldValue) {
@@ -247,7 +247,7 @@ export default {
     }
   },
   data() {
-    
+
     return {
       prueba:'first',
       fecha:'',
@@ -277,7 +277,7 @@ export default {
       radios: [
         { text: 'Hoy, cualquier horario', value: 'first' },
         { text: 'Programar Recolección', value: 'second' }
-      
+
       ],
       items: [
         {
@@ -309,7 +309,7 @@ export default {
   },
 
   methods: {
-    
+
     initAutocomplete(){
       //console.log("entro");
       var longi
@@ -318,9 +318,9 @@ export default {
        var input = document.getElementById('direccionGoogle');
                 var searchBox = new google.maps.places.SearchBox(input);
                 searchBox.addListener('places_changed', function() {
-                  input.value=input.value.split(',')[0]; 
+                  input.value=input.value.split(',')[0];
                     var places = searchBox.getPlaces();
-                    
+
                     if(places.length == 0){
                         return;
                     }
@@ -330,7 +330,7 @@ export default {
                         }
                         latit=place.geometry.location.lat()
                         longi=place.geometry.location.lng()
-                        
+
                         //this.lati=place.geometry.location.lat()
                         //this.longi=place.geometry.location.lng()
                         //this.posta
@@ -355,7 +355,7 @@ export default {
       if(this.prueba=='second'){
             this.fecha=''
       }
-  
+
     },
     updateOption(){
       console.log("entro a update");
@@ -387,16 +387,16 @@ export default {
             this.remit.numero_identificacion=''
             this.remit.telefono=''
           }
-        
+
                     //  this.remitente=Object.assign({}, this.remitente);
-                    
+
         }
         else{
           console.log("selecciono");
           console.log("..................");
           console.log(this.remitente);
           if(this.remitente==null||this.remitente=='null'){
-            this.remit.nombre=''  
+            this.remit.nombre=''
             this.remit.direccion=''
             this.remit.numero_identificacion=''
             this.remit.telefono=''
@@ -427,10 +427,10 @@ export default {
             }
           });
           var resultados = results[0].geometry.location,
-          
+
             resultados_lat = resultados.lat(),
             resultados_long = resultados.lng();
-          
+
           longi=resultados_long
           latit=resultados_lat
           //codpostal=results[0].address_components[7].long_name
@@ -461,9 +461,9 @@ export default {
 
         //loading(true);
       this.search(search, this);
-      
+
     },
-    
+
     search(search){
       var remi = localStorage.getItem("remitente");
         var remijson = JSON.parse(remi);
@@ -487,13 +487,13 @@ export default {
               this.remitente.nombre=search
             }
             else{
-              this.optionsdestinatarios=response.data.destinatarios 
+              this.optionsdestinatarios=response.data.destinatarios
             }
             //this.optionsdestinatarios=response.data.destinatarios
                     //loading(false);
 
           })
-      
+
           }.bind(this), 345);
         }else{
           //this.remitente=remijson.nombre
@@ -507,7 +507,7 @@ export default {
 
           })
           */
-          
+
           this.axios.get(urlservicios+`/obtenerDestinatarioNombre/${escape(search)}`)
           .then(response => {
             if(response.data.destinatarios.length==0)
@@ -525,17 +525,17 @@ export default {
                 this.remit=element
               }
             });            }
-           
+
             //this.remit=this.optionsdestinatarios[0]
                     //loading(false);
 
           })
-          
+
             }.bind(this), 345);
 
         }
-       
-      
+
+
     },
 
     centroSeleccionado() {
@@ -665,7 +665,7 @@ export default {
                 load
               });
             });
-           
+
             this.axios
               .get(
                 urlservicios+ "CentrosPorCliente/" + this.selected_client._id
@@ -707,7 +707,7 @@ export default {
 
     ClientesSelect(seleccion) {
       /*
-                FUNCION DEL CUAL OBTENEMOS EL CLIENTE QUE FUE SELECCIONADO 
+                FUNCION DEL CUAL OBTENEMOS EL CLIENTE QUE FUE SELECCIONADO
             */
 
       if (this.disable_selected_client == true) {
@@ -788,14 +788,14 @@ export default {
                   });
                 });
               }).catch(function(error){
-                  
+
               })
           }
         }
       }
     },
     actualizar: function() {
-     
+
       var load = true;
       setTimeout(() => {
         bus.$emit("load", {
@@ -825,11 +825,11 @@ export default {
           if(this.fecha==''){
              swal("Cuidado", "Se deben completar la fecha de recolección de la orden", "warning");
           }
-          
-            
+
+
         }
         else{
-         
+
           var load = false;
           setTimeout(() => {
             bus.$emit("load", {
@@ -860,7 +860,7 @@ export default {
                     SE CREA UN LOCALSTORAGE EL CUAL PERMITE LA OBTENER LO QUE FUE SELECCIONADO PREVIAMENTE
                 */
 
-      /*  
+      /*
       var observacionesOrden={
         observacion:this.observaciones
       }
@@ -980,7 +980,7 @@ export default {
     }
   },
   created: function() {
-    
+
     var _this = this;
 
     // -------------------------------
@@ -1010,7 +1010,7 @@ export default {
           this.clientes = response.data;
           var orden = localStorage.getItem("orden");
           var ordenjson = JSON.parse(orden);
-          
+
           if (orden) {
             this.selected_cliente = ordenjson.selected_client;
             this.selected_centro = ordenjson.selected_center;
@@ -1196,9 +1196,9 @@ export default {
 */
 
 .nav-tabs .nav-link{
-  
+
   background-color: #ebeaea;
-  
+
 }
 /*
 .nav-tabs{

@@ -18,16 +18,16 @@
                     </template>
                     <template slot="productoslocal" slot-scope="data" >
                         {{data.item.productoslocal.nombre}}
-                    </template> 
+                    </template>
                     <template slot="servicioslocal" slot-scope="data">
                         {{data.item.servicioslocal.nombre}}
-                    </template> 
+                    </template>
                     <template slot="imagenes" slot-scope="data" >
                         <i class="btn btn-success fa fa-picture-o" @click="image(data.item)" v-show="data.item.trazabilidad[0].EsCierre=='true'"></i>
-                    </template> 
+                    </template>
                     <template slot="detalles" slot-scope="data">
                         <i class="btn btn-success fa fa-info" @click="actualizar(data.item)"></i>
-                    </template> 
+                    </template>
                 </b-table>
                 <b-pagination size="md" :total-rows="consulta.length" v-model="currentPage" :per-page="5">
                 </b-pagination>
@@ -39,7 +39,7 @@
                 </b-button>
             </b-row>
         <!-- the modal -->
-        <b-modal id="myModal" size="lg"  ref="myModalRef" lazy>      
+        <b-modal id="myModal" size="lg"  ref="myModalRef" lazy>
             <b-container>
                 <b-row>
                     <b-col cols="6">
@@ -66,22 +66,22 @@
                     <b-col >
                         {{consultaactualizar.consec}}
                     </b-col>
-                </b-row>     
+                </b-row>
                 <b-row>
                     <b-col cols="6" >
                        <h3>Numero de Movilizado :</h3>
                     </b-col>
                     <b-col >
                         {{consultaactualizar.id}}
-                    </b-col>           
-                </b-row>       
+                    </b-col>
+                </b-row>
                 <b-row>
                     <b-col cols="6" >
                        <h3>Producto :</h3>
                     </b-col>
                     <b-col >
                         {{consultaactualizar.productoslocal.nombre}}
-                    </b-col>               
+                    </b-col>
                 </b-row>
                 <b-row>
                     <b-col cols="6" >
@@ -89,7 +89,7 @@
                     </b-col>
                     <b-col >
                         {{consultaactualizar.servicioslocal.nombre}}
-                    </b-col>              
+                    </b-col>
                 </b-row>
                 <b-row>
                     <b-col cols="6" >
@@ -126,7 +126,7 @@
                         </template>
                         <template slot="imagen" slot-scope="data">
                                 <i class="btn btn-success fa fa-picture-o" @click="imagenmodal(data.item)" v-show="data.item.imagenes.length>0">
-                                </i>   
+                                </i>
                         </template>
                     </b-table>
                 </b-row>
@@ -156,7 +156,7 @@
                                  <b-form inline>
                                 <b-form-input v-model="emailT"
                                     type="email"
-                                    placeholder="Ingrese su email"
+                                    placeholder="Email"
                                     @input="validacorreoT" :state="estadoT"></b-form-input>
                                     <b-btn  active-class class="fa fa-envelope-o algo" @click="enviarcorreoT(modalima)" >
                                     </b-btn>
@@ -165,8 +165,8 @@
                     </b-collapse>
             </div>
             <div slot="modal-footer" class="w-100">
-                
-                
+
+
                 <b-btn size="sm" class="float-right" variant="primary" @click="closemodal">
                 Close
                 </b-btn>
@@ -209,7 +209,7 @@
                                  <b-form inline>
                                 <b-form-input v-model="email"
                                     type="email"
-                                    placeholder="Ingrese su email"
+                                    placeholder="Email"
                                     @input="validacorreo" :state="estado"></b-form-input>
                                     <b-btn  active-class class="fa fa-arrow-right algo" @click="enviarcorreo(data)"  v-b-toggle="data.email">
                                     </b-btn>
@@ -234,32 +234,32 @@
                                  <b-form inline>
                                 <b-form-input v-model="emailT"
                                     type="email"
-                                    placeholder="Ingrese su email"
+                                    placeholder="Email"
                                     @input="validacorreoT" :state="estadoT"></b-form-input>
                                     <b-btn  active-class class="fa fa-arrow-right algo" @click="enviarcorreoT(modalima)" >
                                     </b-btn>
                                  </b-form>
                             </b-card>
                     </b-collapse>
-            </div> 
+            </div>
             <div slot="modal-footer" class="w-100">
-                
+
                 <!--<b-btn size="sm" class="float-left" variant="primary" v-b-toggle.todo>
                 Enviar todas
                 </b-btn>-->
-                
+
                 <b-btn size="sm" class="float-right" variant="danger" @click="closemodal">
                 Cerrar
                 </b-btn>
             </div>
         </b-modal>
-        <!-- Modal Component 1 imagen modal 
+        <!-- Modal Component 1 imagen modal
         <b-modal id="modalimagen" ref="ModalImagunidetalle" title="Evidencia Digital">
             <b-container>
                 <b-img :src="imgmodal.imagenes[0].url" fluid alt="Fluid image" />
             </b-container>
         </b-modal>
-        <!-- Modal Component 2 imagenes modal 
+        <!-- Modal Component 2 imagenes modal
         <b-modal id="modalimagenes" ref="ModalImagenesdetalle" title="Evidencia Digital" lazy>
             <b-container>
                 <template v-for="(data,indice) in imgmodal.imagenes">
@@ -289,7 +289,7 @@
                             </p>
                             </b-card-body>
                         </b-collapse>
-                        
+
                     </b-card>
                 </template>
             </b-container>
@@ -324,15 +324,15 @@ export default {
     methods:{
         funcionimagen(){
             //console.log(this.modalima.trazabilidad[0].imagenes[0]);
-            if(this.modalima.trazabilidad[0].imagenes[0]==null|| 
+            if(this.modalima.trazabilidad[0].imagenes[0]==null||
             this.modalima.trazabilidad[0].imagenes[0]==undefined||
-            this.modalima.trazabilidad[0].imagenes[0]==""|| 
+            this.modalima.trazabilidad[0].imagenes[0]==""||
             this.modalima.trazabilidad[0].imagenes[0]=="undefined"){
                 //console.log("invoco url");
                 return null
             }
             else{
-                return this.modalima.trazabilidad[0].imagenes[0].url 
+                return this.modalima.trazabilidad[0].imagenes[0].url
             }
         },
         algo(){
@@ -344,13 +344,13 @@ export default {
                return(this.estado=null)
            }
            if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value))
-            {   
+            {
                 this.emailvalido=true
                 return (this.estado=true)
             }
                 this.emailvalido=false
                 return (this.estado=false)
-            
+
 
        },
         enviarcorreo(value){
@@ -371,7 +371,7 @@ export default {
                     )
             }
             if(this.emailvalido==true){
-                
+
                 var load=true
                     setTimeout(() => {
                         bus.$emit('load', {
@@ -388,9 +388,9 @@ export default {
                         ruta:value.ruta,
                         id:value.id
                     }]
-                    
+
                 }
-                
+
                 this.axios.post(urlservicios+"EnviarCorreoImagen", objeto)
                 .then(response => {
                     this.respuesta = response.data;
@@ -422,7 +422,7 @@ export default {
                 });
 
             }
-            
+
             this.email=''
             this.acor=false
 
@@ -433,7 +433,7 @@ export default {
                return(this.estadoT=null)
            }
            if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value))
-            {   
+            {
                 this.emailvalidoT=true
                 return (this.estadoT=true)
             }
@@ -513,8 +513,8 @@ export default {
             this.emailT=''
         },
         closemodal(){
-            this.$refs.ModalImaguni.hide()     
-            this.$refs.ModalImagenes.hide()            
+            this.$refs.ModalImaguni.hide()
+            this.$refs.ModalImagenes.hide()
         },
         cerrar(value){
             this.$refs.myModalRef.hide();
@@ -600,9 +600,9 @@ export default {
                 detalle='null'
             }
             else{
-                detalle=this.envios.nmovilizado                                                                   
+                detalle=this.envios.nmovilizado
             }
-            
+
             var load=true
                     setTimeout(() => {
                         bus.$emit('load', {
@@ -630,8 +630,8 @@ export default {
                 return moment(date).format('h:mm:ss')
                 }
                 var consulta=response.data.select
-                this.resul=response.data.movilizadosobjet    
-                alasql(consulta,[this.resul])      
+                this.resul=response.data.movilizadosobjet
+                alasql(consulta,[this.resul])
             })
             .catch(function(error){
                 var load=false
@@ -644,11 +644,11 @@ export default {
                 'Error al descargar el reporte!',
                 'Intente Nuevamente',
                 'warning'
-                )   
+                )
             })
-            
 
-        
+
+
         },
         actualizar(value){
             this.consultaactualizar=value
@@ -663,7 +663,7 @@ export default {
                         nombre:'Trayecto',
                         valores:eval('value.detalleslocal.infor.'+obj+'.nombre')
                     }
-                    this.final.push(objetogrande)     
+                    this.final.push(objetogrande)
                     }
 
                 }else{
@@ -691,7 +691,7 @@ export default {
                     });
                   });
             this.axios.get(urlservicios+"estructuraf/" +this.consultaactualizar.productoslocal._id +
-            "/" +this.consultaactualizar.servicioslocal._id)   
+            "/" +this.consultaactualizar.servicioslocal._id)
             .then(response => {
                 this.inputs = response.data;
                 var load = false;
@@ -732,7 +732,7 @@ export default {
             var ocultartra=false
             setTimeout(() => {
                 bus.$emit('ocultartra', {
-                    ocultartra 
+                    ocultartra
                 })
                 }, )
         },
@@ -743,7 +743,7 @@ export default {
         this.variableServidor=servicios
     },
     beforeCreate: function() {
-       
+
     },
     props:['consulta','centro','cliente', 'envios','procesosLogisticos'],
     data () {
@@ -758,7 +758,7 @@ export default {
             email:'',
             emailT:'',
             emailvalido: null,
-            emailvalidoT: null,                  
+            emailvalidoT: null,
             estado:null,
             estadoT:null,
             mostrar: false,
@@ -781,7 +781,7 @@ export default {
                 { key: "fecha", label: "Fecha" },
                 { key: "nombre", label: "Nombre" },
                 { key: "imagen", label: "Imagenes" },
-                
+
             ],
             inputs:{},
             consultaactualizar: {
@@ -835,7 +835,7 @@ export default {
             imagen: false,
             consu: {},
             existe: true,
-            fields: [ 
+            fields: [
                 { key: 'id', sortable: true , label: 'N° Orden de Servicio'},
                 {key:'nmovilizado',  label: 'N° Movilizado'},
                 {key:'nombre_proceso', label: 'Estado'},

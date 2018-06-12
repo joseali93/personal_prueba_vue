@@ -3,12 +3,8 @@
     <b-container fluid class="contenedorTotal">
          <div class="breadPersonalizado">
          <b-breadcrumb :items="items" >
-            <b-btn class="rounded" variant="secondary " 
-                      to="/inicio/orden" 
-                      v-b-tooltip.hover title="Anterior"
-                      ><i class="fa fa-arrow-left"></i>
-                      Anterior</b-btn>
-                      <b-btn class="rounded"  variant="danger"  
+
+                      <b-btn class="rounded"  variant="danger"
                       v-b-tooltip.hover title="Adicionar"
                       @click="abirmodal()"><i class="fa fa-plus"></i>
                       Adicionar
@@ -21,27 +17,29 @@
          </b-breadcrumb>
         </div>
        <b-container fluid class="contenedorInterno">
+        <b-row>
+          <b-col md="6" offset-md="6">
+            <div class="d-inline-block float-right">
+              <b-btn class="rounded" variant="secondary" to="/inicio/orden" v-b-tooltip.hover title="Anterior">
+                <i class="fa fa-arrow-left"></i>Anterior
+              </b-btn>
+              <b-btn class="rounded" variant="success" @click="envioServicio" v-b-tooltip.hover title="Finalizar">
+                <i class="fa fa-check"></i>Finalizar
+              </b-btn>
+            </div>
+          </b-col>
+        </b-row>
         <b-card-group deck >
           <b-card class="cards"  id="card1">
              <h3 slot="header" id="cardHeader">Detalle de servicios</h3>
-            <b-row>
-                  <b-col md="9" offset-md="4">
-                      <b-btn class="rounded" variant="secondary " 
-                      to="/inicio/orden" 
-                      v-b-tooltip.hover title="Anterior"
-                      ><i class="fa fa-arrow-left"></i>
-                      Anterior</b-btn>
-                      <b-btn class="rounded"  variant="danger"  
-                      v-b-tooltip.hover title="Adicionar"
-                      @click="abirmodal()"><i class="fa fa-plus"></i>
-                      Adicionar
-                      </b-btn>
-                       <b-btn  class="rounded" variant="success"
-                          @click="envioServicio"
-                          v-b-tooltip.hover title="Finalizar"><i class="fa fa-check"></i>
-                          Finalizar
-                      </b-btn>
-                  </b-col>        
+              <b-row>
+                <b-col md="6" offset-md="6">
+                    <b-btn class="rounded float-right" variant="danger"
+                    v-b-tooltip.hover title="Adicionar"
+                    @click="abirmodal()"><i class="fa fa-plus"></i>
+                    Adicionar
+                    </b-btn>
+                </b-col>
               </b-row>
               <br>
               <b-row>
@@ -51,7 +49,7 @@
                           <i class="btn btn-danger fa fa-trash" v-on:click="eliminar(data.index)" ></i>
                       </template>
                       <template slot="productoslocal"  slot-scope="data">
-                          {{data.value.nombre}}         
+                          {{data.value.nombre}}
                       </template>
                       <template slot="servicioslocal"  slot-scope="data">
                           {{data.value.nombre}}
@@ -93,7 +91,7 @@
             <b-row>
               <b-form-textarea id="textarea1"
                   v-model="observacionesGeneral"
-                  placeholder=" Ingrese instrucciones a tener en cuenta para recolección "
+                  placeholder="Instrucciones a tener en cuenta para recolección"
                   :rows="3"
                   :max-rows="6">
               </b-form-textarea>
@@ -102,7 +100,7 @@
         </b-card-group>
       </b-container>
         <!-- Modal Adicionar -->
-        <b-modal id="modalcrear" ref="Modal" title="Adicionar Registro" 
+        <b-modal id="modalcrear" ref="Modal" title="Adicionar Registro"
             no-close-on-backdrop
             no-close-on-esc
             size="lg" >
@@ -117,28 +115,28 @@
                 <b-container fluid>
                 <b-row class=" my-1">
                     <b-col>
-                    <v-select v-model="selectproduct" label="nombre" placeholder="Digite el Producto"
+                    <v-select v-model="selectproduct" label="nombre" placeholder="Producto"
                         :options="productosurl" @input="seleccionarServicio()">
                     </v-select>
-                        
+
                     </b-col>
                     <b-col>
-                    <v-select v-model="selectservice" label="nombre" placeholder="Digite el Servicio"
+                    <v-select v-model="selectservice" label="nombre" placeholder="Servicio"
                         :disabled="habilitar"
                         :options="serviciosurl" @input="camposNversion()">
                     </v-select>
                     </b-col>
                 </b-row>
-                
-                    <b-card no-body v-show="selectservice" class=" w-100 cards" 
+
+                    <b-card no-body v-show="selectservice" class=" w-100 cards"
                     style="
                     padding-left: 0px;
                     padding-right: 0px;
                     padding-top: 0px;
                     padding-bottom: 0px;
                     ">
-                                
-                
+
+
                     <b-tabs card id="tarjeta"  class=" cardPersonalizada" v-show="selectservice" v-model="tabIndex">
                             <b-tab  title="Información" class="cardPersonalizada" >
 
@@ -148,34 +146,34 @@
                                             <label class="col col-form-label col-form-label-sm text-capitalize text-primary" >Documento Referencia:</label>
                                         </b-col>
                                         <b-col>
-                                            <b-form-input type="text" class="form-control form-control-sm " 
+                                            <b-form-input type="text" class="form-control form-control-sm "
                                                                     placeholder=" Factura, Remisión, orden de compra..." v-model="detalles.referencia"
                                                                 :state="estado.referencia"></b-form-input>
                                         </b-col>
                                     </b-row>
-                                    
 
 
-                                    <b-row  v-for="(data,indice) in inputs.campos" class="my-2"> 
+
+                                    <b-row  v-for="(data,indice) in inputs.campos" class="my-2">
                                         <template v-if="data.type!='select'" >
                                         <template v-if="data.espieza==false">
-                                        <b-col  >   
+                                        <b-col  >
                                             <label  class="col-sm col-form-label col-form-label-sm text-capitalize text-primary" :style="[data.style]" >{{data.placeholder}}: </label>
                                         </b-col>
                                         <b-col >
-                                            
+
                                             <input class="form-control form-control-sm "  :maxlength="data.maxlength" :type="data.type" :id="data.id" :style="[data.style,validatecampo]" :max="data.max" :min="data.min" :placeholder="data.placeholder" @keyup="Presiono(indice)"   required>
                                         </b-col>
-                                        
+
                                         </template>
-                    
-                                        </template>              
+
+                                        </template>
                                     </b-row>
                                     <b-form-row v-show="selectservice" class=" my-1">
                                     <b-col>
                                     <b-form-textarea id="textarea1"
                                         v-model="detalles.observaciones"
-                                        placeholder="Ingrese las observaciones necesarias"
+                                        placeholder="Observaciones necesarias"
                                         :rows="3"
                                         :max-rows="6">
                                     </b-form-textarea>
@@ -185,7 +183,7 @@
                                     <b-col>
                                     <b-form-textarea id="textarea1"
                                         v-model="detalles.contenido"
-                                        placeholder="Ingrese el contenido de los paquetes"
+                                        placeholder="Contenido de los paquetes"
                                         :rows="3"
                                         :max-rows="6">
                                     </b-form-textarea>
@@ -198,53 +196,53 @@
                                 <b-row v-for="(data,indice) in inputs.campos" v-show="camposdinamicos">
                                 <template v-if="data.type!='select'" >
                                     <template v-if="data.espieza==true">
-                                    <b-col  >   
+                                    <b-col  >
                                         <label  class="col-sm col-form-label col-form-label-sm text-capitalize text-primary" :style="[data.style]" >{{data.placeholder}}: </label>
                                     </b-col>
                                     <b-col >
                                       <!--
                                         @keyup="Presiono(indice)"
                                         -->
-                                        <input focus class="form-control form-control-sm"  :maxlength="data.maxlength" :type="data.type" :id="data.id" :style="[data.style,validatecampo]" 
+                                        <input focus class="form-control form-control-sm"  :maxlength="data.maxlength" :type="data.type" :id="data.id" :style="[data.style,validatecampo]"
                                         :max="data.max" :min="data.min" :placeholder="data.placeholder"  @keyup="Presiono(indice)"
                                          @keyup.enter.tab="adicionarRef"
                                         @keydown.tab="adicionarRef"
                                           required>
                                     </b-col>
                                     </template>
-                
-                                    </template>  
-                                </b-row>   
+
+                                    </template>
+                                </b-row>
                                 <b-row v-show="ocultardicionar">
                                     <b-col class="d-flex flex-row-reverse">
                                         <b-btn variant="outline-success" active-class class="float-right" @click="adicionarRef" v-show="camposdinamicos">
                                         <i class="fa fa-plus"></i>
                                         </b-btn>
                                     </b-col>
-                                    </b-row> 
+                                    </b-row>
                                     <b-row v-show="ocultareditar">
                                     <b-col class="d-flex flex-row-reverse">
                                         <b-btn variant="outline-success" active-class class="float-right" @click="UpdateDinamico" v-show="camposdinamicos">
                                         <i class="fa fa-pencil"></i>
                                         </b-btn>
                                     </b-col>
-                                    </b-row>    
+                                    </b-row>
                                     <b-row>
                                     <b-table striped hover :items="itemsdinamicos"  :fields="fieldsdinamicos"
-                                    :per-page="3" :current-page="currentPageRef" v-show="camposdinamicos"> 
+                                    :per-page="3" :current-page="currentPageRef" v-show="camposdinamicos">
                                         <template slot="eliminar" slot-scope="data">
                                             <i class="btn btn-danger fa fa-trash" v-on:click="eliminarRef(data)" v-show="ocultardicionar"></i>
                                         </template>
                                         <template slot="actualizar" slot-scope="data">
                                             <i class="btn btn-primary fa fa-pencil" v-on:click="ActualizarRef(data,data.index)" v-show="ocultardicionar"></i>
                                         </template>
-                                    
-                                        
+
+
                                         </b-table>
-                                    <b-pagination size="md" :total-rows="itemsdinamicos.length" v-model="currentPageRef" 
+                                    <b-pagination size="md" :total-rows="itemsdinamicos.length" v-model="currentPageRef"
                                     :per-page="3" v-show="camposdinamicos">
-                                    </b-pagination>    
-                                    </b-row>  
+                                    </b-pagination>
+                                    </b-row>
                             </b-card-body>
                             </b-tab>
                             <b-tab title="Destinatario">
@@ -255,11 +253,11 @@
                                 </b-col>
                                 <b-col cols="9">
                                       <v-select maxHeight="500px" label="nombre" :filterable="false" v-model=nombre_remitente
-                                        placeholder="Digite el remitente" :options="optionsremitentes"
+                                        placeholder="Remitente" :options="optionsremitentes"
                                           @input="Seleccionado" v-show="MostrarFiltro"
                                           @search="onSearch">
-                                          <template slot="no-options" > 
-                                            <p >Digite el nombre del remitente..</p>
+                                          <template slot="no-options" >
+                                            <p >Nombre del remitente..</p>
                                           </template>
                                           <template slot="option" slot-scope="option">
                                             <div class="d-center">
@@ -271,7 +269,7 @@
                                               {{ option.nombre }}
                                             </div>
                                           </template>
-                                          
+
                                         </v-select>
                                 </b-col>
                             </b-form-row>
@@ -283,8 +281,8 @@
                                 <b-col  cols="9">
                                     <b-form-input type="text" class="form-control form-control-sm"  placeholder="Nombre"
                                     v-model="detalles.destinatario.nombre"
-                                  
-                                    :state="null" 
+
+                                    :state="null"
                                     title="Num. Identificacion"></b-form-input>
                                 </b-col>
                             </b-form-row>
@@ -296,8 +294,8 @@
                                 <b-col  cols="9">
                                     <b-form-input type="number" class="form-control form-control-sm"  placeholder="Indentidicación"
                                     v-model="detalles.destinatario.numero_identificacion"
-                                  
-                                     v-b-popover.hover="'Se debe diligenciar sin puntos, en caso de NIT sin numero de validación, ni guion'" 
+
+                                     v-b-popover.hover="'Se debe diligenciar sin puntos, en caso de NIT sin numero de validación, ni guion'"
                                     title="Num. Identificacion"></b-form-input>
                                     <!--<input type="text" class="form-control form-control-sm"  placeholder="Nombre" v-model="detalles.destinatario.nombre">
                                      @keyup.enter.tab.native="buscar('nuevo')"
@@ -307,32 +305,32 @@
                             </b-form-row>
                             {{nombre_remitente}}
                             <b-form-row v-show="selectservice&&mostrardestinatario " >
-                             
-                          
-                              
+
+
+
                                 <b-col>
                                     <label  class="col-sm col-form-label col-form-label-sm text-primary">Dirección: </label>
                                 </b-col>
                                 <b-col  cols="9">
-                                    <b-form-input  id="direccionGoogle2" 
+                                    <b-form-input  id="direccionGoogle2"
                                           type="text"
                                      placeholder="Dirección"
                                      required
                                      maxlength="100"
                                      @change="initAutocomplete"
                                      @input="initAutocomplete"
-                                     v-model="detalles.destinatario.direccion" 
-                                     class="form-control form-control-sm" 
+                                     v-model="detalles.destinatario.direccion"
+                                     class="form-control form-control-sm"
                                         :state="estado.direccion"
-                                      
+
                                     > </b-form-input>
-                                    
-                                     <!-- 
+
+                                     <!--
                                          @input="localizar()"
                                         @keypress="localizar()"
-                                                  v-model="detalles.destinatario.direccion"                            
+                                                  v-model="detalles.destinatario.direccion"
 
-                                        class="form-control form-control-sm" 
+                                        class="form-control form-control-sm"
                                         :state="estado.direccion"
                                         @input="localizar()"
                                         @keypress="localizar()"
@@ -340,7 +338,7 @@
                                      -->
 
                                 </b-col>
-                                
+
                             </b-form-row>
                             <b-form-row v-show="selectservice&&mostrardestinatario" class="my-1">
                                 <b-col>
@@ -348,30 +346,30 @@
                                 </b-col>
                                 <b-col  cols="9">
 
-                                    <input type="text" :style="validatecampoTel"  class="form-control form-control-sm" 
+                                    <input type="text" :style="validatecampoTel"  class="form-control form-control-sm"
                                     id="telefono" @keyup="numeros(this)" placeholder="Telefono"
                                      v-model="detalles.destinatario.telefono">
-                                    
+
                                 </b-col>
                             </b-form-row>
                             </b-card-body>
                             </b-tab>
-                    </b-tabs>  
-                    
+                    </b-tabs>
+
                     <b-card-footer>
                         <div class="text-center" v-show="selectservice">
                             <b-button-group class="mt-2">
                             <b-btn @click="tabIndex--"><i class="fa fa-chevron-left" aria-hidden="true"></i></b-btn>
                             <b-btn @click="tabIndex++"><i class="fa fa-chevron-right" aria-hidden="true"></i></b-btn>
                             </b-button-group>
-                            
+
                         </div>
                     </b-card-footer>
                     </b-card>
-        
+
                 </b-container>
                 <div slot="modal-footer" class="w-100">
-                
+
 
                 </div>
         </b-modal>
@@ -384,22 +382,22 @@
                     <i class="fa fa-times-circle" aria-hidden="true">  </i>
                     Cancelar</b-btn>
                     <b-btn class="mt-3 float-right " variant="success" v-on:click="actualizar()">
-                    <i class="fa fa-floppy-o"></i> Guardar 
+                    <i class="fa fa-floppy-o"></i> Guardar
                     </b-btn>
                 </div>
                 <b-container fluid>
                     <b-row class=" my-1">
                     <b-col>
 
-                    <v-select v-model="selectproductED" label="nombre" placeholder="Digite el Producto"
+                    <v-select v-model="selectproductED" label="nombre" placeholder="Producto"
                         :options="productosurlED" @input="seleccionarServicioED()"
                         :disabled="true">
                     </v-select>
-                        
+
                     </b-col>
                     <b-col>
 
-                    <v-select v-model="selectserviceED" label="nombre" placeholder="Digite el Servicio"
+                    <v-select v-model="selectserviceED" label="nombre" placeholder="Servicio"
                         :disabled="true"
                         :options="serviciosurlED"  @input="camposNversionED()">
                         <!--
@@ -424,26 +422,26 @@
                                             <label class="col col-form-label col-form-label-sm text-capitalize text-primary" >Documento Referencia:</label>
                                         </b-col>
                                         <b-col>
-                                            <b-form-input type="text" class="form-control form-control-sm " 
+                                            <b-form-input type="text" class="form-control form-control-sm "
                                                                     placeholder="Referencia" v-model="detalleseditar.referencia"
                                                                 :state="estado.referencia"></b-form-input>
                                         </b-col>
                                     </b-row>
-                            <b-row  v-for="(data,indice) in inputsED.campos" class="my-2"> 
+                            <b-row  v-for="(data,indice) in inputsED.campos" class="my-2">
                                 <template v-if="data.type!='select'" >
                                 <template v-if="data.espieza==false">
-                                <b-col  >   
+                                <b-col  >
                                     <label  class="col-sm col-form-label col-form-label-sm text-capitalize" :style="[data.style]" >{{data.placeholder}}: </label>
                                 </b-col>
                                 <b-col >
-                                    <input class="form-control form-control-sm" 
+                                    <input class="form-control form-control-sm"
                                     :type="data.type" :id="data.id" :style="[data.style,validatecampo]"
-                                    :max="data.max" :placeholder="data.placeholder" 
+                                    :max="data.max" :placeholder="data.placeholder"
                                     @keyup="PresionoED(indice)"  :value="valores(data.id)"      required>
                                 </b-col>
                                 </template>
-            
-                                </template>              
+
+                                </template>
                             </b-row>
                             <b-row class=" my-1">
                                 <b-form-textarea id="textarea1"
@@ -465,42 +463,42 @@
                         </b-tab>
                         <b-tab title="Detalle" :disabled="tabdinamicoED">
                         <!--
-  
+
                           -->
                             <b-row v-for="(data,indice) in inputsED.campos" v-show="camposdinamicos">
                             <template v-if="data.type!='select'" >
                                 <template v-if="data.espieza==true">
-                                <b-col  >   
+                                <b-col  >
                                     <label  class="col-sm col-form-label col-form-label-sm text-capitalize" :style="[data.style]" >{{data.placeholder}}: </label>
                                 </b-col>
                                 <b-col >
                                     <input class="form-control form-control-sm" :type="data.type"
-                                    :id="data.id" :style="[data.style,validatecampo]" :max="data.max" 
+                                    :id="data.id" :style="[data.style,validatecampo]" :max="data.max"
                                     :placeholder="data.placeholder" @keyup="PresionoED(indice)"   required>
                                 </b-col>
                                 </template>
-            
-                            </template>  
-                            </b-row>   
-                        
+
+                            </template>
+                            </b-row>
+
                             <b-row v-show="ocultardicionarED">
                             <b-col class="d-flex flex-row-reverse">
                                 <b-btn variant="outline-success" active-class class="float-right" @click="adicionarRefED" v-show="camposdinamicos">
                                 <i class="fa fa-plus"></i>
                                 </b-btn>
                             </b-col>
-                            </b-row> 
+                            </b-row>
                             <b-row v-show="ocultareditarED">
                             <b-col class="d-flex flex-row-reverse">
                                 <b-btn variant="outline-success" active-class class="float-right" @click="UpdateDinamicoED" v-show="camposdinamicos">
                                 <i class="fa fa-pencil"></i>
                                 </b-btn>
                             </b-col>
-                            </b-row>    
+                            </b-row>
 
                             <b-row>
                             <b-table striped   hover :items="itemsdinamicos"  :fields="fieldsdinamicos"
-                            :per-page="3" :current-page="currentPageRef" v-show="camposdinamicos"> 
+                            :per-page="3" :current-page="currentPageRef" v-show="camposdinamicos">
                                 <template slot="eliminar" slot-scope="data">
                                     <i class="btn btn-danger fa fa-trash" v-on:click="eliminarRef(data)" v-show="ocultardicionarED"></i>
                                 </template>
@@ -508,10 +506,10 @@
                                     <i class="btn btn-primary fa fa-pencil" v-on:click="ActualizarRefED(data,data.index)" v-show="ocultardicionarED"></i>
                                 </template>
                                 </b-table>
-                            <b-pagination size="md" :total-rows="itemsdinamicos.length" v-model="currentPageRef" 
+                            <b-pagination size="md" :total-rows="itemsdinamicos.length" v-model="currentPageRef"
                             :per-page="3" v-show="camposdinamicos">
-                            </b-pagination>    
-                            </b-row> 
+                            </b-pagination>
+                            </b-row>
                         </b-tab>
                         <b-tab title="Destinatario">
                         <b-card-body>
@@ -521,11 +519,11 @@
                                 </b-col>
                                 <b-col cols="9">
                                       <v-select maxHeight="500px" label="nombre" :filterable="false" v-model=destinatarioED
-                                        placeholder="Digite el remitente" :options="optionsremitentes"
+                                        placeholder="Remitente" :options="optionsremitentes"
                                           @input="SeleccionadoED"
                                           @search="onSearchED">
                                           <template slot="no-options">
-                                            <p >Digite el nombre del remitente..</p>
+                                            <p >Nombre del remitente..</p>
                                           </template>
                                           <template slot="option" slot-scope="option">
                                             <div class="d-center">
@@ -537,7 +535,7 @@
                                               {{ option.nombre }}
                                             </div>
                                           </template>
-                                          
+
                                         </v-select>
 
                                 </b-col>
@@ -549,12 +547,12 @@
                                 <b-col>
                                     <b-form-input type="number" class="form-control form-control-sm"  placeholder="Indentidicación"
                                     v-model="detalleseditar.destinatario.numero_identificacion"
-                                   
+
                                     :state="true"  v-b-popover.hover="'Se debe diligenciar sin puntos, en caso de NIT sin numero de validación, ni guion'" title="Num. Identificacion"></b-form-input>
-                                    <!--<input type="text" 
+                                    <!--<input type="text"
                                      @keyup.enter.tab.native="buscar('editar')"
                                     @keydown.tab.native="buscar('editar')"
-                                    class="form-control form-control-sm"  
+                                    class="form-control form-control-sm"
                                     placeholder="Nombre" v-model="detalles.destinatario.nombre">
                                     -->
                                 </b-col>
@@ -567,8 +565,8 @@
                                 <b-col>
                                 <b-form-input type="text" class="form-control form-control-sm"  placeholder="Nombre" v-model="detalleseditar.destinatario.nombre"
                                     :state="estado.nombre"></b-form-input>
-                                   
-                                    
+
+
                                 </b-col>
                                 -->
                             </b-form-row>
@@ -596,12 +594,12 @@
                         </b-tab>
                     </b-tabs>
             </b-card>
-                
-                    
-                    
+
+
+
                 </b-container>
                 <div slot="modal-footer" class="w-100">
-                    
+
 
                 </div>
         </b-modal>
@@ -770,9 +768,9 @@ export default {
                 var searchBox = new google.maps.places.SearchBox(input,options);
                //console.log(searchBox);
                 searchBox.addListener('places_changed', function() {
-                  input.value=input.value.split(',')[0]; 
+                  input.value=input.value.split(',')[0];
                     var places = searchBox.getPlaces();
-                    
+
                     if(places.length == 0){
                         return;
                     }
@@ -784,7 +782,7 @@ export default {
                         console.log("----------------");
                         latit=place.geometry.location.lat()
                         longi=place.geometry.location.lng()
-                        
+
                         //this.lati=place.geometry.location.lat()
                         //this.longi=place.geometry.location.lng()
                         //this.posta
@@ -808,8 +806,8 @@ export default {
                     }.bind(this));
                 }.bind(this));
                 //input.value=input.value.split(',')[0];
-      
-      
+
+
     },
     initAutocomplete(){
        var options = {
@@ -822,9 +820,9 @@ export default {
                 var searchBox = new google.maps.places.SearchBox(input,options);
                //console.log(searchBox);
                 searchBox.addListener('places_changed', function() {
-                  input.value=input.value.split(',')[0]; 
+                  input.value=input.value.split(',')[0];
                     var places = searchBox.getPlaces();
-                    
+
                     if(places.length == 0){
                         return;
                     }
@@ -836,7 +834,7 @@ export default {
                         console.log("----------------");
                         latit=place.geometry.location.lat()
                         longi=place.geometry.location.lng()
-                        
+
                         //this.lati=place.geometry.location.lat()
                         //this.longi=place.geometry.location.lng()
                         //this.posta
@@ -860,9 +858,9 @@ export default {
                     }.bind(this));
                 }.bind(this));
                 //input.value=input.value.split(',')[0];
-      
-      
-    },      
+
+
+    },
     localizarED(){
       var dir
       var longi
@@ -872,7 +870,7 @@ export default {
       {
       }
       else{
-          setTimeout(function(){ 
+          setTimeout(function(){
               dir=this.detalleseditar.destinatario.direccion +', Colombia'
             var geocoder = new google.maps.Geocoder();
                 geocoder.geocode({'address': dir, country: "CO" }, function(results, status) {
@@ -883,14 +881,14 @@ export default {
                         }
                         });
                     var resultados = results[0].geometry.location,
-                    
+
                         resultados_lat = resultados.lat(),
                         resultados_long = resultados.lng();
-                    
+
                     longi=resultados_long
                     latit=resultados_lat
                     //codpostal=results[0].address_components[7].long_name
-                    
+
                     this.lati=latit
                     this.longi=longi
                     this.posta=codpostal
@@ -909,11 +907,11 @@ export default {
                 }.bind(this));
             }.bind(this), 399)
       }
-      
-      
+
+
 
     },
-    
+
     SeleccionadoED() {
       console.log(this.destinatarioED);
       if(this.destinatarioED==null||this.destinatarioED=='null'){
@@ -951,25 +949,25 @@ export default {
                 if(response.data.destinatarios.length==0)
                 {
                 this.optionsremitentes=[]
-                
+
                 //this.remitente={}
                 this.detalleseditar.destinatario.nombre=search
                 }
                 else{
-               
-                this.optionsremitentes=response.data.destinatarios 
+
+                this.optionsremitentes=response.data.destinatarios
                 }
                 /*
                 this.optionsdestinatarios=response.data.destinatarios
                 loading(false);
                 */
         })
-        
+
         }.bind(this), 1000);
 
-    
+
     },
-    
+
     localizar(){
       var dir
       var longi
@@ -979,7 +977,7 @@ export default {
       {
       }
       else{
-          setTimeout(function(){ 
+          setTimeout(function(){
               dir=this.detalles.destinatario.direccion +', Colombia'
             var geocoder = new google.maps.Geocoder();
                 geocoder.geocode({'address': dir, country: "CO" }, function(results, status) {
@@ -990,14 +988,14 @@ export default {
                         }
                         });
                     var resultados = results[0].geometry.location,
-                    
+
                         resultados_lat = resultados.lat(),
                         resultados_long = resultados.lng();
-                    
+
                     longi=resultados_long
                     latit=resultados_lat
                     //codpostal=results[0].address_components[7].long_name
-                    
+
                     this.lati=latit
                     this.longi=longi
                     this.posta=codpostal
@@ -1016,19 +1014,19 @@ export default {
                 }.bind(this));
             }.bind(this), 300)
       }
-      
-      
+
+
 
     },
-    
+
     Seleccionado() {
       if(this.nombre_remitente==null||this.nombre_remitente=="null"){
-        
+
         this.detalles.destinatario.numero_identificacion=''
         this.detalles.destinatario.nombre=''
         this.detalles.destinatario.direccion=''
         this.detalles.destinatario.telefono=''
-        
+
       }
       else{
          this.detalles.destinatario=this.nombre_remitente
@@ -1068,7 +1066,7 @@ export default {
                 //this.nombre_remitente=search
                 }
                 else{
-                this.optionsremitentes=response.data.destinatarios 
+                this.optionsremitentes=response.data.destinatarios
                    //this.monstrarNombre=false
                    //his.MostrarFiltro=true
                 }
@@ -1077,10 +1075,10 @@ export default {
                 loading(false);
                 */
         })
-        
+
         }.bind(this), 1000);
 
-    
+
     },
     abirmodal() {
       this.selectservice = null;
@@ -1105,7 +1103,7 @@ export default {
               load
             });
           });
-          
+
           this.$refs.Modal.show();
         })
         .catch(function(error) {
@@ -1283,7 +1281,7 @@ export default {
                 eval("this.objeto." + this.inputs.campos[x].vmodel + '=""');
 
                 /*
-              
+
                   if(this.inputs.campos[x].vmodel=='unidades'){
                   if(this.itemsdinamicos.length==0)
                   {
@@ -1292,7 +1290,7 @@ export default {
                   else{
                     eval('this.objeto.'+objetollaves[y]+'='+this.itemsdinamicos.length+ eval('this.objeto.'+objetollaves[y]))
                   }
-                  
+
                 }
                 */
               }
@@ -1715,7 +1713,7 @@ export default {
       this.selectservicio = this.DetalleServicio[index].servicioslocal;
       this.seleccionarServicioED();
       this.itemsdinamicos = this.DetalleServicio[
-       
+
         index
       ].detalleslocal.infor.objetoUnidades;
        //this.selectservice=true
@@ -1933,7 +1931,7 @@ export default {
               });
             });
           });
-      
+
       }
       */
       if (this.objeto == undefined) {
@@ -2097,7 +2095,7 @@ export default {
           detalleslocal: detalleslocal
         };
         this.DetalleServicio.push(detalles);
-          
+
 
         //BLANQUEAR DATOS
         this.optionsremitentes=[]
@@ -2329,7 +2327,7 @@ export default {
               this.camposdinamicos = false;
               this.tabdinamico = true;
             }
-            
+
             //this.load=false
             var load2 = false;
             setTimeout(() => {
@@ -2391,7 +2389,7 @@ export default {
         */
         var fechareal = localStorage.getItem("fecha_orden");
         var jsonfechareal = JSON.parse(fechareal);
-        
+
         if(jsonfechareal.fecha==''){
             var objeto = {
           id_OperadorLogistico: infologin.id_OperadorLogistico._id,
@@ -2413,7 +2411,7 @@ export default {
           observaciones:this.observacionesGeneral,
           detalle: this.DetalleServicio
         };
-           
+
         }else{
              var objeto = {
           id_OperadorLogistico: infologin.id_OperadorLogistico._id,
@@ -2435,7 +2433,7 @@ export default {
           detalle: this.DetalleServicio
         };
         }
-        
+
 
         var load = true;
         setTimeout(() => {
@@ -2464,7 +2462,7 @@ export default {
             localStorage.removeItem("observaciones_orden");
             localStorage.removeItem("remitente");
             localStorage.removeItem("fecha_orden");
-            
+
           })
           .catch(function(error) {
             var load = false;
@@ -2500,23 +2498,23 @@ export default {
 <style>
 #cardHeader{
   background-color: #ffffff !important;
-   
+
 }
 #card1 .card-header {
   background-color: #ffffff !important;
-  
+
   color: #4db35a;
-  
+
 }
 #card2 .card-header {
   background-color: #ffffff !important;
-  
+
   color: #4db35a;
-  
+
 }
 .headerPersonalizado{
     background-color: #ffffff !important;
-   
+
 }
 .contenedorTotal {
   padding-top: 0px;
@@ -2567,7 +2565,7 @@ export default {
 
 .cardPersonalizada card-header{
     background-color: #ebeaea;
-   
+
     color: white;
 }
 #josecard{

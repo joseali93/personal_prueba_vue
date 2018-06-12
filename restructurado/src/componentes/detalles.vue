@@ -161,19 +161,19 @@
 
 			<b-row>
 				<b-col>
-					<h4 class="text-primary">Seleccione el Medio de Transporte: </h4>
+					<h4 class="text-primary">Medio de Transporte: </h4>
 					<!--
 					<b-form-select v-model="selected_curier" class="mb-3"  :options="curiers" text-field="nombre"
 					value-field="_id" :state="statuscourier"
 					@change.native="selectcuriers" :disabled="selec_disable">
 					</b-form-select>
 					-->
-					<v-select v-model="model_medios" label="tipo" placeholder="Seleccione el Medio de Transporte"
+					<v-select v-model="model_medios" label="tipo" placeholder="Medio de Transporte"
 					  :options="medios" @input="vehic()"
             :disabled="medios_disable"></v-select>
 				</b-col>
 				<b-col>
-					<h4 class="text-primary">Seleccione el Currier: </h4>
+					<h4 class="text-primary">Courier: </h4>
 					<!--
 					<b-form-select v-model="selected_curier" class="mb-3"  :options="curiers" text-field="nombre"
 					value-field="_id" :state="statuscourier"
@@ -182,7 +182,7 @@
            @input="updatecourier()"
             @search="onSearch"
 					-->
-					<v-select v-model="selected_curier" label="nombre" placeholder="Seleccione el Courier"
+					<v-select v-model="selected_curier" label="nombre" placeholder="Courier"
 					  :options="curiers"
 					  :disabled="selec_disable"
             @onChange="pruebacambio"

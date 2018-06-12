@@ -4,7 +4,7 @@
             <b-breadcrumb :items="items" />
         </div>
 
-        <b-container fluid> 
+        <b-container fluid>
           <b-card class="cards">
             <b-card-body>
               <b-row >
@@ -13,10 +13,10 @@
                   <i class="fa fa-plus"></i>
                 </b-btn>
                 <b-btn class="float-right" variant="outline-success"  @click="refrescarCentrosLogisticos()">
-                  <i class="fa fa-refresh"></i>                              
+                  <i class="fa fa-refresh"></i>
                 </b-btn>
                 </b-col>
-                
+
               </b-row>
                 <b-form-group id="fieldsetHorizontal"
                                           horizontal
@@ -25,14 +25,14 @@
                                           description="Filtrara del listado de centros logisticos asociados."
                                           label="Buscar Centro Logistico "
                                           label-for="inputHorizontal">
-                              <b-form-input   id="inputHorizontal" 
+                              <b-form-input   id="inputHorizontal"
                                               v-model="CentroL"
-                                              placeholder="Ingrese el nombre del Centro de Logistico"
-                                              
+                                              placeholder="Nombre del Centro de Logistico"
+
                                               ></b-form-input>
                           </b-form-group>
               <b-row>
-                <b-table  fixed :items="centrosLogisticos" 
+                <b-table  fixed :items="centrosLogisticos"
                 :current-page="currentPage" :per-page="perPage"
                 :fields="fields"
                 :filter="CentroL">
@@ -43,8 +43,8 @@
                 <b-pagination size="md" :total-rows="centrosLogisticos.length" v-model="currentPage" :per-page="perPage">
                     </b-pagination>
               </b-row>
-              
-              
+
+
 
             </b-card-body>
           </b-card>
@@ -399,7 +399,7 @@ export default {
         (this.statusdireccion = null),
         (this.statusnombre = null),
         (this.statuspais = null),
-        
+
         this.$refs.ModalNuevo.hide();
       this.$refs.ModalEditar.hide();
     },

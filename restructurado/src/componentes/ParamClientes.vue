@@ -1,25 +1,25 @@
 <template>
-    
+
     <b-container fluid class="contenedorTotal">
         <div >
             <b-breadcrumb :items="items" />
         </div>
 
-        <b-container fluid> 
+        <b-container fluid>
             <b-card  class="cards"
                >
                 <b-card-body>
                     <b-row>
                         <b-col>
                             <b-btn variant="outline-success" class="mb-3 float-right" @click="ClienteNuevo()">
-                            <i class="fa fa-plus"></i>                      
+                            <i class="fa fa-plus"></i>
                             </b-btn>
                             <b-btn variant="outline-success" class="mb-3 float-right" @click="refrescarClientes()">
-                                <i class="fa fa-refresh"></i>                              
+                                <i class="fa fa-refresh"></i>
                             </b-btn>
                         </b-col>
                     </b-row>
-                
+
                     <b-form-group id="fieldsetHorizontal"
                                     horizontal
                                     :label-cols="4"
@@ -27,10 +27,10 @@
                                     description="Filtrara del listado de clientes asociados."
                                     label="Buscar Cliente "
                                     label-for="inputHorizontal">
-                        <b-form-input   id="inputHorizontal" 
+                        <b-form-input   id="inputHorizontal"
                                         v-model="Cliente"
-                                        placeholder="Ingrese el Nombre del Cliente"
-                                        
+                                        placeholder="Nombre del Cliente"
+
                                         ></b-form-input>
                     </b-form-group>
 
@@ -59,10 +59,10 @@
                 </b-card-body>
             </b-card>
         </b-container>
-        
+
 
         <!-- Modal Nuevo Cliente -->
-        <b-modal id="modalNuevo" size="lg" ref="modalNuevo" 
+        <b-modal id="modalNuevo" size="lg" ref="modalNuevo"
             title="Crear Clientes"
             no-close-on-esc
             no-close-on-backdrop>
@@ -71,7 +71,7 @@
                     horizontal
                     :label-cols="4"
                     breakpoint="md"
-                    description="Digite nombre Cliente"
+                    description="Nombre Cliente"
                     label="Cliente"
                     label-for="nombreCliente">
                     <b-form-input id="nombreCliente" v-model="ModalNew.nombre"
@@ -83,7 +83,7 @@
                     horizontal
                     :label-cols="4"
                     breakpoint="md"
-                    description="Digite dirección del Cliente"
+                    description="Dirección del Cliente"
                     label="Dirección Cliente"
                     label-for="direccionCliente">
                     <b-form-input id="direccionCliente" v-model="ModalNew.direccion"
@@ -95,7 +95,7 @@
                     horizontal
                     :label-cols="4"
                     breakpoint="md"
-                    description="Digite teléfono del Cliente"
+                    description="Teléfono del Cliente"
                     label="Teléfono"
                     label-for="telefono">
 
@@ -108,7 +108,7 @@
                     horizontal
                     :label-cols="4"
                     breakpoint="md"
-                    description="Digite nombre de la Empresa a la que pertenece"
+                    description="Nombre de la Empresa a la que pertenece"
                     label="Empresa"
                     label-for="empresa">
                     <b-form-input id="empresa" v-model="ModalNew.empresa"
@@ -120,7 +120,7 @@
                     horizontal
                     :label-cols="4"
                     breakpoint="md"
-                    description="Digite el NIT de la empresa"
+                    description="NIT de la empresa"
                     label="NIT"
                     label-for="nitEmpresa">
                     <b-form-input id="nitEmpresa" v-model="ModalNew.nit"
@@ -132,7 +132,7 @@
                     horizontal
                     :label-cols="4"
                     breakpoint="md"
-                    description="Digite el correo de contacto"
+                    description="Correo de contacto"
                     label="Correo Electronico"
                     label-for="emailContacto">
                     <b-form-input id="emailContacto" v-model="ModalNew.correo"
@@ -162,7 +162,7 @@
                     horizontal
                     :label-cols="4"
                     breakpoint="md"
-                    description="Digite nombre Cliente"
+                    description="Nombre Cliente"
                     label="Cliente"
                     label-for="nombreCliente">
                     <b-form-input id="nombreClienteED" v-model="ModalEdit.nombre"
@@ -174,7 +174,7 @@
                     horizontal
                     :label-cols="4"
                     breakpoint="md"
-                    description="Digite dirección del Cliente"
+                    description="Dirección del Cliente"
                     label="Direccion Cliente"
                     label-for="direccionCliente">
                         <b-form-input id="direccionClienteED" v-model="ModalEdit.direccion"
@@ -186,11 +186,11 @@
                     horizontal
                     :label-cols="4"
                     breakpoint="md"
-                    description="Digite telefono del Cliente"
+                    description="Telefono del Cliente"
                     label="Telefono"
                     label-for="telefono">
                     <b-form-input id="telefonoED" v-model="ModalEdit.telefono"
-                    @input="ValidarTelefono('telefonoED','editar')"                    
+                    @input="ValidarTelefono('telefonoED','editar')"
                     :state="statustelefono"
                     maxlength="20"></b-form-input>
                 </b-form-group>
@@ -198,7 +198,7 @@
                     horizontal
                     :label-cols="4"
                     breakpoint="md"
-                    description="Digite nombre de la Empresa a la que pertenece"
+                    description="Nombre de la Empresa a la que pertenece"
                     label="Empresa"
                     label-for="empresa">
                     <b-form-input id="empresaED" v-model="ModalEdit.empresa"
@@ -210,7 +210,7 @@
                     horizontal
                     :label-cols="4"
                     breakpoint="md"
-                    description="Digite el NIT de la compañia"
+                    description="NIT de la compañia"
                     label="NIT"
                     label-for="nitEmpresa">
                     <b-form-input id="nitEmpresaED" v-model="ModalEdit.nit"
@@ -222,7 +222,7 @@
                 horizontal
                 :label-cols="4"
                 breakpoint="md"
-                description="Digite el correo de contacto"
+                description="Correo de contacto"
                 label="Correo Electronico"
                 label-for="emailContacto">
                     <b-form-input id="emailContactoED" v-model="ModalEdit.correo"
@@ -236,7 +236,7 @@
                 X
                 </b-btn>
             </div>
-           
+
            <div slot="modal-footer" class="w-100">
                 <b-btn size="sm" class="float-right" variant="primary" @click="actualizarCliente()">
                 Guardar
@@ -286,7 +286,7 @@ export default {
             { key: 'nit', label: 'NIT', sortable: false },
             { key: 'telefono', label: 'Teléfono Contacto', sortable: false },
             { key: 'empresa', label: 'Empresa', sortable: false },
-            { key: 'correo', label: 'Correo Contacto', sortable: false },    
+            { key: 'correo', label: 'Correo Contacto', sortable: false },
         ],
         ModalEdit:{},
         ModalNew:{
@@ -297,7 +297,7 @@ export default {
             correo:'',
             telefono:''
         }
-    }    
+    }
     },
     methods:{
         ValidarTexto(id,accion){
@@ -305,16 +305,16 @@ export default {
             var key,tecla,tecla_especial,letras,especiales
             var e = document.getElementById(eval('id')).value;
             ////console.log(id);
-           
+
             if(accion=='nuevo')
             {
                     if(id=='direccionCliente')
                 {
                     if(e.match(/^[0-9a-zA-Z\s\#\-]+$/)){
-                        
+
                         if(e.length>=100){
                             this.statusdireccion=null
-                            
+
                         }
                         else{
                             this.statusdireccion=null
@@ -335,7 +335,7 @@ export default {
                             this.statusnombre=null
                         }
                     }
-                
+
                     if(id=='empresa'||id=='empresaED')
                     {
                         if(e.length>100){
@@ -351,7 +351,7 @@ export default {
                     {
                         this.statusnombre=false
                     }
-                
+
                     if(id=='empresa')
                     {
                         this.statusempresa=false
@@ -410,8 +410,8 @@ export default {
                 }
 
             }
-            
-            
+
+
         },
         ValidarTelefono(id,action){
             //console.log("entro a validar tel");
@@ -515,8 +515,8 @@ export default {
                     this.statustelefono=null
                 }
             }
-            
-            
+
+
         },
         refrescarClientes(){
            var test2 = localStorage.getItem("storedData");
@@ -527,7 +527,7 @@ export default {
                     .then((response) => {
                         ////console.log(response);
                         this.ClientesTabla=response.data
-                    }) 
+                    })
         },
         actualizarCliente(){
             //console.log("entro a actualizar cliente");
@@ -586,7 +586,7 @@ export default {
                 }
                 this.axios.post(urlservicios+"ActulizarCliente/"+this.ModalEdit._id,objeto)
                     .then((response) => {
-                    
+
                         //console.log(response);
 
                         if(response.data.validar==true)
@@ -605,12 +605,12 @@ export default {
                             timer: 1000,
                             type:'error'})
                         }
-                        
+
                     })
             }
             ////console.log(this.ModalEdit);
-            
-            
+
+
         },
         validacorreo(value){
             //console.log(value);
@@ -619,14 +619,14 @@ export default {
            }
            //if(value.match(/^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i))
            if (value.match(/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/))
-            {   
+            {
                 return (this.statusCorreo=null)
             }
                 return (this.statusCorreo=false)
-            
+
 
         },
-        adicionarCliente(){ 
+        adicionarCliente(){
             var bandera=true
             if(this.ModalNew.nombre==''||this.statusnombre==false){
                 this.statusnombre=false
@@ -634,7 +634,7 @@ export default {
             }
             else{
                 this.statusnombre=null
-   
+
             }
             if(this.ModalNew.direccion==''||this.statusdireccion==false){
                 this.statusdireccion=false
@@ -678,7 +678,7 @@ export default {
             else{
                 //console.log("hacemos peticion");
                 var test2 = localStorage.getItem("storedData");
-                var test =JSON.parse(test2);        
+                var test =JSON.parse(test2);
                 var objeto={
                     nombre:this.ModalNew.nombre,
                     correo:this.ModalNew.correo,
@@ -711,12 +711,12 @@ export default {
                                 'Upps!',
                                 'Ya existe un cliente con esas caracteristicas , revise el correo',
                                 'error'
-                                )                             
+                                )
                             }
                         })
-                        
 
-            
+
+
             }
         },
         ClienteNuevo(){
@@ -731,17 +731,17 @@ export default {
             this.statusempresa=null,
             this.statusnit=null,
             this.statusCorreo= null,
-            this.statustelefono=null 
+            this.statustelefono=null
             this.ModalNew.nombre=''
             this.ModalNew.direccion=''
             this.ModalNew.telefono=''
             this.ModalNew.empresa=''
             this.ModalNew.nit=''
             this.ModalNew.correo=''
-            
+
             this.$refs.modalEditar.hide()
             this.$refs.modalNuevo.hide()
-        
+
         },
         editar(value){
             ////console.log("entro a editar");
@@ -756,7 +756,7 @@ export default {
         var test =JSON.parse(test2);
         var id_cliente
         id_cliente='null'
-        
+
         this.axios.get(urlservicios+"clientesOperador/"+test.id_OperadorLogistico._id+'/'+id_cliente)
                 .then((response) => {
                     //console.log(response);

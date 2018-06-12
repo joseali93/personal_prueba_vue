@@ -3,67 +3,67 @@
         <div class="breadPersonalizado">
             <b-breadcrumb :items="items" />
         </div>
-               
+
         <b-container fluid class="contenedorInterno">
-             
+
                 <header class="content-heading" slot="header">
                 <h3>Consultar Ordenes de Servicio</h3>
-                    
+
                 </header>
                 <b-card class="cards" v-show="ocultar">
                 <!--
                 <header class="content-heading" slot="header">
                     <h3>Consultar Ordenes de Servicio</h3>
-                        
+
                 </header>
                 -->
                 <b-row>
                     <b-col>
-                        <b-form-group 
+                        <b-form-group
                         class="text-primary"
                             label="Clientes">
-                        <!--    
-                        <b-form-select v-model="selectedCL" class="mb-3" :options="clientes"  
+                        <!--
+                        <b-form-select v-model="selectedCL" class="mb-3" :options="clientes"
                         text-field="nombre" value-field="_id" @change.native="SelectCC"
-                        :disabled="disabled_selectedCL">                        
+                        :disabled="disabled_selectedCL">
                         </b-form-select>
                         -->
-                         <v-select v-model="selectedCL" label="nombre" placeholder="Seleccione el Cliente"
+                         <v-select v-model="selectedCL" label="nombre" placeholder="Cliente"
                       :options="clientes" @input="seleccionCliente()"
                       :disabled="disabled_selectedCL"></v-select>
                         </b-form-group>
                     </b-col>
                     <b-col>
-                        <b-form-group 
+                        <b-form-group
                         class="text-primary"
                             label="Centros de Costo">
                             <!--
-                            <b-form-select v-model="selectedCC" class="mb-3" :options="centros" 
+                            <b-form-select v-model="selectedCC" class="mb-3" :options="centros"
                             text-field="nombre" value-field="_id" :disabled="habilitar">
-                            
+
                             </b-form-select>
                             -->
-                            <v-select v-model="selectedCC" label="nombre_concatenado" placeholder="Seleccione el Cliente"
-                      :options="centros" 
+                            <v-select v-model="selectedCC" label="nombre_concatenado" placeholder="Cliente"
+                      :options="centros"
                       :disabled="habilitar"></v-select>
                         </b-form-group>
                     </b-col>
                 </b-row>
                 <b-row>
                     <b-col>
-                        <b-form-group 
+                        <b-form-group
                         class="text-primary" label="Rango de Fechas" >
-                        <date-picker width=400  v-model="time1" range lang="es" 
+                        <date-picker width=400  v-model="time1" range lang="es"
                         :shortcuts="shortcuts" :confirm="true"
                         ></date-picker>
                         </b-form-group>
                     </b-col>
                     <b-col md="6" class="my-1">
-                        <b-form-group 
+                        <b-form-group
                         class="text-primary"
                          label="Orden de Servicio" >
                             <b-input-group>
-                                <b-form-input v-model="filter" type="number" @keyup="numeros(this)" placeholder="Digite numero Orden de Servicio" />
+                                <b-form-input v-model="filter" type="number" @keyup="numeros(this)" placeholder="Número Orden de Servicio" />
                             </b-input-group>
                         </b-form-group>
                     </b-col>
@@ -71,7 +71,7 @@
                     </b-col>
                 </b-row>
                 <b-row>
-                
+
                     <b-col>
                         <b-form-group  label="Estados" class="text-primary">
                             <b-input-group>
@@ -80,14 +80,14 @@
                                 value-field="nombre" @change.native="selestado">
                                 </b-form-select>
                                 -->
-                                <v-select v-model="selected_state" label="nombre" placeholder="Seleccione un Estado"
+                                <v-select v-model="selected_state" label="nombre" placeholder="Estado"
                                 :options="estados"
                                 ></v-select>
-                                
+
                             </b-input-group>
                         </b-form-group>
                     </b-col>
-                </b-row>    
+                </b-row>
                 <b-row>
                     <b-col  md="6">
                     <b-btn class="my-1 rounded"  variant="primary" exact-active-class v-on:click="consultar()">
@@ -102,7 +102,7 @@
             </router-view>
             </b-card>
         </b-container>
-        
+
         </b-container>
 </template>
 
@@ -119,7 +119,7 @@ export default {
     Preload,
     DatePicker
   },
-  
+
     data() {
         return {
             sel_conslta: false,
@@ -165,7 +165,7 @@ export default {
             estados: [],
             selected_state: null,
             time1: [
-               
+
             ],
             selectedCL: null,
             clientes: [],
@@ -182,14 +182,14 @@ export default {
                 var load=true
                 setTimeout(() => {
                     bus.$emit('load', {
-                        load 
+                        load
                     })
                     }, )
-                this.axios.get(urlservicios+"CentrosPorCliente/"+this.selectedCL._id)            
+                this.axios.get(urlservicios+"CentrosPorCliente/"+this.selectedCL._id)
                     //this.axios.get(urlservicios+"centros/")
                     .then((response) => {
                         this.centros=response.data
-                    
+
                     //this.load=false
                     var load=false
                     setTimeout(() => {
@@ -211,13 +211,13 @@ export default {
                             'Intente nuevamente, por favor',
                             'warning'
                             )
-        }) 
+        })
             }
             else{
                 this.habilitar= true
             }
-            
-            
+
+
         },
         selestado(value){
             this.selected_state=value.target.value
@@ -239,7 +239,7 @@ export default {
             bus.$emit('actualizar',indice)
         },
         consultar: function(){
-            
+
             this.sel_conslta=true
             console.log();
             ///ObtenerOrdenesFiltrado/:consecutivo/:estado/:id_remitente/:id_centro/:fecha_inicio/:fecha_final
@@ -262,11 +262,11 @@ export default {
             var dayante =ant.getDate()
             d.setFullYear(year,month,day)
             ant.setFullYear(year,monthante,dayante)
-        
+
             var mana=new Date(fecha.getTime() + 24*60*60*1000);
             var fechainicial= moment(this.time1[0])
             var finalfinal= moment(this.time1[1])
-           
+
             var cantidaddias=finalfinal.diff(fechainicial, 'days')
             /*
             console.log(mana);
@@ -318,24 +318,24 @@ export default {
                         }
                         else{
                         cliente=this.selectedCL._id
-                        }   
+                        }
                     if(this.selectedCC===''||this.selectedCC===null){
                         centrocosto="null"
-                        }   
+                        }
                         else{
                         centrocosto=this.selectedCC._id
-                        }   
+                        }
                         console.log(this.time1);
-                        
+
                     var login = localStorage.getItem("storedData");
-                    var infologin =JSON.parse(login);  
+                    var infologin =JSON.parse(login);
                     var load=true
                         setTimeout(() => {
                             bus.$emit('load', {
-                                load 
+                                load
                             })
                             }, )
-                
+
                     this.axios.get(urlservicios+"ObtenerOrdenesFiltrado/"+infologin.id_OperadorLogistico._id+"/"+this.filter+"/"+esadoconsulta+
                     "/"+cliente+"/"+centrocosto+"/"+inicio+"/"+fin)
                     .then((response) => {
@@ -352,7 +352,7 @@ export default {
                                 'No se encontro ninguna Orden!',
                                 'error'
                                 )
-                                
+
                         }
                         else{
                             console.log(this.consulta);
@@ -377,11 +377,11 @@ export default {
                             'Intente nuevamente, por favor',
                             'warning'
                             )
-        }) 
-                    
+        })
+
                 }
-               
-               
+
+
             }
             else{
                 console.log("hago peticion");
@@ -413,24 +413,24 @@ export default {
                     }
                     else{
                     cliente=this.selectedCL._id
-                    }   
+                    }
                 if(this.selectedCC===''||this.selectedCC===null){
                     centrocosto="null"
-                    }   
+                    }
                     else{
                     centrocosto=this.selectedCC._id
-                    }   
+                    }
                     console.log(this.time1);
-                    
+
                 var login = localStorage.getItem("storedData");
-                var infologin =JSON.parse(login);  
+                var infologin =JSON.parse(login);
                 var load=true
                     setTimeout(() => {
                         bus.$emit('load', {
-                            load 
+                            load
                         })
                         }, )
-            
+
                 this.axios.get(urlservicios+"ObtenerOrdenesFiltrado/"+infologin.id_OperadorLogistico._id+"/"+this.filter+"/"+esadoconsulta+
                 "/"+cliente+"/"+centrocosto+"/"+inicio+"/"+fin)
                 .then((response) => {
@@ -447,7 +447,7 @@ export default {
                             'No se encontro ninguna Orden!',
                             'error'
                             )
-                            
+
                     }
                     else{
                         console.log(this.consulta);
@@ -472,10 +472,10 @@ export default {
                             'Intente nuevamente, por favor',
                             'warning'
                             )
-        }) 
-                
+        })
+
             }
-            
+
         },
         SelectCC(value){
             var vacio=  { _id: null, nombre: 'Por Favor Seleccione un Centro de Costo' };
@@ -485,10 +485,10 @@ export default {
                 var load=true
                 setTimeout(() => {
                     bus.$emit('load', {
-                        load 
+                        load
                     })
                     }, )
-                this.axios.get(urlservicios+"CentrosPorCliente/"+this.selectedCL)            
+                this.axios.get(urlservicios+"CentrosPorCliente/"+this.selectedCL)
                 //this.axios.get(urlservicios+"centros/")
                 .then((response) => {
                     this.centros=response.data
@@ -514,17 +514,17 @@ export default {
                             'Intente nuevamente, por favor',
                             'warning'
                             )
-        }) 
+        })
             }else{
                 this.selectedCL=value.target.value
                   //this.load = true;
                 var load=true
                 setTimeout(() => {
                     bus.$emit('load', {
-                        load 
+                        load
                     })
                     }, )
-                this.axios.get(urlservicios+"CentrosPorCliente/"+value.target.value)            
+                this.axios.get(urlservicios+"CentrosPorCliente/"+value.target.value)
                 //this.axios.get(urlservicios+"centros/")
                 .then((response) => {
                     this.centros=response.data
@@ -550,17 +550,17 @@ export default {
                             'Intente nuevamente, por favor',
                             'warning'
                             )
-        }) 
+        })
             }
-            
+
 
 
         }
-        
+
     },
     updated: function () {
         bus.$on('ocultar', function (userObject) {
-        
+
         this.ocultar = userObject.ocultar
       }.bind(this))
     },
@@ -576,10 +576,10 @@ export default {
         var dayante =ant.getDate()
         d.setFullYear(year,month,day)
         ant.setFullYear(year,monthante,dayante)
-       
+
        var mana=new Date(fecha.getTime() + 24*60*60*1000);
-       
-       
+
+
         var HaceUnaSemana=new Date(fecha.getTime() - (24*60*60*1000)*7);
         var HaceUnaSemanaDia = HaceUnaSemana.getDate()
         var HaceUnaSemanaMes = HaceUnaSemana.getMonth()
@@ -599,12 +599,12 @@ export default {
         }
         //this.shortcuts[3].start=ant
         //this.shortcuts[3].end=d
-        
+
         this.time1[1]= mana
         this.time1[0] =ant
         var concatday
         var bandera=true
-         
+
         var vacio=  { _id: null, nombre: 'Por Favor Seleccione un Cliente' };
         var vacio2= { nombre: 'Por Favor Seleccione un Cliente' };
         var login = localStorage.getItem("storedData");
@@ -617,7 +617,7 @@ export default {
             var load=true
             setTimeout(() => {
                 bus.$emit('load', {
-                    load 
+                    load
                 })
                 }, )
             this.axios.get(urlservicios+"clientesOperador/"+infologin.id_OperadorLogistico._id
@@ -626,7 +626,7 @@ export default {
                 var load=false
             setTimeout(() => {
                 bus.$emit('load', {
-                    load 
+                    load
                 })
                 }, )
                 this.clientes=response.data
@@ -643,14 +643,14 @@ export default {
                     'Intente nuevamente, por favor',
                     'warning'
                     )
-        }) 
+        })
         }else{
             console.log("hay cliente");
             id_cliente=infologin.id_cliente
             var load=true
             setTimeout(() => {
                 bus.$emit('load', {
-                    load 
+                    load
                 })
             }, )
             this.axios.get(urlservicios+"clientesOperador/"+infologin.id_OperadorLogistico._id
@@ -674,7 +674,7 @@ export default {
                     'Intente nuevamente, por favor',
                     'warning'
                     )
-        }) 
+        })
             this.disabled_selectedCL=true
             //this.SelectCC(id_cliente)
         }
@@ -683,7 +683,7 @@ export default {
                     bus.$emit("load", {
                     load
                     });
-                });   
+                });
         this.axios.get(urlservicios+"estados/")
         .then((response) => {
             this.estados=response.data
@@ -710,9 +710,9 @@ export default {
                     'Intente nuevamente, por favor',
                     'warning'
                     )
-        }) 
-            
-        
+        })
+
+
     },
 }
 </script>
@@ -766,7 +766,7 @@ box-shadow: 1px 5px 7px 5px rgba(0,0,0,0.1);
   padding-bottom: 30px;
   border-color: 15px gray;
 
-  
+
 }
 .car{
     border: 1px solid transparent;
