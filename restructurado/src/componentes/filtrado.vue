@@ -37,7 +37,6 @@
             </v-select>
           </b-form-group>
         </div>
-<<<<<<< HEAD
 
         <b-container fluid class="contenedorInterno">
 
@@ -139,42 +138,6 @@
         </b-container>
 
         </b-container>
-=======
-        <div class="form-row">
-          <b-form-group class="text-primary col-md-6" label="Rango de Fechas">
-            <date-picker class="w-100" v-model="time1" range lang="es" :shortcuts="shortcuts" :confirm="true">
-            </date-picker>
-          </b-form-group>
-          <b-form-group class="text-primary col-md-6" label="Orden de Servicio">
-            <b-input-group>
-              <b-form-input v-model="filter" type="number" @keyup="numeros(this)"
-                placeholder="Número Orden de Servicio"/>
-            </b-input-group>
-          </b-form-group>
-        </div>
-        <div class="form-row">
-          <b-form-group label="Estados" class="text-primary col-md-6">
-            <b-input-group>
-              <!--
-              <b-form-select  v-model="selected_state" :options="estados" text-field="nombre"
-              value-field="nombre" @change.native="selestado">
-              </b-form-select>
-              -->
-              <v-select v-model="selected_state" class="w-100" label="nombre" placeholder="Estado" :options="estados">
-              </v-select>
-            </b-input-group>
-          </b-form-group>
-        </div>
-        <b-btn class="my-1 rounded float-right" variant="primary" exact-active-class v-on:click="consultar()">
-          <i class="fa fa-search" aria-hidden="true"></i>Consultar
-        </b-btn>
-      </b-card>
-      <b-card id="jose" class="cards2"  v-show="sel_conslta">
-        <router-view :consulta="consulta" :peticion="peticion"></router-view>
-      </b-card>
-    </b-container>
-  </b-container>
->>>>>>> origin/cambios
 </template>
 
 <script>
