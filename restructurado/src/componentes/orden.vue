@@ -10,16 +10,19 @@ DE LA ORDEN DE SERVICIO -->
 
       <b-container fluid class="contenedorInterno">
                 <header class="content-heading" slot="header">
+                  <b-row  class=" my-1">
+                  <b-col>
                 <h3>Generación Orden de Servicio</h3>
-                    
-                </header> 
-                <b-row>
-                  <b-col md="3" offset-md="10" class=" my-1">
-                    <b-btn class="rounded" variant="primary"   v-on:click="actualizar"
+                  </b-col>
+                 
+                  <b-col >
+                    <b-btn class="rounded float-right" variant="primary"   v-on:click="actualizar"
                     v-b-popover.hover="'Continuar'" >Continuar<i class="fa fa-arrow-right"></i>
                     </b-btn>
                 </b-col>
                 </b-row>
+                </header> 
+                
     <b-card>
         <b-card class="cards" >
            <b-row>
@@ -40,7 +43,14 @@ DE LA ORDEN DE SERVICIO -->
                  <h3 class="text-primary"> Fecha </h3>
                  <b-form-input  type="date" v-model="fecha"></b-form-input>
               </b-col>
-               
+               <b-col v-show="prueba=='second'" >
+                 <h3 class="text-primary"> Hora inicio </h3>
+                 <b-form-input  type="number" v-model="horaInicio"></b-form-input>
+              </b-col>
+                <b-col v-show="prueba=='second'" >
+                 <h3 class="text-primary"> Hora fin </h3>
+                 <b-form-input  type="number" v-model="horaFin"></b-form-input>
+              </b-col>
             </b-row>
             <b-row>
                 <b-col>
@@ -137,9 +147,7 @@ DE LA ORDEN DE SERVICIO -->
                               @keypress="localizar()"
                                  @keyup.enter.native="localizar()"
                               -->
-                              {{lati}}
-                              <br>
-                              {{longi}}
+                              
                     </b-form-group>
                     </b-col>
                 </b-row>
@@ -249,6 +257,8 @@ export default {
   data() {
     
     return {
+      horaInicio:'',
+      horaFin:'',
       prueba:'first',
       fecha:'',
       //observaciones:'',
@@ -311,12 +321,16 @@ export default {
   methods: {
     
     initAutocomplete(){
-      //console.log("entro");
+      console.log("entro");
       var longi
       var latit
       var codpostal
+       var options = {
+        componentRestrictions: {country: 'co'}
+      };
        var input = document.getElementById('direccionGoogle');
-                var searchBox = new google.maps.places.SearchBox(input);
+                var searchBox = new google.maps.places.Autocomplete(input,options);
+                //console.log(searchBox);
                 searchBox.addListener('places_changed', function() {
                   input.value=input.value.split(',')[0]; 
                     var places = searchBox.getPlaces();
@@ -344,9 +358,8 @@ export default {
                         }
                         this.lati=latit
                         this.longi=longi
-
-                       // document.getElementById('lat').innerHTML = place.geometry.location.lat();
-                        //document.getElementById('lng').innerHTML = place.geometry.location.lng();
+                        //console.log(this.longi);
+                       
                     }.bind(this));
                 }.bind(this));
                 //input.value=input.value.split(',')[0];
@@ -869,6 +882,7 @@ export default {
         bus.$emit("remitente", seleccionados);
         localStorage.setItem("orden", JSON.stringify(seleccionados));
         localStorage.setItem("infoorden", JSON.stringify(selecciones));
+        console.log(this.remit);
          var objetoremitente
         if(this.longi==null||this.longi===null||this.longi==''||
        this.lati==null||this.lati===null||this.lati==''){
@@ -949,7 +963,7 @@ export default {
                 load
               });
             });
-            this.$router.replace("/inicio/ordenservicio");
+           this.$router.replace("/inicio/ordenservicio");
           })
           .catch(function(error) {
 

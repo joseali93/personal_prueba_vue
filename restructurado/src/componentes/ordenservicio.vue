@@ -147,7 +147,7 @@
                                         <b-col>
                                             <label class="col col-form-label col-form-label-sm text-capitalize text-primary" >Documento Referencia:</label>
                                         </b-col>
-                                        <b-col>
+                                        <b-col cols="8">
                                             <b-form-input type="text" class="form-control form-control-sm " 
                                                                     placeholder=" Factura, Remisión, orden de compra..." v-model="detalles.referencia"
                                                                 :state="estado.referencia"></b-form-input>
@@ -160,9 +160,9 @@
                                         <template v-if="data.type!='select'" >
                                         <template v-if="data.espieza==false">
                                         <b-col  >   
-                                            <label  class="col-sm col-form-label col-form-label-sm text-capitalize text-primary" :style="[data.style]" >{{data.placeholder}}: </label>
+                                            <label  class="col-sm col-form-label col-form-label-sm text-capitalize text-primary" :style="[data.style]" >{{data.nombre}}: </label>
                                         </b-col>
-                                        <b-col >
+                                        <b-col  cols="8">
                                             
                                             <input class="form-control form-control-sm "  :maxlength="data.maxlength" :type="data.type" :id="data.id" :style="[data.style,validatecampo]" :max="data.max" :min="data.min" :placeholder="data.placeholder" @keyup="Presiono(indice)"   required>
                                         </b-col>
@@ -173,24 +173,24 @@
                                     </b-row>
                                     <b-form-row v-show="selectservice" class=" my-1">
                                     <b-col>
-                                    <b-form-textarea id="textarea1"
-                                        v-model="detalles.observaciones"
-                                        placeholder="Ingrese las observaciones necesarias"
-                                        :rows="3"
-                                        :max-rows="6">
-                                    </b-form-textarea>
+                                    <b-form-input id="textarea1" type="text" 
+                                        v-model="detalles.contenido"
+                                        placeholder="Medicamentos, Facturas, Mercancias Especiales, ...etc"
+                                       >
+                                    </b-form-input>
                                     </b-col>
                                 </b-form-row>
-                                <b-form-row v-show="selectservice" class=" my-1">
+                                    <b-form-row v-show="selectservice" class=" my-1">
                                     <b-col>
                                     <b-form-textarea id="textarea1"
-                                        v-model="detalles.contenido"
-                                        placeholder="Ingrese el contenido de los paquetes"
+                                        v-model="detalles.observaciones"
+                                        placeholder="Ingrese las instrucciones a tener en cuenta para entrega, recolección y transporte."
                                         :rows="3"
                                         :max-rows="6">
                                     </b-form-textarea>
                                     </b-col>
                                 </b-form-row>
+                                
                             </b-card-body>
                             </b-tab>
                             <b-tab title="Detalle" :disabled="tabdinamico">
@@ -314,7 +314,9 @@
                                     <label  class="col-sm col-form-label col-form-label-sm text-primary">Dirección: </label>
                                 </b-col>
                                 <b-col  cols="9">
-                                    <b-form-input  id="direccionGoogle2" 
+                                    <b-form-input
+                                    ref="focusDireccion"
+                                      id="direccionGoogle2" 
                                           type="text"
                                      placeholder="Dirección"
                                      required
@@ -359,10 +361,10 @@
                     </b-tabs>  
                     
                     <b-card-footer>
-                        <div class="text-center" v-show="selectservice">
+                        <div class="text-center" v-show="selectservice" variant="success">
                             <b-button-group class="mt-2">
-                            <b-btn @click="tabIndex--"><i class="fa fa-chevron-left" aria-hidden="true"></i></b-btn>
-                            <b-btn @click="tabIndex++"><i class="fa fa-chevron-right" aria-hidden="true"></i></b-btn>
+                            <b-btn @click="tabIndex--" variant="success"><i class="fa fa-chevron-left" aria-hidden="true"></i></b-btn>
+                            <b-btn @click="tabIndex++" variant="success"><i class="fa fa-chevron-right" aria-hidden="true"></i></b-btn>
                             </b-button-group>
                             
                         </div>
@@ -471,7 +473,7 @@
                             <template v-if="data.type!='select'" >
                                 <template v-if="data.espieza==true">
                                 <b-col  >   
-                                    <label  class="col-sm col-form-label col-form-label-sm text-capitalize" :style="[data.style]" >{{data.placeholder}}: </label>
+                                    <label  class="col-sm col-form-label col-form-label-sm text-capitalize" :style="[data.style]" >{{data.nombre}}: </label>
                                 </b-col>
                                 <b-col >
                                     <input class="form-control form-control-sm" :type="data.type"
@@ -549,8 +551,9 @@
                                 <b-col>
                                     <b-form-input type="number" class="form-control form-control-sm"  placeholder="Indentidicación"
                                     v-model="detalleseditar.destinatario.numero_identificacion"
-                                   
-                                    :state="true"  v-b-popover.hover="'Se debe diligenciar sin puntos, en caso de NIT sin numero de validación, ni guion'" title="Num. Identificacion"></b-form-input>
+                                    @change="initAutocompleteED"
+                                     @input="initAutocompleteED"
+                                    :state="null"  v-b-popover.hover="'Se debe diligenciar sin puntos, en caso de NIT sin numero de validación, ni guion'" title="Num. Identificacion"></b-form-input>
                                     <!--<input type="text" 
                                      @keyup.enter.tab.native="buscar('editar')"
                                     @keydown.tab.native="buscar('editar')"
@@ -578,7 +581,9 @@
                                 </b-col>
                                 <b-col>
                                 <b-form-input id="direccionGoogle3" type="text" class="form-control form-control-sm"  placeholder="Direccion" v-model="detalleseditar.destinatario.direccion"
-                                    :state="estado.direccion"></b-form-input>
+                                    :state="estado.direccion"
+                                    
+                                    ></b-form-input>
                                     <!--
                                     <input type="text" class="form-control form-control-sm" id="editardire" placeholder="Direccion" v-model="detalleseditar.destinatario.direccion">
                                     -->
@@ -767,7 +772,7 @@ export default {
       var latit
       var codpostal
        var input = document.getElementById('direccionGoogle3');
-                var searchBox = new google.maps.places.SearchBox(input,options);
+                var searchBox = new google.maps.places.Autocomplete(input,options);
                //console.log(searchBox);
                 searchBox.addListener('places_changed', function() {
                   input.value=input.value.split(',')[0]; 
@@ -819,7 +824,7 @@ export default {
       var latit
       var codpostal
        var input = document.getElementById('direccionGoogle2');
-                var searchBox = new google.maps.places.SearchBox(input,options);
+                var searchBox = new google.maps.places.Autocomplete(input,options);
                //console.log(searchBox);
                 searchBox.addListener('places_changed', function() {
                   input.value=input.value.split(',')[0]; 
@@ -917,7 +922,7 @@ export default {
     SeleccionadoED() {
       console.log(this.destinatarioED);
       if(this.destinatarioED==null||this.destinatarioED=='null'){
-        this.detalleseditar.destinatario.identificacion = ''
+        this.detalleseditar.destinatario.numero_identificacion = ''
         this.detalleseditar.destinatario.direccion = ''
         this.detalleseditar.destinatario.telefono = ''
         this.detalleseditar.destinatario.nombre = ''
@@ -954,6 +959,9 @@ export default {
                 
                 //this.remitente={}
                 this.detalleseditar.destinatario.nombre=search
+                this.destinatarioED.numero_identificacion=''
+                this.destinatarioED.direccion=''
+                this.destinatarioED.telefono=''
                 }
                 else{
                
@@ -1032,6 +1040,7 @@ export default {
       }
       else{
          this.detalles.destinatario=this.nombre_remitente
+          this.$refs.focusDireccion.focus()
 
       }
       console.log(this.nombre_remitente);
@@ -1607,6 +1616,80 @@ export default {
           productoslocal: productoslocal,
           detalleslocal: detalleslocal
         };
+         var inforemitente = localStorage.getItem("orden");
+      var inforemi = JSON.parse(inforemitente);
+         if(this.optionsremitentes.length==0){
+           var load = true;
+            setTimeout(() => {
+              bus.$emit("load", {
+                load
+              });
+
+            });
+             var objetocrear = {
+                    numero_identificacion: this.detalleseditar.destinatario.numero_identificacion,
+                    direccion: this.detalleseditar.destinatario.direccion,
+                    nombre: this.detalleseditar.destinatario.nombre,
+                    telefono: this.detalleseditar.destinatario.telefono,
+                    //id_cliente: this.remitente.id_cliente,
+                    latitud: this.lati,
+                    longitud:this.longi,
+                    codigo_postal:this.posta,
+                    id_cliente: inforemi.selected_client._id
+                    };
+                    console.log("creo destinatario");
+                    console.log(objetocrear);
+         this.axios.post(urlservicios+ "CrearDestinatario", objetocrear)
+          .then(response => {
+            console.log("se creo correcto");
+            console.log(response);
+            var load = false;
+            setTimeout(() => {
+              bus.$emit("load", {
+                load
+              });
+
+            });
+          })
+         }
+         else{
+            //detallepr=Object.assign({},this.detalles.destinatario);
+            var load = true;
+            setTimeout(() => {
+              bus.$emit("load", {
+                load
+              });
+
+            });
+             var objetoactualizar = {
+                    numero_identificacion: this.detalleseditar.destinatario.numero_identificacion,
+                    direccion: this.detalleseditar.destinatario.direccion,
+                    nombre: this.detalleseditar.destinatario.nombre,
+                    telefono: this.detalleseditar.destinatario.telefono,
+                    //id_cliente: this.remitente.id_cliente,
+                    latitud: this.lati,
+                    longitud:this.longi,
+                    codigo_postal:this.posta,
+                    id_cliente: inforemi.selected_client._id
+                    };
+            this.axios.post(urlservicios+"ActualizarDestinatario" +"/" +this.detalleseditar.destinatario._id,objetoactualizar)
+            .then(response => {
+                var load = false;
+                setTimeout(() => {
+                bus.$emit("load", {
+                    load
+                });
+                });
+            })
+            .catch(function(error) {
+                var load = false;
+                setTimeout(() => {
+                bus.$emit("load", {
+                    load
+                });
+                });
+            });
+         }
         this.DetalleServicio.splice(this.indices, 1);
         this.DetalleServicio.splice(this.indices, 0, detalles);
         (this.objeto = ""),
@@ -1816,7 +1899,7 @@ export default {
       var inforemi = JSON.parse(inforemitente);
          if(this.optionsremitentes.length==0){
              var objetocrear = {
-                    numero_identificacion: this.detalles.destinatario.identificacion,
+                    numero_identificacion: this.detalles.destinatario.numero_identificacion,
                     direccion: this.detalles.destinatario.direccion,
                     nombre: this.detalles.destinatario.nombre,
                     telefono: this.detalles.destinatario.telefono,
@@ -1826,8 +1909,12 @@ export default {
                     codigo_postal:this.posta,
                     id_cliente: inforemi.selected_client._id
                     };
+                    console.log("creo destinatario");
+                    console.log(objetocrear);
          this.axios.post(urlservicios+ "CrearDestinatario", objetocrear)
           .then(response => {
+            console.log("se creo correcto");
+            console.log(response);
             var load = false;
             setTimeout(() => {
               bus.$emit("load", {
@@ -1840,7 +1927,7 @@ export default {
          else{
             //detallepr=Object.assign({},this.detalles.destinatario);
              var objetoactualizar = {
-                    numero_identificacion: this.detalles.destinatario.identificacion,
+                    numero_identificacion: this.detalles.destinatario.numero_identificacion,
                     direccion: this.detalles.destinatario.direccion,
                     nombre: this.detalles.destinatario.nombre,
                     telefono: this.detalles.destinatario.telefono,
