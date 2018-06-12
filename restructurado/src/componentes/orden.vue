@@ -13,18 +13,10 @@ DE LA ORDEN DE SERVICIO -->
                   <b-row  class=" my-1">
                   <b-col>
                 <h3>Generación Orden de Servicio</h3>
-<<<<<<< HEAD
                   </b-col>
                  
                   <b-col >
                     <b-btn class="rounded float-right" variant="primary"   v-on:click="actualizar"
-=======
-
-                </header>
-                <b-row>
-                  <b-col md="3" offset-md="10" class=" my-1">
-                    <b-btn class="rounded" variant="primary"   v-on:click="actualizar"
->>>>>>> origin/cambios
                     v-b-popover.hover="'Continuar'" >Continuar<i class="fa fa-arrow-right"></i>
                     </b-btn>
                 </b-col>
@@ -51,7 +43,6 @@ DE LA ORDEN DE SERVICIO -->
                  <h3 class="text-primary"> Fecha </h3>
                  <b-form-input  type="date" v-model="fecha"></b-form-input>
               </b-col>
-<<<<<<< HEAD
                <b-col v-show="prueba=='second'" >
                  <h3 class="text-primary"> Hora inicio </h3>
                  <b-form-input  type="number" v-model="horaInicio"></b-form-input>
@@ -60,9 +51,6 @@ DE LA ORDEN DE SERVICIO -->
                  <h3 class="text-primary"> Hora fin </h3>
                  <b-form-input  type="number" v-model="horaFin"></b-form-input>
               </b-col>
-=======
-
->>>>>>> origin/cambios
             </b-row>
             <b-row>
                 <b-col>
@@ -341,16 +329,43 @@ export default {
         componentRestrictions: {country: 'co'}
       };
        var input = document.getElementById('direccionGoogle');
-                var searchBox = new google.maps.places.Autocomplete(input,options);
-                //console.log(searchBox);
-                searchBox.addListener('places_changed', function() {
+                var searchBox = new google.maps.places.Autocomplete(input);
+                input.value=input.value.split(',')[0];
+                 searchBox.setComponentRestrictions( {'country': ['co']})
+                searchBox.addListener('place_changed', function() {
                   input.value=input.value.split(',')[0];
-                    var places = searchBox.getPlaces();
-
+                    var places = searchBox.getPlace();
                     if(places.length == 0){
                         return;
                     }
+                    else{
+                      if(!places.geometry){
+                        console.log("no tengo latitud");
+                      }else{
+                        console.log("tengo lati y longi");
+                        this.lati=places.geometry.location.lat()
+                        this.longi=places.geometry.location.lng()
+                      }
+                      for (var i = 0; i < places.address_components.length; i++) {
+                        for (var j = 0; j < places.address_components[i].types.length; j++) {
+                            if (places.address_components[i].types[j] == "postal_code") {
+                              console.log("tengo codigo");
+                              this.posta = places.address_components[i].long_name;
+
+                            }
+                        }
+                      }
+                    }
+                    
+                    // Object.keys(places).forEach((k) => {
+                      
+                    //   const place = (places[k]);
+                    //   console.log(place);
+                    //  if(k=='geometry'||k==='geometry'){}
+                    // });
+                    /*
                     places.forEach(function(place){
+                      console.log(place);
                         if(!place.geometry) {
                             return;
                         }
@@ -373,8 +388,10 @@ export default {
                         //console.log(this.longi);
                        
                     }.bind(this));
+                    */
                 }.bind(this));
                 //input.value=input.value.split(',')[0];
+                input.value=input.value.split(',')[0];
     },
     cambio(){
       if(this.prueba=='second'){

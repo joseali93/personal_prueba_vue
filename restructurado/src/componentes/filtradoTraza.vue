@@ -131,7 +131,7 @@
                 <router-view :consulta="consulta" :centro="selectedCC"
                     :cliente="selectedCL"
                     :envios="envio"
-                    :procesosLogisticos="procesosLogisticos">
+                    >
                 </router-view>
            </b-card>
         </b-container>
@@ -430,7 +430,7 @@ export default {
               )
               .then(response => {
                 console.log(response.data);
-                this.consulta = response.data.detalles;
+                this.consulta = response.data;
                 this.procesosLogisticos = response.data.proceso
                 if (this.consulta == "") {
                   swal("Oops...", "No se encontro ninguna Orden!", "error");
@@ -516,8 +516,8 @@ export default {
                 )
                 .then(response => {
                   console.log(response);
-                  this.consulta = response.data.detalles;
-                  this.procesosLogisticos = response.data.proceso
+                  this.consulta = response.data;
+                  //this.procesosLogisticos = response.data.proceso
                   console.log(this.procesosLogisticos);
                   if (this.consulta == "") {
                     swal("Oops...", "No se encontro ninguna Orden!", "error");
@@ -587,8 +587,8 @@ export default {
                     "/null/null"
                 )
                 .then(response => {
-                  this.consulta = response.data.detalles;
-                this.procesosLogisticos = response.data.proceso
+                  this.consulta = response.data;
+                //this.procesosLogisticos = response.data.proceso
 
                   if (this.consulta == "") {
                     swal("Oops...", "No se encontro ninguna Orden!", "error");
@@ -657,12 +657,13 @@ export default {
                       //ObtenerOrdenesFiltradoDetalle/:id_centro/:id_cliente/:consecutivo/:detalle/:referencia/:fecha_inicio/:fecha_final"
 
             console.log(urlservicios+"ObtenerOrdenesFiltradoDetalle/" +centocosto +"/" +this.selectedCL._id +"/null/" +this.nmovilizado +"/null/null/null");
+             
               this.axios
-                .get(urlservicios+"ObtenerOrdenesFiltradoDetalle/" +centocosto +"/" +this.selectedCL._id +"/null/" +this.nmovilizado +"/null/null/null")
+                .get(urlservicios+"ObtenerOrdenesFiltradoDetalle/" +centocosto +"/" +this.selectedCL._id +"/null/" +(this.nmovilizado) +"/null/null/null")
                 .then(response => {
                   console.log(response);
-                  this.consulta = response.data.detalles;
-                                  this.procesosLogisticos = response.data.proceso
+                  this.consulta = response.data;
+                                  //this.procesosLogisticos = response.data.proceso
 
                   if (this.consulta == "") {
                     swal("Oops...", "No se encontro ninguna Orden!", "error");

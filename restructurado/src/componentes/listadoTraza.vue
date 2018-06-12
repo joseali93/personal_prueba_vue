@@ -722,10 +722,10 @@ export default {
                 //centro:centro,
                 inputs:this.final
             }
-            var proce = this.procesosLogisticos
+            //var proce = this.procesosLogisticos
             setTimeout(() => {
                 bus.$emit('resultado', {
-                    value ,personal,proce
+                    value ,personal
                 })
                 }, )
             this.$router.replace('/inicio/trazabilidad/resultado')
@@ -745,10 +745,9 @@ export default {
     beforeCreate: function() {
 
     },
-    props:['consulta','centro','cliente', 'envios','procesosLogisticos'],
+    props:['consulta','centro','cliente', 'envios'],
     data () {
         return {
-            procesosLogisticos:'',
             variableServidor:'',
             resul:[],
             acor:false,

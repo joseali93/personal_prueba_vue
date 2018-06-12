@@ -66,22 +66,7 @@
                   <b-pagination size="md" :total-rows="DetalleServicio.length" v-model="currentPage" :per-page="5">
                   </b-pagination>
               </b-row>
-              <!--
-              <b-row>
-                <b-col class="float-left" cols="5">
-                  <b-btn to="/inicio/orden" variant="primary">
-                  <i class="fa fa-chevron-left" aria-hidden="true">  </i>
-                  Anterior</b-btn>
 
-                </b-col>
-                <b-col class="d-flex flex-row-reverse">
-                                        <b-btn   @click="envioServicio" variant="primary">
-                                          <i class="fa fa-check" aria-hidden="true"></i>
-                                          Finalizar</b-btn>
-
-                </b-col>
-              </b-row>
-              -->
           </b-card>
           <b-card class="cards" id="card2">
              <h3 slot="header" id="cardHeader" >Observaciones generales de recolección</h3>
@@ -145,13 +130,8 @@
                                         <b-col>
                                             <label class="col col-form-label col-form-label-sm text-capitalize text-primary" >Documento Referencia:</label>
                                         </b-col>
-<<<<<<< HEAD
                                         <b-col cols="8">
                                             <b-form-input type="text" class="form-control form-control-sm " 
-=======
-                                        <b-col>
-                                            <b-form-input type="text" class="form-control form-control-sm "
->>>>>>> origin/cambios
                                                                     placeholder=" Factura, Remisión, orden de compra..." v-model="detalles.referencia"
                                                                 :state="estado.referencia"></b-form-input>
                                         </b-col>
@@ -162,19 +142,11 @@
                                     <b-row  v-for="(data,indice) in inputs.campos" class="my-2">
                                         <template v-if="data.type!='select'" >
                                         <template v-if="data.espieza==false">
-<<<<<<< HEAD
                                         <b-col  >   
                                             <label  class="col-sm col-form-label col-form-label-sm text-capitalize text-primary" :style="[data.style]" >{{data.nombre}}: </label>
                                         </b-col>
                                         <b-col  cols="8">
                                             
-=======
-                                        <b-col  >
-                                            <label  class="col-sm col-form-label col-form-label-sm text-capitalize text-primary" :style="[data.style]" >{{data.placeholder}}: </label>
-                                        </b-col>
-                                        <b-col >
-
->>>>>>> origin/cambios
                                             <input class="form-control form-control-sm "  :maxlength="data.maxlength" :type="data.type" :id="data.id" :style="[data.style,validatecampo]" :max="data.max" :min="data.min" :placeholder="data.placeholder" @keyup="Presiono(indice)"   required>
                                         </b-col>
 
@@ -183,33 +155,22 @@
                                         </template>
                                     </b-row>
                                     <b-form-row v-show="selectservice" class=" my-1">
+                                      <b-col>
+                                        <label  class="col-sm col-form-label col-form-label-sm text-capitalize text-primary" > Contenido </label>
+                                      </b-col>
                                     <b-col>
-<<<<<<< HEAD
                                     <b-form-input id="textarea1" type="text" 
                                         v-model="detalles.contenido"
                                         placeholder="Medicamentos, Facturas, Mercancias Especiales, ...etc"
                                        >
                                     </b-form-input>
-=======
-                                    <b-form-textarea id="textarea1"
-                                        v-model="detalles.observaciones"
-                                        placeholder="Observaciones necesarias"
-                                        :rows="3"
-                                        :max-rows="6">
-                                    </b-form-textarea>
->>>>>>> origin/cambios
                                     </b-col>
                                 </b-form-row>
                                     <b-form-row v-show="selectservice" class=" my-1">
                                     <b-col>
                                     <b-form-textarea id="textarea1"
-<<<<<<< HEAD
                                         v-model="detalles.observaciones"
                                         placeholder="Ingrese las instrucciones a tener en cuenta para entrega, recolección y transporte."
-=======
-                                        v-model="detalles.contenido"
-                                        placeholder="Contenido de los paquetes"
->>>>>>> origin/cambios
                                         :rows="3"
                                         :max-rows="6">
                                     </b-form-textarea>
@@ -257,11 +218,32 @@
                                     <b-row>
                                     <b-table striped hover :items="itemsdinamicos"  :fields="fieldsdinamicos"
                                     :per-page="3" :current-page="currentPageRef" v-show="camposdinamicos">
+                                    <!--
                                         <template slot="eliminar" slot-scope="data">
+                                          <b-btn variant="danger"  v-on:click="eliminarRef(data)" v-show="ocultardicionar" 
+                                           v-b-popover.hover="'Eliminar'">
+                                          <i class="fa fa-trash" v-on:click="eliminarRef(data)" v-show="ocultardicionar"
+                                          ></i>
+                                        </b-btn>
+                                        
                                             <i class="btn btn-danger fa fa-trash" v-on:click="eliminarRef(data)" v-show="ocultardicionar"></i>
+                                       
                                         </template>
-                                        <template slot="actualizar" slot-scope="data">
+                                         -->
+                                        <template slot="acciones" slot-scope="data">
+                                           <b-btn variant="primary"  v-on:click="ActualizarRef(data,data.index)" v-show="ocultardicionar"
+                                           v-b-popover.hover="'Actulizar'">
+                                          <i class="fa fa-pencil" v-on:click="ActualizarRef(data,data.index)" v-show="ocultardicionar"
+                                          ></i>
+                                        </b-btn>
+                                       <b-btn variant="danger"  v-on:click="eliminarRef(data)" v-show="ocultardicionar" 
+                                           v-b-popover.hover="'Eliminar'">
+                                          <i class="fa fa-trash" v-on:click="eliminarRef(data)" v-show="ocultardicionar"
+                                          ></i>
+                                        </b-btn>
+                                        <!--
                                             <i class="btn btn-primary fa fa-pencil" v-on:click="ActualizarRef(data,data.index)" v-show="ocultardicionar"></i>
+                                        -->
                                         </template>
 
 
@@ -284,7 +266,7 @@
                                           @input="Seleccionado" v-show="MostrarFiltro"
                                           @search="onSearch">
                                           <template slot="no-options" >
-                                            <p >Nombre del remitente..</p>
+                                            <p >Nombre del destinatario..</p>
                                           </template>
                                           <template slot="option" slot-scope="option">
                                             <div class="d-center">
@@ -339,19 +321,16 @@
                                     <label  class="col-sm col-form-label col-form-label-sm text-primary">Dirección: </label>
                                 </b-col>
                                 <b-col  cols="9">
-<<<<<<< HEAD
                                     <b-form-input
                                     ref="focusDireccion"
                                       id="direccionGoogle2" 
-=======
-                                    <b-form-input  id="direccionGoogle2"
->>>>>>> origin/cambios
                                           type="text"
                                      placeholder="Dirección"
                                      required
                                      maxlength="100"
                                      @change="initAutocomplete"
                                      @input="initAutocomplete"
+
                                      v-model="detalles.destinatario.direccion"
                                      class="form-control form-control-sm"
                                         :state="estado.direccion"
@@ -464,7 +443,7 @@
                                 <template v-if="data.type!='select'" >
                                 <template v-if="data.espieza==false">
                                 <b-col  >
-                                    <label  class="col-sm col-form-label col-form-label-sm text-capitalize" :style="[data.style]" >{{data.placeholder}}: </label>
+                                    <label  class="col-sm col-form-label col-form-label-sm text-capitalize text-primary" :style="[data.style]" >{{data.nombre}}: </label>
                                 </b-col>
                                 <b-col >
                                     <input class="form-control form-control-sm"
@@ -501,13 +480,8 @@
                             <b-row v-for="(data,indice) in inputsED.campos" v-show="camposdinamicos">
                             <template v-if="data.type!='select'" >
                                 <template v-if="data.espieza==true">
-<<<<<<< HEAD
                                 <b-col  >   
                                     <label  class="col-sm col-form-label col-form-label-sm text-capitalize" :style="[data.style]" >{{data.nombre}}: </label>
-=======
-                                <b-col  >
-                                    <label  class="col-sm col-form-label col-form-label-sm text-capitalize" :style="[data.style]" >{{data.placeholder}}: </label>
->>>>>>> origin/cambios
                                 </b-col>
                                 <b-col >
                                     <input class="form-control form-control-sm" :type="data.type"
@@ -538,10 +512,18 @@
                             <b-table striped   hover :items="itemsdinamicos"  :fields="fieldsdinamicos"
                             :per-page="3" :current-page="currentPageRef" v-show="camposdinamicos">
                                 <template slot="eliminar" slot-scope="data">
-                                    <i class="btn btn-danger fa fa-trash" v-on:click="eliminarRef(data)" v-show="ocultardicionarED"></i>
+                                  <b-btn  v-on:click="eliminarRef(data)" v-show="ocultardicionarED">
+                                    <i class="fa fa-trash" v-on:click="eliminarRef(data)" v-show="ocultardicionarED"
+                                    ></i>
+                                  </b-btn>
+                                  <!--
+                                    <i class="btn btn-danger fa fa-trash" v-on:click="eliminarRef(data)" v-show="ocultardicionarED"
+                                    v-b-popover.hover="'Permite eliminar'" title="Popover Title" ></i>
+                                    -->
                                 </template>
                                 <template slot="actualizar" slot-scope="data">
-                                    <i class="btn btn-primary fa fa-pencil" v-on:click="ActualizarRefED(data,data.index)" v-show="ocultardicionarED"></i>
+                                    <i class="btn btn-primary fa fa-pencil" v-on:click="ActualizarRefED(data,data.index)" v-show="ocultardicionarED"
+                                    v-b-popover.hover="'Permite Actualizar'" ></i>
                                 </template>
                                 </b-table>
                             <b-pagination size="md" :total-rows="itemsdinamicos.length" v-model="currentPageRef"
@@ -561,7 +543,7 @@
                                           @input="SeleccionadoED"
                                           @search="onSearchED">
                                           <template slot="no-options">
-                                            <p >Nombre del remitente..</p>
+                                            <p >Nombre del destinatario..</p>
                                           </template>
                                           <template slot="option" slot-scope="option">
                                             <div class="d-center">
@@ -585,16 +567,10 @@
                                 <b-col>
                                     <b-form-input type="number" class="form-control form-control-sm"  placeholder="Indentidicación"
                                     v-model="detalleseditar.destinatario.numero_identificacion"
-<<<<<<< HEAD
                                     @change="initAutocompleteED"
                                      @input="initAutocompleteED"
                                     :state="null"  v-b-popover.hover="'Se debe diligenciar sin puntos, en caso de NIT sin numero de validación, ni guion'" title="Num. Identificacion"></b-form-input>
                                     <!--<input type="text" 
-=======
-
-                                    :state="true"  v-b-popover.hover="'Se debe diligenciar sin puntos, en caso de NIT sin numero de validación, ni guion'" title="Num. Identificacion"></b-form-input>
-                                    <!--<input type="text"
->>>>>>> origin/cambios
                                      @keyup.enter.tab.native="buscar('editar')"
                                     @keydown.tab.native="buscar('editar')"
                                     class="form-control form-control-sm"
@@ -620,7 +596,7 @@
                                     <label  class="col-sm col-form-label col-form-label-sm">Dirección: </label>
                                 </b-col>
                                 <b-col>
-                                <b-form-input id="direccionGoogle3" type="text" class="form-control form-control-sm"  placeholder="Direccion" v-model="detalleseditar.destinatario.direccion"
+                                <b-form-input id="direccionGoogle3" ref="focusDireccionED" type="text" class="form-control form-control-sm"  placeholder="Direccion" v-model="detalleseditar.destinatario.direccion"
                                     :state="estado.direccion"
                                     
                                     ></b-form-input>
@@ -812,15 +788,36 @@ export default {
       var latit
       var codpostal
        var input = document.getElementById('direccionGoogle3');
-                var searchBox = new google.maps.places.Autocomplete(input,options);
+                var searchBox = new google.maps.places.Autocomplete(input);
+                searchBox.setComponentRestrictions( {'country': ['co']})
                //console.log(searchBox);
-                searchBox.addListener('places_changed', function() {
+                searchBox.addListener('place_changed', function() {
                   input.value=input.value.split(',')[0];
-                    var places = searchBox.getPlaces();
+                    var places = searchBox.getPlace();
 
                     if(places.length == 0){
                         return;
                     }
+                    else{
+                      if(!places.geometry){
+                        console.log("no tengo latitud");
+                      }else{
+                        console.log("tengo lati y longi");
+                        this.lati=places.geometry.location.lat()
+                        this.longi=places.geometry.location.lng()
+                      }
+                      for (var i = 0; i < places.address_components.length; i++) {
+                        for (var j = 0; j < places.address_components[i].types.length; j++) {
+                            if (places.address_components[i].types[j] == "postal_code") {
+                              console.log("tengo codigo");
+                              this.posta = places.address_components[i].long_name;
+
+                            }
+                        }
+                      }
+                    }
+
+                    /*
                     places.forEach(function(place){
                         if(!place.geometry) {
                             return;
@@ -851,28 +848,48 @@ export default {
                        // document.getElementById('lat').innerHTML = place.geometry.location.lat();
                         //document.getElementById('lng').innerHTML = place.geometry.location.lng();
                     }.bind(this));
+                    */
                 }.bind(this));
                 //input.value=input.value.split(',')[0];
 
 
     },
     initAutocomplete(){
-       var options = {
-        componentRestrictions: {country: 'co'}
-      };
+       
       var longi
       var latit
       var codpostal
        var input = document.getElementById('direccionGoogle2');
-                var searchBox = new google.maps.places.Autocomplete(input,options);
+                var searchBox = new google.maps.places.Autocomplete(input);
                //console.log(searchBox);
-                searchBox.addListener('places_changed', function() {
+               searchBox.setComponentRestrictions( {'country': ['co']})
+                searchBox.addListener('place_changed', function() {
                   input.value=input.value.split(',')[0];
-                    var places = searchBox.getPlaces();
-
+                    var places = searchBox.getPlace();
+                  console.log(places);
                     if(places.length == 0){
                         return;
                     }
+                    else{
+                      if(!places.geometry){
+                        console.log("no tengo latitud");
+                      }else{
+                        console.log("tengo lati y longi");
+                        this.lati=places.geometry.location.lat()
+                        this.longi=places.geometry.location.lng()
+                      }
+                      for (var i = 0; i < places.address_components.length; i++) {
+                        for (var j = 0; j < places.address_components[i].types.length; j++) {
+                            if (places.address_components[i].types[j] == "postal_code") {
+                              console.log("tengo codigo");
+                              this.posta = places.address_components[i].long_name;
+
+                            }
+                        }
+                      }
+                    }
+
+                    /*
                     places.forEach(function(place){
                         if(!place.geometry) {
                             return;
@@ -903,6 +920,7 @@ export default {
                        // document.getElementById('lat').innerHTML = place.geometry.location.lat();
                         //document.getElementById('lng').innerHTML = place.geometry.location.lng();
                     }.bind(this));
+                    */
                 }.bind(this));
                 //input.value=input.value.split(',')[0];
 
@@ -972,7 +990,9 @@ export default {
       }
       else{
           this.detalleseditar.destinatario=this.destinatarioED
-
+        this.$nextTick(() => {
+          this.$refs.focusDireccionED.focus();
+         });
       }
         /*
       this.detalleseditar.destinatario.identificacion = this.nombre_remitente.numero_identificacion;
@@ -1080,8 +1100,10 @@ export default {
       }
       else{
          this.detalles.destinatario=this.nombre_remitente
-          this.$refs.focusDireccion.focus()
-
+         this.$nextTick(() => {
+          this.$refs.focusDireccion.focus();
+         });
+          
       }
       console.log(this.nombre_remitente);
        /*
@@ -1306,7 +1328,7 @@ export default {
         swal("Error!", "Revise los campos", "error");
       } else {
         bandera = true;
-        this.itemsdinamicos.push(tituloopciones);
+        this.itemsdinamicos.unshift(tituloopciones);
       }
     },
     adicionarRef() {
@@ -1354,11 +1376,11 @@ export default {
       } else {
         bandera = true;
         var fields = Object.keys(tituloopciones);
-        fields.push("eliminar");
-        fields.push("actualizar");
+        //fields.push("eliminar");
+        fields.push("acciones");
 
         this.fieldsdinamicos = fields;
-        this.itemsdinamicos.push(tituloopciones);
+        this.itemsdinamicos.unshift(tituloopciones);
       }
     },
     /*

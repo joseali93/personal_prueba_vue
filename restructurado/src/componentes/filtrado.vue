@@ -10,91 +10,91 @@
                 <h3>Consultar Ordenes de Servicio</h3>
 
                 </header>
-                <b-card class="cards" v-show="ocultar">
-                <!--
-                <header class="content-heading" slot="header">
-                    <h3>Consultar Ordenes de Servicio</h3>
+            <b-card class="cards" v-show="ocultar">
+                    <!--
+                    <header class="content-heading" slot="header">
+                        <h3>Consultar Ordenes de Servicio</h3>
 
-                </header>
-                -->
-                <b-row>
-                    <b-col>
-                        <b-form-group
-                        class="text-primary"
-                            label="Clientes">
-                        <!--
-                        <b-form-select v-model="selectedCL" class="mb-3" :options="clientes"
-                        text-field="nombre" value-field="_id" @change.native="SelectCC"
-                        :disabled="disabled_selectedCL">
-                        </b-form-select>
-                        -->
-                         <v-select v-model="selectedCL" label="nombre" placeholder="Cliente"
-                      :options="clientes" @input="seleccionCliente()"
-                      :disabled="disabled_selectedCL"></v-select>
-                        </b-form-group>
-                    </b-col>
-                    <b-col>
-                        <b-form-group
-                        class="text-primary"
-                            label="Centros de Costo">
+                    </header>
+                    -->
+                    <b-row>
+                        <b-col>
+                            <b-form-group
+                            class="text-primary"
+                                label="Clientes">
                             <!--
-                            <b-form-select v-model="selectedCC" class="mb-3" :options="centros"
-                            text-field="nombre" value-field="_id" :disabled="habilitar">
-
+                            <b-form-select v-model="selectedCL" class="mb-3" :options="clientes"
+                            text-field="nombre" value-field="_id" @change.native="SelectCC"
+                            :disabled="disabled_selectedCL">
                             </b-form-select>
                             -->
-                            <v-select v-model="selectedCC" label="nombre_concatenado" placeholder="Cliente"
-                      :options="centros"
-                      :disabled="habilitar"></v-select>
-                        </b-form-group>
-                    </b-col>
-                </b-row>
-                <b-row>
-                    <b-col>
-                        <b-form-group
-                        class="text-primary" label="Rango de Fechas" >
-                        <date-picker width=400  v-model="time1" range lang="es"
-                        :shortcuts="shortcuts" :confirm="true"
-                        ></date-picker>
-                        </b-form-group>
-                    </b-col>
-                    <b-col md="6" class="my-1">
-                        <b-form-group
-                        class="text-primary"
-                         label="Orden de Servicio" >
-                            <b-input-group>
-                                <b-form-input v-model="filter" type="number" @keyup="numeros(this)" placeholder="Número Orden de Servicio" />
-                            </b-input-group>
-                        </b-form-group>
-                    </b-col>
-                    <b-col>
-                    </b-col>
-                </b-row>
-                <b-row>
-
-                    <b-col>
-                        <b-form-group  label="Estados" class="text-primary">
-                            <b-input-group>
+                            <v-select v-model="selectedCL" label="nombre" placeholder="Cliente"
+                        :options="clientes" @input="seleccionCliente()"
+                        :disabled="disabled_selectedCL"></v-select>
+                            </b-form-group>
+                        </b-col>
+                        <b-col>
+                            <b-form-group
+                            class="text-primary"
+                                label="Centros de Costo">
                                 <!--
-                                <b-form-select  v-model="selected_state" :options="estados" text-field="nombre"
-                                value-field="nombre" @change.native="selestado">
+                                <b-form-select v-model="selectedCC" class="mb-3" :options="centros"
+                                text-field="nombre" value-field="_id" :disabled="habilitar">
+
                                 </b-form-select>
                                 -->
-                                <v-select v-model="selected_state" label="nombre" placeholder="Estado"
-                                :options="estados"
-                                ></v-select>
+                                <v-select v-model="selectedCC" label="nombre_concatenado" placeholder="Cliente"
+                        :options="centros"
+                        :disabled="habilitar"></v-select>
+                            </b-form-group>
+                        </b-col>
+                    </b-row>
+                    <b-row>
+                        <b-col>
+                            <b-form-group
+                            class="text-primary" label="Rango de Fechas" >
+                            <date-picker width=400  v-model="time1" range lang="es"
+                            :shortcuts="shortcuts" :confirm="true"
+                            ></date-picker>
+                            </b-form-group>
+                        </b-col>
+                        <b-col md="6" class="my-1">
+                            <b-form-group
+                            class="text-primary"
+                            label="Orden de Servicio" >
+                                <b-input-group>
+                                    <b-form-input v-model="filter" type="number" @keyup="numeros(this)" placeholder="Número Orden de Servicio" />
+                                </b-input-group>
+                            </b-form-group>
+                        </b-col>
+                        <b-col>
+                        </b-col>
+                    </b-row>
+                    <b-row>
 
-                            </b-input-group>
-                        </b-form-group>
-                    </b-col>
-                </b-row>
-                <b-row>
-                    <b-col  md="6">
-                    <b-btn class="my-1 rounded"  variant="primary" exact-active-class v-on:click="consultar()">
-                        <i class="fa fa-search" aria-hidden="true"></i>
-                        Consultar</b-btn>
-                    </b-col>
-                </b-row>
+                        <b-col>
+                            <b-form-group  label="Estados" class="text-primary">
+                                <b-input-group>
+                                    <!--
+                                    <b-form-select  v-model="selected_state" :options="estados" text-field="nombre"
+                                    value-field="nombre" @change.native="selestado">
+                                    </b-form-select>
+                                    -->
+                                    <v-select v-model="selected_state" label="nombre" placeholder="Estado"
+                                    :options="estados"
+                                    ></v-select>
+
+                                </b-input-group>
+                            </b-form-group>
+                        </b-col>
+                    </b-row>
+                    <b-row>
+                        <b-col  md="6">
+                        <b-btn class="my-1 rounded"  variant="primary" exact-active-class v-on:click="consultar()">
+                            <i class="fa fa-search" aria-hidden="true"></i>
+                            Consultar</b-btn>
+                        </b-col>
+                    </b-row>
             </b-card>
             <b-card id="jose" class="cards2"  v-show="sel_conslta">
                 <router-view :consulta="consulta" :peticion="peticion">

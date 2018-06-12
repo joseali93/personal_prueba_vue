@@ -150,7 +150,7 @@
         <b-row>
 
 
-            <b-table :items="valorestabla" :fields="campostra" thead-class=text-center tbody-class=text-center>
+            <b-table :items="info.trazabilidad" :fields="campostra" thead-class=text-center tbody-class=text-center>
                         <template slot="fecha" slot-scope="data" >
                             {{data.item.fecha |formatdate}}
                         </template>
@@ -422,37 +422,7 @@ export default {
 
 
         },
-        valorestabla(){
-            var arreglos={}
-            this.info.trazabilidad
-            this.procesos.forEach(proceso => {
-                this.info.trazabilidad.forEach(element => {
-                if(proceso.id_procesoLogistico==element.id_ProcesoLogistico){
-                    if(proceso.EsVisible==true){
-                        element.EsVisible=true
-                    }
-                    else{
-                        element.EsVisible=false
-                    }
-                }
-                });
-            });
-            var prueba =[]
-            for(var o=0;o<this.info.trazabilidad.length;o++){
-                if(this.info.trazabilidad[o].EsVisible==true){
-                   prueba.push(this.info.trazabilidad[o])
-                }
-
-            }
-            return prueba
-            /*
-            this.info.trazabilidad.forEach((element,index) => {
-                if(element.EsVisible==false){
-                    element.splice(index,1)
-                }
-            });
-            */
-        },
+        
         conceptoModal(value){
             this.concepto=value.conceptos.nombre
             this.$refs.ModalConcepto.show()
@@ -665,7 +635,7 @@ export default {
         this.otro=this.info
         console.log(userObject.value);
         //this.otro=userObject.personal
-        this.procesos=userObject.proce
+        //this.procesos=userObject.proce
         this.inputs=userObject.personal.inputs
         this.curier=userObject.value.courier
         this.curieractual=userObject.value.id_courier_actual
