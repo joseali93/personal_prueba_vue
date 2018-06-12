@@ -14,24 +14,21 @@ DE LA ORDEN DE SERVICIO -->
                     
                 </header> 
                 <b-row>
-                   <b-col md="3" offset-md="10" class=" my-1">
-                  <b-btn class="rounded" variant="primary"   v-on:click="actualizar"
-                  v-b-popover.hover="'Continuar'" >Continuar<i class="fa fa-arrow-right"></i>
-                  </b-btn>
-              </b-col>
+                  <b-col md="3" offset-md="10" class=" my-1">
+                    <b-btn class="rounded" variant="primary"   v-on:click="actualizar"
+                    v-b-popover.hover="'Continuar'" >Continuar<i class="fa fa-arrow-right"></i>
+                    </b-btn>
+                </b-col>
                 </b-row>
-    <b-card no-body class="">
-    <b-tabs  card>
-      <b-tab  title="Informacion de Recolección" >
-        <b-card  class="cards">
-            
-             <b-row>
+    <b-card>
+        <b-card class="cards" >
+           <b-row>
                <b-form-group 
-                    
+                      class=" text-primary"
                         label="Fecha y Hora de recolección"
                         label-size="">
                         <b-form-radio-group v-model="prueba"
-                        
+
                                         :options="radios"
                                         name="radiosSm"
                                         @change="cambio"
@@ -40,27 +37,27 @@ DE LA ORDEN DE SERVICIO -->
 
                     </b-form-group>
               <b-col v-show="prueba=='second'" >
-                 <h3 class="text-primary">Seleccione el Cliente</h3>
+                 <h3 class="text-primary"> Fecha </h3>
                  <b-form-input  type="date" v-model="fecha"></b-form-input>
               </b-col>
                
             </b-row>
             <b-row>
                 <b-col>
-                    <h3 class="text-primary">Seleccione el Cliente</h3>
+                    <h3 class="text-primary">Cliente</h3>
                     <!--
                     <b-form-select v-model="selected_client" class="mb-3"  
                     :options="clientes" text-field="nombre" value-field="_id" @change.native="ClientesSelect"
                     :disabled="disable_selected_client" >  
                     </b-form-select>
                     -->
-                     <v-select v-model="selected_client" label="nombre" placeholder="Seleccione el Cliente"
+                     <v-select v-model="selected_client" label="nombre" placeholder="Cliente"
                       :options="clientes" @input="clienteSeleccionado()"
                        :disabled="disable_selected_client" ></v-select>
                       
                 </b-col>
                 <b-col>
-                    <h3 class="text-primary">Seleccione el Centro de Costos</h3>
+                    <h3 class="text-primary">Centro de Costos</h3>
                     <preload v-if="load"></preload>
                     <!--
                     <b-form-select v-model="selected_center" class="mb-3"
@@ -74,15 +71,19 @@ DE LA ORDEN DE SERVICIO -->
                       ></v-select>
                     -->
                     <v-select v-model="selected_center" label="nombre_concatenado" 
-                    placeholder="Seleccione el Centro de Costo" :options="centros" 
+                    placeholder=" Centro de Costo" :options="centros" 
                     @input="centroSeleccionado()" :disabled="habilitar"
                       ></v-select>
                 </b-col>
                 
             </b-row>
+        </b-card>
+        <b-card  class="cards" style="top: 34px;">
+            
+            
             <b-row >
                 <b-col class=" my-2">
-                    <h3 class="text-primary">Digite el Remitente</h3>
+                    <h3 class="text-primary">Remitente</h3>
                     <!--
                   <v-select v-model="selected_client" label="nombre" placeholder="Seleccione el remitente"
                       :options="clientes" @input="clienteSeleccionado()"
@@ -93,7 +94,7 @@ DE LA ORDEN DE SERVICIO -->
                     
                     -->
                      <v-select label="nombre" :filterable="false" v-model=remitente
-                     placeholder="Digite el remitente" :options="optionsdestinatarios"
+                     placeholder=" Remitente " :options="optionsdestinatarios" 
                       @input="updateOption"
                       @search="onSearch">
                       <template slot="no-options" >
@@ -124,8 +125,9 @@ DE LA ORDEN DE SERVICIO -->
                             <b-form-input id="direccionGoogle"
                                 size=""
                                 type="text"
-                                v-model="remitente.direccion"
+                                v-model="remit.direccion"
                                 required
+                                @input="initAutocomplete()"
                                @change="initAutocomplete()"
                                 placeholder="Dirección"
                                 maxlength="100">
@@ -149,7 +151,7 @@ DE LA ORDEN DE SERVICIO -->
                             <b-form-input id="nombre"
                                 size=""
                                 type="text"
-                                v-model="remitente.nombre"
+                                v-model="remit.nombre"
                                 required
                                 placeholder="Nombre"
                                 maxlength="100"
@@ -166,9 +168,9 @@ DE LA ORDEN DE SERVICIO -->
                             <b-form-input id="identificacion"
                                 size=""
                                 type="text"
-                                v-model="remitente.numero_identificacion"
+                                v-model="remit.numero_identificacion"
                                 required
-                                placeholder="Digite numero de identificacion"
+                                placeholder="Numero de identificacion"
                                 maxlength="100"
                                 >
                             </b-form-input>
@@ -184,7 +186,7 @@ DE LA ORDEN DE SERVICIO -->
                             size=""
                                 type="text"
                                 
-                                v-model="remitente.telefono"
+                                v-model="remit.telefono"
                                 required
                                 placeholder="Teléfono"
                                 maxlength="20">
@@ -193,9 +195,10 @@ DE LA ORDEN DE SERVICIO -->
                     </b-col>
                 </b-row>
                 
-          </b-card>
-      </b-tab>
-      <b-tab title="Observaciones de Recolección">
+          
+          
+        </b-card>
+        <!--
         <b-card class="cards">
           <b-row>
                   <b-col>
@@ -214,8 +217,7 @@ DE LA ORDEN DE SERVICIO -->
                   </b-col>
                 </b-row>
         </b-card>
-      </b-tab>
-    </b-tabs>
+        -->
   </b-card>
           
       </b-container> 
@@ -249,11 +251,14 @@ export default {
     return {
       prueba:'first',
       fecha:'',
-      observaciones:'',
+      //observaciones:'',
       remit:{
         nombre:'',
         direccion:'',
-        telefono:''
+        telefono:'',
+        latitud:'',
+        longitud:'',
+        codigo_postal:''
       },
       lati:"",
       longi:"",
@@ -304,7 +309,9 @@ export default {
   },
 
   methods: {
+    
     initAutocomplete(){
+      //console.log("entro");
       var longi
       var latit
       var codpostal
@@ -351,14 +358,57 @@ export default {
   
     },
     updateOption(){
+      console.log("entro a update");
         var remi = localStorage.getItem("remitente");
         var remijson = JSON.parse(remi);
         if(remi){
-         this.onSearch(remijson.nombre)
-          
+          console.log(this.remitente);
+          if(this.remitente!=null){
+            console.log("entro a null");
+            if(this.remitente.nombre==remijson.nombre){
+              console.log("son iguales");
+               this.onSearch(remijson.nombre)
+            }
+            else{
+              console.log("entro al else");
+               this.onSearch(this.remitente.nombre)
+                this.remit.nombre=''
+                this.remit.direccion=''
+                this.remit.numero_identificacion=''
+                this.remit.telefono=''
+                //this.remit.nombre=''
+                console.log(this.remit);
+            }
+          }
+          else{
+            console.log("es nulo");
+            this.remit.nombre=''
+            this.remit.direccion=''
+            this.remit.numero_identificacion=''
+            this.remit.telefono=''
+          }
+        
+                    //  this.remitente=Object.assign({}, this.remitente);
+                    
         }
         else{
+          console.log("selecciono");
+          console.log("..................");
+          console.log(this.remitente);
+          if(this.remitente==null||this.remitente=='null'){
+            this.remit.nombre=''  
+            this.remit.direccion=''
+            this.remit.numero_identificacion=''
+            this.remit.telefono=''
+          }
+          else{
+            this.remit=Object.assign({}, this.remitente);
+          //this.remitente=Object.assign({}, this.remitente);
+
+          }
         }
+
+
          //this.remitente=remijson
     },
 
@@ -444,7 +494,7 @@ export default {
 
           })
       
-        }.bind(this), 345);
+          }.bind(this), 345);
         }else{
           //this.remitente=remijson.nombre
           this.optionsdestinatarios=[]
@@ -460,8 +510,23 @@ export default {
           
           this.axios.get(urlservicios+`/obtenerDestinatarioNombre/${escape(search)}`)
           .then(response => {
-
+            if(response.data.destinatarios.length==0)
+            {
+              this.optionsdestinatarios=[]
+              //this.remitente={}
+              this.remit.nombre=search
+              //this.remitente.nombre=this.remit.nombre
+              //this.remitente=this.remit
+            }
+            else{
             this.optionsdestinatarios=response.data.destinatarios
+            this.optionsdestinatarios.forEach(element => {
+              if(search==element.nombre){
+                this.remit=element
+              }
+            });            }
+           
+            //this.remit=this.optionsdestinatarios[0]
                     //loading(false);
 
           })
@@ -469,29 +534,7 @@ export default {
             }.bind(this), 345);
 
         }
-        /*
-      this.optionsdestinatarios=[]
-      setTimeout(function(){
-        /*
-        this.axios.get(`https://api.github.com/search/repositories?q=${escape(search)}`)
-      .then(response => {
-        this.optionsdestinatarios=response.data.items
-                loading(false);
-
-      })
-      
-      
-      this.axios.get(`http://192.168.1.59:3000/logistica//obtenerDestinatarioNombre/${escape(search)}`)
-      .then(response => {
-
-        this.optionsdestinatarios=response.data.destinatarios
-                loading(false);
-
-      })
-      
-        }.bind(this), 345);
-
-      */
+       
       
     },
 
@@ -817,12 +860,12 @@ export default {
                     SE CREA UN LOCALSTORAGE EL CUAL PERMITE LA OBTENER LO QUE FUE SELECCIONADO PREVIAMENTE
                 */
 
-        
+      /*  
       var observacionesOrden={
         observacion:this.observaciones
       }
       localStorage.setItem("observaciones_orden", JSON.stringify(observacionesOrden));
-
+      */
         bus.$emit("remitente", seleccionados);
         localStorage.setItem("orden", JSON.stringify(seleccionados));
         localStorage.setItem("infoorden", JSON.stringify(selecciones));
@@ -830,22 +873,22 @@ export default {
         if(this.longi==null||this.longi===null||this.longi==''||
        this.lati==null||this.lati===null||this.lati==''){
          objetoremitente = {
-          numero_identificacion: this.remitente.numero_identificacion,
-          direccion: this.remitente.direccion,
-          nombre: this.remitente.nombre,
-          telefono: this.remitente.telefono,
-          id_cliente: this.remitente.id_cliente,
+          numero_identificacion: this.remit.numero_identificacion,
+          direccion: this.remit.direccion,
+          nombre: this.remit.nombre,
+          telefono: this.remit.telefono,
+          id_cliente: this.remit.id_cliente,
           //latitud: this.lati,
           //longitud:this.longi,
           //codigo_postal:this.posta
         };
         }else{
           objetoremitente = {
-          numero_identificacion: this.remitente.numero_identificacion,
-          direccion: this.remitente.direccion,
-          nombre: this.remitente.nombre,
-          telefono: this.remitente.telefono,
-          id_cliente: this.remitente.id_cliente,
+          numero_identificacion: this.remit.numero_identificacion,
+          direccion: this.remit.direccion,
+          nombre: this.remit.nombre,
+          telefono: this.remit.telefono,
+          id_cliente: this.remit.id_cliente,
           latitud: this.lati,
           longitud:this.longi,
           codigo_postal:this.posta
@@ -863,15 +906,15 @@ export default {
           codigo_postal:this.posta
         };
         */
-       localStorage.setItem("remitente", JSON.stringify(this.remitente));
+       localStorage.setItem("remitente", JSON.stringify(this.remit));
        if(this.optionsdestinatarios.length==0)
        {
           var objetocrear = {
-          numero_identificacion: this.remitente.numero_identificacion,
-          direccion: this.remitente.direccion,
-          nombre: this.remitente.nombre,
-          telefono: this.remitente.telefono,
-          id_cliente: this.remitente.id_cliente,
+          numero_identificacion: this.remit.numero_identificacion,
+          direccion: this.remit.direccion,
+          nombre: this.remit.nombre,
+          telefono: this.remit.telefono,
+          id_cliente: this.remit.id_cliente,
           latitud: this.lati,
           longitud:this.longi,
           codigo_postal:this.posta,
@@ -898,7 +941,7 @@ export default {
           });
        }
        else{
-         this.axios.post(urlservicios+"ActualizarDestinatario" +"/" +this.remitente._id,objetoremitente)
+         this.axios.post(urlservicios+"ActualizarDestinatario" +"/" +this.remit._id,objetoremitente)
           .then(response => {
             var load = false;
             setTimeout(() => {
@@ -1121,7 +1164,7 @@ export default {
     bus.$emit("remitente");
   },
   updated: function(){
-    this.initAutocomplete()
+    //this.initAutocomplete()
   },
   beforeCreate: function() {
     var items;
@@ -1151,6 +1194,7 @@ export default {
     color: white;
 }
 */
+
 .nav-tabs .nav-link{
   
   background-color: #ebeaea;
@@ -1190,7 +1234,8 @@ export default {
   border-color: black;
 }
 .cards {
-  box-shadow: 1px 5px 7px 5px rgba(0, 0, 0, 0.1);
+  top: 22px;
+  box-shadow: 5px 5px 7px 5px rgba(0, 0, 0, 0.1);
   /*margin: 2%;
     /*border-top-width: 3px;
     */

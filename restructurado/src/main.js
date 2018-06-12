@@ -16,6 +16,7 @@ Vue.use(BootstrapVue);
 Vue.use(VueAxios, axios)
 import VueGoogleAutocomplete from 'vue-google-autocomplete'
 import VueGmaps from 'vue-gmaps'
+import * as VueGoogleMaps from 'vue2-google-maps'
 
 Vue.use(VueGmaps, {
   key: 'AIzaSyCg0ofGR4zUE78qeSw8iEVNwWpWXWXvQjA'

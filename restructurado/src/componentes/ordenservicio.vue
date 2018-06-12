@@ -2,75 +2,105 @@
 <!-- EN ESTE SE PERMITE LA GENERACION DE LOS DETALLES ASOCIADOS A UN CLIENTE Y CENTOR DE COSTO -->
     <b-container fluid class="contenedorTotal">
          <div class="breadPersonalizado">
-         <b-breadcrumb :items="items" />
+         <b-breadcrumb :items="items" >
+            <b-btn class="rounded" variant="secondary " 
+                      to="/inicio/orden" 
+                      v-b-tooltip.hover title="Anterior"
+                      ><i class="fa fa-arrow-left"></i>
+                      Anterior</b-btn>
+                      <b-btn class="rounded"  variant="danger"  
+                      v-b-tooltip.hover title="Adicionar"
+                      @click="abirmodal()"><i class="fa fa-plus"></i>
+                      Adicionar
+                      </b-btn>
+                       <b-btn  class="rounded" variant="success"
+                          @click="envioServicio"
+                          v-b-tooltip.hover title="Finalizar"><i class="fa fa-check"></i>
+                          Finalizar
+                      </b-btn>
+         </b-breadcrumb>
         </div>
        <b-container fluid class="contenedorInterno">
-
-        <b-card class="cards">
-          <b-row>
-                <b-col md="10" offset-md="8">
-                    <b-btn class="rounded" variant="secondary " 
-                     to="/inicio/orden" 
-                     v-b-tooltip.hover title="Anterior"
-                     ><i class="fa fa-arrow-left"></i>
-                     Anterior</b-btn>
-                    <b-btn  class="rounded" variant="success"
-                         @click="envioServicio"
-                        v-b-tooltip.hover title="Finalizar"><i class="fa fa-check"></i>
-                        Finalizar
-                    </b-btn>
-                    <b-btn class="rounded"  variant="danger"  
-                    v-b-tooltip.hover title="Adicionar"
-                    @click="abirmodal()"><i class="fa fa-plus"></i>
-                    Adicionar
-
-                    </b-btn>
-                </b-col>        
-            </b-row>
-            <br>
+        <b-card-group deck >
+          <b-card class="cards"  id="card1">
+             <h3 slot="header" id="cardHeader">Detalle de servicios</h3>
             <b-row>
-                <b-table :fields="fields" :per-page="5" :current-page="currentPage" :items="DetalleServicio">
+                  <b-col md="9" offset-md="4">
+                      <b-btn class="rounded" variant="secondary " 
+                      to="/inicio/orden" 
+                      v-b-tooltip.hover title="Anterior"
+                      ><i class="fa fa-arrow-left"></i>
+                      Anterior</b-btn>
+                      <b-btn class="rounded"  variant="danger"  
+                      v-b-tooltip.hover title="Adicionar"
+                      @click="abirmodal()"><i class="fa fa-plus"></i>
+                      Adicionar
+                      </b-btn>
+                       <b-btn  class="rounded" variant="success"
+                          @click="envioServicio"
+                          v-b-tooltip.hover title="Finalizar"><i class="fa fa-check"></i>
+                          Finalizar
+                      </b-btn>
+                  </b-col>        
+              </b-row>
+              <br>
+              <b-row>
+                  <b-table :fields="fields" :per-page="5" :current-page="currentPage" :items="DetalleServicio">
 
-                    <template slot="eliminar" slot-scope="data" >
-                        <i class="btn btn-danger fa fa-trash" v-on:click="eliminar(data.index)" ></i>
-                    </template>
-                    <template slot="productoslocal"  slot-scope="data">
-                        {{data.value.nombre}}         
-                    </template>
-                    <template slot="servicioslocal"  slot-scope="data">
-                        {{data.value.nombre}}
-                    </template>
-                    <template slot="editar"  slot-scope="data">
-                        <i class="btn btn-success fa fa-pencil"  v-on:click="editar(data.index)" ></i>
+                      <template slot="eliminar" slot-scope="data" >
+                          <i class="btn btn-danger fa fa-trash" v-on:click="eliminar(data.index)" ></i>
+                      </template>
+                      <template slot="productoslocal"  slot-scope="data">
+                          {{data.value.nombre}}         
+                      </template>
+                      <template slot="servicioslocal"  slot-scope="data">
+                          {{data.value.nombre}}
+                      </template>
+                      <template slot="editar"  slot-scope="data">
+                          <i class="btn btn-success fa fa-pencil"  v-on:click="editar(data.index)" ></i>
 
-                        <!--
-                        <i class="btn btn-success fa fa-pencil"  v-on:click="editar(data.index)" v-b-modal.modaleditar></i>
+                          <!--
+                          <i class="btn btn-success fa fa-pencil"  v-on:click="editar(data.index)" v-b-modal.modaleditar></i>
 
-                          -->
-                    </template>
-                </b-table>
-                <b-pagination size="md" :total-rows="DetalleServicio.length" v-model="currentPage" :per-page="5">
-                </b-pagination>
-            </b-row>
-            <!--
+                            -->
+                      </template>
+                  </b-table>
+                  <b-pagination size="md" :total-rows="DetalleServicio.length" v-model="currentPage" :per-page="5">
+                  </b-pagination>
+              </b-row>
+              <!--
+              <b-row>
+                <b-col class="float-left" cols="5">
+                  <b-btn to="/inicio/orden" variant="primary">
+                  <i class="fa fa-chevron-left" aria-hidden="true">  </i>
+                  Anterior</b-btn>
+
+                </b-col>
+                <b-col class="d-flex flex-row-reverse">
+                                        <b-btn   @click="envioServicio" variant="primary">
+                                          <i class="fa fa-check" aria-hidden="true"></i>
+                                          Finalizar</b-btn>
+
+                </b-col>
+              </b-row>
+              -->
+          </b-card>
+          <b-card class="cards" id="card2">
+             <h3 slot="header" id="cardHeader" >Observaciones generales de recolección</h3>
             <b-row>
-              <b-col class="float-left" cols="5">
-                <b-btn to="/inicio/orden" variant="primary">
-                <i class="fa fa-chevron-left" aria-hidden="true">  </i>
-                Anterior</b-btn>
-
-              </b-col>
-              <b-col class="d-flex flex-row-reverse">
-                                      <b-btn   @click="envioServicio" variant="primary">
-                                        <i class="fa fa-check" aria-hidden="true"></i>
-                                        Finalizar</b-btn>
-
-              </b-col>
+              <h6 class="text-primary">Observaciones</h6>
             </b-row>
-            -->
-        </b-card>
-        
-       </b-container>
+            <b-row>
+              <b-form-textarea id="textarea1"
+                  v-model="observacionesGeneral"
+                  placeholder=" Ingrese instrucciones a tener en cuenta para recolección "
+                  :rows="3"
+                  :max-rows="6">
+              </b-form-textarea>
+            </b-row>
+          </b-card>
+        </b-card-group>
+      </b-container>
         <!-- Modal Adicionar -->
         <b-modal id="modalcrear" ref="Modal" title="Adicionar Registro" 
             no-close-on-backdrop
@@ -119,7 +149,7 @@
                                         </b-col>
                                         <b-col>
                                             <b-form-input type="text" class="form-control form-control-sm " 
-                                                                    placeholder="Referencia" v-model="detalles.referencia"
+                                                                    placeholder=" Factura, Remisión, orden de compra..." v-model="detalles.referencia"
                                                                 :state="estado.referencia"></b-form-input>
                                         </b-col>
                                     </b-row>
@@ -275,7 +305,7 @@
                                     -->
                                 </b-col>
                             </b-form-row>
-                            
+                            {{nombre_remitente}}
                             <b-form-row v-show="selectservice&&mostrardestinatario " >
                              
                           
@@ -289,6 +319,8 @@
                                      placeholder="Dirección"
                                      required
                                      maxlength="100"
+                                     @change="initAutocomplete"
+                                     @input="initAutocomplete"
                                      v-model="detalles.destinatario.direccion" 
                                      class="form-control form-control-sm" 
                                         :state="estado.direccion"
@@ -589,6 +621,7 @@ export default {
   },
   data() {
     return {
+      observacionesGeneral:'',
       MostrarFiltro:true,
       monstrarNombre:true,
     destinatarioED:"",
@@ -882,8 +915,20 @@ export default {
     },
     
     SeleccionadoED() {
-      console.log(this.nombre_remitente);
-      this.detalleseditar.destinatario=this.destinatarioED
+      console.log(this.destinatarioED);
+      if(this.destinatarioED==null||this.destinatarioED=='null'){
+        this.detalleseditar.destinatario.identificacion = ''
+        this.detalleseditar.destinatario.direccion = ''
+        this.detalleseditar.destinatario.telefono = ''
+        this.detalleseditar.destinatario.nombre = ''
+        this.detalleseditar.destinatario.latitud = ''
+        this.detalleseditar.destinatario.longitud = ''
+        this.detalleseditar.destinatario.codigo_postal = ''
+      }
+      else{
+          this.detalleseditar.destinatario=this.destinatarioED
+
+      }
         /*
       this.detalleseditar.destinatario.identificacion = this.nombre_remitente.numero_identificacion;
       this.detalleseditar.destinatario.direccion = this.nombre_remitente.direccion;
@@ -977,8 +1022,19 @@ export default {
     },
     
     Seleccionado() {
+      if(this.nombre_remitente==null||this.nombre_remitente=="null"){
+        
+        this.detalles.destinatario.numero_identificacion=''
+        this.detalles.destinatario.nombre=''
+        this.detalles.destinatario.direccion=''
+        this.detalles.destinatario.telefono=''
+        
+      }
+      else{
+         this.detalles.destinatario=this.nombre_remitente
+
+      }
       console.log(this.nombre_remitente);
-       this.detalles.destinatario=this.nombre_remitente
        /*
       this.detalles.destinatario.numero_identificacion = this.nombre_remitente.numero_identificacion;
       this.detalles.destinatario.direccion = this.nombre_remitente.direccion;
@@ -995,7 +1051,6 @@ export default {
       //loading(true);
       this.search(search, this);
     },
-
     search(search) {
         setTimeout(function(){
         this.axios.get(urlservicios+`/obtenerDestinatarioNombre/${escape(search)}`)
@@ -1004,6 +1059,8 @@ export default {
                 {
                 this.optionsremitentes=[]
                 this.nombre_remitente.nombre=search
+                this.nombre_remitente.direccion=''
+                this.nombre_remitente.telefono=''
                 //this.remitente={}
                //this.detalles.destinatario.nombre=search
                    //this.monstrarNombre=true
@@ -2310,6 +2367,7 @@ export default {
         var inforemi = JSON.parse(inforemitente);
         var localremitente = localStorage.getItem("remitente");
         var localremijson = JSON.parse(localremitente);
+        /*
         var obserOrden = localStorage.getItem("observaciones_orden");
         var observacionesOrden = JSON.parse(obserOrden);
         /*
@@ -2352,7 +2410,7 @@ export default {
             longitud: localremijson.longitud,
             codigo_postal: localremijson.codigo_postal
           },
-          observaciones:observacionesOrden.observacion,
+          observaciones:this.observacionesGeneral,
           detalle: this.DetalleServicio
         };
            
@@ -2373,7 +2431,7 @@ export default {
             longitud: localremijson.longitud,
             codigo_postal: localremijson.codigo_postal
           },
-          observaciones:observacionesOrden.observacion,
+          observaciones:this.observacionesGeneral,
           detalle: this.DetalleServicio
         };
         }
@@ -2421,7 +2479,7 @@ export default {
     }
   },
   updated: function(){
-    this.initAutocomplete();
+    //this.initAutocomplete();
   },
   created: function() {},
   beforeCreate: function() {
@@ -2440,6 +2498,26 @@ export default {
 </script>
 
 <style>
+#cardHeader{
+  background-color: #ffffff !important;
+   
+}
+#card1 .card-header {
+  background-color: #ffffff !important;
+  
+  color: #4db35a;
+  
+}
+#card2 .card-header {
+  background-color: #ffffff !important;
+  
+  color: #4db35a;
+  
+}
+.headerPersonalizado{
+    background-color: #ffffff !important;
+   
+}
 .contenedorTotal {
   padding-top: 0px;
   padding-right: 0%;
@@ -2468,7 +2546,7 @@ export default {
   margin-top: 2%;
 }
 .cards {
-  box-shadow: 4px 4px 8px rgba(0, 0, 0, 0.1);
+  box-shadow: 2px 2px 8px 4px rgba(0, 0, 0, 0.1);
   /*margin: 2%;
     /*border-top-width: 3px;
     */

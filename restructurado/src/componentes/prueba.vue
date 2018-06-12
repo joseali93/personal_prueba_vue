@@ -2,23 +2,20 @@
 
 
   <b-container fluid>
-      <vue-google-autocomplete
-            ref="address"
-            id="map"
-            v-model="prueba"
-            classname="form-control"
-            placeholder="Please type your address"
-            v-on:placechanged="getAddressData"
-            country="co"
-        >
-                </vue-google-autocomplete>
-      {{prueba}}
+       <b-input-group>
+   
 
+    <b-form-input type="text" placeholder="digite direccion" ></b-form-input>
 
-        <input id="searchTextField" type="text" size="50">
-
-
-  <b-btn @click="sweet"> asasdasd</b-btn>
+    <b-input-group-append>
+      <b-btn variant="outline-secondary" v-b-modal.modal1
+      > <i class="fa fa-map-o"></i></b-btn>
+    </b-input-group-append>
+  </b-input-group>
+  <!-- Modal Component -->
+  <b-modal id="modal1" title="Bootstrap-Vue">
+    <p class="my-4">Hello from modal!</p>
+  </b-modal>
   </b-container>
 </template>
 
@@ -30,116 +27,12 @@ export default {
 
   data () {
     return {
-      searchPlace:'',
-     prueba:'Calle 100 #49-97',
-     address:''
-      
-     
+    
     }
     
   },
   methods:{
-    sweet(){
-      swal({
-  title: 'digite observaciones al courier',
-  input: 'text',
-  inputAttributes: {
-    autocapitalize: 'on'
-  },
-  showCancelButton: true,
-  confirmButtonText: 'Look up',
-  showLoaderOnConfirm: true,
-  preConfirm: (login) => {
-    console.log(login);
-    
-  },
-  allowOutsideClick: () => !swal.isLoading()
-}).then((result) => {
-  console.log(result);
-  if (result.value) {
-    swal({
-      title: `${result.value}'s avatar`,
-      //imageUrl: result.value.avatar_url
-    })
-  }
-})
-    },
-    pruebas(){
-      console.log("entro a prueba");
-      console.log(addressData);
-    },
-    localizar(){
-      console.log("enter");
-      var dir
-      dir=this.text1+', Colombia'
-      var geocoder = new google.maps.Geocoder();
-      geocoder.geocode({'address': dir, country: "CO" }, function(results, status) {
-			if (status === 'OK') {
-				var resultados = results[0].geometry.location,
-					resultados_lat = resultados.lat(),
-					resultados_long = resultados.lng();
-				
-				console.log(results);
-			} else {
-				var mensajeError = "";
-				if (status === "ZERO_RESULTS") {
-					mensajeError = "No hubo resultados para la dirección ingresada.";
-				} else if (status === "OVER_QUERY_LIMIT" || status === "REQUEST_DENIED" || status === "UNKNOWN_ERROR") {
-					mensajeError = "Error general del mapa.";
-				} else if (status === "INVALID_REQUEST") {
-					mensajeError = "Error de la web. Contacte con Name Agency.";
-				}
-				alert(mensajeError);
-			}
-		});
-    },
-    enterfuncion(){
-      console.log("entro a enter");
-      console.log(this.text1);
-      console.log(typeof(this.text1));
-      var geocoder = new google.maps.Geocoder();
-      geocoder.geocode({ 'address': this.text1}, this.geocodeResult());
-      //console.log(geocodeResult);
-    },
-     geocodeResult(results, status) {
-       console.log("entra a geo code");
-       console.log(results);
-      // Verificamos el estatus
-      if (status == 'OK') {
-          // Si hay resultados encontrados, centramos y repintamos el mapa
-          // esto para eliminar cualquier pin antes puesto
-        
-      } else {
-          // En caso de no haber resultados o que haya ocurrido un error
-          // lanzamos un mensaje con el error
-          alert("Geocoding no tuvo éxito debido a: " + status);
-      }
-    },
-    update(valor){
-      console.log(valor);
-     // onchange(this.getAddressData)
-    },
-     /**
-            * When the location found
-            * @param {Object} addressData Data of the found location
-            * @param {Object} placeResultData PlaceResult object
-            * @param {String} id Input container ID
-            */
-            getAddressData: function (addressData, placeResultData, id) {
-                console.log(addressData);
-                console.log(placeResultData);
-                this.address = addressData;
-            }
-    },
-    mounted: function() {
-                  this.$refs.address.focus();
 
-       bus.$on('modalinfo', function (userObject) {
-     
-        this.algo = userObject.itemsmodal
-
-        console.log(this.algo);
-      }.bind(this))
     },
     updated: function(){
      

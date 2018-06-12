@@ -210,6 +210,10 @@ export default {
   },
   methods: {
     orden(){
+      localStorage.removeItem("orden");
+      //localStorage.removeItem("observaciones_orden");
+      localStorage.removeItem("remitente");
+      localStorage.removeItem("fecha_orden");
       var ocultar=true
             var eliminar= this.vali
             setTimeout(() => {
