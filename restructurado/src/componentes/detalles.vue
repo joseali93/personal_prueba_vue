@@ -139,45 +139,47 @@
           </b-pagination>
         </b-row>
       </b-card>
-      <b-row class="my-2">
-        <b-col>
-          <h4 class="text-primary">Medio de Transporte: </h4>
-          <!--
-          <b-form-select v-model="selected_curier" class="mb-3"  :options="curiers" text-field="nombre"
-          value-field="_id" :state="statuscourier"
-          @change.native="selectcuriers" :disabled="selec_disable">
-          </b-form-select>
-          -->
-          <v-select v-model="model_medios" label="tipo" placeholder="Medio de Transporte"
-            :options="medios" @input="vehic()"
-            :disabled="medios_disable"></v-select>
-        </b-col>
-        <b-col>
-          <h4 class="text-primary">Courier: </h4>
-          <!--
-          <b-form-select v-model="selected_curier" class="mb-3"  :options="curiers" text-field="nombre"
-          value-field="_id" :state="statuscourier"
-          @change.native="selectcuriers" :disabled="selec_disable">
-          </b-form-select>
-          @input="updatecourier()"
-            @search="onSearch"
-          -->
-          <v-select v-model="selected_curier" label="nombre" placeholder="Courier"
-            :options="curiers"
-            :disabled="selec_disable"
-            @onChange="pruebacambio"
+      <b-container>
+        <b-row class="my-2">
+          <b-col>
+            <h4 class="text-primary">Medio de Transporte: </h4>
+            <!--
+            <b-form-select v-model="selected_curier" class="mb-3"  :options="curiers" text-field="nombre"
+            value-field="_id" :state="statuscourier"
+            @change.native="selectcuriers" :disabled="selec_disable">
+            </b-form-select>
+            -->
+            <v-select v-model="model_medios" label="tipo" placeholder="Medio de Transporte"
+              :options="medios" @input="vehic()"
+              :disabled="medios_disable"></v-select>
+          </b-col>
+          <b-col>
+            <h4 class="text-primary">Courier: </h4>
+            <!--
+            <b-form-select v-model="selected_curier" class="mb-3"  :options="curiers" text-field="nombre"
+            value-field="_id" :state="statuscourier"
+            @change.native="selectcuriers" :disabled="selec_disable">
+            </b-form-select>
             @input="updatecourier()"
-            @search="onSearch"
-            :resetOnOptionsChange="true"
-          ></v-select>
-        </b-col>
-      </b-row>
-      <b-row>
-        <b-col>
-          <b-btn class="float-right" size="lg" variant="success" @click="asignar(selected_curier)"
-          :disabled=desabilitarguardar()>Aceptar</b-btn>
-        </b-col>
-      </b-row>
+              @search="onSearch"
+            -->
+            <v-select v-model="selected_curier" label="nombre" placeholder="Courier"
+              :options="curiers"
+              :disabled="selec_disable"
+              @onChange="pruebacambio"
+              @input="updatecourier()"
+              @search="onSearch"
+              :resetOnOptionsChange="true"
+            ></v-select>
+          </b-col>
+        </b-row>
+        <b-row>
+          <b-col>
+            <b-btn class="float-right" size="lg" variant="success" @click="asignar(selected_curier)"
+            :disabled=desabilitarguardar()>Aceptar</b-btn>
+          </b-col>
+        </b-row>
+      </b-container>
     </b-container>
 
 		<!-- Modal para Trayectos-->
