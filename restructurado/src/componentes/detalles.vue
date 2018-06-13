@@ -803,29 +803,54 @@ export default {
                   });
                 });
             this.inputs.campos.forEach(element => {
-              if(element.requerido_edi==true)
+              if(element.HeredaDestinatario==true)
               {
                 enviodestinatario=element
               }
             });
             console.log(enviodestinatario);
-
+            var load = false;
+                setTimeout(() => {
+                  bus.$emit("load", {
+                    load
+                  });
+                });
             var destina
+            var llavescampos =Object.keys(this.inputs.objeto)
+            console.log("------");
+            console.log(llavescampos);
+            var josea
+            llavescampos.forEach(element => {
+              if(enviodestinatario.vmodel==element){
+                console.log("tengo vmodel ==");
+                  console.log("campos con eval");
+                  console.log(objeto.id_trayecto);
+                  josea[element]=objeto.id_trayecto
+                  console.log(josea);
+                 var objdestinatario={
+                  propiedadesDinamicas : josea
+                }
+                
+                  console.log(objdestinatario);
+              }
+            });
+            
             this.axios.get(urlservicios+"obtenerDestinatario/"+this.currentUser.detalle[this.indemodal].detalleslocal.destinatario.numero_identificacion)
               .then(response =>{
                 destina=response.data.destinatarios
                 console.log(destina);
-                var objdestinatario={
-                  propiedadesDinamicas : this.campos
-                }
-                console.log(objdestinatario);
+                
+               
+                
+                /*
                 this.axios.post(urlservicios+"ActualizarDestinatario" +"/" +destina._id,objdestinatario)
                   .then(responsedestinatario =>{
                     console.log(responsedestinatario);
                   })
+                  */
               });
             //console.log(destina);
-            
+            /*
             this.axios.post(urlservicios +"ActualizarTrayecto/" +this.currentUser._id +"/" +this.consecutivo,objeto)
               .then(response => {
                 this.$refs.table.refresh();
@@ -857,7 +882,7 @@ export default {
                 this.indices = "";
                 this.consecutivo = "";
                 this.selection = "";
-                this.$refs.ModalAct.hide();
+                //this.$refs.ModalAct.hide();
                 var load = false;
                 setTimeout(() => {
                   bus.$emit("load", {
@@ -879,6 +904,8 @@ export default {
                 );
               });
               
+          */
+          
           }
         }
       }
