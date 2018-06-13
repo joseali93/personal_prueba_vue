@@ -25,6 +25,9 @@ DE LA ORDEN DE SERVICIO -->
                 
     <b-card>
         <b-card class="cards" >
+          <h6 slot="header"
+                class="mb-0">Información Cliente
+                </h6>
            <b-row>
                <b-form-group
                       class=" text-primary"
@@ -89,7 +92,9 @@ DE LA ORDEN DE SERVICIO -->
             </b-row>
         </b-card>
         <b-card  class="cards" style="top: 34px;">
-
+            <h6 slot="header"
+                class="mb-0">Información Recolección
+            </h6>
 
             <b-row >
                 <b-col class=" my-2">
@@ -103,7 +108,6 @@ DE LA ORDEN DE SERVICIO -->
                       v-model="remitente"
 
                     -->
-                    {{remitente}}
                      <v-select label="nombre" :filterable="false" v-model=remitente
                      placeholder=" Remitente " :options="optionsdestinatarios"
                       @input="updateOption"
@@ -128,13 +132,14 @@ DE LA ORDEN DE SERVICIO -->
                     </v-select>
                 </b-col>
             </b-row>
-            <b-row>
+            <b-row v-if="GeoReferenciacion">
                     <b-col>
                     <b-form-group id="exampleInputGroup1"
                       class="text-primary"
                         label="Dirección ">
                             <b-form-input id="direccionGoogle"
                                 size=""
+                                ref="focusRemitente"
                                 type="text"
                                 v-model="remit.direccion"
                                 required
@@ -151,7 +156,30 @@ DE LA ORDEN DE SERVICIO -->
                               
                     </b-form-group>
                     </b-col>
-                </b-row>
+            </b-row>
+            <b-row>
+                    <b-col>
+                    <b-form-group id="exampleInputGroup1"
+                      class="text-primary"
+                        label="Dirección ">
+                            <b-form-input id="complemento"
+                                size=""
+                                type="text"
+                                v-model="remit.complemento"
+                                required
+                                
+                                placeholder="Torre, Apartamento, Oficina, Conjunto Residencial, Bodega"
+                                maxlength="100">
+                            </b-form-input>
+                            <!--
+                               @change="localizar()"
+                              @keypress="localizar()"
+                                 @keyup.enter.native="localizar()"
+                              -->
+                              
+                    </b-form-group>
+                    </b-col>
+            </b-row>
                 <b-row>
                     <b-col>
                     <b-form-group id="exampleInputGroup2"
@@ -207,27 +235,7 @@ DE LA ORDEN DE SERVICIO -->
 
 
         </b-card>
-        <!--
-        <b-card class="cards">
-          <b-row>
-                  <b-col>
-                    <b-form-group
-                        class="text-primary"
-                        label="Observaciones para la Orden de Servicio"
-                        label-size="">
-                    <b-form-textarea id="textarea1"
-                        v-model="observaciones"
-                        placeholder="Digita las observaciones para tener en cuenta al momento de la recolección "
-                        :rows="3"
-                        :max-rows="6"
-                        >
-                    </b-form-textarea>
-                    </b-form-group>
-                  </b-col>
-                </b-row>
-        </b-card>
-        -->
-  </b-card>
+    </b-card>
 
       </b-container>
 
@@ -258,6 +266,8 @@ export default {
   data() {
 
     return {
+      GeoReferenciacion:false,
+      validacionDireccion:false,
       horaInicio:'',
       horaFin:'',
       prueba:'first',
@@ -269,7 +279,8 @@ export default {
         telefono:'',
         latitud:'',
         longitud:'',
-        codigo_postal:''
+        codigo_postal:'',
+        complemento:''
       },
       lati:"",
       longi:"",
@@ -322,7 +333,6 @@ export default {
   methods: {
 
     initAutocomplete(){
-      console.log("entro");
       var longi
       var latit
       var codpostal
@@ -331,65 +341,42 @@ export default {
       };
        var input = document.getElementById('direccionGoogle');
                 var searchBox = new google.maps.places.Autocomplete(input);
+
                 input.value=input.value.split(',')[0];
                  searchBox.setComponentRestrictions( {'country': ['co']})
                 searchBox.addListener('place_changed', function() {
                   input.value=input.value.split(',')[0];
                     var places = searchBox.getPlace();
-                    if(places.length == 0){
-                        return;
-                    }
-                    else{
-                      if(!places.geometry){
-                        console.log("no tengo latitud");
-                      }else{
-                        console.log("tengo lati y longi");
-                        this.lati=places.geometry.location.lat()
-                        this.longi=places.geometry.location.lng()
-                      }
-                      for (var i = 0; i < places.address_components.length; i++) {
-                        for (var j = 0; j < places.address_components[i].types.length; j++) {
-                            if (places.address_components[i].types[j] == "postal_code") {
-                              console.log("tengo codigo");
-                              this.posta = places.address_components[i].long_name;
+                          if(!places.geometry){
+                          this.validacionDireccion=false
+                          console.log("no es posible geo referenciar");
+                          swal({
+                            position: 'top-end',
+                            type: 'warning',
+                            title: 'No es posible Georeferenciar la dirección digitada',
+                            showConfirmButton: false,
+                            timer: 1500
+                          })
+                          }else{
+                            this.validacionDireccion=true
+                            this.lati=places.geometry.location.lat()
+                            this.longi=places.geometry.location.lng()
+                            for (var i = 0; i < places.address_components.length; i++) {
+                            for (var j = 0; j < places.address_components[i].types.length; j++) {
+                                if (places.address_components[i].types[j] == "postal_code") {
+                                  this.posta = places.address_components[i].long_name;
 
+                                }
                             }
-                        }
-                      }
-                    }
+                          }
+                          }
+                          
+                        
+                      
+                    
                     
                     // Object.keys(places).forEach((k) => {
-                      
-                    //   const place = (places[k]);
-                    //   console.log(place);
-                    //  if(k=='geometry'||k==='geometry'){}
-                    // });
-                    /*
-                    places.forEach(function(place){
-                      console.log(place);
-                        if(!place.geometry) {
-                            return;
-                        }
-                        latit=place.geometry.location.lat()
-                        longi=place.geometry.location.lng()
-
-                        //this.lati=place.geometry.location.lat()
-                        //this.longi=place.geometry.location.lng()
-                        //this.posta
-                        for (var i = 0; i < place.address_components.length; i++) {
-                        for (var j = 0; j < place.address_components[i].types.length; j++) {
-                            if (place.address_components[i].types[j] == "postal_code") {
-                            this.posta = place.address_components[i].long_name;
-
-                            }
-                        }
-                        }
-                        this.lati=latit
-                        this.longi=longi
-                        //console.log(this.longi);
-                       
-                    }.bind(this));
-                    */
+                   
                 }.bind(this));
                 //input.value=input.value.split(',')[0];
                 input.value=input.value.split(',')[0];
@@ -401,31 +388,23 @@ export default {
 
     },
     updateOption(){
-      console.log("entro a update");
         var remi = localStorage.getItem("remitente");
         var remijson = JSON.parse(remi);
         if(remi){
-          console.log("tengo remi")
-          console.log(this.remitente);
           if(this.remitente!=null){
             if(this.remitente.nombre==remijson.nombre){
                this.onSearch(remijson.nombre)
             }
             else{
-             console.log('------------------------------------');
-             console.log("no son iguales");
-             console.log('------------------------------------');
                this.onSearch(this.remitente.nombre)
                 this.remit.nombre=''
                 this.remit.direccion=''
                 this.remit.numero_identificacion=''
                 this.remit.telefono=''
-                //this.remit.nombre=''
-                //console.log(this.remit);
+                this.remit.nombre=''
             }
           }
           else{
-            console.log("es nulo");
             this.remit.nombre=''
             this.remit.direccion=''
             this.remit.numero_identificacion=''
@@ -436,20 +415,17 @@ export default {
 
         }
         else{
-          console.log("selecciono");
-          console.log("..................");
-          console.log(this.remitente);
           if(this.remitente==null||this.remitente=='null'){
             this.remit.nombre=''
             this.remit.direccion=''
             this.remit.numero_identificacion=''
             this.remit.telefono=''
           }
-          else{
-            console.log('------------------------------------');
-            console.log("hago igualacion");
-            console.log('------------------------------------');
+          else{console.log("entro al else");
             this.remit=Object.assign({}, this.remitente);
+            this.$nextTick(() => {
+                          this.$refs.focusRemitente.focus();
+            });
           //this.remitente=Object.assign({}, this.remitente);
 
           }
@@ -533,6 +509,8 @@ export default {
               this.optionsdestinatarios=[]
               this.remitente={}
               this.remitente.nombre=search
+                            //this.$refs.focusRemitente.focus();
+
             }
             else{
               this.optionsdestinatarios=response.data.destinatarios
@@ -544,32 +522,25 @@ export default {
 
           }.bind(this), 345);
         }else{
-          console.log('------------------------------------');
-          console.log("entro a else");
-          console.log('------------------------------------');
+          console.log("entro al search con local");
           //this.remitente=remijson.nombre
           this.optionsdestinatarios=[]
           setTimeout(function(){
-            /*
-            this.axios.get(`https://api.github.com/search/repositories?q=${escape(search)}`)
-          .then(response => {
-            this.optionsdestinatarios=response.data.items
-                    loading(false);
-
-          })
-          */
-
           this.axios.get(urlservicios+`/obtenerDestinatarioNombre/${escape(search)}`)
           .then(response => {
             if(response.data.destinatarios.length==0)
             {
+              console.log("no tengo destinatarios blanqueo");
               this.optionsdestinatarios=[]
+              localStorage.removeItem("remitente");
               //this.remitente={}
               
               //this.remitente=search
               
               this.remit.nombre=search
-              //this.remitente=this.remit.nombre
+              this.$nextTick(() => {
+                          this.$refs.focusRemitente.focus();
+            });              //this.remitente=this.remit.nombre
               this.remit.numero_identificacion=''
               this.remit.direccion=''
               this.remit.telefono=''
@@ -578,6 +549,9 @@ export default {
             }
             else{
             this.optionsdestinatarios=response.data.destinatarios
+              this.$nextTick(() => {
+                          this.$refs.focusRemitente.focus();
+            });
             this.optionsdestinatarios.forEach(element => {
               if(search==element.nombre){
                 this.remit=element
@@ -868,11 +842,25 @@ export default {
         this.selected_client == "null" ||
         this.selected_center == "null" ||
         this.remitente == null ||
+        this.remit==null||
+        this.remit=="null"||
+        this.remit==''||
         this.remitente == "null" ||
         this.remitente == '' ||
-        (this.prueba == 'second'&&this.fecha=='')
+        this.remit.direccion==''||
+        (this.prueba == 'second'&&this.fecha=='')||
+        this.validacionDireccion==false
 
       ) {
+        if(this.validacionDireccion==false){
+          var load = false;
+          setTimeout(() => {
+            bus.$emit("load", {
+              load
+            });
+          });
+          swal("Cuidado", "La dirección digitada no es valida", "warning");
+        }
         if(this.prueba=='second'){
           var load = false;
           setTimeout(() => {
@@ -927,7 +915,6 @@ export default {
         bus.$emit("remitente", seleccionados);
         localStorage.setItem("orden", JSON.stringify(seleccionados));
         localStorage.setItem("infoorden", JSON.stringify(selecciones));
-        console.log(this.remit);
          var objetoremitente
         if(this.longi==null||this.longi===null||this.longi==''||
        this.lati==null||this.lati===null||this.lati==''){
@@ -937,12 +924,14 @@ export default {
           nombre: this.remit.nombre,
           telefono: this.remit.telefono,
           id_cliente: this.remit.id_cliente,
+          complemento:this.remit.complemento
           //latitud: this.lati,
           //longitud:this.longi,
           //codigo_postal:this.posta
         };
         }else{
           objetoremitente = {
+                      complemento:this.remit.complemento,
           numero_identificacion: this.remit.numero_identificacion,
           direccion: this.remit.direccion,
           nombre: this.remit.nombre,
@@ -1041,7 +1030,6 @@ export default {
   created: function() {
 
     var _this = this;
-
     // -------------------------------
     var test2 = localStorage.getItem("storedData");
     var test = JSON.parse(test2);
@@ -1218,12 +1206,16 @@ export default {
           }
         });
     }
-
+    if(test.id_OperadorLogistico.geolocalizaciónGoogle==true){
+      this.GeoReferenciacion=true
+    }
+    else{
+      this.GeoReferenciacion=false
+    }
     this.nombreusu;
     bus.$emit("remitente");
   },
   updated: function(){
-    //this.initAutocomplete()
   },
   beforeCreate: function() {
     var items;

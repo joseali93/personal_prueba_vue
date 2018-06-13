@@ -124,7 +124,6 @@
 
                     <b-tabs card id="tarjeta"  class=" cardPersonalizada" v-show="selectservice" v-model="tabIndex">
                             <b-tab  title="Información" class="cardPersonalizada" >
-
                             <b-card-body>
                                     <b-row>
                                         <b-col>
@@ -154,18 +153,18 @@
 
                                         </template>
                                     </b-row>
-                                    <b-form-row v-show="selectservice" class=" my-1">
+                                    <b-row v-show="selectservice" class=" my-1">
                                       <b-col>
                                         <label  class="col-sm col-form-label col-form-label-sm text-capitalize text-primary" > Contenido </label>
                                       </b-col>
-                                    <b-col>
+                                    <b-col cols="8">
                                     <b-form-input id="textarea1" type="text" 
                                         v-model="detalles.contenido"
                                         placeholder="Medicamentos, Facturas, Mercancias Especiales, ...etc"
                                        >
                                     </b-form-input>
                                     </b-col>
-                                </b-form-row>
+                                </b-row>
                                     <b-form-row v-show="selectservice" class=" my-1">
                                     <b-col>
                                     <b-form-textarea id="textarea1"
@@ -281,20 +280,20 @@
 
                                         </v-select>
                                 </b-col>
-                            </b-form-row>
+                              </b-form-row>
                             <!--
-                            <b-form-row v-show="selectservice&&mostrardestinatario&&monstrarNombre" class="my-1">
-                                <b-col>
-                                    <label  class="col-sm col-form-label col-form-label-sm text-primary"> Nombre: </label>
-                                </b-col>
-                                <b-col  cols="9">
-                                    <b-form-input type="text" class="form-control form-control-sm"  placeholder="Nombre"
-                                    v-model="detalles.destinatario.nombre"
+                              <b-form-row v-show="selectservice&&mostrardestinatario&&monstrarNombre" class="my-1">
+                                  <b-col>
+                                      <label  class="col-sm col-form-label col-form-label-sm text-primary"> Nombre: </label>
+                                  </b-col>
+                                  <b-col  cols="9">
+                                      <b-form-input type="text" class="form-control form-control-sm"  placeholder="Nombre"
+                                      v-model="detalles.destinatario.nombre"
 
-                                    :state="null"
-                                    title="Num. Identificacion"></b-form-input>
-                                </b-col>
-                            </b-form-row>
+                                      :state="null"
+                                      title="Num. Identificacion"></b-form-input>
+                                  </b-col>
+                              </b-form-row>
                             -->
                             <b-form-row v-show="selectservice&&mostrardestinatario" class="my-1">
                                 <b-col>
@@ -396,28 +395,28 @@
                     <b-btn class="mt-3 float-right " variant="success" v-on:click="actualizar()">
                     <i class="fa fa-floppy-o"></i> Guardar
                     </b-btn>
-                </div>
+            </div>
                 <b-container fluid>
-                    <b-row class=" my-1">
-                    <b-col>
+                  <b-row class=" my-1">
+                      <b-col>
 
-                    <v-select v-model="selectproductED" label="nombre" placeholder="Producto"
-                        :options="productosurlED" @input="seleccionarServicioED()"
-                        :disabled="true">
-                    </v-select>
+                      <v-select v-model="selectproductED" label="nombre" placeholder="Producto"
+                          :options="productosurlED" @input="seleccionarServicioED()"
+                          :disabled="true">
+                      </v-select>
 
-                    </b-col>
-                    <b-col>
+                      </b-col>
+                      <b-col>
 
-                    <v-select v-model="selectserviceED" label="nombre" placeholder="Servicio"
-                        :disabled="true"
-                        :options="serviciosurlED"  @input="camposNversionED()">
-                        <!--
-            :options="serviciosurl" @input="camposNversion()">
-                          -->
-                    </v-select>
-                    </b-col>
-                </b-row>
+                      <v-select v-model="selectserviceED" label="nombre" placeholder="Servicio"
+                          :disabled="true"
+                          :options="serviciosurlED"  @input="camposNversionED()">
+                          <!--
+                      :options="serviciosurl" @input="camposNversion()">
+                            -->
+                      </v-select>
+                      </b-col>
+                  </b-row>
 
             <b-card no-body v-show="selectserviceED" class=" w-100 cards"
                     style="
@@ -426,7 +425,7 @@
                     padding-top: 0px;
                     padding-bottom: 0px;
                     ">
-                    <b-tabs card  v-show="selectserviceED" v-model="tabIndexED" @input="cambiotab">
+                    <b-tabs card id="tarjeta"  class=" cardPersonalizada"  v-show="selectserviceED" v-model="tabIndexED" @input="cambiotab">
                         <b-tab  title="Información" >
                             <b-card-body>
                                 <b-row>
@@ -438,39 +437,39 @@
                                                                     placeholder="Referencia" v-model="detalleseditar.referencia"
                                                                 :state="estado.referencia"></b-form-input>
                                         </b-col>
-                                    </b-row>
-                            <b-row  v-for="(data,indice) in inputsED.campos" class="my-2">
-                                <template v-if="data.type!='select'" >
-                                <template v-if="data.espieza==false">
-                                <b-col  >
-                                    <label  class="col-sm col-form-label col-form-label-sm text-capitalize text-primary" :style="[data.style]" >{{data.nombre}}: </label>
-                                </b-col>
-                                <b-col >
-                                    <input class="form-control form-control-sm"
-                                    :type="data.type" :id="data.id" :style="[data.style,validatecampo]"
-                                    :max="data.max" :placeholder="data.placeholder"
-                                    @keyup="PresionoED(indice)"  :value="valores(data.id)"      required>
-                                </b-col>
-                                </template>
+                                </b-row>
+                                <b-row  v-for="(data,indice) in inputsED.campos" class="my-2">
+                                    <template v-if="data.type!='select'" >
+                                    <template v-if="data.espieza==false">
+                                    <b-col  >
+                                        <label  class="col-sm col-form-label col-form-label-sm text-capitalize text-primary" :style="[data.style]" >{{data.nombre}}: </label>
+                                    </b-col>
+                                    <b-col >
+                                        <input class="form-control form-control-sm"
+                                        :type="data.type" :id="data.id" :style="[data.style,validatecampo]"
+                                        :max="data.max" :placeholder="data.placeholder"
+                                        @keyup="PresionoED(indice)"  :value="valores(data.id)"      required>
+                                    </b-col>
+                                    </template>
 
-                                </template>
-                            </b-row>
-                            <b-row class=" my-1">
-                                <b-form-textarea id="textarea1"
-                                    v-model="detalleseditar.observaciones"
-                                    placeholder="Observaciones"
-                                    :rows="3"
-                                    :max-rows="6">
-                                </b-form-textarea>
-                            </b-row>
-                            <b-row class=" my-1">
-                                <b-form-textarea id="textarea1"
-                                    v-model="detalleseditar.contenido"
-                                    placeholder="Ingrese el contenido"
-                                    :rows="3"
-                                    :max-rows="6">
-                                </b-form-textarea>
-                            </b-row>
+                                    </template>
+                                </b-row>
+                                <b-row class=" my-1">
+                                    <b-form-textarea id="textarea1"
+                                        v-model="detalleseditar.observaciones"
+                                        placeholder="Observaciones"
+                                        :rows="3"
+                                        :max-rows="6">
+                                    </b-form-textarea>
+                                </b-row>
+                              <b-row class=" my-1">
+                                  <b-form-textarea id="textarea1"
+                                      v-model="detalleseditar.contenido"
+                                      placeholder="Ingrese el contenido"
+                                      :rows="3"
+                                      :max-rows="6">
+                                  </b-form-textarea>
+                              </b-row>
                             </b-card-body>
                         </b-tab>
                         <b-tab title="Detalle" :disabled="tabdinamicoED">
