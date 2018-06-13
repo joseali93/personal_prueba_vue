@@ -92,13 +92,13 @@
 
       -->
       <header class="header " id="headerpersonalizado" >
-        <nav class="navbar ">
+        <nav class="navbar bg-dark">
           <div class="container-fluid">
             <div class="navbar-holder d-flex align-items-center justify-content-between">
               <div class="navbar-header">
-                <a  id="toggle-btn" class="menu-btn" @click="menu()">
-                  <i class="icon-bars"> </i>
-                </a >
+                <a id="toggle-btn" class="menu-btn bg-dark text-white" @click="menu()" style="font-size:20px">
+                  <i class="fa fa-bars"></i>
+                </a>
 
                   <a class="navbar-brand">
               <b-link to="/inicio">
@@ -110,19 +110,21 @@
               </div>
               <ul class="nav-menu list-unstyled d-flex flex-md-row align-items-md-center">
                 <li class="nav-item">
-                  <b-link variant="link" class="nav-link logout" @click="Salir()">
-                    Cerrar
-                    <i class="fa fa-sign-out"></i>
-                  </b-link>
-                </li>
-                <li class="nav-item">
-                  <b-dropdown id="ddown-header" text="Configuración" variant="link" class="nav-link logout"
-                  v-show="config">
-                    <b-dropdown-header>Configuración Aplicativo</b-dropdown-header>
+                  <b-dropdown id="ddown-header" variant="dark" size="lg" v-show="config">
+                    <template slot="button-content">
+                      <i class="fa fa-cogs" aria-hidden="true"></i><span class="sr-only">Search</span>
+                    </template>
+                    <b-dropdown-header>Configuración WayLogistic</b-dropdown-header>
                     <b-dropdown-item-button @click="confiCliente">Clientes</b-dropdown-item-button>
                     <b-dropdown-item-button @click="confiCentroC">Centros de Costo</b-dropdown-item-button>
                     <b-dropdown-item-button @click="confiCentroL">Centros Logísticos </b-dropdown-item-button>
                   </b-dropdown>
+                </li>
+                <li class="nav-item">
+                  <b-link variant="link" class="nav-link logout" @click="Salir()">
+                    Cerrar
+                    <i class="fa fa-sign-out"></i>
+                  </b-link>
                 </li>
                </ul>
             </div>
