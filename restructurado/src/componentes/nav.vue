@@ -9,7 +9,7 @@
             <div class="sidenav-header d-flex align-items-center justify-content-center">
             <div class="sidenav-header-inner text-center " >
               <b-link to="/inicio" class="active">
-                <b-img :src="servidor+imagen" fluid alt="Responsive image"  
+                <b-img :src="servidor+imagen" fluid alt="Responsive image"
                 class="img-fluid   mCS_img_loaded imagenpersonalizada"/>
               </b-link>
             </div>
@@ -18,56 +18,55 @@
             </div>
             <div class="main-menu">
               <!-- ASIDE BAR -->
-            <ul id="side-main-menu" class="side-menu list-unstyled">                
+            <ul id="side-main-menu" class="side-menu list-unstyled">
                <li v-for="(ruta,indice) in rutas">
                     <b-link :to="ruta" v-if="indice=='ruta_uno'"  class="pintar">
                          <!--<i class="fa fa-wpforms"></i> /lib/icons/generacion_orden.svg -->
                          <b-img src="../../lib/icons/generar_orden.svg"
-                          fluid alt="G_O" 
+                          fluid alt="G_O"
                           width="25%"
                          />
-                        <span>
-                            Generación Orden de Servicio </span>
+                        <span>Generar orden de servicio</span>
                     </b-link>
                 </li>
-                <li v-for="(ruta,indice) in rutas" @click="orden()"> 
+                <li v-for="(ruta,indice) in rutas" @click="orden()">
                     <b-link :to="ruta" v-if="indice=='ruta_dos'" >
                         <!--<i class="fa fa-truck " ></i>-->
                         <b-img src="../../lib/icons/consulta_orden.svg"
-                          fluid alt="C_O" 
+                          fluid alt="C_O"
                           width="25%"
                          />
-                        <span > Consultar Ordenes de Servicio </span>
+                        <span>Consultar ordenes de servicio</span>
                     </b-link>
                 </li>
-                <li  v-for="(ruta,indice) in rutas" @click="Traza()"> 
-                    <b-link :to="ruta" v-if="indice=='ruta_tres'" >  
+                <li  v-for="(ruta,indice) in rutas" @click="Traza()">
+                    <b-link :to="ruta" v-if="indice=='ruta_tres'" >
                         <!--<i class="fa fa-map-signs" >-->
                            <b-img src="../../lib/icons/trazabilidad.svg"
-                          fluid alt="C_T" 
+                          fluid alt="C_T"
                           width="25%"
                          />
-                          <span >Consulta Trazabilidad</span>
+                        <span>Consultar trazabilidad</span>
                     </b-link>
                 </li>
-                <li  v-for="(ruta,indice) in rutas"> 
+                <li  v-for="(ruta,indice) in rutas">
                     <b-link :to="ruta" v-if="indice=='ruta_cuatro'">
-                       
+
                         <b-img src="../../lib/icons/entradas_salidas.svg"
-                          fluid alt="C_T" 
+                          fluid alt="C_T"
                           width="25%"
                          />
-                        <span >Entradas y Salidas</span>
+                        <span>Gestionar entradas y salidas</span>
                     </b-link>
                 </li>
-                <li  v-for="(ruta,indice) in rutas"> 
+                <li  v-for="(ruta,indice) in rutas">
                     <b-link :to="ruta" v-if="indice=='ruta_cinco'">
-                        
+
                            <b-img src="../../lib/icons/documento.svg"
-                          fluid alt="C_T" 
+                          fluid alt="C_T"
                           width="25%"
                          />
-                          <span > Consulta Manifiestos </span>
+                          <span>Consultar manifiestos</span>
                     </b-link>
                 </li>
             </ul>
@@ -75,7 +74,7 @@
 
         </div>
         </div>
-        <div id="mCSB_1_scrollbar_vertical" 
+        <div id="mCSB_1_scrollbar_vertical"
         class="mCSB_scrollTools mCSB_1_scrollbar mCS-light mCSB_scrollTools_vertical"
          style="display: none;">
           <div class="mCSB_draggerContainer">
@@ -90,7 +89,7 @@
     </nav>
     <div id="div-prueba" class="page home-page">
       <!-- NAVBAR
-      
+
       -->
       <header class="header " id="headerpersonalizado" >
         <nav class="navbar ">
@@ -100,7 +99,7 @@
                 <a  id="toggle-btn" class="menu-btn" @click="menu()">
                   <i class="icon-bars"> </i>
                 </a >
-                  
+
                   <a class="navbar-brand">
               <b-link to="/inicio">
                   <div class="brand-text d-none d-md-inline-block">
@@ -131,7 +130,7 @@
         </nav>
       </header>
       <!-- SECCION DEL HEADER Y CONTENIDO DIV-->
-      <section class="dashboard-header section-padding" 
+      <section class="dashboard-header section-padding"
       style="
     padding-top: 1px;padding-bottom: 0px;">
         <!--
@@ -151,18 +150,29 @@
       </section>
 
       <!-- FOOTER  -->
-      <footer class="main-footer" id="footerpersonalizado">
+      <footer class="main-footer">
         <div class="container-fluid">
           <div class="row">
             <div class="col-sm-6">
-              <p>WaySolutions Tecnology © 2017</p>
-            </div>
-            <div class="col-sm-6 text-right">
-              <p>Design by <a href="http://www.waysolutions.co/" class="external">WaySolutions Tecnology</a></p>
+              <p>WayLogistic &copy; 2017
+                Developed by <a href="http://www.waysolutions.co/" class="external">WaySolutions Technology</a>
+              </p>
             </div>
           </div>
         </div>
       </footer>
+      <!-- <footer class="main-footer">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-sm-6">
+              <p>WaySolutions Technology © 2017</p>
+            </div>
+            <div class="col-sm-6 text-right">
+              <p>Developed by <a href="" class="external">WaySolutions Tecnology</a></p>
+            </div>
+          </div>
+        </div>
+      </footer> -->
     </div>
    </div>
 </template>
@@ -206,7 +216,7 @@ export default {
         this.items = userObject.items;
       }.bind(this)
     );
-    
+
   },
   methods: {
     orden(){
@@ -218,7 +228,7 @@ export default {
             var eliminar= this.vali
             setTimeout(() => {
                 bus.$emit('ocultar', {
-                    ocultar,eliminar 
+                    ocultar,eliminar
                 })
                 }, )
             this.$router.replace('/inicio/consultar/resultado')
@@ -228,7 +238,7 @@ export default {
       var ocultartra=true
             setTimeout(() => {
                 bus.$emit('ocultartra', {
-                    ocultartra 
+                    ocultartra
                 })
                 }, )
             this.$router.replace('/inicio/trazabilidad/listado')
@@ -287,10 +297,10 @@ export default {
   components: {
     Preload
   },
-  
+
   mounted: function() {
 
-    
+
     var test2 = localStorage.getItem("storedData");
     var test = JSON.parse(test2);
     var servi =localStorage.getItem("servidor")
@@ -335,7 +345,7 @@ export default {
     //console.log(this.rutas);
   },
   beforeCreate: function() {
-    
+
   }
 };
 </script>

@@ -1,245 +1,230 @@
 <template>
 <!-- SE PERMITE LA SELECCION DE LOS CLIENTE Y CENTRO DE COSTO QUE CORRESPONDA PARA LA REALIZACION
 DE LA ORDEN DE SERVICIO -->
-
-    <b-container fluid class="contenedorTotal">
-      <div class="breadPersonalizado">
-         <b-breadcrumb :items="items" />
+  <b-container fluid class="contenedorTotal">
+    <div class="breadcrumb-holder">
+      <div class="container-fluid">
+        <b-breadcrumb :items="items" />
+        <!-- <ul class="breadcrumb">
+          <li v-for="(item, i) in items" :key="i" class="breadcrumb-item">
+            <a :href="item.to">{{item.text}}</a>
+          </li>
+        </ul> -->
       </div>
+    </div>
+    <b-container fluid>
+      <header class="content-heading" slot="header">
+        <b-row class="my-2">
+        <b-col><h3 class="my-2">Generar orden de servicio</h3></b-col>
+        <b-col>
+          <b-btn class="rounded float-right" variant="primary" v-on:click="actualizar"
+            v-b-popover.hover="'Continuar'">Continuar<i class="fa fa-arrow-right"></i>
+          </b-btn>
+        </b-col>
+      </b-row>
+      </header>
+      <b-card class="my-3 border">
+        <h3 slot="header" class="mb-0 encabezado">Información del cliente</h3>
+        <b-row>
+          <b-col>
+            <h3 class="text-primary">Fecha y hora de recolección</h3>
+            <b-form-group class="text-dark my-1">
+              <b-form-radio-group v-model="prueba" :options="radios" name="radiosSm" @change="cambio">
+              </b-form-radio-group>
+            </b-form-group>
+          </b-col>
+          <b-col v-show="prueba=='second'" >
+              <h3 class="text-primary"> Fecha </h3>
+              <b-form-input  type="date" v-model="fecha"></b-form-input>
+          </b-col>
+            <b-col v-show="prueba=='second'" >
+              <h3 class="text-primary"> Hora inicio </h3>
+              <b-form-input  type="number" v-model="horaInicio"></b-form-input>
+          </b-col>
+            <b-col v-show="prueba=='second'" >
+              <h3 class="text-primary"> Hora fin </h3>
+              <b-form-input  type="number" v-model="horaFin"></b-form-input>
+          </b-col>
+        </b-row>
+          <b-row>
+              <b-col>
+                  <h3 class="text-primary">Cliente</h3>
+                  <!--
+                  <b-form-select v-model="selected_client" class="mb-3"
+                  :options="clientes" text-field="nombre" value-field="_id" @change.native="ClientesSelect"
+                  :disabled="disable_selected_client" >
+                  </b-form-select>
+                  -->
+                    <v-select v-model="selected_client" label="nombre" placeholder="Cliente"
+                    :options="clientes" @input="clienteSeleccionado()"
+                      :disabled="disable_selected_client" ></v-select>
 
-
-      <b-container fluid class="contenedorInterno">
-                <header class="content-heading" slot="header">
-                  <b-row  class=" my-1">
-                  <b-col>
-                <h3>Generación Orden de Servicio</h3>
-                  </b-col>
-                 
-                  <b-col >
-                    <b-btn class="rounded float-right" variant="primary"   v-on:click="actualizar"
-                    v-b-popover.hover="'Continuar'" >Continuar<i class="fa fa-arrow-right"></i>
-                    </b-btn>
-                </b-col>
-                </b-row>
-                </header> 
-                
-    <b-card>
-        <b-card class="cards" >
-          <h6 slot="header"
-                class="mb-0">Información Cliente
-                </h6>
-           <b-row>
-               <b-form-group
-                      class=" text-primary"
-                        label="Fecha y Hora de recolección"
-                        label-size="">
-                        <b-form-radio-group v-model="prueba"
-
-                                        :options="radios"
-                                        name="radiosSm"
-                                        @change="cambio"
-                                        >
-                        </b-form-radio-group>
-
-                    </b-form-group>
-              <b-col v-show="prueba=='second'" >
-                 <h3 class="text-primary"> Fecha </h3>
-                 <b-form-input  type="date" v-model="fecha"></b-form-input>
               </b-col>
-               <b-col v-show="prueba=='second'" >
-                 <h3 class="text-primary"> Hora inicio </h3>
-                 <b-form-input  type="number" v-model="horaInicio"></b-form-input>
+              <b-col>
+                  <h3 class="text-primary">Centro de Costos</h3>
+                  <preload v-if="load"></preload>
+                  <!--
+                  <b-form-select v-model="selected_center" class="mb-3"
+                  :options="centros" text-field="nombre" value-field="_id"
+                    @change.native="centrosseleccionado" :disabled="habilitar" v-else >
+                  </b-form-select>
+
+                  <v-select v-model="selected_center" label="nombre"
+                  placeholder="Seleccione el Centro de Costo" :options="centros"
+                  @input="centroSeleccionado()" :disabled="habilitar"
+                    ></v-select>
+                  -->
+                  <v-select v-model="selected_center" label="nombre_concatenado"
+                  placeholder=" Centro de Costo" :options="centros"
+                  @input="centroSeleccionado()" :disabled="habilitar"
+                    ></v-select>
               </b-col>
-                <b-col v-show="prueba=='second'" >
-                 <h3 class="text-primary"> Hora fin </h3>
-                 <b-form-input  type="number" v-model="horaFin"></b-form-input>
-              </b-col>
-            </b-row>
-            <b-row>
-                <b-col>
-                    <h3 class="text-primary">Cliente</h3>
-                    <!--
-                    <b-form-select v-model="selected_client" class="mb-3"
-                    :options="clientes" text-field="nombre" value-field="_id" @change.native="ClientesSelect"
-                    :disabled="disable_selected_client" >
-                    </b-form-select>
-                    -->
-                     <v-select v-model="selected_client" label="nombre" placeholder="Cliente"
-                      :options="clientes" @input="clienteSeleccionado()"
-                       :disabled="disable_selected_client" ></v-select>
 
-                </b-col>
-                <b-col>
-                    <h3 class="text-primary">Centro de Costos</h3>
-                    <preload v-if="load"></preload>
-                    <!--
-                    <b-form-select v-model="selected_center" class="mb-3"
-                    :options="centros" text-field="nombre" value-field="_id"
-                     @change.native="centrosseleccionado" :disabled="habilitar" v-else >
-                    </b-form-select>
-
-                    <v-select v-model="selected_center" label="nombre"
-                    placeholder="Seleccione el Centro de Costo" :options="centros"
-                    @input="centroSeleccionado()" :disabled="habilitar"
-                      ></v-select>
-                    -->
-                    <v-select v-model="selected_center" label="nombre_concatenado"
-                    placeholder=" Centro de Costo" :options="centros"
-                    @input="centroSeleccionado()" :disabled="habilitar"
-                      ></v-select>
-                </b-col>
-
-            </b-row>
-        </b-card>
-        <b-card  class="cards" style="top: 34px;">
-            <h6 slot="header"
-                class="mb-0">Información Recolección
-            </h6>
-
-            <b-row >
-                <b-col class=" my-2">
-                    <h3 class="text-primary">Remitente</h3>
-                    <!--
-                  <v-select v-model="selected_client" label="nombre" placeholder="Seleccione el remitente"
-                      :options="clientes" @input="clienteSeleccionado()"
-                       :disabled="disable_selected_client" ></v-select>
+          </b-row>
+      </b-card>
+      <b-card class="my-3 border">
+          <h3 slot="header" class="mb-0">Información de recolección</h3>
+          <b-row >
+              <b-col class=" my-2">
+                  <h3 class="text-primary">Remitente</h3>
+                  <!--
+                <v-select v-model="selected_client" label="nombre" placeholder="Seleccione el remitente"
+                    :options="clientes" @input="clienteSeleccionado()"
+                      :disabled="disable_selected_client" ></v-select>
 
 
-                      v-model="remitente"
+                    v-model="remitente"
 
-                    -->
-                     <v-select label="nombre" :filterable="false" v-model=remitente
-                     placeholder=" Remitente " :options="optionsdestinatarios"
-                      @input="updateOption"
-                      @search="onSearch">
-                      <template slot="no-options" >
-                        Nombre del remitente..
-                      </template>
-                      <template slot="option" slot-scope="option">
-                        <div class="d-center">
-                          {{ option.nombre }}
-                          </div>
-                      </template>
-                      <template slot="selected-option" scope="option">
-                        <div class="selected d-center">
-                          {{ option.nombre }}
+                  -->
+                    <v-select label="nombre" :filterable="false" v-model=remitente
+                    placeholder=" Remitente " :options="optionsdestinatarios"
+                    @input="updateOption"
+                    @search="onSearch">
+                    <template slot="no-options" >
+                      Nombre del remitente..
+                    </template>
+                    <template slot="option" slot-scope="option">
+                      <div class="d-center">
+                        {{ option.nombre }}
                         </div>
-                        <template slot="no-options" >
-                        no se encontro nada.
-                      </template>
-                      </template>
+                    </template>
+                    <template slot="selected-option" scope="option">
+                      <div class="selected d-center">
+                        {{ option.nombre }}
+                      </div>
+                      <template slot="no-options" >
+                      no se encontro nada.
+                    </template>
+                    </template>
 
-                    </v-select>
-                </b-col>
-            </b-row>
-            <b-row v-if="GeoReferenciacion">
-                    <b-col>
-                    <b-form-group id="exampleInputGroup1"
-                      class="text-primary"
-                        label="Dirección ">
-                            <b-form-input id="direccionGoogle"
-                                size=""
-                                ref="focusRemitente"
-                                type="text"
-                                v-model="remit.direccion"
-                                required
-                                @input="initAutocomplete()"
-                               @change="initAutocomplete()"
-                                placeholder="Dirección"
-                                maxlength="100">
-                            </b-form-input>
-                            <!--
-                               @change="localizar()"
-                              @keypress="localizar()"
-                                 @keyup.enter.native="localizar()"
-                              -->
-                              
-                    </b-form-group>
-                    </b-col>
-            </b-row>
-            <b-row>
-                    <b-col>
-                    <b-form-group id="exampleInputGroup1"
-                      class="text-primary"
-                        label="Dirección ">
-                            <b-form-input id="complemento"
-                                size=""
-                                type="text"
-                                v-model="remit.complemento"
-                                required
-                                
-                                placeholder="Torre, Apartamento, Oficina, Conjunto Residencial, Bodega"
-                                maxlength="100">
-                            </b-form-input>
-                            <!--
-                               @change="localizar()"
-                              @keypress="localizar()"
-                                 @keyup.enter.native="localizar()"
-                              -->
-                              
-                    </b-form-group>
-                    </b-col>
-            </b-row>
-                <b-row>
-                    <b-col>
-                    <b-form-group id="exampleInputGroup2"
-                    class="text-primary"
-                        label="Contacto ">
-                            <b-form-input id="nombre"
-                                size=""
-                                type="text"
-                                v-model="remit.nombre"
-                                required
-                                placeholder="Nombre"
-                                maxlength="100"
-                                >
-                            </b-form-input>
-                    </b-form-group>
-                    </b-col>
-                </b-row>
-                <b-row>
-                    <b-col>
-                    <b-form-group id="exampleInputGroup2"
-                    class="text-primary"
-                        label="Num Identificacion ">
-                            <b-form-input id="identificacion"
-                                size=""
-                                type="text"
-                                v-model="remit.numero_identificacion"
-                                required
-                                placeholder="Numero de identificacion"
-                                maxlength="100"
-                                >
-                            </b-form-input>
-                    </b-form-group>
-                    </b-col>
-                </b-row>
-                <b-row>
-                    <b-col>
-                    <b-form-group id="exampleInputGroup3"
-                    class="text-primary"
-                        label="Teléfono " >
-                            <b-form-input id="telefono"
-                            size=""
-                                type="text"
+                  </v-select>
+              </b-col>
+          </b-row>
+          <b-row v-if="GeoReferenciacion">
+                  <b-col>
+                  <h3 class="text-primary">Dirección</h3>
+                  <b-form-group id="exampleInputGroup1"
+                    class="text-primary">
+                          <b-form-input id="direccionGoogle"
+                              size=""
+                              ref="focusRemitente"
+                              type="text"
+                              v-model="remit.direccion"
+                              required
+                              @input="initAutocomplete()"
+                              @change="initAutocomplete()"
+                              placeholder="Dirección"
+                              maxlength="100">
+                          </b-form-input>
+                          <!--
+                              @change="localizar()"
+                            @keypress="localizar()"
+                                @keyup.enter.native="localizar()"
+                            -->
 
-                                v-model="remit.telefono"
-                                required
-                                placeholder="Teléfono"
-                                maxlength="20">
-                            </b-form-input>
-                    </b-form-group>
-                    </b-col>
-                </b-row>
+                  </b-form-group>
+                  </b-col>
+          </b-row>
+          <b-row>
+                  <b-col>
+                  <h3 class="text-primary">Dirección</h3>
+                  <b-form-group id="exampleInputGroup1"
+                    class="text-primary my-2">
+                          <b-form-input id="complemento"
+                              size=""
+                              type="text"
+                              v-model="remit.complemento"
+                              required
+
+                              placeholder="Torre, Apartamento, Oficina, Conjunto Residencial, Bodega"
+                              maxlength="100">
+                          </b-form-input>
+                          <!--
+                              @change="localizar()"
+                            @keypress="localizar()"
+                                @keyup.enter.native="localizar()"
+                            -->
+
+                  </b-form-group>
+                  </b-col>
+          </b-row>
+              <b-row>
+                  <b-col>
+                  <h3 class="text-primary">Contacto</h3>
+                  <b-form-group id="exampleInputGroup2"
+                  class="text-primary my-2">
+                          <b-form-input id="nombre"
+                              size=""
+                              type="text"
+                              v-model="remit.nombre"
+                              required
+                              placeholder="Nombre"
+                              maxlength="100"
+                              >
+                          </b-form-input>
+                  </b-form-group>
+                  </b-col>
+              </b-row>
+              <b-row>
+                  <b-col>
+                  <h3 class="text-primary">Número de identificación</h3>
+                  <b-form-group id="exampleInputGroup2"
+                  class="text-primary my-2">
+                          <b-form-input id="identificacion"
+                              size=""
+                              type="text"
+                              v-model="remit.numero_identificacion"
+                              required
+                              placeholder="Numero de identificacion"
+                              maxlength="100"
+                              >
+                          </b-form-input>
+                  </b-form-group>
+                  </b-col>
+              </b-row>
+              <b-row>
+                  <b-col>
+                  <h3 class="text-primary">Teléfono</h3>
+                  <b-form-group id="exampleInputGroup3"
+                  class="text-primary my-2">
+                          <b-form-input id="telefono"
+                          size=""
+                              type="text"
+
+                              v-model="remit.telefono"
+                              required
+                              placeholder="Teléfono"
+                              maxlength="20">
+                          </b-form-input>
+                  </b-form-group>
+                  </b-col>
+              </b-row>
 
 
 
-        </b-card>
-    </b-card>
-
-      </b-container>
-
+      </b-card>
     </b-container>
+  </b-container>
 </template>
 
 <script>
@@ -255,37 +240,33 @@ import axios from "axios";
 
 export default {
   components: {
-    Preload,
-
+    Preload
   },
   watch: {
-    clientprueba(newValue, oldValue) {
-
-    }
+    clientprueba(newValue, oldValue) {}
   },
   data() {
-
     return {
-      GeoReferenciacion:false,
-      validacionDireccion:false,
-      horaInicio:'',
-      horaFin:'',
-      prueba:'first',
-      fecha:'',
+      GeoReferenciacion: false,
+      validacionDireccion: false,
+      horaInicio: "",
+      horaFin: "",
+      prueba: "first",
+      fecha: "",
       //observaciones:'',
-      remit:{
-        nombre:'',
-        direccion:'',
-        telefono:'',
-        latitud:'',
-        longitud:'',
-        codigo_postal:'',
-        complemento:''
+      remit: {
+        nombre: "",
+        direccion: "",
+        telefono: "",
+        latitud: "",
+        longitud: "",
+        codigo_postal: "",
+        complemento: ""
       },
-      lati:"",
-      longi:"",
-      posta:"",
-      remitente:'',
+      lati: "",
+      longi: "",
+      posta: "",
+      remitente: "",
       /*
       remitente:{
         nombre:'',
@@ -294,12 +275,11 @@ export default {
         numero_identificacion:'',
       },
       */
-      optionsdestinatarios:[],
-      selected: 'first',
+      optionsdestinatarios: [],
+      selected: "first",
       radios: [
-        { text: 'Hoy, cualquier horario', value: 'first' },
-        { text: 'Programar Recolección', value: 'second' }
-
+        { text: "Hoy, cualquier horario", value: "first" },
+        { text: "Programar recolección", value: "second" }
       ],
       items: [
         {
@@ -331,169 +311,164 @@ export default {
   },
 
   methods: {
-
-    initAutocomplete(){
-      var longi
-      var latit
-      var codpostal
-       var options = {
-        componentRestrictions: {country: 'co'}
+    initAutocomplete() {
+      var longi;
+      var latit;
+      var codpostal;
+      var options = {
+        componentRestrictions: { country: "co" }
       };
-       var input = document.getElementById('direccionGoogle');
-                var searchBox = new google.maps.places.Autocomplete(input);
+      var input = document.getElementById("direccionGoogle");
+      var searchBox = new google.maps.places.Autocomplete(input);
 
-                input.value=input.value.split(',')[0];
-                 searchBox.setComponentRestrictions( {'country': ['co']})
-                searchBox.addListener('place_changed', function() {
-                  input.value=input.value.split(',')[0];
-                    var places = searchBox.getPlace();
-                          if(!places.geometry){
-                          this.validacionDireccion=false
-                          console.log("no es posible geo referenciar");
-                          swal({
-                            position: 'top-end',
-                            type: 'warning',
-                            title: 'No es posible Georeferenciar la dirección digitada',
-                            showConfirmButton: false,
-                            timer: 1500
-                          })
-                          }else{
-                            this.validacionDireccion=true
-                            this.lati=places.geometry.location.lat()
-                            this.longi=places.geometry.location.lng()
-                            for (var i = 0; i < places.address_components.length; i++) {
-                            for (var j = 0; j < places.address_components[i].types.length; j++) {
-                                if (places.address_components[i].types[j] == "postal_code") {
-                                  this.posta = places.address_components[i].long_name;
+      input.value = input.value.split(",")[0];
+      searchBox.setComponentRestrictions({ country: ["co"] });
+      searchBox.addListener(
+        "place_changed",
+        function() {
+          input.value = input.value.split(",")[0];
+          var places = searchBox.getPlace();
+          if (!places.geometry) {
+            this.validacionDireccion = false;
+            console.log("no es posible geo referenciar");
+            swal({
+              position: "top-end",
+              type: "warning",
+              title: "No es posible Georeferenciar la dirección digitada",
+              showConfirmButton: false,
+              timer: 1500
+            });
+          } else {
+            this.validacionDireccion = true;
+            this.lati = places.geometry.location.lat();
+            this.longi = places.geometry.location.lng();
+            for (var i = 0; i < places.address_components.length; i++) {
+              for (
+                var j = 0;
+                j < places.address_components[i].types.length;
+                j++
+              ) {
+                if (places.address_components[i].types[j] == "postal_code") {
+                  this.posta = places.address_components[i].long_name;
+                }
+              }
+            }
+          }
 
-                                }
-                            }
-                          }
-                          }
-                          
-                        
-                      
-                    
-                    
-                    // Object.keys(places).forEach((k) => {
-                   
-                }.bind(this));
-                //input.value=input.value.split(',')[0];
-                input.value=input.value.split(',')[0];
+          // Object.keys(places).forEach((k) => {
+        }.bind(this)
+      );
+      //input.value=input.value.split(',')[0];
+      input.value = input.value.split(",")[0];
     },
-    cambio(){
-      if(this.prueba=='second'){
-            this.fecha=''
+    cambio() {
+      if (this.prueba == "second") {
+        this.fecha = "";
+      }
+    },
+    updateOption() {
+      var remi = localStorage.getItem("remitente");
+      var remijson = JSON.parse(remi);
+      if (remi) {
+        if (this.remitente != null) {
+          if (this.remitente.nombre == remijson.nombre) {
+            this.onSearch(remijson.nombre);
+          } else {
+            this.onSearch(this.remitente.nombre);
+            this.remit.nombre = "";
+            this.remit.direccion = "";
+            this.remit.numero_identificacion = "";
+            this.remit.telefono = "";
+            this.remit.nombre = "";
+          }
+        } else {
+          this.remit.nombre = "";
+          this.remit.direccion = "";
+          this.remit.numero_identificacion = "";
+          this.remit.telefono = "";
+        }
+
+        //  this.remitente=Object.assign({}, this.remitente);
+      } else {
+        if (this.remitente == null || this.remitente == "null") {
+          this.remit.nombre = "";
+          this.remit.direccion = "";
+          this.remit.numero_identificacion = "";
+          this.remit.telefono = "";
+        } else {
+          console.log("entro al else");
+          this.remit = Object.assign({}, this.remitente);
+          this.$nextTick(() => {
+            this.$refs.focusRemitente.focus();
+          });
+          //this.remitente=Object.assign({}, this.remitente);
+        }
       }
 
-    },
-    updateOption(){
-        var remi = localStorage.getItem("remitente");
-        var remijson = JSON.parse(remi);
-        if(remi){
-          if(this.remitente!=null){
-            if(this.remitente.nombre==remijson.nombre){
-               this.onSearch(remijson.nombre)
-            }
-            else{
-               this.onSearch(this.remitente.nombre)
-                this.remit.nombre=''
-                this.remit.direccion=''
-                this.remit.numero_identificacion=''
-                this.remit.telefono=''
-                this.remit.nombre=''
-            }
-          }
-          else{
-            this.remit.nombre=''
-            this.remit.direccion=''
-            this.remit.numero_identificacion=''
-            this.remit.telefono=''
-          }
-
-                    //  this.remitente=Object.assign({}, this.remitente);
-
-        }
-        else{
-          if(this.remitente==null||this.remitente=='null'){
-            this.remit.nombre=''
-            this.remit.direccion=''
-            this.remit.numero_identificacion=''
-            this.remit.telefono=''
-          }
-          else{console.log("entro al else");
-            this.remit=Object.assign({}, this.remitente);
-            this.$nextTick(() => {
-                          this.$refs.focusRemitente.focus();
-            });
-          //this.remitente=Object.assign({}, this.remitente);
-
-          }
-        }
-
-
-         //this.remitente=remijson
+      //this.remitente=remijson
     },
 
-     localizar(){
-      var dir
-      var longi
-      var latit
-      var codpostal
-      dir=this.remitente.direccion +', Colombia'
+    localizar() {
+      var dir;
+      var longi;
+      var latit;
+      var codpostal;
+      dir = this.remitente.direccion + ", Colombia";
       var geocoder = new google.maps.Geocoder();
-      geocoder.geocode({'address': dir, country: "CO" }, function(results, status) {
-        if (status === 'OK') {
-          results[0].address_components.forEach(element => {
-            if(element.types[0]=='postal_code'){
-              codpostal=results[0].address_components[7].long_name
-            }
-          });
-          var resultados = results[0].geometry.location,
+      geocoder.geocode(
+        { address: dir, country: "CO" },
+        function(results, status) {
+          if (status === "OK") {
+            results[0].address_components.forEach(element => {
+              if (element.types[0] == "postal_code") {
+                codpostal = results[0].address_components[7].long_name;
+              }
+            });
+            var resultados = results[0].geometry.location,
+              resultados_lat = resultados.lat(),
+              resultados_long = resultados.lng();
 
-            resultados_lat = resultados.lat(),
-            resultados_long = resultados.lng();
-
-          longi=resultados_long
-          latit=resultados_lat
-          //codpostal=results[0].address_components[7].long_name
-          /*
+            longi = resultados_long;
+            latit = resultados_lat;
+            //codpostal=results[0].address_components[7].long_name
+            /*
           this.lati=resultados_lat
           this.longi=resultados_long
           this.posta=results[0].address_components[7].long_name
           */
-          this.lati=latit
-          this.longi=longi
-          this.posta=codpostal
-            } else {
-              var mensajeError = "";
-              if (status === "ZERO_RESULTS") {
-                mensajeError = "No hubo resultados para la dirección ingresada.";
-              } else if (status === "OVER_QUERY_LIMIT" || status === "REQUEST_DENIED" || status === "UNKNOWN_ERROR") {
-                mensajeError = "Error general del mapa.";
-              } else if (status === "INVALID_REQUEST") {
-                mensajeError = "Error de la web. Contacte con Name Agency.";
-              }
-              alert(mensajeError);
+            this.lati = latit;
+            this.longi = longi;
+            this.posta = codpostal;
+          } else {
+            var mensajeError = "";
+            if (status === "ZERO_RESULTS") {
+              mensajeError = "No hubo resultados para la dirección ingresada.";
+            } else if (
+              status === "OVER_QUERY_LIMIT" ||
+              status === "REQUEST_DENIED" ||
+              status === "UNKNOWN_ERROR"
+            ) {
+              mensajeError = "Error general del mapa.";
+            } else if (status === "INVALID_REQUEST") {
+              mensajeError = "Error de la web. Contacte con Name Agency.";
             }
-
-        }.bind(this));
-
+            alert(mensajeError);
+          }
+        }.bind(this)
+      );
     },
     onSearch(search) {
-
-        //loading(true);
+      //loading(true);
       this.search(search, this);
-
     },
 
-    search(search){
-     
+    search(search) {
       var remi = localStorage.getItem("remitente");
-        var remijson = JSON.parse(remi);
-        if(remi==undefined||remi==''){
-          this.optionsdestinatarios=[]
-          setTimeout(function(){
+      var remijson = JSON.parse(remi);
+      if (remi == undefined || remi == "") {
+        this.optionsdestinatarios = [];
+        setTimeout(
+          function() {
             /*
             this.axios.get(`https://api.github.com/search/repositories?q=${escape(search)}`)
           .then(response => {
@@ -502,72 +477,72 @@ export default {
 
           })
           */
-          this.axios.get(urlservicios+`/obtenerDestinatarioNombre/${escape(search)}`)
-          .then(response => {
-            if(response.data.destinatarios.length==0)
-            {
-              this.optionsdestinatarios=[]
-              this.remitente={}
-              this.remitente.nombre=search
-                            //this.$refs.focusRemitente.focus();
+            this.axios
+              .get(
+                urlservicios + `/obtenerDestinatarioNombre/${escape(search)}`
+              )
+              .then(response => {
+                if (response.data.destinatarios.length == 0) {
+                  this.optionsdestinatarios = [];
+                  this.remitente = {};
+                  this.remitente.nombre = search;
+                  //this.$refs.focusRemitente.focus();
+                } else {
+                  this.optionsdestinatarios = response.data.destinatarios;
+                }
+                //this.optionsdestinatarios=response.data.destinatarios
+                //loading(false);
+              });
+          }.bind(this),
+          345
+        );
+      } else {
+        console.log("entro al search con local");
+        //this.remitente=remijson.nombre
+        this.optionsdestinatarios = [];
+        setTimeout(
+          function() {
+            this.axios
+              .get(
+                urlservicios + `/obtenerDestinatarioNombre/${escape(search)}`
+              )
+              .then(response => {
+                if (response.data.destinatarios.length == 0) {
+                  console.log("no tengo destinatarios blanqueo");
+                  this.optionsdestinatarios = [];
+                  localStorage.removeItem("remitente");
+                  //this.remitente={}
 
-            }
-            else{
-              this.optionsdestinatarios=response.data.destinatarios
-            }
-            //this.optionsdestinatarios=response.data.destinatarios
-                    //loading(false);
+                  //this.remitente=search
 
-          })
+                  this.remit.nombre = search;
+                  this.$nextTick(() => {
+                    this.$refs.focusRemitente.focus();
+                  }); //this.remitente=this.remit.nombre
+                  this.remit.numero_identificacion = "";
+                  this.remit.direccion = "";
+                  this.remit.telefono = "";
+                  //this.remitente.nombre=this.remit.nombre
+                  //this.remitente=this.remit
+                } else {
+                  this.optionsdestinatarios = response.data.destinatarios;
+                  this.$nextTick(() => {
+                    this.$refs.focusRemitente.focus();
+                  });
+                  this.optionsdestinatarios.forEach(element => {
+                    if (search == element.nombre) {
+                      this.remit = element;
+                    }
+                  });
+                }
 
-          }.bind(this), 345);
-        }else{
-          console.log("entro al search con local");
-          //this.remitente=remijson.nombre
-          this.optionsdestinatarios=[]
-          setTimeout(function(){
-          this.axios.get(urlservicios+`/obtenerDestinatarioNombre/${escape(search)}`)
-          .then(response => {
-            if(response.data.destinatarios.length==0)
-            {
-              console.log("no tengo destinatarios blanqueo");
-              this.optionsdestinatarios=[]
-              localStorage.removeItem("remitente");
-              //this.remitente={}
-              
-              //this.remitente=search
-              
-              this.remit.nombre=search
-              this.$nextTick(() => {
-                          this.$refs.focusRemitente.focus();
-            });              //this.remitente=this.remit.nombre
-              this.remit.numero_identificacion=''
-              this.remit.direccion=''
-              this.remit.telefono=''
-              //this.remitente.nombre=this.remit.nombre
-              //this.remitente=this.remit
-            }
-            else{
-            this.optionsdestinatarios=response.data.destinatarios
-              this.$nextTick(() => {
-                          this.$refs.focusRemitente.focus();
-            });
-            this.optionsdestinatarios.forEach(element => {
-              if(search==element.nombre){
-                this.remit=element
-              }
-            });            }
-
-            //this.remit=this.optionsdestinatarios[0]
-                    //loading(false);
-
-          })
-
-            }.bind(this), 345);
-
-        }
-
-
+                //this.remit=this.optionsdestinatarios[0]
+                //loading(false);
+              });
+          }.bind(this),
+          345
+        );
+      }
     },
 
     centroSeleccionado() {
@@ -595,7 +570,7 @@ export default {
             });
             this.axios
               .get(
-                urlservicios+ "CentrosPorCliente/" + this.selected_client._id
+                urlservicios + "CentrosPorCliente/" + this.selected_client._id
               )
               .then(response => {
                 this.centros = response.data;
@@ -610,8 +585,7 @@ export default {
                   });
                 });
               })
-              .catch(error => {
-              });
+              .catch(error => {});
           } else {
             this.selected_cliente = Object.assign({}, this.selected_client);
             this.selected_center = null;
@@ -622,7 +596,9 @@ export default {
               });
             });
             this.axios
-              .get(urlservicios+ "CentrosPorCliente/" + this.selected_client._id)
+              .get(
+                urlservicios + "CentrosPorCliente/" + this.selected_client._id
+              )
               .then(response => {
                 this.centros = response.data;
 
@@ -636,8 +612,7 @@ export default {
                   });
                 });
               })
-              .catch(error => {
-              });
+              .catch(error => {});
           }
         } else {
           var load = true;
@@ -660,7 +635,10 @@ export default {
       } else {
         if (this.selected_client) {
           if (orden) {
-            this.selected_cliente = Object.assign({},ordenjson.selected_client);
+            this.selected_cliente = Object.assign(
+              {},
+              ordenjson.selected_client
+            );
             this.selected_centro = Object.assign({}, ordenjson.selected_center);
             this.selected_center = Object.assign({}, this.selected_centro);
             localStorage.removeItem("orden");
@@ -673,7 +651,7 @@ export default {
             });
             this.axios
               .get(
-                urlservicios+ "CentrosPorCliente/" + this.selected_client._id
+                urlservicios + "CentrosPorCliente/" + this.selected_client._id
               )
               .then(response => {
                 this.centros = response.data;
@@ -689,7 +667,7 @@ export default {
                 });
               });
           } else {
-          this.selected_cliente = Object.assign({}, this.selected_client);
+            this.selected_cliente = Object.assign({}, this.selected_client);
             this.selected_center = null;
             var load = true;
             setTimeout(() => {
@@ -700,7 +678,7 @@ export default {
 
             this.axios
               .get(
-                urlservicios+ "CentrosPorCliente/" + this.selected_client._id
+                urlservicios + "CentrosPorCliente/" + this.selected_client._id
               )
               .then(response => {
                 this.centros = response.data;
@@ -764,7 +742,7 @@ export default {
         });
         if (seleccion !== undefined) {
           this.axios
-            .get(urlservicios+ "CentrosPorCliente/" + id_cliente)
+            .get(urlservicios + "CentrosPorCliente/" + id_cliente)
             .then(response => {
               this.centros = response.data;
               this.centros.unshift(vacio);
@@ -794,7 +772,7 @@ export default {
             if (this.clientes[i]._id == seleccion.target.value) {
               this.selected_cliente = Object.assign({}, this.clientes[i]);
 
-              this.clientprueba=Object.assign({},this.selected_cliente)
+              this.clientprueba = Object.assign({}, this.selected_cliente);
             }
           }
           this.selected_center = null;
@@ -806,7 +784,7 @@ export default {
           });
           if (seleccion !== undefined) {
             this.axios
-              .get(urlservicios+ "CentrosPorCliente/" + seleccion.target.value)
+              .get(urlservicios + "CentrosPorCliente/" + seleccion.target.value)
               .then(response => {
                 this.centros = response.data;
                 //this.centros.unshift(vacio);
@@ -819,15 +797,15 @@ export default {
                     load
                   });
                 });
-              }).catch(function(error){
-
               })
+              .catch(function(error) {});
           }
         }
       }
     },
     actualizar: function() {
-
+      this.$router.replace("/inicio/ordenservicio");
+      return;
       var load = true;
       setTimeout(() => {
         bus.$emit("load", {
@@ -842,17 +820,16 @@ export default {
         this.selected_client == "null" ||
         this.selected_center == "null" ||
         this.remitente == null ||
-        this.remit==null||
-        this.remit=="null"||
-        this.remit==''||
+        this.remit == null ||
+        this.remit == "null" ||
+        this.remit == "" ||
         this.remitente == "null" ||
-        this.remitente == '' ||
-        this.remit.direccion==''||
-        (this.prueba == 'second'&&this.fecha=='')||
-        this.validacionDireccion==false
-
+        this.remitente == "" ||
+        this.remit.direccion == "" ||
+        (this.prueba == "second" && this.fecha == "") ||
+        this.validacionDireccion == false
       ) {
-        if(this.validacionDireccion==false){
+        if (this.validacionDireccion == false) {
           var load = false;
           setTimeout(() => {
             bus.$emit("load", {
@@ -861,35 +838,34 @@ export default {
           });
           swal("Cuidado", "La dirección digitada no es valida", "warning");
         }
-        if(this.prueba=='second'){
+        if (this.prueba == "second") {
           var load = false;
           setTimeout(() => {
             bus.$emit("load", {
               load
             });
           });
-          if(this.fecha==''){
-             swal("Cuidado", "Se deben completar la fecha de recolección de la orden", "warning");
+          if (this.fecha == "") {
+            swal(
+              "Cuidado",
+              "Se deben completar la fecha de recolección de la orden",
+              "warning"
+            );
           }
-
-
-        }
-        else{
-
+        } else {
           var load = false;
           setTimeout(() => {
             bus.$emit("load", {
               load
             });
           });
-        swal("Cuidado", "Se deben completar todos los campos !", "warning");
+          swal("Cuidado", "Se deben completar todos los campos !", "warning");
         }
-
       } else {
-         var fecha={
-              fecha:this.fecha
-            }
-              localStorage.setItem("fecha_orden", JSON.stringify(fecha));
+        var fecha = {
+          fecha: this.fecha
+        };
+        localStorage.setItem("fecha_orden", JSON.stringify(fecha));
         var selected_client = this.selected_cliente;
         var selected_center = this.selected_centro;
         var seleccionados = {
@@ -906,7 +882,7 @@ export default {
                     SE CREA UN LOCALSTORAGE EL CUAL PERMITE LA OBTENER LO QUE FUE SELECCIONADO PREVIAMENTE
                 */
 
-      /*
+        /*
       var observacionesOrden={
         observacion:this.observaciones
       }
@@ -915,31 +891,37 @@ export default {
         bus.$emit("remitente", seleccionados);
         localStorage.setItem("orden", JSON.stringify(seleccionados));
         localStorage.setItem("infoorden", JSON.stringify(selecciones));
-         var objetoremitente
-        if(this.longi==null||this.longi===null||this.longi==''||
-       this.lati==null||this.lati===null||this.lati==''){
-         objetoremitente = {
-          numero_identificacion: this.remit.numero_identificacion,
-          direccion: this.remit.direccion,
-          nombre: this.remit.nombre,
-          telefono: this.remit.telefono,
-          id_cliente: this.remit.id_cliente,
-          complemento:this.remit.complemento
-          //latitud: this.lati,
-          //longitud:this.longi,
-          //codigo_postal:this.posta
-        };
-        }else{
+        var objetoremitente;
+        if (
+          this.longi == null ||
+          this.longi === null ||
+          this.longi == "" ||
+          this.lati == null ||
+          this.lati === null ||
+          this.lati == ""
+        ) {
           objetoremitente = {
-                      complemento:this.remit.complemento,
-          numero_identificacion: this.remit.numero_identificacion,
-          direccion: this.remit.direccion,
-          nombre: this.remit.nombre,
-          telefono: this.remit.telefono,
-          id_cliente: this.remit.id_cliente,
-          latitud: this.lati,
-          longitud:this.longi,
-          codigo_postal:this.posta
+            numero_identificacion: this.remit.numero_identificacion,
+            direccion: this.remit.direccion,
+            nombre: this.remit.nombre,
+            telefono: this.remit.telefono,
+            id_cliente: this.remit.id_cliente,
+            complemento: this.remit.complemento
+            //latitud: this.lati,
+            //longitud:this.longi,
+            //codigo_postal:this.posta
+          };
+        } else {
+          objetoremitente = {
+            complemento: this.remit.complemento,
+            numero_identificacion: this.remit.numero_identificacion,
+            direccion: this.remit.direccion,
+            nombre: this.remit.nombre,
+            telefono: this.remit.telefono,
+            id_cliente: this.remit.id_cliente,
+            latitud: this.lati,
+            longitud: this.longi,
+            codigo_postal: this.posta
           };
         }
         /*
@@ -954,56 +936,56 @@ export default {
           codigo_postal:this.posta
         };
         */
-       localStorage.setItem("remitente", JSON.stringify(this.remit));
-       if(this.optionsdestinatarios.length==0)
-       {
+        localStorage.setItem("remitente", JSON.stringify(this.remit));
+        if (this.optionsdestinatarios.length == 0) {
           var objetocrear = {
-          numero_identificacion: this.remit.numero_identificacion,
-          direccion: this.remit.direccion,
-          nombre: this.remit.nombre,
-          telefono: this.remit.telefono,
-          id_cliente: this.remit.id_cliente,
-          latitud: this.lati,
-          longitud:this.longi,
-          codigo_postal:this.posta,
-           id_cliente: this.selected_cliente._id
-        };
-         this.axios.post(urlservicios+ "CrearDestinatario", objetocrear)
-          .then(response => {
-            var load = false;
-            setTimeout(() => {
-              bus.$emit("load", {
-                load
+            numero_identificacion: this.remit.numero_identificacion,
+            direccion: this.remit.direccion,
+            nombre: this.remit.nombre,
+            telefono: this.remit.telefono,
+            id_cliente: this.remit.id_cliente,
+            latitud: this.lati,
+            longitud: this.longi,
+            codigo_postal: this.posta,
+            id_cliente: this.selected_cliente._id
+          };
+          this.axios
+            .post(urlservicios + "CrearDestinatario", objetocrear)
+            .then(response => {
+              var load = false;
+              setTimeout(() => {
+                bus.$emit("load", {
+                  load
+                });
               });
-
-            });
-            this.$router.replace("/inicio/ordenservicio");
-          })
-          .catch(function(error) {
-            var load = false;
-            setTimeout(() => {
-              bus.$emit("load", {
-                load
-              });
-            });
-          });
-       }
-       else{
-         this.axios.post(urlservicios+"ActualizarDestinatario" +"/" +this.remit._id,objetoremitente)
-          .then(response => {
-            var load = false;
-            setTimeout(() => {
-              bus.$emit("load", {
-                load
+              this.$router.replace("/inicio/ordenservicio");
+            })
+            .catch(function(error) {
+              var load = false;
+              setTimeout(() => {
+                bus.$emit("load", {
+                  load
+                });
               });
             });
-           this.$router.replace("/inicio/ordenservicio");
-          })
-          .catch(function(error) {
-
-          })
-       }
-       /*
+        } else {
+          this.axios
+            .post(
+              urlservicios + "ActualizarDestinatario" + "/" + this.remit._id,
+              objetoremitente
+            )
+            .then(response => {
+              var load = false;
+              setTimeout(() => {
+                bus.$emit("load", {
+                  load
+                });
+              });
+              this.$router.replace("/inicio/ordenservicio");
+            })
+            .catch(function(error) {});
+        }
+        /*
       this.axios.post(urlservicios+"ActualizarDestinatario" +"/" +this.remitente._id,objetoremitente)
           .then(response => {
             var load = false;
@@ -1019,16 +1001,15 @@ export default {
         */
         //this.$router.replace("/inicio/ordenservicio");
         var load = false;
-      setTimeout(() => {
-        bus.$emit("load", {
-          load
+        setTimeout(() => {
+          bus.$emit("load", {
+            load
+          });
         });
-      });
       }
     }
   },
   created: function() {
-
     var _this = this;
     // -------------------------------
     var test2 = localStorage.getItem("storedData");
@@ -1047,7 +1028,7 @@ export default {
 
       this.axios
         .get(
-          urlservicios+
+          urlservicios +
             "clientesOperador/" +
             test.id_OperadorLogistico._id +
             "/" +
@@ -1069,8 +1050,8 @@ export default {
           }
           var remi = localStorage.getItem("remitente");
           var remijson = JSON.parse(remi);
-          if(remi){
-            this.remitente=remijson
+          if (remi) {
+            this.remitente = remijson;
             //this.onSearch(remijson.nombre, loading)
           }
           //this.clientes.unshift(vacio);
@@ -1100,11 +1081,7 @@ export default {
               confirmButtonText: "Ok, Entiendo"
             }).then(result => {
               if (result.value) {
-                swal(
-                  "Se Redireccionara a la pagina de inicio",
-                  "",
-                  "warning"
-                );
+                swal("Se Redireccionara a la pagina de inicio", "", "warning");
                 _this.$router.replace("/inicio");
               }
             });
@@ -1147,7 +1124,7 @@ export default {
       });
       this.axios
         .get(
-          urlservicios+
+          urlservicios +
             "clientesOperador/" +
             test.id_OperadorLogistico._id +
             "/" +
@@ -1206,17 +1183,15 @@ export default {
           }
         });
     }
-    if(test.id_OperadorLogistico.geolocalizaciónGoogle==true){
-      this.GeoReferenciacion=true
-    }
-    else{
-      this.GeoReferenciacion=false
+    if (test.id_OperadorLogistico.geolocalizaciónGoogle == true) {
+      this.GeoReferenciacion = true;
+    } else {
+      this.GeoReferenciacion = false;
     }
     this.nombreusu;
     bus.$emit("remitente");
   },
-  updated: function(){
-  },
+  updated: function() {},
   beforeCreate: function() {
     var items;
     items = [
@@ -1246,19 +1221,17 @@ export default {
 }
 */
 
-.nav-tabs .nav-link{
-
+.nav-tabs .nav-link {
   background-color: #ebeaea;
-
 }
 /*
 .nav-tabs{
   background-color: #ebeaea !important;
 }
 */
-.card-header{
-      background-color: #4db35a !important;
-    color: white;
+.card-header {
+  background-color: #4db35a !important;
+  color: white;
 }
 /*
 .card-header-tabs {

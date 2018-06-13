@@ -1,16 +1,27 @@
 <template>
    <b-container fluid class="contenedorTotal">
-      <div class="breadPersonalizado">
+      <!-- <div class="breadPersonalizado">
          <b-breadcrumb :items="items" />
+      </div> -->
+      <div class="breadcrumb-holder">
+        <div class="container-fluid">
+          <ul class="breadcrumb">
+            <li v-for="(item, i) in items" :key="i" class="breadcrumb-item">
+              <a :to="item.to">{{item.text}}</a>
+            </li>
+          </ul>
+        </div>
       </div>
-       <b-container fluid class="contenedorInterno">
+       <b-container fluid class="m-2">
           <b-card class="cards">
-            <header class="content-heading text-capitalize">
-                Bienvenido {{nombreusu}}
+            <header class="row">
+              Bienvenido {{nombreusu}}
             </header>
             <b-row>
               <h3>
-                <strong >Way</strong><strong class="text-primary">Logistic</strong> es un aplicativo para el manejo logístico de su empresa
+                <strong >Way</strong>
+                <strong class="text-primary">Logistic</strong>
+                es un aplicativo para el manejo logístico de su empresa
             </h3>
             </b-row>
           </b-card>
@@ -30,7 +41,6 @@ export default {
           text: "Inicio",
           to: "/inicio"
         }
-        
       ],
     }
   }

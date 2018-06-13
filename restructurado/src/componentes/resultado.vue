@@ -1,11 +1,11 @@
 <template>
     <b-container fluid >
-       
+
         <h3>
-            Listado de Ordenes de Servicio:
+            Listado de ordenes de servicio:
         </h3>
         <b-table :fields="fields" :per-page="5" :current-page="currentPage" :items="consulta" :bordered="true"
-        thead-class=text-center tbody-class=text-center> 
+        thead-class=text-center tbody-class=text-center>
             <template slot="index" slot-scope="data">
                 {{data.index + 1}}
             </template>
@@ -13,10 +13,10 @@
                 {{data.item.estado}}
             </template>
             <template slot="Cancelar" slot-scope="data">
-                <b-button variant="danger" class="fa fa-ban" @click="cancelarOrden(data)" 
+                <b-button variant="danger" class="fa fa-ban" @click="cancelarOrden(data)"
                 v-show="data.item.estado!='orden de servicio cancelada'"></b-button>
-                
-            </template> 
+
+            </template>
             <template slot="fecha_creacion" slot-scope="data">
                 {{data.item.fecha_creacion | formatdate}}
             </template>
@@ -26,11 +26,11 @@
 
                 <!--<router-link  to="/inicio/consultar"  tag="button" class-active="active" class="btn btn-warning fa fa-cogs"></router-link>
                 -->
-            </template>                       
+            </template>
         </b-table>
         <b-pagination size="md" :total-rows="consulta.length" v-model="currentPage" :per-page="5">
         </b-pagination>
-        
+
     </b-container>
 </template>
 
@@ -60,11 +60,11 @@ export default {
             currentPage: 1,
             fields: [
                 'Cancelar',
-                { key: 'id', label:'N. Orden de Servicio', sortable: true },
-                { key: 'fecha_creacion',label:'Fecha Creación Orden', sortable: false },
+                { key: 'id', label:'# Orden de Servicio', sortable: true },
+                { key: 'fecha_creacion',label:'Fecha creación orden', sortable: false },
                 'estado',
                 'actualizar',
-                
+
             ],
         }
     },
@@ -310,7 +310,7 @@ export default {
             console.log(value);
             var login = localStorage.getItem("storedData");
             var infologin =JSON.parse(login);
-            console.log(infologin.id_cliente);  
+            console.log(infologin.id_cliente);
             console.log(this.consulta);
             if(infologin.id_cliente==undefined||
             infologin.id_cliente==null){
@@ -399,8 +399,8 @@ export default {
                                                 'Intente nuevamente, por favor',
                                                 'warning'
                                                 )
-                                    }) 
-                                
+                                    })
+
                             }
                             else
                             {
@@ -418,8 +418,8 @@ export default {
                     }
                     })
             }
-            
- 
+
+
         },
         */
         actualizar(inde){
@@ -449,19 +449,19 @@ export default {
                         bus.$emit('items',inde,inputstotales)
             setTimeout(() => {
                 bus.$emit('thisEvent', {
-                    inde, inputstotales, 
+                    inde, inputstotales,
                 })
                 }, )
                 var load=true
                 setTimeout(() => {
                     bus.$emit('load', {
-                        load 
+                        load
                     })
                     }, )
             bus.$emit('ocul',ocultar)
             setTimeout(() => {
                 bus.$emit('ocultar', {
-                    ocultar 
+                    ocultar
                 })
                 }, )
                 var load=false
@@ -484,20 +484,20 @@ export default {
                             'Intente nuevamente, por favor',
                             'warning'
                             )
-                }) 
-            }   
-            
+                })
+            }
+
         },
-         mounted: function () {  
+         mounted: function () {
              bus.$on('ocultar', function (userObject) {
-        
+
             this.algo = userObject
             console.log(this.algo);
         }.bind(this))
-        
+
         },
     }
-    
+
 }
 </script>
 
@@ -522,7 +522,7 @@ export default {
   padding-bottom: 30px;
   border-color: 15px gray;
 
-  
+
 
 }
 </style>
