@@ -103,6 +103,7 @@ DE LA ORDEN DE SERVICIO -->
                       v-model="remitente"
 
                     -->
+                    {{remitente}}
                      <v-select label="nombre" :filterable="false" v-model=remitente
                      placeholder=" Remitente " :options="optionsdestinatarios"
                       @input="updateOption"
@@ -404,22 +405,23 @@ export default {
         var remi = localStorage.getItem("remitente");
         var remijson = JSON.parse(remi);
         if(remi){
+          console.log("tengo remi")
           console.log(this.remitente);
           if(this.remitente!=null){
-            console.log("entro a null");
             if(this.remitente.nombre==remijson.nombre){
-              console.log("son iguales");
                this.onSearch(remijson.nombre)
             }
             else{
-              console.log("entro al else");
+             console.log('------------------------------------');
+             console.log("no son iguales");
+             console.log('------------------------------------');
                this.onSearch(this.remitente.nombre)
                 this.remit.nombre=''
                 this.remit.direccion=''
                 this.remit.numero_identificacion=''
                 this.remit.telefono=''
                 //this.remit.nombre=''
-                console.log(this.remit);
+                //console.log(this.remit);
             }
           }
           else{
@@ -444,6 +446,9 @@ export default {
             this.remit.telefono=''
           }
           else{
+            console.log('------------------------------------');
+            console.log("hago igualacion");
+            console.log('------------------------------------');
             this.remit=Object.assign({}, this.remitente);
           //this.remitente=Object.assign({}, this.remitente);
 
@@ -507,6 +512,7 @@ export default {
     },
 
     search(search){
+     
       var remi = localStorage.getItem("remitente");
         var remijson = JSON.parse(remi);
         if(remi==undefined||remi==''){
@@ -538,6 +544,9 @@ export default {
 
           }.bind(this), 345);
         }else{
+          console.log('------------------------------------');
+          console.log("entro a else");
+          console.log('------------------------------------');
           //this.remitente=remijson.nombre
           this.optionsdestinatarios=[]
           setTimeout(function(){
@@ -556,7 +565,14 @@ export default {
             {
               this.optionsdestinatarios=[]
               //this.remitente={}
+              
+              //this.remitente=search
+              
               this.remit.nombre=search
+              //this.remitente=this.remit.nombre
+              this.remit.numero_identificacion=''
+              this.remit.direccion=''
+              this.remit.telefono=''
               //this.remitente.nombre=this.remit.nombre
               //this.remitente=this.remit
             }
