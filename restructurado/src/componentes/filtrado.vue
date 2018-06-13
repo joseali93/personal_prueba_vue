@@ -2,13 +2,18 @@
 
   <b-container fluid class="contenedorTotal">
 
-    <div class="breadPersonalizado">
-
-      <b-breadcrumb :items="items" />
-
+    <div class="breadcrumb-holder">
+      <div class="container-fluid">
+        <b-breadcrumb :items="items" />
+        <!-- <ul class="breadcrumb">
+          <li v-for="(item, i) in items" :key="i" class="breadcrumb-item">
+            <a :href="item.to">{{item.text}}</a>
+          </li>
+        </ul> -->
+      </div>
     </div>
 
-    <b-container fluid class="contenedorInterno">
+    <b-container fluid>
 
       <header class="content-heading" slot="header">
 
@@ -30,8 +35,8 @@
 
         <div class="form-row">
 
-          <b-form-group class="text-primary col-md-6" label="Clientes">
-
+          <b-form-group class="text-primary col-md-6" >
+          <h3 class="text-primary">Clientes</h3>
             <!--
 
             <b-form-select v-model="selectedCL" class="mb-3" :options="clientes"
@@ -52,8 +57,8 @@
 
           </b-form-group>
 
-          <b-form-group class="text-primary col-md-6" label="Centros de Costo">
-
+          <b-form-group class="text-primary col-md-6" >
+          <h3 class="text-primary">Centros de costo</h3>
             <!--
 
             <b-form-select v-model="selectedCC" class="mb-3" :options="centros"
@@ -78,16 +83,16 @@
 
         <div class="form-row">
 
-          <b-form-group class="text-primary col-md-6" label="Rango de Fechas">
-
+          <b-form-group class="text-primary col-md-6" >
+            <h3 class="text-primary">Rango de fechas</h3>
             <date-picker class="w-100" v-model="time1" range lang="es" :shortcuts="shortcuts" :confirm="true">
 
             </date-picker>
 
           </b-form-group>
 
-          <b-form-group class="text-primary col-md-6" label="Orden de Servicio">
-
+          <b-form-group class="text-primary col-md-6" >
+            <h3 class="text-primary">Orden de servicio</h3>
             <b-input-group>
 
               <b-form-input v-model="filter" type="number" @keyup="numeros(this)"
@@ -102,8 +107,8 @@
 
         <div class="form-row">
 
-          <b-form-group label="Estados" class="text-primary col-md-6">
-
+          <b-form-group  class="text-primary col-md-6">
+            <h3 class="text-primary">Estado</h3>
             <b-input-group>
 
               <!--
@@ -134,11 +139,11 @@
 
       </b-card>
 
-      <b-card id="jose" class="cards2"  v-show="sel_conslta">
+      <div id="jose" class="cards2"  v-show="sel_conslta">
 
         <router-view :consulta="consulta" :peticion="peticion"></router-view>
 
-      </b-card>
+      </div>
 
     </b-container>
 

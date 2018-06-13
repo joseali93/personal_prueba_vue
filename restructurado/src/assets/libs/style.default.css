@@ -70,12 +70,12 @@
     .table td, .table th{
         padding: 0rem !important;
     }
-    
+
     @page {  size: letter portrait;
         margin: 0cm 0cm 0cm 0cm;
-   
-    } 
-    
+
+    }
+
     .table,
     td,
     th {
@@ -96,7 +96,7 @@
         width: 95% !important;
         /*
         height: auto;
-        
+
         table-layout: auto !important;
         */
     }
@@ -126,7 +126,7 @@
         padding: 0;
         position: relative;
         /*
-        table-layout: fixed !important;   
+        table-layout: fixed !important;
         */
     }
     .non-printableE {
@@ -211,6 +211,7 @@ table {
 .mCSB_scrollTools {
     width: 4px
 }
+
 
 .mCSB_inside>.mCSB_container {
     margin-right: 0 !important
@@ -2809,4 +2810,7 @@ a.text-light:hover {
 a.text-dark:focus,
 a.text-dark:hover {
     color: #1d2124 !important
+}
+.encabezado{
+  background-color: #33b35a;
 }

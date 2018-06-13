@@ -3,12 +3,12 @@
 <div class="page login-page">
       <div class="container">
         <div class="form-outer text-center d-flex align-items-center">
-          <div class="form-inner">
+          <div class="form-inner m-auto">
             <div class="logo text-uppercase"><span> Way </span><strong class="text-primary"> Logistic </strong></div>
-            <p>Aplicativo para el manejo de procesos logisticos</p>
+            <p>Aplicativo para el manejo de procesos logísticos</p>
             <form id="login-form" method="post">
               <div class="form-group">
-                <label for="login-username">Correo Electronico</label>
+                <label for="login-username">Correo electrónico</label>
                 <b-form-input v-model="correo"
                   autocomplete
                   id="login-username"
@@ -30,11 +30,11 @@
                   v-b-popover.hover="'Debe contener letras o numeros unicamente'" title="Estructura Valida"
                   ></b-form-input>
               </div>
-              <a  v-on:click="autenticar" class="btn btn-lg btn-success btn-block"> <span class="boton">Ingresar</span> </a>
+              <a  v-on:click="autenticar" class="btn btn-lg btn-success btn-block rounded"> <span class="boton">Ingresar</span> </a>
             </form>
           </div>
           <div class="copyrights text-center">
-            <p>Design by <a href="http://www.waysolutions.co/" class="external">WaySoltions Tecnology</a></p>
+            <p>Developed By <a href="http://www.waysolutions.co/" class="external">WaySolutions Technology</a></p>
           </div>
         </div>
       </div>

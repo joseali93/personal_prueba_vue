@@ -16,7 +16,7 @@
                       </b-btn>
          </b-breadcrumb>
         </div>
-       <b-container fluid class="contenedorInterno">
+       <b-container fluid>
         <b-row>
           <b-col md="6" offset-md="6">
             <div class="d-inline-block float-right">
@@ -43,7 +43,7 @@
               </b-row>
               <br>
               <b-row>
-                  <b-table :fields="fields" :per-page="5" :current-page="currentPage" :items="DetalleServicio">
+                  <b-table v-if="DetalleServicio && DetalleServicio.length" :fields="fields" :per-page="5" :current-page="currentPage" :items="DetalleServicio">
 
                       <template slot="eliminar" slot-scope="data" >
                           <i class="btn btn-danger fa fa-trash" v-on:click="eliminar(data.index)" ></i>
@@ -90,11 +90,11 @@
             no-close-on-esc
             size="lg" >
             <div slot="modal-header" class="w-100">
-                    <b-btn class="mt-3" variant="danger"  @click="hideModal">
-                    <i class="fa fa-times-circle" aria-hidden="true">  </i>
-                    Cancelar</b-btn>
-                    <b-btn class="mt-3 float-right" variant="success" v-on:click="ingresarOrden">
-                    <i class="fa fa-floppy-o">  </i> Guardar
+                    <b-btn class="mt-3 rounded" variant="danger"  @click="hideModal">
+                      <i class="fa fa-times-circle" aria-hidden="true"></i>Cancelar
+                    </b-btn>
+                    <b-btn class="mt-3 float-right rounded" variant="success" v-on:click="ingresarOrden">
+                      <i class="fa fa-floppy-o">  </i> Guardar
                     </b-btn>
             </div>
                 <b-container fluid>
@@ -112,74 +112,56 @@
                     </v-select>
                     </b-col>
                 </b-row>
-
-                    <b-card no-body v-show="selectservice" class=" w-100 cards"
-                    style="
-                    padding-left: 0px;
-                    padding-right: 0px;
-                    padding-top: 0px;
-                    padding-bottom: 0px;
-                    ">
-
-
-                    <b-tabs card id="tarjeta"  class=" cardPersonalizada" v-show="selectservice" v-model="tabIndex">
-                            <b-tab  title="Información" class="cardPersonalizada" >
-                            <b-card-body>
-                                    <b-row>
-                                        <b-col>
-                                            <label class="col col-form-label col-form-label-sm text-capitalize text-primary" >Documento Referencia:</label>
-                                        </b-col>
-                                        <b-col cols="8">
-                                            <b-form-input type="text" class="form-control form-control-sm " 
-                                                                    placeholder=" Factura, Remisión, orden de compra..." v-model="detalles.referencia"
-                                                                :state="estado.referencia"></b-form-input>
-                                        </b-col>
-                                    </b-row>
-
-
-
-                                    <b-row  v-for="(data,indice) in inputs.campos" class="my-2">
-                                        <template v-if="data.type!='select'" >
-                                        <template v-if="data.espieza==false">
-                                        <b-col  >   
-                                            <label  class="col-sm col-form-label col-form-label-sm text-capitalize text-primary" :style="[data.style]" >{{data.nombre}}: </label>
-                                        </b-col>
-                                        <b-col  cols="8">
-                                            
-                                            <input class="form-control form-control-sm "  :maxlength="data.maxlength" :type="data.type" :id="data.id" :style="[data.style,validatecampo]" :max="data.max" :min="data.min" :placeholder="data.placeholder" @keyup="Presiono(indice)"   required>
-                                        </b-col>
-
-                                        </template>
-
-                                        </template>
-                                    </b-row>
-                                    <b-row v-show="selectservice" class=" my-1">
-                                      <b-col>
-                                        <label  class="col-sm col-form-label col-form-label-sm text-capitalize text-primary" > Contenido </label>
-                                      </b-col>
-                                    <b-col cols="8">
-                                    <b-form-input id="textarea1" type="text" 
-                                        v-model="detalles.contenido"
-                                        placeholder="Medicamentos, Facturas, Mercancias Especiales, ...etc"
-                                       >
-                                    </b-form-input>
-                                    </b-col>
-                                </b-row>
-                                    <b-form-row v-show="selectservice" class=" my-1">
-                                    <b-col>
-                                    <b-form-textarea id="textarea1"
-                                        v-model="detalles.observaciones"
-                                        placeholder="Ingrese las instrucciones a tener en cuenta para entrega, recolección y transporte."
-                                        :rows="3"
-                                        :max-rows="6">
-                                    </b-form-textarea>
-                                    </b-col>
-                                </b-form-row>
-                                
-                            </b-card-body>
-                            </b-tab>
-                            <b-tab title="Detalle" :disabled="tabdinamico">
-                            <b-card-body>
+                <b-card no-body v-show="selectservice" class="border">
+                  <b-tabs card v-model="tabIndex">
+                    <b-tab title="Información">
+                          <b-row class="my-2">
+                              <b-col>
+                                  <label class="col col-form-label col-form-label-sm text-primary" >Documento de referencia:</label>
+                              </b-col>
+                              <b-col cols="8">
+                                  <b-form-input type="text" class="form-control form-control-sm"
+                                    placeholder=" Factura, remisión, orden de compra..." v-model="detalles.referencia"
+                                    :state="estado.referencia"></b-form-input>
+                              </b-col>
+                          </b-row>
+                          <b-row  v-for="(data,indice) in inputs.campos" class="my-2">
+                              <template v-if="data.type!='select'" >
+                              <template v-if="data.espieza==false">
+                                <b-col  >
+                                    <label  class="col-sm col-form-label col-form-label-sm text-capitalize text-primary" :style="[data.style]" >{{data.nombre}}: </label>
+                                </b-col>
+                                <b-col  cols="8">
+                                    <input class="form-control form-control-sm"  :maxlength="data.maxlength" :type="data.type" :id="data.id" :style="[data.style,validatecampo]" :max="data.max" :min="data.min" :placeholder="data.placeholder" @keyup="Presiono(indice)"   required>
+                                </b-col>
+                              </template>
+                              </template>
+                          </b-row>
+                          <b-row v-show="selectservice" class="my-2">
+                            <b-col>
+                              <label  class="col-sm col-form-label col-form-label-sm text-capitalize text-primary" > Contenido </label>
+                            </b-col>
+                            <b-col cols="8">
+                              <b-form-input id="textarea1" type="text"
+                                v-model="detalles.contenido"
+                                class="form-control-sm"
+                                placeholder="Medicamentos, facturas, mercancías especiales, ...etc">
+                              </b-form-input>
+                            </b-col>
+                          </b-row>
+                          <b-form-row v-show="selectservice">
+                          <b-col>
+                          <b-form-textarea id="textarea1"
+                              v-model="detalles.observaciones"
+                              class="form-control-sm"
+                              placeholder="Ingrese las instrucciones a tener en cuenta para entrega, recolección y transporte."
+                              :rows="3"
+                              :max-rows="6">
+                          </b-form-textarea>
+                          </b-col>
+                      </b-form-row>
+                    </b-tab>
+                    <b-tab title="Detalle" :disabled="tabdinamico">
                                 <b-row v-for="(data,indice) in inputs.campos" v-show="camposdinamicos">
                                 <template v-if="data.type!='select'" >
                                     <template v-if="data.espieza==true">
@@ -201,10 +183,10 @@
                                     </template>
                                 </b-row>
                                 <b-row v-show="ocultardicionar">
-                                    <b-col class="d-flex flex-row-reverse">
-                                        <b-btn variant="outline-success" active-class class="float-right" @click="adicionarRef" v-show="camposdinamicos">
+                                    <b-col class="d-flex flex-row-reverse my-2">
+                                      <b-btn variant="outline-success" active-class class="float-right" @click="adicionarRef" v-show="camposdinamicos">
                                         <i class="fa fa-plus"></i>
-                                        </b-btn>
+                                      </b-btn>
                                     </b-col>
                                     </b-row>
                                     <b-row v-show="ocultareditar">
@@ -216,17 +198,17 @@
                                     </b-row>
                                     <b-row>
                                     <b-table striped hover :items="itemsdinamicos"  :fields="fieldsdinamicos"
-                                    :per-page="3" :current-page="currentPageRef" v-show="camposdinamicos">
+                                    :per-page="3" :current-page="currentPageRef" v-show="camposdinamicos && itemsdinamicos.length">
                                     <!--
                                         <template slot="eliminar" slot-scope="data">
-                                          <b-btn variant="danger"  v-on:click="eliminarRef(data)" v-show="ocultardicionar" 
+                                          <b-btn variant="danger"  v-on:click="eliminarRef(data)" v-show="ocultardicionar"
                                            v-b-popover.hover="'Eliminar'">
                                           <i class="fa fa-trash" v-on:click="eliminarRef(data)" v-show="ocultardicionar"
                                           ></i>
                                         </b-btn>
-                                        
+
                                             <i class="btn btn-danger fa fa-trash" v-on:click="eliminarRef(data)" v-show="ocultardicionar"></i>
-                                       
+
                                         </template>
                                          -->
                                         <template slot="acciones" slot-scope="data">
@@ -235,7 +217,7 @@
                                           <i class="fa fa-pencil" v-on:click="ActualizarRef(data,data.index)" v-show="ocultardicionar"
                                           ></i>
                                         </b-btn>
-                                       <b-btn variant="danger"  v-on:click="eliminarRef(data)" v-show="ocultardicionar" 
+                                       <b-btn variant="danger"  v-on:click="eliminarRef(data)" v-show="ocultardicionar"
                                            v-b-popover.hover="'Eliminar'">
                                           <i class="fa fa-trash" v-on:click="eliminarRef(data)" v-show="ocultardicionar"
                                           ></i>
@@ -248,13 +230,11 @@
 
                                         </b-table>
                                     <b-pagination size="md" :total-rows="itemsdinamicos.length" v-model="currentPageRef"
-                                    :per-page="3" v-show="camposdinamicos">
+                                    :per-page="3" v-show="camposdinamicos && itemsdinamicos.length">
                                     </b-pagination>
                                     </b-row>
-                            </b-card-body>
-                            </b-tab>
-                            <b-tab title="Destinatario">
-                            <b-card-body>
+                    </b-tab>
+                    <b-tab title="Destinatario">
                               <b-form-row v-show="selectservice" class="my-1">
                                 <b-col>
                                     <label  class="col-sm col-form-label col-form-label-sm text-primary">Nombre: </label>
@@ -300,18 +280,18 @@
                                     <label  class="col-sm col-form-label col-form-label-sm text-primary"> Identificación: </label>
                                 </b-col>
                                 <b-col  cols="9">
-                                    <b-form-input type="number" class="form-control form-control-sm"  placeholder="Indentidicación"
+                                    <b-form-input type="number" class="form-control form-control-sm"  placeholder="Identificación"
                                     v-model="detalles.destinatario.numero_identificacion"
 
-                                     v-b-popover.hover="'Se debe diligenciar sin puntos, en caso de NIT sin numero de validación, ni guion'"
-                                    title="Num. Identificacion"></b-form-input>
+                                     v-b-popover.hover="'Se debe diligenciar sin puntos, en caso de NIT sin número de validación, ni guión'"
+                                    title="Número de identificación"></b-form-input>
                                     <!--<input type="text" class="form-control form-control-sm"  placeholder="Nombre" v-model="detalles.destinatario.nombre">
                                      @keyup.enter.tab.native="buscar('nuevo')"
                                     @keydown.tab.native="buscar('nuevo')"
                                     -->
                                 </b-col>
                             </b-form-row>
-                            {{nombre_remitente}}
+                            <!-- {{nombre_remitente}} -->
                             <b-form-row v-show="selectservice&&mostrardestinatario " >
 
 
@@ -322,7 +302,7 @@
                                 <b-col  cols="9">
                                     <b-form-input v-if="GeoReferenciacion==true"
                                     ref="focusDireccion"
-                                      id="direccionGoogle2" 
+                                      id="direccionGoogle2"
                                           type="text"
                                      placeholder="Dirección"
                                      required
@@ -367,30 +347,41 @@
                             </b-form-row>
                             <b-form-row v-show="selectservice&&mostrardestinatario" class="my-1">
                                 <b-col>
-                                    <label  class="col-sm col-form-label col-form-label-sm text-primary">Telefono: </label>
+                                    <label  class="col-sm col-form-label col-form-label-sm text-primary">Teléfono: </label>
                                 </b-col>
                                 <b-col  cols="9">
 
                                     <input type="text" :style="validatecampoTel"  class="form-control form-control-sm"
-                                    id="telefono" @keyup="numeros(this)" placeholder="Telefono"
+                                    id="telefono" @keyup="numeros(this)" placeholder="Teléfono"
                                      v-model="detalles.destinatario.telefono">
 
                                 </b-col>
                             </b-form-row>
+                    </b-tab>
+                  </b-tabs>
+                  <b-card-footer>
+                    <div class="text-center" v-show="selectservice" variant="success">
+                      <b-button-group class="mt-2">
+                      <b-btn @click="tabIndex--" variant="success"><i class="fa fa-chevron-left" aria-hidden="true"></i></b-btn>
+                      <b-btn @click="tabIndex++" variant="success"><i class="fa fa-chevron-right" aria-hidden="true"></i></b-btn>
+                      </b-button-group>
+                    </div>
+                  </b-card-footer>
+                </b-card>
+
+                    <!-- <b-tabs card v-show="selectservice" v-model="tabIndex">
+                            <b-tab  title="Información" class="cardPersonalizada" >
+                            </b-tab>
+                            <b-tab title="Detalle" :disabled="tabdinamico">
+                            <b-card-body>
+                            </b-card-body>
+                            </b-tab>
+                            <b-tab title="Destinatario">
+                            <b-card-body>
                             </b-card-body>
                             </b-tab>
                     </b-tabs>
-
-                    <b-card-footer>
-                        <div class="text-center" v-show="selectservice" variant="success">
-                            <b-button-group class="mt-2">
-                            <b-btn @click="tabIndex--" variant="success"><i class="fa fa-chevron-left" aria-hidden="true"></i></b-btn>
-                            <b-btn @click="tabIndex++" variant="success"><i class="fa fa-chevron-right" aria-hidden="true"></i></b-btn>
-                            </b-button-group>
-
-                        </div>
-                    </b-card-footer>
-                    </b-card>
+ -->
 
                 </b-container>
                 <div slot="modal-footer" class="w-100">
@@ -432,16 +423,8 @@
                       </b-col>
                   </b-row>
 
-            <b-card no-body v-show="selectserviceED" class=" w-100 cards"
-                    style="
-                    padding-left: 0px;
-                    padding-right: 0px;
-                    padding-top: 0px;
-                    padding-bottom: 0px;
-                    ">
-                    <b-tabs card id="tarjeta"  class=" cardPersonalizada"  v-show="selectserviceED" v-model="tabIndexED" @input="cambiotab">
-                        <b-tab  title="Información" >
-                            <b-card-body>
+                    <b-tabs  v-show="selectserviceED" v-model="tabIndexED" @input="cambiotab">
+                        <b-tab  title="Información">
                                 <b-row>
                                         <b-col>
                                             <label class="col col-form-label col-form-label-sm text-capitalize text-primary" >Documento Referencia:</label>
@@ -484,7 +467,6 @@
                                       :max-rows="6">
                                   </b-form-textarea>
                               </b-row>
-                            </b-card-body>
                         </b-tab>
                         <b-tab title="Detalle" :disabled="tabdinamicoED">
                         <!--
@@ -493,7 +475,7 @@
                             <b-row v-for="(data,indice) in inputsED.campos" v-show="camposdinamicos">
                             <template v-if="data.type!='select'" >
                                 <template v-if="data.espieza==true">
-                                <b-col  >   
+                                <b-col  >
                                     <label  class="col-sm col-form-label col-form-label-sm text-capitalize" :style="[data.style]" >{{data.nombre}}: </label>
                                 </b-col>
                                 <b-col >
@@ -545,7 +527,6 @@
                             </b-row>
                         </b-tab>
                         <b-tab title="Destinatario">
-                        <b-card-body>
                             <b-form-row  class="my-1">
                                 <b-col>
                                     <label  class="col-sm col-form-label col-form-label-sm text-primary">Nombre: </label>
@@ -583,7 +564,7 @@
                                     @change="initAutocompleteED"
                                      @input="initAutocompleteED"
                                     :state="null"  v-b-popover.hover="'Se debe diligenciar sin puntos, en caso de NIT sin numero de validación, ni guion'" title="Num. Identificacion"></b-form-input>
-                                    <!--<input type="text" 
+                                    <!--<input type="text"
                                      @keyup.enter.tab.native="buscar('editar')"
                                     @keydown.tab.native="buscar('editar')"
                                     class="form-control form-control-sm"
@@ -613,7 +594,7 @@
                                   v-if="GeoReferenciacion==true"
                                   id="direccionGoogle3" ref="focusDireccionED" type="text" class="form-control form-control-sm"  placeholder="Direccion" v-model="detalleseditar.destinatario.direccion"
                                     :state="estado.direccion"
-                                    
+
                                     ></b-form-input>
                                 <b-form-input 
                                   v-if="GeoReferenciacion==false"
@@ -635,18 +616,10 @@
                                     <input type="text" :style="validatecampoTel" class="form-control form-control-sm" id="telefonoedit"  @keyup="numeroseditar(this)"  placeholder="Telefono" v-model="detalleseditar.destinatario.telefono">
                                 </b-col>
                             </b-form-row>
-                        </b-card-body>
                         </b-tab>
                     </b-tabs>
-            </b-card>
-
-
-
                 </b-container>
-                <div slot="modal-footer" class="w-100">
-
-
-                </div>
+                <div slot="modal-footer" class="w-100"></div>
         </b-modal>
     </b-container>
 </template>
@@ -879,7 +852,7 @@ export default {
 
     },
     initAutocomplete(){
-       
+
       var longi
       var latit
       var codpostal
@@ -1127,7 +1100,7 @@ export default {
          this.$nextTick(() => {
           this.$refs.focusDireccion.focus();
          });
-          
+
       }
       console.log(this.nombre_remitente);
        /*
@@ -2697,6 +2670,9 @@ export default {
 </script>
 
 <style>
+.card-header {
+  height: auto !important;
+}
 #cardHeader{
   background-color: #ffffff !important;
 
