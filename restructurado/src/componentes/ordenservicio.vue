@@ -1,21 +1,16 @@
 <template>
 <!-- EN ESTE SE PERMITE LA GENERACION DE LOS DETALLES ASOCIADOS A UN CLIENTE Y CENTOR DE COSTO -->
     <b-container fluid class="contenedorTotal">
-         <div class="breadPersonalizado">
-         <b-breadcrumb :items="items" >
-
-                      <b-btn class="rounded"  variant="danger"
-                      v-b-tooltip.hover title="Adicionar"
-                      @click="abirmodal()"><i class="fa fa-plus"></i>
-                      Adicionar
-                      </b-btn>
-                       <b-btn  class="rounded" variant="success"
-                          @click="envioServicio"
-                          v-b-tooltip.hover title="Finalizar"><i class="fa fa-check"></i>
-                          Finalizar
-                      </b-btn>
-         </b-breadcrumb>
+      <div class="breadcrumb-holder">
+        <div class="container-fluid">
+          <b-breadcrumb :items="items" />
+          <!-- <ul class="breadcrumb">
+            <li v-for="(item, i) in items" :key="i" class="breadcrumb-item">
+              <a :href="item.to">{{item.text}}</a>
+            </li>
+          </ul> -->
         </div>
+      </div>
        <b-container fluid>
         <b-row>
           <b-col md="6" offset-md="6">
