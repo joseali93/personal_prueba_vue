@@ -436,17 +436,17 @@ export default {
             */
           if(infologin.id_OperadorLogistico.confirmacionSocket==true&&this.proceSeleccionado.atencion_courier==true){
             if(this.curier!="null"&&this.curier!=''&&this.curier!=null)
-                {
-                   this.Scurier=null
-                }
-                else{
-                    swal("Debe completarse",
-                        "Seleccione un curier",
-                        "error",{
-                              allowEnterKey: true,
-                        });
-                    this.Scurier=false
-                }
+            {
+                this.Scurier=null
+            }
+            else{
+                swal("Debe completarse",
+                    "Seleccione un curier",
+                    "error",{
+                          allowEnterKey: true,
+                    });
+                this.Scurier=false
+            }
             var load = true;
             setTimeout(() => {
               bus.$emit("load", {
@@ -549,18 +549,31 @@ export default {
             })*/
           }
           else {
-            var envio ={
+            if(this.proceSeleccionado.atencion_courier==true){
+              var envio ={
                 listadoMovilizados:varios,
                 infoManifiesto:this.objeto,
-                id_procesoLogistico:this.processSelected._id
+                id_procesoLogistico:this.processSelected._id,
+                id_courier:this.curier
+              }
             }
+            else{
+              var envio ={
+                listadoMovilizados:varios,
+                infoManifiesto:this.objeto,
+                id_procesoLogistico:this.processSelected._id,
+                //id_courier:this.curier
+              }
+            }
+            
             var load = true;
                         setTimeout(() => {
                             bus.$emit("load", {
                             load
                             });
                         });
-
+            console.log("envio");
+            console.log(envio);
             this.axios
             .post(urlservicios+"GenerarManifiestoWeb", envio)
             .then(response => {

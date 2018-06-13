@@ -320,7 +320,7 @@
                                     <label  class="col-sm col-form-label col-form-label-sm text-primary">Dirección: </label>
                                 </b-col>
                                 <b-col  cols="9">
-                                    <b-form-input
+                                    <b-form-input v-if="GeoReferenciacion==true"
                                     ref="focusDireccion"
                                       id="direccionGoogle2" 
                                           type="text"
@@ -334,8 +334,22 @@
                                      class="form-control form-control-sm"
                                         :state="estado.direccion"
 
-                                    > </b-form-input>
+                                    > 
+                                    </b-form-input>
+                                    <b-form-input v-if="GeoReferenciacion==false"
+                                    ref="focusDireccion"
+                                      id="direccion" 
+                                          type="text"
+                                     placeholder="Dirección"
+                                     required
+                                     maxlength="100"
+                                     
+                                     v-model="detalles.destinatario.direccion"
+                                     class="form-control form-control-sm"
+                                        :state="estado.direccion"
 
+                                    > 
+                                    </b-form-input>
                                      <!--
                                          @input="localizar()"
                                         @keypress="localizar()"
@@ -595,9 +609,18 @@
                                     <label  class="col-sm col-form-label col-form-label-sm">Dirección: </label>
                                 </b-col>
                                 <b-col>
-                                <b-form-input id="direccionGoogle3" ref="focusDireccionED" type="text" class="form-control form-control-sm"  placeholder="Direccion" v-model="detalleseditar.destinatario.direccion"
+                                <b-form-input 
+                                  v-if="GeoReferenciacion==true"
+                                  id="direccionGoogle3" ref="focusDireccionED" type="text" class="form-control form-control-sm"  placeholder="Direccion" v-model="detalleseditar.destinatario.direccion"
                                     :state="estado.direccion"
                                     
+                                    ></b-form-input>
+                                <b-form-input 
+                                  v-if="GeoReferenciacion==false"
+                                  id="direccionGoogle" ref="focusDireccionED" type="text" class="form-control form-control-sm" 
+                                   placeholder="Direccion sin google"
+                                   v-model="detalleseditar.destinatario.direccion"
+                                    :state="estado.direccion"  
                                     ></b-form-input>
                                     <!--
                                     <input type="text" class="form-control form-control-sm" id="editardire" placeholder="Direccion" v-model="detalleseditar.destinatario.direccion">
@@ -641,6 +664,8 @@ export default {
   },
   data() {
     return {
+      GeoReferenciacion:false,
+      validacionDireccion:true,
       observacionesGeneral:'',
       MostrarFiltro:true,
       monstrarNombre:true,
@@ -1951,6 +1976,8 @@ export default {
     ingresarOrden() {
         //var inforemitente = localStorage.getItem("orden");
         //var inforemi = JSON.parse(inforemitente);
+        var test2 = localStorage.getItem("storedData");
+            var test = JSON.parse(test2);
       this.validatecampoTel = "";
       this.estado.nombre = null;
       this.estado.direccion = null;
@@ -1972,18 +1999,18 @@ export default {
                     };
                     console.log("creo destinatario");
                     console.log(objetocrear);
-         this.axios.post(urlservicios+ "CrearDestinatario", objetocrear)
-          .then(response => {
-            console.log("se creo correcto");
-            console.log(response);
-            var load = false;
-            setTimeout(() => {
-              bus.$emit("load", {
-                load
-              });
+          this.axios.post(urlservicios+ "CrearDestinatario", objetocrear)
+            .then(response => {
+              console.log("se creo correcto");
+              console.log(response);
+              var load = false;
+              setTimeout(() => {
+                bus.$emit("load", {
+                  load
+                });
 
-            });
-          })
+              });
+            })
          }
          else{
             //detallepr=Object.assign({},this.detalles.destinatario);
@@ -2016,74 +2043,7 @@ export default {
                 });
             });
          }
-         /*
-      if (this.creaciondestinatarios == false) {
-        var objeto = {
-          numero_identificacion: this.identificacion,
-          direccion: this.detalles.destinatario.direccion,
-          nombre: this.detalles.destinatario.nombre,
-          telefono: this.detalles.destinatario.telefono,
-          id_cliente: inforemi.selected_client
-        };
-        var load = true;
-        setTimeout(() => {
-          bus.$emit("load", {
-            load
-          });
-        });
-        this.axios
-          .post(urlservicios+ "CrearDestinatario", objeto)
-          .then(response => {
-            var load = false;
-            setTimeout(() => {
-              bus.$emit("load", {
-                load
-              });
-            });
-          })
-          .catch(function(error) {
-            var load = false;
-            setTimeout(() => {
-              bus.$emit("load", {
-                load
-              });
-            });
-          });
-      } else {
-        /*
-        var objeto = {
-          numero_identificacion: this.identificacion,
-          direccion: this.detalles.destinatario.direccion,
-          nombre: this.detalles.destinatario.nombre,
-          telefono: this.detalles.destinatario.telefono,
-          id_cliente: inforemi.selected_client
-        };
-        var load = true;
-        setTimeout(() => {
-          bus.$emit("load", {
-            load
-          });
-        });
-        this.axios.post(urlservicios+"ActualizarDestinatario" +"/" +this.detalles.destinatario._id,objeto)
-          .then(response => {
-            var load = false;
-            setTimeout(() => {
-              bus.$emit("load", {
-                load
-              });
-            });
-          })
-          .catch(function(error) {
-            var load = false;
-            setTimeout(() => {
-              bus.$emit("load", {
-                load
-              });
-            });
-          });
 
-      }
-      */
       if (this.objeto == undefined) {
       } else {
         var load = true;
@@ -2218,6 +2178,7 @@ export default {
 
         swal("Oops...", "Falto completar algun campo", "error");
       } else {
+        
         this.objeto.objetoUnidades;
         this.objeto.objetoUnidades = this.itemsdinamicos;
         var servicioslocal = this.selectservicio;
@@ -2225,6 +2186,86 @@ export default {
         this.detallesc.infor = this.objeto;
         var productoslocal = this.selectproducto;
         var detalleslocal = this.detalles;
+        console.log("----objeto----");
+        console.log(this.objeto);
+        //CMBIOS ASIGNACION TRAYECTO AUTOMATICA
+        var desti= detalleslocal.destinatario                
+        var informacion = detalleslocal.infor
+        var produc= productoslocal._id
+        var serv = servicioslocal._id
+        var estructura
+        var llavesInfor
+        var llavesDesti
+        var respuestatrayectos
+        if(desti.propiedadesDinamicas){
+                    
+                    llavesInfor=Object.keys(informacion)
+                    llavesDesti=Object.keys(desti.propiedadesDinamicas)
+                    llavesInfor.forEach(infor => {
+                        llavesDesti.forEach(destinatario => {
+                            if(infor==destinatario){
+                                if(eval('informacion.'+destinatario)=="000000000000000000000000"){
+                                    eval('informacion.'+destinatario+'='+'desti.propiedadesDinamicas.'+destinatario)
+                                    this.axios.get(urlservicios+"estructuraf/" +produc +"/" +serv)
+                                        .then(response=>{
+                                            estructura=response.data
+                                            estructura.campos.forEach(element => {
+                                                
+                                                if(element.vmodel==destinatario){
+                                                    this.axios.get(element.urlobjeto+test.id_OperadorLogistico._id)
+                                                        .then(responseurl =>{
+                                                            console.log(responseurl);
+                                                            respuestatrayectos=responseurl.data
+                                                            respuestatrayectos.forEach(elementosT => {
+                                                                
+                                                                if(eval('informacion.'+destinatario)==elementosT._id){
+                                                                    informacion.trayectoobj={},
+                                                                    informacion.trayectoobj={
+                                                                        nombre:elementosT.nombre,
+                                                                        id_trayecto:elementosT._id
+                                                                    }
+                                                                }
+
+                                                            });
+                                                        })
+                                                }
+                                            });
+                                        });
+                                }
+                                
+                            }
+                            else{
+                                console.log("no son iguales");
+                            }
+                        });
+                    });
+                    console.log("itemmm");
+                    console.log();
+                    
+                }
+                else{
+                    console.log("no existe");
+                }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
         //this.detalles.destinatario=
         /*
 
@@ -2245,7 +2286,7 @@ export default {
           detalleslocal: detalleslocal
         };
         this.DetalleServicio.push(detalles);
-
+        console.log(detalles);
 
         //BLANQUEAR DATOS
         this.optionsremitentes=[]
@@ -2629,7 +2670,17 @@ export default {
   updated: function(){
     //this.initAutocomplete();
   },
-  created: function() {},
+  created: function() {
+    var test2 = localStorage.getItem("storedData");
+    var test = JSON.parse(test2);
+    if(test.id_OperadorLogistico.geolocalizaciónGoogle==true){
+      this.GeoReferenciacion=true
+    }
+    else{
+      this.GeoReferenciacion=false
+      this.validacionDireccion=true
+    }
+  },
   beforeCreate: function() {
     /*
     var login = localStorage.getItem("storedData");

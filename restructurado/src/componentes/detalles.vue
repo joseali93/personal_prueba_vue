@@ -1,6 +1,7 @@
 <template>
 	<b-container fluid>
 		<b-row>
+      {{this.inputstotales}}
 			<b-btn @click="volver" variant="success">
 				<i class="fa fa-chevron-left" aria-hidden="true"></i>
 				Volver
@@ -274,27 +275,27 @@
         <b-row v-for="(data,indice) in inputs.campos" class="my-1 card-text">
           <template v-if="data.type=='number'">
             <b-col cols="5">
-              <label  class="col-form-label col-form-label-sm text-capitalize" :style="data.style" >{{data.placeholder}}: </label>
+              <label  class="col-form-label col-form-label-sm text-capitalize" :style="data.style" >{{data.nombre}}: </label>
             </b-col>
             <b-col cols="6">
               <input class="form-control form-control-sm"  :type="data.type" :id="data.id" :style="data.style" :max="data.max"
-                @keyup="Presiono(indice,data)" :placeholder="data.placeholder" :disabled="desabilitar(data)"
+                @keyup="Presiono(indice,data)" :placeholder="data.placeholder" :disabled="data.requerido_edi==false"
                 :value="values(data.id)" required>
             </b-col>
           </template>
           <template v-if="data.type=='text'" >
             <b-col cols="5">
-              <label class="col-form-label col-form-label-sm text-capitalize" :style="data.style" >{{data.placeholder}}: </label>
+              <label class="col-form-label col-form-label-sm text-capitalize" :style="data.style" >{{data.nombre}}: </label>
             </b-col>
             <b-col cols="6">
               <input class="form-control form-control-sm"  :type="data.type" :id="data.id" :style="data.style" :max="data.max"
-                @keyup="Presiono(indice,data)" :placeholder="data.placeholder" :disabled="desabilitar(data)"
+                @keyup="Presiono(indice,data)" :placeholder="data.placeholder" :disabled="data.requerido_edi==false"
                 :value="values(data.id)"  required>
             </b-col>
           </template>
           <template v-if="data.type=='select'" class="my-1 card-text">
             <b-col cols="5">
-              <label class="col-form-label col-form-label-sm text-capitalize">{{data.placeholder}}</label>
+              <label class="col-form-label col-form-label-sm text-capitalize">{{data.nombre}}</label>
             </b-col>
             <b-col cols="6">
               <!-- ------------------------------------------------------- -->
@@ -512,27 +513,15 @@ export default {
         if (this.model_medios != null) {
           console.log("no tengo medios");
           var nombre;
-          console.log("emito");
-          this.socket.emit('MedioCourier', {
-            id_operadorlogistico:infologin.id_OperadorLogistico._id,
-            id_cliente:infologin._id,
-            medio_transporte: this.model_medios._id,
-            descripcion: 'orden'
-          });
-
-          this.socket.on('CouriersActivos', (connectionList) => {
-            //console.log(connectionList);
-            this.curiers=connectionList
-          });
-          /*
-          var load = true;
+          if(infologin.id_OperadorLogistico.confirmacionSocket==false){
+            var load = true;
           setTimeout(() => {
             bus.$emit("load", {
               load
             });
           });
-          */
-          /*
+          
+          
           this.axios
             .get(
               urlservicios +
@@ -571,6 +560,24 @@ export default {
                 "warning"
               );
             });
+          }
+          else{
+            console.log("emito");
+          this.socket.emit('MedioCourier', {
+            id_operadorlogistico:infologin.id_OperadorLogistico._id,
+            id_cliente:infologin._id,
+            medio_transporte: this.model_medios._id,
+            descripcion: 'orden'
+          });
+
+          this.socket.on('CouriersActivos', (connectionList) => {
+            //console.log(connectionList);
+            this.curiers=connectionList
+          });
+          }
+          
+          /*
+          
             */
         } else {
           //this.selec_disable=true
@@ -775,22 +782,51 @@ export default {
             };
 
             this.$refs.table.refresh();
-
+            /*
             var load = true;
             setTimeout(() => {
               bus.$emit("load", {
                 load
               });
             });
-            this.axios
-              .post(
-                urlservicios +
-                  "ActualizarTrayecto/" +
-                  this.currentUser._id +
-                  "/" +
-                  this.consecutivo,
-                objeto
-              )
+            */
+            console.log("objeto");
+            console.log(objeto);
+            console.log(this.currentUser);
+            console.log(this.indemodal);
+            console.log(this.inputs);
+            var enviodestinatario
+            var load = true;
+                setTimeout(() => {
+                  bus.$emit("load", {
+                    load
+                  });
+                });
+            this.inputs.campos.forEach(element => {
+              if(element.requerido_edi==true)
+              {
+                enviodestinatario=element
+              }
+            });
+            console.log(enviodestinatario);
+
+            var destina
+            this.axios.get(urlservicios+"obtenerDestinatario/"+this.currentUser.detalle[this.indemodal].detalleslocal.destinatario.numero_identificacion)
+              .then(response =>{
+                destina=response.data.destinatarios
+                console.log(destina);
+                var objdestinatario={
+                  propiedadesDinamicas : this.campos
+                }
+                console.log(objdestinatario);
+                this.axios.post(urlservicios+"ActualizarDestinatario" +"/" +destina._id,objdestinatario)
+                  .then(responsedestinatario =>{
+                    console.log(responsedestinatario);
+                  })
+              });
+            //console.log(destina);
+            
+            this.axios.post(urlservicios +"ActualizarTrayecto/" +this.currentUser._id +"/" +this.consecutivo,objeto)
               .then(response => {
                 this.$refs.table.refresh();
                 var objeto2 = {
@@ -842,6 +878,7 @@ export default {
                   "warning"
                 );
               });
+              
           }
         }
       }
@@ -1334,6 +1371,8 @@ export default {
     selection(n, o) {}
   },
   mounted: function() {
+    console.log("montado");
+    console.log(this.currentUser);
     bus.$on(
       "ocultar",
       function(userObject) {
@@ -1401,6 +1440,7 @@ export default {
     var login = localStorage.getItem("storedData");
     var infologin = JSON.parse(login);
     //console.log(infologin);
+    if(infologin.id_OperadorLogistico.confirmacionSocket==true){
       this.socket = (new CreateSocket({
 
         id_cliente: infologin._id,
@@ -1428,6 +1468,9 @@ export default {
             // this.socket.instance.disconnect(true);
           });
       });
+    }
+    console.log("----");
+    console.log(this.currentUser);      
 
 
   },

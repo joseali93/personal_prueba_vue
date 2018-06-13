@@ -423,13 +423,74 @@ export default {
         },
         */
         actualizar(inde){
-            //$('#jose').removeClass('cards')
+            var test2 = localStorage.getItem("storedData");
+            var test = JSON.parse(test2);
+            console.log(inde);
             var ocultar=false
             var inputstotales=[]
              for(var a=0;a<inde.item.detalle.length;a++)
             {
+                var desti= inde.item.detalle[a].detalleslocal.destinatario
+                
+                var informacion = inde.item.detalle[a].detalleslocal.infor
                 var produc= inde.item.detalle[a].productoslocal._id
                 var serv = inde.item.detalle[a].servicioslocal._id
+                var estructura
+                var llavesInfor
+                var llavesDesti
+                var respuestatrayectos
+                if(desti.propiedadesDinamicas){
+                    
+                    llavesInfor=Object.keys(informacion)
+                    llavesDesti=Object.keys(desti.propiedadesDinamicas)
+                    llavesInfor.forEach(infor => {
+                        llavesDesti.forEach(destinatario => {
+                            if(infor==destinatario){
+                                if(eval('informacion.'+destinatario)=="000000000000000000000000"){
+                                    eval('informacion.'+destinatario+'='+'desti.propiedadesDinamicas.'+destinatario)
+                                    this.axios.get(urlservicios+"estructuraf/" +produc +"/" +serv)
+                                        .then(response=>{
+                                            estructura=response.data
+                                            estructura.campos.forEach(element => {
+                                                
+                                                if(element.vmodel==destinatario){
+                                                    this.axios.get(element.urlobjeto+test.id_OperadorLogistico._id)
+                                                        .then(responseurl =>{
+                                                            console.log(responseurl);
+                                                            respuestatrayectos=responseurl.data
+                                                            respuestatrayectos.forEach(elementosT => {
+                                                                
+                                                                if(eval('informacion.'+destinatario)==elementosT._id){
+                                                                    informacion.trayectoobj={},
+                                                                    informacion.trayectoobj={
+                                                                        nombre:elementosT.nombre,
+                                                                        id_trayecto:elementosT._id
+                                                                    }
+                                                                }
+
+                                                            });
+                                                        })
+                                                }
+                                            });
+                                        });
+                                }
+                                
+                            }
+                            else{
+                                console.log("no son iguales");
+                            }
+                        });
+                    });
+                    console.log("itemmm");
+                    console.log(inde.item);
+                    
+                }
+                else{
+                    console.log("no existe");
+                }
+
+
+
                 var load = true;
                 setTimeout(() => {
                     bus.$emit("load", {
@@ -447,7 +508,7 @@ export default {
                     });
                         inputstotales.push(response.data)
                         bus.$emit('items',inde,inputstotales)
-            setTimeout(() => {
+                setTimeout(() => {
                 bus.$emit('thisEvent', {
                     inde, inputstotales, 
                 })
@@ -458,33 +519,33 @@ export default {
                         load 
                     })
                     }, )
-            bus.$emit('ocul',ocultar)
-            setTimeout(() => {
-                bus.$emit('ocultar', {
-                    ocultar 
-                })
-                }, )
-                var load=false
-            setTimeout(() => {
-                bus.$emit('load', {
-                    load
-                })
-                }, )
-            this.$router.replace('/inicio/consultar/detalles')
-                })
-                 .catch(function(error) {
-                    var load = false;
-                        setTimeout(() => {
-                            bus.$emit("load", {
-                            load
+                bus.$emit('ocul',ocultar)
+                setTimeout(() => {
+                    bus.$emit('ocultar', {
+                        ocultar 
+                    })
+                    }, )
+                    var load=false
+                setTimeout(() => {
+                    bus.$emit('load', {
+                        load
+                    })
+                    }, )
+                this.$router.replace('/inicio/consultar/detalles')
+                    })
+                    .catch(function(error) {
+                        var load = false;
+                            setTimeout(() => {
+                                bus.$emit("load", {
+                                load
+                                });
                             });
-                        });
-                        swal(
-                            'Se presento un problema',
-                            'Intente nuevamente, por favor',
-                            'warning'
-                            )
-                }) 
+                            swal(
+                                'Se presento un problema',
+                                'Intente nuevamente, por favor',
+                                'warning'
+                                )
+                    }) 
             }   
             
         },

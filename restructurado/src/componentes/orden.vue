@@ -132,7 +132,7 @@ DE LA ORDEN DE SERVICIO -->
                     </v-select>
                 </b-col>
             </b-row>
-            <b-row v-if="GeoReferenciacion">
+            <b-row v-if="GeoReferenciacion==true">
                     <b-col>
                     <b-form-group id="exampleInputGroup1"
                       class="text-primary"
@@ -157,11 +157,11 @@ DE LA ORDEN DE SERVICIO -->
                     </b-form-group>
                     </b-col>
             </b-row>
-            <b-row>
+            <b-row v-if="GeoReferenciacion==true">
                     <b-col>
                     <b-form-group id="exampleInputGroup1"
                       class="text-primary"
-                        label="Dirección ">
+                        label="Complemento  ">
                             <b-form-input id="complemento"
                                 size=""
                                 type="text"
@@ -169,6 +169,29 @@ DE LA ORDEN DE SERVICIO -->
                                 required
                                 
                                 placeholder="Torre, Apartamento, Oficina, Conjunto Residencial, Bodega"
+                                maxlength="100">
+                            </b-form-input>
+                            <!--
+                               @change="localizar()"
+                              @keypress="localizar()"
+                                 @keyup.enter.native="localizar()"
+                              -->
+                              
+                    </b-form-group>
+                    </b-col>
+            </b-row>
+            <b-row v-if="GeoReferenciacion==false">
+                    <b-col>
+                    <b-form-group id="exampleInputGroup1"
+                      class="text-primary"
+                        label="Dirección  ">
+                            <b-form-input id="complemento"
+                                size=""
+                                type="text"
+                                v-model="remit.direccion "
+                                required
+                                
+                                placeholder="Calle, Carrera, Avenida..."
                                 maxlength="100">
                             </b-form-input>
                             <!--
@@ -423,9 +446,13 @@ export default {
           }
           else{console.log("entro al else");
             this.remit=Object.assign({}, this.remitente);
-            this.$nextTick(() => {
+            if(this.GeoReferenciacion==true){
+              this.$nextTick(() => {
                           this.$refs.focusRemitente.focus();
-            });
+              });
+            }
+            
+
           //this.remitente=Object.assign({}, this.remitente);
 
           }
@@ -509,7 +536,6 @@ export default {
               this.optionsdestinatarios=[]
               this.remitente={}
               this.remitente.nombre=search
-                            //this.$refs.focusRemitente.focus();
 
             }
             else{
@@ -538,9 +564,11 @@ export default {
               //this.remitente=search
               
               this.remit.nombre=search
+              if(this.GeoReferenciacion==true){
               this.$nextTick(() => {
                           this.$refs.focusRemitente.focus();
-            });              //this.remitente=this.remit.nombre
+              });
+            }             //this.remitente=this.remit.nombre
               this.remit.numero_identificacion=''
               this.remit.direccion=''
               this.remit.telefono=''
@@ -549,9 +577,11 @@ export default {
             }
             else{
             this.optionsdestinatarios=response.data.destinatarios
+            if(this.GeoReferenciacion==true){
               this.$nextTick(() => {
                           this.$refs.focusRemitente.focus();
-            });
+              });
+            }
             this.optionsdestinatarios.forEach(element => {
               if(search==element.nombre){
                 this.remit=element
@@ -1211,6 +1241,7 @@ export default {
     }
     else{
       this.GeoReferenciacion=false
+      this.validacionDireccion=true
     }
     this.nombreusu;
     bus.$emit("remitente");
