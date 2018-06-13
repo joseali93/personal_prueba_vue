@@ -107,7 +107,6 @@ DE LA ORDEN DE SERVICIO -->
                       <div class="d-center">
                         {{ option.nombre }}
                         </div>
-<<<<<<< HEAD
                         <template slot="no-options" >
                         no se encontro nada.
                       </template>
@@ -239,17 +238,6 @@ DE LA ORDEN DE SERVICIO -->
                     </b-col>
                 </b-row>
 
-=======
-                    </template>
-                    <template slot="selected-option" scope="option">
-                      <div class="selected d-center">
-                        {{ option.nombre }}
-                      </div>
-                      <template slot="no-options" >
-                      no se encontro nada.
-                    </template>
-                    </template>
->>>>>>> cristian
 
                   </v-select>
               </b-col>
@@ -521,26 +509,6 @@ export default {
           this.remit.numero_identificacion = "";
           this.remit.telefono = "";
         }
-<<<<<<< HEAD
-        else{
-          if(this.remitente==null||this.remitente=='null'){
-            this.remit.nombre=''
-            this.remit.direccion=''
-            this.remit.numero_identificacion=''
-            this.remit.telefono=''
-          }
-          else{console.log("entro al else");
-            this.remit=Object.assign({}, this.remitente);
-            if(this.GeoReferenciacion==true){
-              this.$nextTick(() => {
-                          this.$refs.focusRemitente.focus();
-              });
-            }
-            
-
-          //this.remitente=Object.assign({}, this.remitente);
-=======
->>>>>>> cristian
 
         //  this.remitente=Object.assign({}, this.remitente);
       } else {
@@ -562,55 +530,6 @@ export default {
       //this.remitente=remijson
     },
 
-    localizar() {
-      var dir;
-      var longi;
-      var latit;
-      var codpostal;
-      dir = this.remitente.direccion + ", Colombia";
-      var geocoder = new google.maps.Geocoder();
-      geocoder.geocode(
-        { address: dir, country: "CO" },
-        function(results, status) {
-          if (status === "OK") {
-            results[0].address_components.forEach(element => {
-              if (element.types[0] == "postal_code") {
-                codpostal = results[0].address_components[7].long_name;
-              }
-            });
-            var resultados = results[0].geometry.location,
-              resultados_lat = resultados.lat(),
-              resultados_long = resultados.lng();
-
-            longi = resultados_long;
-            latit = resultados_lat;
-            //codpostal=results[0].address_components[7].long_name
-            /*
-          this.lati=resultados_lat
-          this.longi=resultados_long
-          this.posta=results[0].address_components[7].long_name
-          */
-            this.lati = latit;
-            this.longi = longi;
-            this.posta = codpostal;
-          } else {
-            var mensajeError = "";
-            if (status === "ZERO_RESULTS") {
-              mensajeError = "No hubo resultados para la dirección ingresada.";
-            } else if (
-              status === "OVER_QUERY_LIMIT" ||
-              status === "REQUEST_DENIED" ||
-              status === "UNKNOWN_ERROR"
-            ) {
-              mensajeError = "Error general del mapa.";
-            } else if (status === "INVALID_REQUEST") {
-              mensajeError = "Error de la web. Contacte con Name Agency.";
-            }
-            alert(mensajeError);
-          }
-        }.bind(this)
-      );
-    },
     onSearch(search) {
       //loading(true);
       this.search(search, this);
@@ -631,7 +550,6 @@ export default {
 
           })
           */
-<<<<<<< HEAD
           this.axios.get(urlservicios+`/obtenerDestinatarioNombre/${escape(search)}`)
           .then(response => {
             if(response.data.destinatarios.length==0)
@@ -679,87 +597,24 @@ export default {
               //this.remitente=this.remit
             }
             else{
-            this.optionsdestinatarios=response.data.destinatarios
-            if(this.GeoReferenciacion==true){
-              this.$nextTick(() => {
-                          this.$refs.focusRemitente.focus();
-              });
-            }
-            this.optionsdestinatarios.forEach(element => {
-              if(search==element.nombre){
-                this.remit=element
+              this.optionsdestinatarios=response.data.destinatarios
+              if(this.GeoReferenciacion==true){
+                this.$nextTick(() => {
+                            this.$refs.focusRemitente.focus();
+                });
               }
-            });            }
+              this.optionsdestinatarios.forEach(element => {
+                if(search==element.nombre){
+                  this.remit=element
+                }
+              });            
+              }
 
             //this.remit=this.optionsdestinatarios[0]
                     //loading(false);
 
-          })
 
-            }.bind(this), 345);
 
-        }
-
-=======
-            this.axios
-              .get(
-                urlservicios + `/obtenerDestinatarioNombre/${escape(search)}`
-              )
-              .then(response => {
-                if (response.data.destinatarios.length == 0) {
-                  this.optionsdestinatarios = [];
-                  this.remitente = {};
-                  this.remitente.nombre = search;
-                  //this.$refs.focusRemitente.focus();
-                } else {
-                  this.optionsdestinatarios = response.data.destinatarios;
-                }
-                //this.optionsdestinatarios=response.data.destinatarios
-                //loading(false);
-              });
-          }.bind(this),
-          345
-        );
-      } else {
-        console.log("entro al search con local");
-        //this.remitente=remijson.nombre
-        this.optionsdestinatarios = [];
-        setTimeout(
-          function() {
-            this.axios
-              .get(
-                urlservicios + `/obtenerDestinatarioNombre/${escape(search)}`
-              )
-              .then(response => {
-                if (response.data.destinatarios.length == 0) {
-                  console.log("no tengo destinatarios blanqueo");
-                  this.optionsdestinatarios = [];
-                  localStorage.removeItem("remitente");
-                  //this.remitente={}
-
-                  //this.remitente=search
-
-                  this.remit.nombre = search;
-                  this.$nextTick(() => {
-                    this.$refs.focusRemitente.focus();
-                  }); //this.remitente=this.remit.nombre
-                  this.remit.numero_identificacion = "";
-                  this.remit.direccion = "";
-                  this.remit.telefono = "";
-                  //this.remitente.nombre=this.remit.nombre
-                  //this.remitente=this.remit
-                } else {
-                  this.optionsdestinatarios = response.data.destinatarios;
-                  this.$nextTick(() => {
-                    this.$refs.focusRemitente.focus();
-                  });
-                  this.optionsdestinatarios.forEach(element => {
-                    if (search == element.nombre) {
-                      this.remit = element;
-                    }
-                  });
-                }
->>>>>>> cristian
 
                 //this.remit=this.optionsdestinatarios[0]
                 //loading(false);
@@ -1029,8 +884,8 @@ export default {
       }
     },
     actualizar: function() {
-      this.$router.replace("/inicio/ordenservicio");
-      return;
+      
+      
       var load = true;
       setTimeout(() => {
         bus.$emit("load", {
@@ -1408,19 +1263,12 @@ export default {
           }
         });
     }
-<<<<<<< HEAD
     if(test.id_OperadorLogistico.geolocalizaciónGoogle==true){
       this.GeoReferenciacion=true
     }
     else{
       this.GeoReferenciacion=false
       this.validacionDireccion=true
-=======
-    if (test.id_OperadorLogistico.geolocalizaciónGoogle == true) {
-      this.GeoReferenciacion = true;
-    } else {
-      this.GeoReferenciacion = false;
->>>>>>> cristian
     }
     this.nombreusu;
     bus.$emit("remitente");

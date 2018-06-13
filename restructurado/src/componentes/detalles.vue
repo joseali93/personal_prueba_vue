@@ -1,7 +1,6 @@
 <template>
 	<b-container>
 		<b-row>
-      {{this.inputstotales}}
 			<b-btn @click="volver" variant="success">
 				<i class="fa fa-chevron-left" aria-hidden="true"></i>
 				Volver
@@ -297,11 +296,7 @@
           </template>
           <template v-if="data.type=='select'" class="my-1 card-text">
             <b-col cols="5">
-<<<<<<< HEAD
               <label class="col-form-label col-form-label-sm text-capitalize">{{data.nombre}}</label>
-=======
-              <label class="col-form-label col-form-label-sm text-capitalize">{{data.nombre}}:</label>
->>>>>>> cristian
             </b-col>
             <b-col cols="7">
               <!-- ------------------------------------------------------- -->
@@ -825,38 +820,41 @@ export default {
             var llavescampos =Object.keys(this.inputs.objeto)
             console.log("------");
             console.log(llavescampos);
-            var josea
+            var josea=[]
+            var propiedadesDinamicas
             llavescampos.forEach(element => {
               if(enviodestinatario.vmodel==element){
-                console.log("tengo vmodel ==");
-                  console.log("campos con eval");
-                  console.log(objeto.id_trayecto);
-                  josea[element]=objeto.id_trayecto
+                
+                  josea[element]=this.selection
                   console.log(josea);
                  var objdestinatario={
-                  propiedadesDinamicas : josea
-                }
+                   propiedadesDinamicas: josea
+                 }
+                 console.log("-------");
+                  console.log(objdestinatario.propiedadesDinamicas.id_trayecto);
                 
-                  console.log(objdestinatario);
-              }
-            });
-            
-            this.axios.get(urlservicios+"obtenerDestinatario/"+this.currentUser.detalle[this.indemodal].detalleslocal.destinatario.numero_identificacion)
+                this.axios.get(urlservicios+"obtenerDestinatario/"+this.currentUser.detalle[this.indemodal].detalleslocal.destinatario.numero_identificacion)
               .then(response =>{
                 destina=response.data.destinatarios
                 console.log(destina);
                 
                
                 
-                /*
+                
                 this.axios.post(urlservicios+"ActualizarDestinatario" +"/" +destina._id,objdestinatario)
                   .then(responsedestinatario =>{
                     console.log(responsedestinatario);
                   })
-                  */
+                  
               });
+                  
+                  console.log(objdestinatario);
+              }
+            });
+            
+            
             //console.log(destina);
-            /*
+            
             this.axios.post(urlservicios +"ActualizarTrayecto/" +this.currentUser._id +"/" +this.consecutivo,objeto)
               .then(response => {
                 this.$refs.table.refresh();
@@ -888,7 +886,7 @@ export default {
                 this.indices = "";
                 this.consecutivo = "";
                 this.selection = "";
-                //this.$refs.ModalAct.hide();
+                this.$refs.ModalAct.hide();
                 var load = false;
                 setTimeout(() => {
                   bus.$emit("load", {
@@ -909,9 +907,6 @@ export default {
                   "warning"
                 );
               });
-              
-          */
-          
           }
         }
       }

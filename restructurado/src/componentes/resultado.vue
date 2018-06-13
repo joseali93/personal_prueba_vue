@@ -519,7 +519,6 @@ export default {
                         load
                     })
                     }, )
-<<<<<<< HEAD
                 bus.$emit('ocul',ocultar)
                 setTimeout(() => {
                     bus.$emit('ocultar', {
@@ -549,37 +548,6 @@ export default {
                     }) 
             }   
             
-=======
-            bus.$emit('ocul',ocultar)
-            setTimeout(() => {
-                bus.$emit('ocultar', {
-                    ocultar
-                })
-                }, )
-                var load=false
-            setTimeout(() => {
-                bus.$emit('load', {
-                    load
-                })
-                }, )
-            this.$router.replace('/inicio/consultar/detalles')
-                })
-                 .catch(function(error) {
-                    var load = false;
-                        setTimeout(() => {
-                            bus.$emit("load", {
-                            load
-                            });
-                        });
-                        swal(
-                            'Se presento un problema',
-                            'Intente nuevamente, por favor',
-                            'warning'
-                            )
-                })
-            }
-
->>>>>>> cristian
         },
          mounted: function () {
              bus.$on('ocultar', function (userObject) {
