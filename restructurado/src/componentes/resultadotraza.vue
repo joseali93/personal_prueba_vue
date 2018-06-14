@@ -6,8 +6,7 @@
                     Volver
                 </b-btn>
 
-        <b-card  fluid    class="mb-2 borderC"
-               >
+        <b-card fluid class="mb-2 borderC">
                <div slot="header" class="w-100">
                     <strong class="float-left ">Información de Remitente </strong>
                 </div>
@@ -422,7 +421,7 @@ export default {
 
 
         },
-        
+
         conceptoModal(value){
             this.concepto=value.conceptos.nombre
             this.$refs.ModalConcepto.show()

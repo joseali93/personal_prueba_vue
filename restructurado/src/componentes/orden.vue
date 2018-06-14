@@ -20,8 +20,8 @@ DE LA ORDEN DE SERVICIO -->
           </b-btn>
         </b-col>
       </b-row>
-      <b-card class="my-3 border">
-        <h3 slot="header" class="mb-0 encabezado">Información del cliente</h3>
+      <b-card class="my-3 border" header="Primary" header-bg-variant="primary">
+        <h3 slot="header" class="mb-0">Información del cliente</h3>
         <b-row>
           <b-col>
             <h3 class="text-primary">Fecha y hora de recolección</h3>
@@ -69,7 +69,7 @@ DE LA ORDEN DE SERVICIO -->
 
           </b-row>
       </b-card>
-      <b-card class="my-3 border">
+      <b-card class="my-3 border" header="Primary" header-bg-variant="primary">
           <h3 slot="header" class="mb-0">Información de recolección</h3>
           <b-row >
               <b-col class=" my-2">
@@ -798,8 +798,8 @@ export default {
       }
     },
     actualizar: function() {
-
-
+      this.$router.replace("/inicio/ordenservicio");
+      return;
       var load = true;
       setTimeout(() => {
         bus.$emit("load", {
@@ -1230,10 +1230,6 @@ export default {
   background-color: #ebeaea !important;
 }
 */
-.card-header {
-  background-color: #4db35a !important;
-  color: white;
-}
 /*
 .card-header-tabs {
   background-color: #ebeaea;

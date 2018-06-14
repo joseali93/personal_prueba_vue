@@ -1,5 +1,5 @@
 <template>
-      <b-card v-if="consulta.length" class="mt-2">
+      <b-card v-if="consulta.length" class="mt-2" header="Primary" header-bg-variant="primary">
         <h3 slot="header" class="mb-0 encabezado">Lista de ordenes de servicio</h3>
         <b-table :fields="fields" :per-page="5" :current-page="currentPage" :items="consulta" :bordered="true"
         thead-class=text-center tbody-class=text-center>

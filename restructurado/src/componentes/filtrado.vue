@@ -14,8 +14,8 @@
     </div>
 
     <b-container fluid>
-      <b-card class="mt-2 border" v-show="ocultar">
-        <h3 slot="header" class="mb-0 encabezado">Información de filtrado</h3>
+      <b-card class="mt-2 border" v-show="ocultar" header="Primary" header-bg-variant="primary">
+        <h3 slot="header" class="mb-0">Información de filtrado</h3>
         <!--
 
         <header class="content-heading" slot="header">
@@ -123,10 +123,8 @@
 
         </div>
 
-        <b-btn class="my-1 rounded float-right" variant="primary" exact-active-class v-on:click="consultar()">
-
-          <i class="fa fa-search" aria-hidden="true"></i>Consultar
-
+        <b-btn class="my-1 rounded float-right text-white" variant="warning" exact-active-class v-on:click="consultar()">
+          <i class="fa fa-search" aria-hidden="true"></i>&#32;Consultar
         </b-btn>
 
       </b-card>

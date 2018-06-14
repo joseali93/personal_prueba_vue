@@ -1,15 +1,12 @@
 <template>
 	<b-container>
-		<b-row>
-			<b-btn @click="volver" variant="success">
-				<i class="fa fa-chevron-left" aria-hidden="true"></i>
-				Volver
-			</b-btn>
-		</b-row>
-
-    <b-card class="border my-2">
+    <b-btn @click="volver" class="mt-2" variant="success">
+      <i class="fa fa-chevron-left" aria-hidden="true"></i>
+      Volver
+    </b-btn>
+    <b-card class="border my-2" header="Primary" header-bg-variant="primary">
       <div slot="header" class="w-100">
-        <strong class="float-left ">Información del cliente</strong>
+        <strong class="float-left ">Información de la orden de servicio</strong>
       </div>
       <b-row class="text-center">
         <b-col md="3">
@@ -40,7 +37,7 @@
         </b-col>
       </b-row>
     </b-card>
-    <b-card class="border my-2">
+    <b-card class="border my-2" header="Primary" header-bg-variant="primary">
       <div slot="header" class="w-100">
         <strong class="float-left ">Información del cliente</strong>
       </div>
@@ -81,7 +78,7 @@
         </b-col>
       </b-row>
     </b-card>
-    <b-card class="border my-2">
+    <b-card class="border my-2" header="Primary" header-bg-variant="primary">
       <div slot="header" class="w-100">
         <strong class="float-left">Información de recolección</strong>
       </div>
@@ -114,7 +111,7 @@
         </b-col>
       </b-row>
     </b-card>
-    <b-card class="border my-2">
+    <b-card class="border my-2" header="Primary" header-bg-variant="primary">
       <div slot="header" class="w-100">
         <strong class="float-left ">Detalle de los envios</strong>
       </div>
@@ -195,7 +192,7 @@
 			<b-container fluid>
 				<b-row>
 					<b-col md="6">
-            <b-card no-body class="border">
+            <b-card no-body class="border" header="Primary" header-bg-variant="primary">
               <div slot="header" class="w-100">
                 <h4 class="float-left">Remitente</h4>
               </div>
@@ -220,7 +217,7 @@
             </b-card>
 					</b-col>
 					<b-col md="6">
-            <b-card no-body class="border">
+            <b-card no-body class="border" header="Primary" header-bg-variant="primary">
               <div slot="header" class="w-100">
                 <h3 class="float-left">Destinatario</h3>
               </div>
@@ -410,7 +407,7 @@ export default {
             this.curiers=connectionList
           });
     }
-      
+
     },
     onSearch(search) {
 
@@ -525,8 +522,8 @@ export default {
               load
             });
           });
-          
-          
+
+
           this.axios
             .get(
               urlservicios +
@@ -580,9 +577,9 @@ export default {
             this.curiers=connectionList
           });
           }
-          
+
           /*
-          
+
             */
         } else {
           //this.selec_disable=true
@@ -831,7 +828,7 @@ export default {
               console.log("elemenr llaves");
               console.log(element);
               if(enviodestinatario.vmodel==element){
-                
+
                   josea[element]=this.selection
                   console.log(josea);
                  var objdestinatario={
@@ -839,29 +836,29 @@ export default {
                  }
                  console.log("-------");
                   console.log(objdestinatario.propiedadesDinamicas.id_trayecto);
-                
+
                 this.axios.get(urlservicios+"obtenerDestinatario/"+this.currentUser.detalle[this.indemodal].detalleslocal.destinatario.numero_identificacion)
               .then(response =>{
                 destina=response.data.destinatarios
                 console.log(destina);
-                
-               
-                
-                
+
+
+
+
                 this.axios.post(urlservicios+"ActualizarDestinatario" +"/" +destina._id,objdestinatario)
                   .then(responsedestinatario =>{
                     console.log(responsedestinatario);
                   })
-                  
+
               });
-                  
+
                   console.log(objdestinatario);
               }
             });
-            
-            
+
+
             //console.log(destina);
-            
+
             this.axios.post(urlservicios +"ActualizarTrayecto/" +this.currentUser._id +"/" +this.consecutivo,objeto)
               .then(response => {
                 this.$refs.table.refresh();
@@ -1539,7 +1536,7 @@ export default {
       });
     }
     console.log("----");
-    console.log(this.currentUser);      
+    console.log(this.currentUser);
 
 
   },
@@ -1587,12 +1584,6 @@ export default {
   background-color: #4db35a;
   color: white;
 }
-
-.card-header {
-  background-color: #4db35a !important;
-  color: white;
-}
-
 .conta {
   padding: 3%;
 }
