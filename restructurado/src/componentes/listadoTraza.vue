@@ -1,8 +1,6 @@
 <template>
-    <b-container fluid >
-        <h3>
-            Listado de Detalles obtenidos:
-        </h3>
+    <b-card v-if="consulta.length" class="mt-2">
+        <h3 slot="header" class="mb-0 encabezado">Lista de detalles</h3>
             <b-row>
                 <b-table  :items="consulta" :fields="fields"
                 :per-page="5" :current-page="currentPage" :bordered="true"
@@ -33,9 +31,9 @@
                 </b-pagination>
             </b-row>
             <b-row>
-                <b-button @click="exportarxls()">
+                <b-button @click="exportarxls()" class="btn-warning text-white rounded">
                     <i class="fa fa-file-excel-o" aria-hidden="true"></i>
-                    Exportar EXCEL
+                    Exportar a excel
                 </b-button>
             </b-row>
         <!-- the modal -->
@@ -294,7 +292,7 @@
                 </template>
             </b-container>
         </b-modal>  -->
-    </b-container>
+</b-card>
 </template>
 
 <script>

@@ -11,81 +11,64 @@
         </ul> -->
       </div>
     </div>
-
-
-        <b-container fluid class="contenedorInterno">
-            <header class="content-heading" slot="header">
-                <h3>Consultar Trazabilidad</h3>
-            </header>
-            <b-card class="cards" v-show="ocultartra">
-
+        <b-container fluid>
+            <b-card v-show="ocultartra" class="mt-2">
+              <h3 slot="header" class="mb-0 encabezado">Información del cliente</h3>
                  <b-row>
-                        <b-col>
-                            <b-form-group
-                              class="text-primary"
-                            label="Clientes">
-                                <!--
-                                <b-form-select v-model="selectedCL" id="clienteselect" v-bind:style="validatecampo" :options="clientes"
-                                text-field="nombre" value-field="_id" @change.native="SelectCC" required
-                                :disabled="disabled_selectedCL" >
-                                </b-form-select>
-                                -->
-                                <v-select v-model="selectedCL" label="nombre"
-                                v-bind:style="validatecampo"
-                                :disabled="disabled_selectedCL"
-                                placeholder="Cliente" id="clienteselect"
-                                :options="clientes" @input="clienteSelec()"></v-select>
-                            </b-form-group>
-                        </b-col>
-                        <b-col>
-                            <b-form-group
-                              class="text-primary"
-                            label="Centro de Costo">
-                                <!--
-                               <v-select v-model="selectedCC" label="nombre_concatenado"
-                                v-bind:style="validatecampo" :disabled="disable"
-                                placeholder="Seleccione el Centro de Costos" id="costoselect"
-                                :options="centros"></v-select>
-                                -->
-                                <v-select v-model="selectedCC" label="nombre_concatenado"
-                               :disabled="disable"
-                                placeholder="Centro de Costos" id="costoselect"
-                                :options="centros"></v-select>
-                            </b-form-group>
-                        </b-col>
+                   <b-col>
+                      <h3 class="text-primary">Cliente</h3>
+                      <b-form-group class="text-primary">
+                          <!--
+                          <b-form-select v-model="selectedCL" id="clienteselect" v-bind:style="validatecampo" :options="clientes"
+                          text-field="nombre" value-field="_id" @change.native="SelectCC" required
+                          :disabled="disabled_selectedCL" >
+                          </b-form-select>
+                          -->
+                          <v-select v-model="selectedCL" label="nombre"
+                          v-bind:style="validatecampo"
+                          :disabled="disabled_selectedCL"
+                          placeholder="Cliente" id="clienteselect"
+                          :options="clientes" @input="clienteSelec()"></v-select>
+                      </b-form-group>
+                   </b-col>
+                    <b-col>
+                      <h3 class="text-primary">Centro de costo</h3>
+                      <b-form-group class="text-primary">
+                          <!--
+                          <v-select v-model="selectedCC" label="nombre_concatenado"
+                          v-bind:style="validatecampo" :disabled="disable"
+                          placeholder="Seleccione el Centro de Costos" id="costoselect"
+                          :options="centros"></v-select>
+                          -->
+                          <v-select v-model="selectedCC" label="nombre_concatenado"
+                          :disabled="disable"
+                          placeholder="Centro de Costos" id="costoselect"
+                          :options="centros"></v-select>
+                      </b-form-group>
+                    </b-col>
                 </b-row>
         </b-card>
-        <br>
-        <b-card class="cards"  v-show="ocultartra">
+        <b-card class="mt-2"  v-show="ocultartra">
+          <h3 slot="header" class="mb-0 encabezado">Información para filtrar</h3>
             <b-row>
                 <b-col>
-                    <b-form-group
-
-                        label="Filtro:"
-                        label-size="lg">
-                        <b-form-radio-group v-model="prueba"
-
-                                        :options="options"
-                                        name="radiosSm"
-
-                                        >
+                    <b-form-group label-size="lg">
+                        <b-form-radio-group v-model="prueba" :options="options" name="radiosSm">
                         </b-form-radio-group>
-
                     </b-form-group>
-
                 </b-col>
                 <b-col >
-                    <b-btn active-class class="float-right rounded" @click="limpiarfiltro">
+                    <!-- <b-btn active-class class="float-right rounded" @click="limpiarfiltro">
                         <i class="fa fa-refresh" aria-hidden="true"></i>
                         Busqueda
-                    </b-btn>
+                    </b-btn> -->
                 </b-col>
             </b-row>
             <b-row v-show="prueba=='first'">
                     <b-col>
+                      <h3 class="text-primary">Establecer rango de fechas</h3>
                         <b-form-group
-                          class="text-primary"
-                          label="Rango de Fechas" >
+                          class="text-primary">
                             <date-picker disabled="true" id="fecha" width="430"
                              @keyup.enter.native="consultar()"
                             v-model="time1" placeholder="Rango de Fechas" range lang="en"
@@ -96,7 +79,8 @@
             </b-row>
             <b-row v-show="prueba=='second'">
                     <b-col>
-                        <b-form-group label="Orden de Servicio" class="mb-3 text-primary">
+                      <h3 class="text-primary">Orden de servicio</h3>
+                        <b-form-group  class="mb-3 text-primary">
                         <b-input-group>
                         <b-form-input v-model="orden" class="mb-3" type="number" id="orden" @input.native="ordenes"
                          @keyup.enter.native="consultar()"  placeholder="Orden de Servicio" />
@@ -104,7 +88,8 @@
                         </b-form-group>
                     </b-col>
                     <b-col>
-                        <b-form-group label="Referencia" class="mb-3 text-primary">
+                      <h3 class="text-primary">Referencia</h3>
+                        <b-form-group  class="mb-3 text-primary">
                         <b-input-group>
                         <b-form-input v-model="referencia" class="mb-3" type="text" id="referencia" @input.native="referencias"
                          @keyup.enter.native="consultar()"  placeholder="Referencia" />
@@ -112,7 +97,8 @@
                         </b-form-group>
                     </b-col>
                     <b-col>
-                        <b-form-group label="N° Movilizado" class="mb-3 text-primary">
+                      <h3 class="text-primary">Número de movilizado</h3>
+                        <b-form-group class="mb-3 text-primary">
                         <b-input-group>
                         <b-form-input v-model="nmovilizado" class="mb-3" type="number" id="nmovilizado" @input.native="movilizado"
                          placeholder="Num. Movilizado"  @keyup.enter.native="consultar()"/>
@@ -122,15 +108,14 @@
             </b-row>
             <b-row class="my-1">
                 <b-col>
-                <b-button @click="consultar()" variant="success" class="my-1 rounded">
+                <b-button @click="consultar()" variant="success" class="my-1 btn-warning text-white rounded">
                     <i class="fa fa-search" aria-hidden="true"></i>
                     Consultar
                 </b-button>
                 </b-col>
             </b-row>
         </b-card>
-        <br>
-           <b-card class="cards"  v-show="mostrarcard">
+           <b-card class="mt-2" v-show="mostrarcard">
                <!--
                     <router-view :consulta="consulta" :centro="selectedCC"
                     :cliente="selectedCL">
@@ -186,7 +171,7 @@ export default {
           to: "/inicio"
         },
         {
-          text: "Consulta Trazabilidad",
+          text: "Consultar Trazabilidad",
           to: "/inicio/trazabilidad",
           active: true
         }
@@ -208,8 +193,8 @@ export default {
       time1: [],
       validatecampo: "",
       options: [
-        { text: "Rango de Fechas", value: "first" },
-        { text: "Orden, Referencia, N° Movilizado", value: "second" }
+        { text: "Filtrar por rango de fechas", value: "first" },
+        { text: "Filtrar por orden, referencia, # movilizado", value: "second" }
       ],
       consulta: []
     };
@@ -664,7 +649,7 @@ export default {
                       //ObtenerOrdenesFiltradoDetalle/:id_centro/:id_cliente/:consecutivo/:detalle/:referencia/:fecha_inicio/:fecha_final"
 
             console.log(urlservicios+"ObtenerOrdenesFiltradoDetalle/" +centocosto +"/" +this.selectedCL._id +"/null/" +this.nmovilizado +"/null/null/null");
-             
+
               this.axios
                 .get(urlservicios+"ObtenerOrdenesFiltradoDetalle/" +centocosto +"/" +this.selectedCL._id +"/null/" +(this.nmovilizado) +"/null/null/null")
                 .then(response => {

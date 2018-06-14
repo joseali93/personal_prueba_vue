@@ -13,16 +13,13 @@ DE LA ORDEN DE SERVICIO -->
       </div>
     </div>
     <b-container fluid>
-      <header class="content-heading" slot="header">
-        <b-row class="my-2">
-        <b-col><h3 class="my-2">Generar orden de servicio</h3></b-col>
+      <b-row>
         <b-col>
-          <b-btn class="rounded float-right" variant="primary" v-on:click="actualizar"
-            v-b-popover.hover="'Continuar'">Continuar<i class="fa fa-arrow-right"></i>
+          <b-btn class="rounded float-right btn-warning text-white mt-3" variant="primary" v-on:click="actualizar"
+            v-b-popover.hover="'Continuar'">Continuar&#32;<i class="fa fa-arrow-right"></i>
           </b-btn>
         </b-col>
       </b-row>
-      </header>
       <b-card class="my-3 border">
         <h3 slot="header" class="mb-0 encabezado">Información del cliente</h3>
         <b-row>
@@ -76,7 +73,7 @@ DE LA ORDEN DE SERVICIO -->
           <h3 slot="header" class="mb-0">Información de recolección</h3>
           <b-row >
               <b-col class=" my-2">
-                  <h3 class="text-primary">Remitente</h3>
+                  <h3 class="text-primary">Nombre</h3>
                   <!--
                 <v-select v-model="selected_client" label="nombre" placeholder="Seleccione el remitente"
                     :options="clientes" @input="clienteSeleccionado()"
@@ -87,7 +84,7 @@ DE LA ORDEN DE SERVICIO -->
 
                   -->
                     <v-select label="nombre" :filterable="false" v-model=remitente
-                    placeholder=" Remitente " :options="optionsdestinatarios"
+                    placeholder="Nombre" :options="optionsdestinatarios"
                     @input="updateOption"
                     @search="onSearch">
                     <template slot="no-options" >
@@ -127,7 +124,7 @@ DE LA ORDEN DE SERVICIO -->
                               @keypress="localizar()"
                                  @keyup.enter.native="localizar()"
                               -->
-                              
+
                     </b-form-group>
                     </b-col>
             </b-row>
@@ -142,7 +139,7 @@ DE LA ORDEN DE SERVICIO -->
                                 type="text"
                                 v-model="remit.complemento"
                                 required
-                                
+
                                 placeholder="Torre, Apartamento, Oficina, Conjunto Residencial, Bodega"
                                 maxlength="100">
                             </b-form-input>
@@ -151,7 +148,7 @@ DE LA ORDEN DE SERVICIO -->
                               @keypress="localizar()"
                                  @keyup.enter.native="localizar()"
                               -->
-                              
+
                     </b-form-group>
                     </b-col>
             </b-row>
@@ -167,7 +164,7 @@ DE LA ORDEN DE SERVICIO -->
                                 ref="focusRemitente"
                                 v-model="remit.direccion "
                                 required
-                                
+
                                 placeholder="Calle, Carrera, Avenida..."
                                 maxlength="100">
                             </b-form-input>
@@ -176,11 +173,11 @@ DE LA ORDEN DE SERVICIO -->
                               @keypress="localizar()"
                                  @keyup.enter.native="localizar()"
                               -->
-                              
+
                     </b-form-group>
                     </b-col>
             </b-row>
-         
+
           <b-row v-if="GeoReferenciacion">
                   <b-col>
                   <h3 class="text-primary">Dirección</h3>
@@ -206,7 +203,7 @@ DE LA ORDEN DE SERVICIO -->
                   </b-form-group>
                   </b-col>
           </b-row>
-          
+
               <b-row>
                   <b-col>
                   <h3 class="text-primary">Contacto</h3>
@@ -498,9 +495,9 @@ export default {
               this.optionsdestinatarios=[]
               localStorage.removeItem("remitente");
               //this.remitente={}
-              
+
               //this.remitente=search
-              
+
               this.remit.nombre=search
               if(this.GeoReferenciacion==true){
               this.$nextTick(() => {
@@ -524,7 +521,7 @@ export default {
                 if(search==element.nombre){
                   this.remit=element
                 }
-              });            
+              });
               }
 
             //this.remit=this.optionsdestinatarios[0]
@@ -801,8 +798,8 @@ export default {
       }
     },
     actualizar: function() {
-      
-      
+
+
       var load = true;
       setTimeout(() => {
         bus.$emit("load", {
