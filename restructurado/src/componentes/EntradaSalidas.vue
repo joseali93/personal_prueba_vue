@@ -14,18 +14,6 @@
         </div>
     </div>
 
-<<<<<<< HEAD
-    <b-container fluid>
-
-        <b-card class="mt-2">
-            <h3
-                slot="header"
-                class="mb-0 encabezado"
-            >Entradas y salidas de proceso logístico</h3>
-                <b-row>
-                    <b-col md="6">
-                        <h3 class="text-primary">Proceso Logistico</h3>
-=======
       <b-container fluid>
 
       <b-card class="mt-2" header="Primary" header-bg-variant="primary">
@@ -95,7 +83,6 @@
                         <strong>
                         {{itemsmovilizados.length}}
                         </strong>
->>>>>>> 14-062-2018
                     </b-col>
                     <b-col md="6">
                     </b-col>

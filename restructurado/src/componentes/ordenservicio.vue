@@ -2191,13 +2191,8 @@ export default {
                         });
                     });
                     console.log("itemmm");
-<<<<<<< HEAD
                     console.log(informacion);
                     
-=======
-                    console.log();
-
->>>>>>> 14-062-2018
                 }
                 else{
                     console.log("no existe");
