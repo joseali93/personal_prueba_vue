@@ -47,7 +47,7 @@
                     <b-row>
                     <h3>fecha: <strong>{{fecha}}</strong></h3>  
                     </b-row>
-                    <b-row>
+                    <b-row v-if="otrainfo[1]">
                     <h3>Conductor: <strong class="text-uppercase"> {{otrainfo[1].nombre}} {{otrainfo[1].apellido}}</strong></h3> 
                     </b-row>
                     <b-row>
@@ -132,7 +132,7 @@ export default {
             fecha:  moment().format("DD/MM/YYYY"),
             fechaimpre:moment().format('MMMM Do YYYY, h:mm:ss a'),
             otrainfo:'',
-            modal:true,
+            modal:false,
             itemsmodal:[],
            fields2: [
               { key: 'id', label: 'N° Movilizado' },
@@ -211,10 +211,12 @@ export default {
     this.imagen = test.url_logo;
       this.servicios = servicios
        bus.$on('modalinfo', function (userObject) {
-     
+        console.log("evento modalinfo");
+
         this.itemsmodal = userObject.itemsmodal
         console.log(this.itemsmodal);
         this.otrainfo= userObject.inforvaria
+
         this.nmanifiesto=userObject.nmanifiesto
         
         if(this.otrainfo){
@@ -222,6 +224,7 @@ export default {
         }
         console.log("informacion que da error");
         console.log(this.otrainfo);
+        this.modal=true
       }.bind(this))
 
         moment.locale('es');

@@ -897,7 +897,7 @@ export default {
           objetoremitente = {
             numero_identificacion: this.remit.numero_identificacion,
             direccion: this.remit.direccion,
-            nombre: this.remit.nombre,
+            //nombre: this.remit.nombre,
             telefono: this.remit.telefono,
             id_cliente: this.remit.id_cliente,
             complemento: this.remit.complemento
@@ -910,7 +910,7 @@ export default {
             complemento: this.remit.complemento,
             numero_identificacion: this.remit.numero_identificacion,
             direccion: this.remit.direccion,
-            nombre: this.remit.nombre,
+            //nombre: this.remit.nombre,
             telefono: this.remit.telefono,
             id_cliente: this.remit.id_cliente,
             latitud: this.lati,

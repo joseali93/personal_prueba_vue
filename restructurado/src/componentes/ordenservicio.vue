@@ -1718,7 +1718,7 @@ export default {
              var objetoactualizar = {
                     numero_identificacion: this.detalleseditar.destinatario.numero_identificacion,
                     direccion: this.detalleseditar.destinatario.direccion,
-                    nombre: this.detalleseditar.destinatario.nombre,
+                    //nombre: this.detalleseditar.destinatario.nombre,
                     telefono: this.detalleseditar.destinatario.telefono,
                     //id_cliente: this.remitente.id_cliente,
                     latitud: this.lati,
@@ -1985,7 +1985,7 @@ export default {
              var objetoactualizar = {
                     numero_identificacion: this.detalles.destinatario.numero_identificacion,
                     direccion: this.detalles.destinatario.direccion,
-                    nombre: this.detalles.destinatario.nombre,
+                   // nombre: this.detalles.destinatario.nombre,
                     telefono: this.detalles.destinatario.telefono,
                     //id_cliente: this.remitente.id_cliente,
                     latitud: this.lati,
@@ -2215,23 +2215,6 @@ export default {
                 else{
                     console.log("no existe");
                 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
