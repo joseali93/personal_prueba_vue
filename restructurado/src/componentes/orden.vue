@@ -798,8 +798,7 @@ export default {
       }
     },
     actualizar: function() {
-      this.$router.replace("/inicio/ordenservicio");
-      return;
+
       var load = true;
       setTimeout(() => {
         bus.$emit("load", {

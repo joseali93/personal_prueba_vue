@@ -1,313 +1,335 @@
 <template>
-<b-container
-    fluid
-    class="contenedorTotal"
->
-    <div class="breadcrumb-holder">
-        <div class="container-fluid">
-            <b-breadcrumb :items="itemsbr" />
-            <!-- <ul class="breadcrumb">
+
+    <b-container fluid class="contenedorTotal">
+
+          <div class="breadcrumb-holder">
+
+      <div class="container-fluid">
+
+        <b-breadcrumb :items="itemsbr" />
+
+        <!-- <ul class="breadcrumb">
+
           <li v-for="(item, i) in items" :key="i" class="breadcrumb-item">
+
             <a :href="item.to">{{item.text}}</a>
+
           </li>
+
         </ul> -->
-        </div>
+
+      </div>
+
     </div>
+
+ 
 
       <b-container fluid>
 
+ 
+
       <b-card class="mt-2" header="Primary" header-bg-variant="primary">
+
         <h3 slot="header" class="mb-0 encabezado">Entradas y salidas de proceso logístico</h3>
+
         <b-row>
+
           <b-col md="6">
+
             <h3 class="text-primary">Proceso Logistico</h3>
+
           </b-col>
+
           <b-col md="6">
+
           </b-col>
+
         </b-row>
+
         <b-row>
+
           <b-col md="6">
+
             <b-form-select v-model="selected"  text-field="nombre" value-field="_id"
+
             :options="procesosLog" @input="procesoseleccionado">
+
             </b-form-select>
+
           </b-col>
+
           <b-col md="6">
+
             <b-btn class="rounded btn-warning text-white" variant="success" @click="MostrarModal()">
+
               <i class="fa fa fa-plus" aria-hidden="true"></i>&#32;Agregar movilizado
+
             </b-btn>
+
           </b-col>
+
         </b-row>
+
         <div class="mt-2">
+
           <template v-for="(data,indice) in inputs.campos">
+
             <template v-if="data.type=='text'">
 
+ 
+
                     <label class=" text-primary">{{ data.placeholder }}:</label>
+
                     <b-form-input
+
                     :id="data.id"
+
                     :type="data.type"
+
                     :placeholder="data.placeholder"
+
                     @input="digitar(data)"
+
                     :state="data.estado"></b-form-input>
+
             </template>
+
             <template v-if="data.type=='number'">
+
                     <label class=" text-primary">{{ data.placeholder }}:</label>
+
                     <b-form-input
+
                     :id="data.id"
+
                     :type="data.type"
+
                     :placeholder="data.placeholder"
+
                     @input="digitar(data)"
+
                     :state="data.estado">
+
                     </b-form-input>
+
             </template>
+
             <template v-if="data.type=='select'">
+
+ 
 
                 <h3 class=" text-primary">{{data.placeholder}}</h3>
 
+ 
+
                 <b-form-select :id="data.id"  :value="valores(indice,data)"  text-field="nombre" value-field="_id"
+
                 :options="opciones[indice]" @change="seleccionado(data)" :state="data.estado">
+
                 </b-form-select>
+
             </template>
+
           </template>
+
         </div>
+
         <b-row v-show="proceSeleccionado.atencion_courier==true">
+
           <b-col>
+
             <h3 class="text-primary">Courier</h3>
+
             <b-form-select v-model="curier" text-field="nombre" value-field="_id" :options="curiers2" class="mb-3"
+
             :state="Scurier">
+
             </b-form-select>
+
           </b-col>
+
         </b-row>
+
         <b-row class="my-1 text-primary">
+
             <b-col class="my-3">
+
                         Total de Movilizados :
+
                         <strong>
+
                         {{itemsmovilizados.length}}
+
                         </strong>
-                    </b-col>
-                    <b-col md="6">
-                    </b-col>
-                </b-row>
-                <b-row>
-                    <b-col md="6">
-                        <b-form-select
-                            v-model="selected"
-                            text-field="nombre"
-                            value-field="_id"
-                            :options="procesosLog"
-                            @input="procesoseleccionado"
-                        >
-                            </b-form-select>
-                    </b-col>
-                    <b-col md="6">
-                        <b-btn
-                            class="rounded btn-warning text-white"
-                            variant="success"
-                            @click="MostrarModal()"
-                        >
-                            <i
-                                class="fa fa fa-plus"
-                                aria-hidden="true"
-                            ></i>&#32;Agregar movilizado
-                                </b-btn>
-                    </b-col>
-                </b-row>
-                <div class="mt-2">
-                    <template v-for="(data,indice) in inputs.campos">
-                        <template v-if="data.type=='text'">
 
-                            <label class=" text-primary">{{ data.placeholder }}:</label>
-                            <b-form-input
-                                :id="data.id"
-                                :type="data.type"
-                                :placeholder="data.placeholder"
-                                @input="digitar(data)"
-                                :state="data.estado"
-                            ></b-form-input>
-                        </template>
-                        <template v-if="data.type=='number'">
-                            <label class=" text-primary">{{ data.placeholder }}:</label>
-                            <b-form-input
-                                :id="data.id"
-                                :type="data.type"
-                                :placeholder="data.placeholder"
-                                @input="digitar(data)"
-                                :state="data.estado"
-                            >
-                                </b-form-input>
-                        </template>
-                        <template v-if="data.type=='select'">
-
-                            <h3 class=" text-primary">{{data.placeholder}}</h3>
-
-                            <b-form-select
-                                :id="data.id"
-                                :value="valores(indice,data)"
-                                text-field="nombre"
-                                value-field="_id"
-                                :options="opciones[indice]"
-                                @change="seleccionado(data)"
-                                :state="data.estado"
-                            >
-                                </b-form-select>
-                        </template>
-                    </template>
-                </div>
-                <b-row v-show="proceSeleccionado.atencion_courier==true">
-                    <b-col>
-                        <h3 class="text-primary">Courier</h3>
-                        <b-form-select
-                            v-model="curier"
-                            text-field="nombre"
-                            value-field="_id"
-                            :options="curiers2"
-                            class="mb-3"
-                            :state="Scurier"
-                        >
-                            </b-form-select>
                     </b-col>
-                </b-row>
-                <b-row class="my-1 text-primary">
-                    <b-col class="my-3">
-                        Total de Movilizados :
-                        <strong>
-                        {{itemsmovilizados.length}}
-                        </strong>
-                    </b-col>
-                    <b-col class="my-3">
+
+                    <b-col  class="my-3">
+
                         Total de Unidades :
+
                         <strong>
+
                         {{mostrar()}}
+
                         </strong>
+
                     </b-col>
-                </b-row>
-                <b-row v-show="itemsmovilizados.length>0">
-                    <b-btn
-                        variant="success"
-                        @click="generarManifiesto"
-                        :disabled="manifiesto"
-                    >
-                        Generar
-                        </b-btn>
-                </b-row>
-        </b-card>
-    </b-container>
+
+        </b-row>
+
+         <b-row v-show="itemsmovilizados.length>0">
+
+            <b-btn variant="success" @click="generarManifiesto" :disabled="manifiesto">
+
+                Generar
+
+            </b-btn>
+
+        </b-row>
+
+      </b-card>
+
+      </b-container>
 
 
 
-    <router-view></router-view>
-    <!-- Modal Component -->
-    <b-modal
-        id="modal1"
-        ref="myModalRef"
-        title="Movilizados"
-        class="text-primary"
-        size="lg"
-        :no-close-on-esc="true"
-    >
-        <b-container fluid>
-            <b-row class="my-1">
-                <b-col>
-                    <b-form-select
-                        v-model="concepto"
-                        :options="listadoconcepto"
-                        text-field="nombre"
-                        value-field="_id"
-                        class="my-1"
-                    >
+
+        <router-view></router-view>
+
+       <!-- Modal Component -->
+
+        <b-modal id="modal1" ref="myModalRef" title="Movilizados" class="text-primary" size="lg" :no-close-on-esc="true">
+
+            <b-container fluid>
+
+                 <b-row class="my-1">
+
+                    <b-col>
+
+                        <b-form-select v-model="concepto" :options="listadoconcepto"
+
+                         text-field="nombre" value-field="_id" class="my-1">
+
                         </b-form-select>
-                </b-col>
-            </b-row>
-            <b-row class="my-1">
-                <b-col>
-                    <b-form-input
-                        v-model="text1"
+
+                    </b-col>
+
+                </b-row>
+
+                <b-row class="my-1">
+
+                    <b-col >
+
+                        <b-form-input v-model="text1"
+
                         class="float-left"
+
                         type="number"
+
                         id="nmovilizado"
-                        placeholder="Número Movilizado"
-                        @keyup.enter.native="adicionar(text1)"
-                        v-b-tooltip.hover
-                        title="Número de Movilizado!"
-                    ></b-form-input>
 
-                </b-col>
-            </b-row>
+                        placeholder="Número Movilizado" @keyup.enter.native="adicionar(text1)"
 
-            <b-row class="my-1 text-primary">
-                <b-col class="my-3 ">
-                    <h3></h3>
-                    Total de Movilizados :
-                    <strong>
+                        v-b-tooltip.hover title="Número de Movilizado!"></b-form-input>
+
+ 
+
+                    </b-col>
+
+                </b-row>
+
+ 
+
+                <b-row class="my-1 text-primary">
+
+                    <b-col class="my-3 ">
+
+                      <h3 ></h3>
+
+                        Total de Movilizados :
+
+                        <strong>
+
                         {{itemsmovilizados.length}}
+
                         </strong>
-                </b-col>
-                <b-col class="my-3">
-                    Total de Unidades :
-                    <strong>
+
+                    </b-col>
+
+                    <b-col  class="my-3">
+
+                        Total de Unidades :
+
+                        <strong>
+
                         {{mostrar()}}
+
                         </strong>
-                </b-col>
-            </b-row>
-            <b-row>
-                <b-col>
-                    <h3 class="text-primary">Listado de Movilizados:</h3>
-                    <b-table
-                        striped
-                        hover
-                        :fields="fields"
-                        :items="itemsmovilizados"
-                        :per-page="5"
-                        :current-page="currentPage"
-                    >
-                        <template
-                            slot="elimnar"
-                            slot-scope="data"
-                        >
-                            <b-btn
-                                variant="danger"
-                                @click="borrar(data)"
-                            >
-                                <i
-                                    class="fa fa-trash-o"
-                                    aria-hidden="true"
-                                ></i>
+
+                    </b-col>
+
+                </b-row>
+
+                <b-row>
+
+                    <b-col>
+
+                        <h3 class="text-primary">Listado de Movilizados:</h3>
+
+                            <b-table striped hover :fields="fields" :items="itemsmovilizados"
+
+                            :per-page="5" :current-page="currentPage">
+
+                                <template slot="elimnar" slot-scope="data">
+
+                                    <b-btn variant="danger" @click="borrar(data)">
+
+                                        <i class="fa fa-trash-o" aria-hidden="true"></i>
+
                                     </b-btn>
-                                    </template>
-                                    <template
-                                        slot="nmovilizado"
-                                        slot-scope="data"
-                                    >
-                                        {{data.item.id}}
-                                        </template>
-                                        <template
-                                            slot="unidades"
-                                            slot-scope="data"
-                                        >
-                                            {{data.item.unidades}}
-                                            </template>
-                                            <template
-                                                slot="concepto"
-                                                slot-scope="data"
-                                            >
-                                                {{data.item.concepto.nombre}}
-                                                </template>
-                                                </b-table>
-                                                <b-pagination
-                                                    size="md"
-                                                    :total-rows="itemsmovilizados.length"
-                                                    v-model="currentPage"
-                                                    :per-page="5"
-                                                >
-                                                    </b-pagination>
-                </b-col>
-            </b-row>
-        </b-container>
+
+                                </template>
+
+                                <template slot="nmovilizado" slot-scope="data">
+
+                                {{data.item.id}}
+
+                                </template>
+
+                                <template slot="unidades" slot-scope="data">
+
+                                {{data.item.unidades}}
+
+                                </template>
+
+                                <template slot="concepto" slot-scope="data">
+
+                                {{data.item.concepto.nombre}}
+
+                                </template>
+
+                            </b-table>
+
+                            <b-pagination size="md" :total-rows="itemsmovilizados.length"
+
+                            v-model="currentPage" :per-page="5">
+
+                            </b-pagination>
+
+                    </b-col>
+
+                </b-row>
+
+            </b-container>
+
         </b-modal>
 
-        </b-container>
+ 
+
+    </b-container>
+
 </template>
-
-
 
 <script>
 import {
