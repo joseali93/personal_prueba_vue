@@ -335,6 +335,7 @@ import { CreateSocket } from './utils/socket'
 export default {
   data() {
     return {
+      validacionsockets:'',
       socket: null,
       medios_disable:false,
       leido: "",
@@ -823,7 +824,7 @@ export default {
             var llavescampos =Object.keys(this.inputs.objeto)
             console.log("------");
             console.log(llavescampos);
-            var josea=[]
+            var josea={}
             var propiedadesDinamicas
 
             llavescampos.forEach(element => {
@@ -919,6 +920,7 @@ export default {
     },
 
     asignarcurier(seleccionado) {
+      console.log(this.currentUser);
       var login = localStorage.getItem("storedData");
       var infologin = JSON.parse(login);
       if (
@@ -931,24 +933,51 @@ export default {
         this.statuscourier = false;
       } else {
         if(infologin.id_OperadorLogistico.confirmacionSocket==true){
-          this.socket.emit('new-message', {
-          idOperador:infologin.id_OperadorLogistico._id,//per logistico
-          idOrigen:infologin._id,//id usuario
-          idDestino:seleccionado._id,//id courier seleccionado
-          mensaje :{
-              contacto:this.currentUser.remitente.nombre_contacto,//nombre remitente
-              direccion:this.currentUser.remitente.direccion_recogida,//direccion remitente
-              observaciones:this.currentUser.remitente.direccion_recogida,
-              num_movilizados:this.currentUser.detalle.length,//cantidad movilizados orden
-              tipo_proceso:1
-            }
-          })
-          var load = true;
-          setTimeout(() => {
-            bus.$emit("load", {
-              load
+        
+         if(this.currentUser.estado=='Orden De Servicio Asignada'&&(this.currentUser.id_courier==seleccionado._id||this.selected_curier._id==seleccionado._id)){
+          swal(
+            'ya la tiene asignada este courier',
+            '',
+            'warning'
+          )
+         }else{
+           this.socket.emit('new-message', {
+            idOperador:infologin.id_OperadorLogistico._id,//per logistico
+            idOrigen:infologin._id,//id usuario
+            idDestino:seleccionado._id,//id courier seleccionado
+            mensaje :{
+                contacto:this.currentUser.remitente.nombre_contacto,//nombre remitente
+                direccion:this.currentUser.remitente.direccion_recogida,//direccion remitente
+                observaciones:this.currentUser.observaciones,
+                num_movilizados:this.currentUser.detalle.length,//cantidad movilizados orden
+                tipo_proceso:1
+              }
+            })
+            //VALIDACION DEL TIMER
+            this.validacionsockets=setTimeout(function(){ 
+              swal(
+              'No se obtuvo respuesta del courier!',
+              '',
+              'warning'
+            )
+              var load = false;
+            setTimeout(() => {
+              bus.$emit("load", {
+                load
+              });
             });
-          });
+             }, 35000);
+            //----------------------------
+            var load = true;
+            setTimeout(() => {
+              bus.$emit("load", {
+                load
+              });
+            });
+            
+            
+         }
+          
         }
         else{
           var obj = {
@@ -1299,6 +1328,7 @@ export default {
       console.log("entro a asignar final");
       console.log(data);
       if(data.mensaje.respuesta=="true"){
+        this.currentUser.estado='Orden De Servicio Asignada'
         var obj = {
           id_orden: this.currentUser._id,
           id_curier: data.idOrigen,
@@ -1343,6 +1373,11 @@ export default {
       }
       else{
         console.log("no hago nada");
+        swal(
+          'El courier ha rechazado la Orden',
+          '',
+          'warning'
+        )
       }
       /*
       var obj = {
@@ -1487,7 +1522,7 @@ export default {
         //console.log(this.socket.instance.id);
       })
       this.socket.on('messages', (data) => {
-
+        clearTimeout(this.validacionsockets)
         //$.cbSpinner("hide");
         console.log('------------------------------------');
         console.log(data);

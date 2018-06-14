@@ -2209,7 +2209,7 @@ export default {
                         });
                     });
                     console.log("itemmm");
-                    console.log();
+                    console.log(informacion);
                     
                 }
                 else{

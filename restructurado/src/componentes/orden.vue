@@ -966,12 +966,15 @@ export default {
               });
             });
         } else {
+          console.log("actualizo");
+          console.log(objetoremitente);
           this.axios
             .post(
-              urlservicios + "ActualizarDestinatario" + "/" + this.remit._id,
+              urlservicios + "ActualizarDestinatario/" +  this.remit._id,
               objetoremitente
             )
             .then(response => {
+              console.log(response);
               var load = false;
               setTimeout(() => {
                 bus.$emit("load", {
@@ -980,7 +983,9 @@ export default {
               });
               this.$router.replace("/inicio/ordenservicio");
             })
-            .catch(function(error) {});
+            .catch(function(error) {
+              console.log(error);
+            });
         }
         /*
       this.axios.post(urlservicios+"ActualizarDestinatario" +"/" +this.remitente._id,objetoremitente)
@@ -996,7 +1001,7 @@ export default {
 
           })
         */
-        //this.$router.replace("/inicio/ordenservicio");
+        this.$router.replace("/inicio/ordenservicio");
         var load = false;
         setTimeout(() => {
           bus.$emit("load", {

@@ -509,8 +509,8 @@ export default {
                     idOrigen:infologin._id,//id usuario
                     idDestino:this.curier,//id courier seleccionado
                     mensaje :{
-                        contacto:"this.currentUser.remitente.nombre_contacto",//nombre remitente
-                        direccion:"this.currentUser.remitente.direccion_recogida",//direccion remitente
+                        contacto:'',//nombre remitente
+                        direccion:'',//direccion remitente
                         observaciones:result.value,
                         num_movilizados:varios.length,//cantidad movilizados orden
                         tipo_proceso:2
@@ -970,7 +970,7 @@ export default {
           });
         }
         else{
-          his.axios.get(
+          this.axios.get(
                 urlservicios+
                   "MovilizadoProcesosLogistico/" +
                   value +
@@ -1367,7 +1367,15 @@ export default {
       }
 
     },
-    generarManifiestoFinal(value, final){
+    generarManifiestoFinal(value){
+      console.log("entro a finallll");
+      var load = false;
+          setTimeout(() => {
+            bus.$emit("load", {
+              load
+            });
+            // this.socket.instance.disconnect(true);
+          });
        if(value.mensaje.respuesta=="true"){
          this.Scurier=null
             var objvario=[
@@ -1585,9 +1593,7 @@ export default {
           'warning'
         )
        }
-       if(final){
 
-       }
     }
   },
   beforeCreate: function() {
@@ -1737,7 +1743,7 @@ export default {
       this.socket.on('connect', () => {
       })
       this.socket.on('messages', (data) => {
-
+        console.log("tengo resuesta");
         //$.cbSpinner("hide");
         this.generarManifiestoFinal(data)
         //this.message = (data.mensaje);
