@@ -408,7 +408,7 @@ export default {
     },
     methods: {
         curieractualFun(){
-            console.log("entro a curier actual");
+            console.log("-------------");
             console.log(this.curieractual);
             if(this.curieractual==''||this.curieractual==undefined||this.curieractual=='undefined'){
                 this.curieractualFinal='No tiene curier actual asignado'
@@ -633,7 +633,6 @@ export default {
         bus.$on('resultado', function (userObject) {
         this.info=userObject.value
         this.otro=this.info
-        console.log(userObject.value);
         //this.otro=userObject.personal
         //this.procesos=userObject.proce
         this.inputs=userObject.personal.inputs

@@ -400,13 +400,16 @@ export default {
       console.log("entro a cambios");
     },
     updatecourier(){
-      console.log(this.selected_curier);
-      console.log("emito!");
+       var login = localStorage.getItem("storedData");
+    var infologin = JSON.parse(login);
+    if(infologin.id_OperadorLogistico.confirmacionSocket==true){
         this.socket.on('CouriersActivos', (connectionList) => {
             console.log(connectionList);
 
             this.curiers=connectionList
           });
+    }
+      
     },
     onSearch(search) {
 
@@ -822,7 +825,10 @@ export default {
             console.log(llavescampos);
             var josea=[]
             var propiedadesDinamicas
+
             llavescampos.forEach(element => {
+              console.log("elemenr llaves");
+              console.log(element);
               if(enviodestinatario.vmodel==element){
                 
                   josea[element]=this.selection

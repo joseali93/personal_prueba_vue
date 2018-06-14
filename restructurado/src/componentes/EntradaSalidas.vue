@@ -1,8 +1,16 @@
 <template>
     <b-container fluid class="contenedorTotal">
-      <div class="breadPersonalizado">
+          <div class="breadcrumb-holder">
+      <div class="container-fluid">
         <b-breadcrumb :items="itemsbr" />
+        <!-- <ul class="breadcrumb">
+          <li v-for="(item, i) in items" :key="i" class="breadcrumb-item">
+            <a :href="item.to">{{item.text}}</a>
+          </li>
+        </ul> -->
       </div>
+    </div>
+
       <b-container fluid class="contenedorInterno">
 
       <b-card class="cards">
@@ -164,6 +172,7 @@ import { CreateSocket } from './utils/socket'
 export default {
   data() {
     return {
+      procesoSelected:'',
       observacionesManifiesto:'',
             socket: null,
       manifiesto:false,
@@ -549,6 +558,7 @@ export default {
             })*/
           }
           else {
+            
             if(this.proceSeleccionado.atencion_courier==true){
               var envio ={
                 listadoMovilizados:varios,
@@ -556,17 +566,7 @@ export default {
                 id_procesoLogistico:this.processSelected._id,
                 id_courier:this.curier
               }
-            }
-            else{
-              var envio ={
-                listadoMovilizados:varios,
-                infoManifiesto:this.objeto,
-                id_procesoLogistico:this.processSelected._id,
-                //id_courier:this.curier
-              }
-            }
-            
-            var load = true;
+              var load = true;
                         setTimeout(() => {
                             bus.$emit("load", {
                             load
@@ -661,6 +661,112 @@ export default {
                             "warning"
                         );
             });
+            }
+            else{
+              var envio ={
+                listadoMovilizados:varios,
+                infoManifiesto:this.objeto,
+                id_procesoLogistico:this.processSelected._id,
+                //id_courier:this.curier
+              }
+              var load = true;
+                        setTimeout(() => {
+                            bus.$emit("load", {
+                            load
+                            });
+                        });
+            console.log("envio");
+            console.log(envio);
+            this.axios
+            .post(urlservicios+"GenerarManifiestoWeb", envio)
+            .then(response => {
+                if(response.data.validacion==true){
+                  this.manifiesto=true
+                   localStorage.removeItem('Manifiesto');
+                    var nmanifiesto=response.data.manifiesto
+                    setTimeout(() => {
+                        bus.$emit('modalinfo', {
+                            itemsmodal,inforvaria,nmanifiesto
+                        })
+                        }, )
+
+                    this.$router.push(this.processSelected.modal)
+                }
+                if(response.data.validacion==false){
+                  this.manifiesto=false
+                  var Movilizados=response.data.listaMovilizadoConManifiesto
+                  this.errores=response.data.listaMovilizadoConManifiesto
+                  var n_movilizados=''
+                  for(var o=0;o<Movilizados.length;o++){
+                    if(o==Movilizados.length-1){
+                      n_movilizados=n_movilizados+ Movilizados[o].id
+                    }
+                    else{
+                    n_movilizados=n_movilizados+ Movilizados[o].id+', '
+
+                    }
+
+                  }
+                  this.errores=Movilizados
+                  //this.$refs.myModalRef2.show()
+                  var titulo1_inicio='<div class="prueba"><ul>'
+                  var conten_1=''
+                  var conten_2=''
+                  var titulo1_fin='</ul></div><br><h3><strong>Desea Retirarlos del Manifiesto?</strong></h3>'
+                  var prueba
+                  var total
+                   for(var y=0;y<this.errores.length;y++){
+                  conten_1=conten_1+'<li>'+this.errores[y].id+' - '+this.errores[y].NombreProceso+'</li>'
+                  conten_2=conten_2+'<li>'+this.errores[y].NombreProceso+'</li>'
+
+
+                }
+              total=titulo1_inicio+conten_1+titulo1_fin
+                                    swal({
+                title: 'El manifiesto no se puede generar por que los movilizados ya se encuentran procesados',
+                type: 'info',
+                html: total,
+                showCloseButton: true,
+                showCancelButton: true,
+                focusConfirm: false,
+                confirmButtonText:
+                  'Si',
+                confirmButtonAriaLabel: '',
+                cancelButtonText:
+                'No',
+                cancelButtonAriaLabel: '',
+              }).then((result)=> {
+                if(result.value){
+                this.metodo(this.errores); // this should execute now
+
+                }
+
+              });
+
+                }
+                var load = false;
+                        setTimeout(() => {
+                            bus.$emit("load", {
+                            load
+                            });
+                        });
+            })
+            .catch(function(error) {
+                        var load = false;
+                        setTimeout(() => {
+                            bus.$emit("load", {
+                            load
+                            });
+                        });
+                        swal(
+                            "Se presento un problema",
+                            "Intente nuevamente, por favor",
+                            "warning"
+                        );
+            });
+            }
+            
+            
 
           }
 
@@ -693,7 +799,7 @@ export default {
       var agregar = true;
       var infoconcepto;
       var algo;
-
+      console.log(this.processSelected);
       if (this.concepto == null) {
         infoconcepto = {};
       } else {
@@ -723,140 +829,283 @@ export default {
             load
           });
         });
+        if(this.processSelected.Entrada==true){
+          this.inputs.campos.forEach(element => {
+            console.log(element);
+            if(element.EnvioServicio==true){
+              console.log("---------------");
+              console.log(this.objeto.id_curier)
+              this.axios.get(
+                urlservicios+
+                  "MovilizadoProcesosLogistico/" +
+                  value +
+                  "/" +
+                  this.selected+'/'+this.objeto.id_curier)
+              .then(response => {
 
-        this.axios
-          .get(
-            urlservicios+
-              "MovilizadoProcesosLogistico/" +
-              value +
-              "/" +
-              this.selected
-          )
-          .then(response => {
-
-            this.mensaje = response.data;
-            if (this.mensaje.message) {
-              swal({
-                title: "Error!",
-                text: "" + this.mensaje.message,
-                type: "error",
-                focusConfirm: true,
-                showConfirmButton: true,
-                allowOutsideClick: false,
-                allowEscapeKey: false,
-                allowEnterKey: true,
-                timer: 3000
-              });
-            }
-            if (this.mensaje.estado == true) {
-              if (this.itemsmovilizados.length == 0) {
-                swal({
-                  position: "center",
-                  type: "success",
-                  title: "Agregado correctamente",
-                  showConfirmButton: false,
-                  timer: 1000
-                });
-                this.text1 = "";
-                this.mensaje.concepto = infoconcepto;
-                this.itemsmovilizados.push(this.mensaje);
-                var guardado = {
-                  itemsmovilizados: this.itemsmovilizados,
-                  inputs: this.objeto,
-                  curier: this.curier,
-                  ProSeleccionado: this.selected
-                };
-                localStorage.setItem("Manifiesto", JSON.stringify(guardado));
-              } else {
-                for (var x = 0; x < this.itemsmovilizados.length; x++) {
-                  if (this.itemsmovilizados[x].id == this.mensaje.id) {
-                    agregar = false;
+                this.mensaje = response.data;
+                if (this.mensaje.message) {
+                  swal({
+                    title: "Error!",
+                    text: "" + this.mensaje.message,
+                    type: "error",
+                    focusConfirm: true,
+                    showConfirmButton: true,
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    allowEnterKey: true,
+                    timer: 3000
+                  });
+                }
+                if (this.mensaje.estado == true) {
+                  if (this.itemsmovilizados.length == 0) {
+                    swal({
+                      position: "center",
+                      type: "success",
+                      title: "Agregado correctamente",
+                      showConfirmButton: false,
+                      timer: 1000
+                    });
+                    this.text1 = "";
+                    this.mensaje.concepto = infoconcepto;
+                    this.itemsmovilizados.push(this.mensaje);
+                    var guardado = {
+                      itemsmovilizados: this.itemsmovilizados,
+                      inputs: this.objeto,
+                      curier: this.curier,
+                      ProSeleccionado: this.selected
+                    };
+                    localStorage.setItem("Manifiesto", JSON.stringify(guardado));
+                  } else {
+                    for (var x = 0; x < this.itemsmovilizados.length; x++) {
+                      if (this.itemsmovilizados[x].id == this.mensaje.id) {
+                        agregar = false;
+                      }
+                    }
+                    if (agregar == false) {
+                      swal({
+                        position: "center",
+                        type: "error",
+                        title: "Ya se encuentra en el Listado",
+                        showConfirmButton: false,
+                        timer: 1000
+                      });
+                    } else {
+                      swal({
+                        position: "center",
+                        type: "success",
+                        title: "Agregado correctamente",
+                        showConfirmButton: false,
+                        timer: 1000
+                      });
+                      this.mensaje.concepto = infoconcepto;
+                      this.itemsmovilizados.push(this.mensaje);
+                      this.text1 = "";
+                      var guardado = {
+                        itemsmovilizados: this.itemsmovilizados,
+                        inputs: this.objeto,
+                        curier: this.curier,
+                        ProSeleccionado: this.selected
+                      };
+                      localStorage.setItem("Manifiesto", JSON.stringify(guardado));
+                    }
                   }
                 }
-                if (agregar == false) {
-                  swal({
-                    position: "center",
+                if (this.mensaje.estado == false) {
+                  if(this.mensaje.message=="esta en ruta"){
+                    swal({
+                    title: "Error!",
+                    text:
+                      "El N° Movilizado " +
+                      this.mensaje.id +
+                      " se encuentra en ruta",
                     type: "error",
-                    title: "Ya se encuentra en el Listado",
-                    showConfirmButton: false,
-                    timer: 1000
+                    focusConfirm: true,
+                    showConfirmButton: true,
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    allowEnterKey: true,
+                    timer: 4000
                   });
-                } else {
-                  swal({
-                    position: "center",
-                    type: "success",
-                    title: "Agregado correctamente",
-                    showConfirmButton: false,
-                    timer: 1000
+                  }else{
+                    swal({
+                    title: "Error!",
+                    text:
+                      "El N° Movilizado " +
+                      this.mensaje.id +
+                      " se encuentra en el siguiente proceso " +
+                      this.mensaje.proceso,
+                    type: "error",
+                    focusConfirm: true,
+                    showConfirmButton: true,
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    allowEnterKey: true,
+                    timer: 4000
                   });
-                  this.mensaje.concepto = infoconcepto;
-                  this.itemsmovilizados.push(this.mensaje);
-                  this.text1 = "";
-                  var guardado = {
-                    itemsmovilizados: this.itemsmovilizados,
-                    inputs: this.objeto,
-                    curier: this.curier,
-                    ProSeleccionado: this.selected
-                  };
-                  localStorage.setItem("Manifiesto", JSON.stringify(guardado));
-                }
-              }
-            }
-            if (this.mensaje.estado == false) {
-              if(this.mensaje.message=="esta en ruta"){
-                swal({
-                title: "Error!",
-                text:
-                  "El N° Movilizado " +
-                  this.mensaje.id +
-                  " se encuentra en ruta",
-                type: "error",
-                focusConfirm: true,
-                showConfirmButton: true,
-                allowOutsideClick: false,
-                allowEscapeKey: false,
-                allowEnterKey: true,
-                timer: 4000
-              });
-              }else{
-                swal({
-                title: "Error!",
-                text:
-                  "El N° Movilizado " +
-                  this.mensaje.id +
-                  " se encuentra en el siguiente proceso " +
-                  this.mensaje.proceso,
-                type: "error",
-                focusConfirm: true,
-                showConfirmButton: true,
-                allowOutsideClick: false,
-                allowEscapeKey: false,
-                allowEnterKey: true,
-                timer: 4000
-              });
-              }
+                  }
 
-            }
-            var load = false;
-            setTimeout(() => {
-              bus.$emit("load", {
-                load
-              });
-            });
-          })
-          .catch(function(error) {
-                        var load = false;
-                        setTimeout(() => {
-                            bus.$emit("load", {
-                            load
+                }
+                var load = false;
+                setTimeout(() => {
+                  bus.$emit("load", {
+                    load
+                  });
+                });
+              })
+              .catch(function(error) {
+                            var load = false;
+                            setTimeout(() => {
+                                bus.$emit("load", {
+                                load
+                                });
                             });
-                        });
-                        swal(
-                            "Se presento un problema",
-                            "Intente nuevamente, por favor",
-                            "warning"
-                        );
+                            swal(
+                                "Se presento un problema",
+                                "Intente nuevamente, por favor",
+                                "warning"
+                            );
+              });
+            }
+          });
+        }
+        else{
+          his.axios.get(
+                urlservicios+
+                  "MovilizadoProcesosLogistico/" +
+                  value +
+                  "/" +
+                  this.selected+'/null')
+              .then(response => {
+
+                this.mensaje = response.data;
+                if (this.mensaje.message) {
+                  swal({
+                    title: "Error!",
+                    text: "" + this.mensaje.message,
+                    type: "error",
+                    focusConfirm: true,
+                    showConfirmButton: true,
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    allowEnterKey: true,
+                    timer: 3000
+                  });
+                }
+                if (this.mensaje.estado == true) {
+                  if (this.itemsmovilizados.length == 0) {
+                    swal({
+                      position: "center",
+                      type: "success",
+                      title: "Agregado correctamente",
+                      showConfirmButton: false,
+                      timer: 1000
                     });
+                    this.text1 = "";
+                    this.mensaje.concepto = infoconcepto;
+                    this.itemsmovilizados.push(this.mensaje);
+                    var guardado = {
+                      itemsmovilizados: this.itemsmovilizados,
+                      inputs: this.objeto,
+                      curier: this.curier,
+                      ProSeleccionado: this.selected
+                    };
+                    localStorage.setItem("Manifiesto", JSON.stringify(guardado));
+                  } else {
+                    for (var x = 0; x < this.itemsmovilizados.length; x++) {
+                      if (this.itemsmovilizados[x].id == this.mensaje.id) {
+                        agregar = false;
+                      }
+                    }
+                    if (agregar == false) {
+                      swal({
+                        position: "center",
+                        type: "error",
+                        title: "Ya se encuentra en el Listado",
+                        showConfirmButton: false,
+                        timer: 1000
+                      });
+                    } else {
+                      swal({
+                        position: "center",
+                        type: "success",
+                        title: "Agregado correctamente",
+                        showConfirmButton: false,
+                        timer: 1000
+                      });
+                      this.mensaje.concepto = infoconcepto;
+                      this.itemsmovilizados.push(this.mensaje);
+                      this.text1 = "";
+                      var guardado = {
+                        itemsmovilizados: this.itemsmovilizados,
+                        inputs: this.objeto,
+                        curier: this.curier,
+                        ProSeleccionado: this.selected
+                      };
+                      localStorage.setItem("Manifiesto", JSON.stringify(guardado));
+                    }
+                  }
+                }
+                if (this.mensaje.estado == false) {
+                  if(this.mensaje.message=="esta en ruta"){
+                    swal({
+                    title: "Error!",
+                    text:
+                      "El N° Movilizado " +
+                      this.mensaje.id +
+                      " se encuentra en ruta",
+                    type: "error",
+                    focusConfirm: true,
+                    showConfirmButton: true,
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    allowEnterKey: true,
+                    timer: 4000
+                  });
+                  }else{
+                    swal({
+                    title: "Error!",
+                    text:
+                      "El N° Movilizado " +
+                      this.mensaje.id +
+                      " se encuentra en el siguiente proceso " +
+                      this.mensaje.proceso,
+                    type: "error",
+                    focusConfirm: true,
+                    showConfirmButton: true,
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                    allowEnterKey: true,
+                    timer: 4000
+                  });
+                  }
+
+                }
+                var load = false;
+                setTimeout(() => {
+                  bus.$emit("load", {
+                    load
+                  });
+                });
+              })
+              .catch(function(error) {
+                            var load = false;
+                            setTimeout(() => {
+                                bus.$emit("load", {
+                                load
+                                });
+                            });
+                            swal(
+                                "Se presento un problema",
+                                "Intente nuevamente, por favor",
+                                "warning"
+                            );
+              });
+        }
+        console.log(this.objeto);
+        //console.log(this.inputs);
+        
+        
       }
     },
     procesoseleccionado(value) {
@@ -867,6 +1116,7 @@ export default {
       if (infoguardadoManifiesto == null || infoguardadoManifiesto == "null") {
         var nvacio = { _id: null, nombre: "Por Favor Seleccione un Concepto" };
         this.selected = value;
+        console.log(this.selected);
         this.itemsmovilizados = [];
         this.listadoconcepto = [];
         if (this.selected == null) {
@@ -1370,6 +1620,7 @@ export default {
           });
           this.procesosLog = response.data;
           this.procesosLog.unshift(vacio);
+          console.log(this.procesosLog);
         })
         .catch(function(error) {
           bandera = false;

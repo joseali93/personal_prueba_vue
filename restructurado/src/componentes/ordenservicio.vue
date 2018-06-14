@@ -58,7 +58,7 @@
                             -->
                       </template>
                   </b-table>
-                  <b-pagination size="md" :total-rows="DetalleServicio.length" v-model="currentPage" :per-page="5">
+                  <b-pagination v-if="DetalleServicio && DetalleServicio.length" size="md" :total-rows="DetalleServicio.length" v-model="currentPage" :per-page="5">
                   </b-pagination>
               </b-row>
 
@@ -108,7 +108,7 @@
                     </b-col>
                 </b-row>
                 <b-card no-body v-show="selectservice" class="border">
-                  <b-tabs card v-model="tabIndex">
+                  <b-tabs card v-model="tabIndex" class="cabecera-tabs">
                     <b-tab title="Información">
                           <b-row class="my-2">
                               <b-col>
@@ -376,7 +376,7 @@
                             </b-card-body>
                             </b-tab>
                     </b-tabs>
- -->
+          -->
 
                 </b-container>
                 <div slot="modal-footer" class="w-100">
@@ -2176,9 +2176,10 @@ export default {
                                     eval('informacion.'+destinatario+'='+'desti.propiedadesDinamicas.'+destinatario)
                                     this.axios.get(urlservicios+"estructuraf/" +produc +"/" +serv)
                                         .then(response=>{
+                                         
                                             estructura=response.data
                                             estructura.campos.forEach(element => {
-                                                
+                                        
                                                 if(element.vmodel==destinatario){
                                                     this.axios.get(element.urlobjeto+test.id_OperadorLogistico._id)
                                                         .then(responseurl =>{
@@ -2665,6 +2666,9 @@ export default {
 </script>
 
 <style>
+.cabecera-tabs > .card-header {
+  background-color: #ebeaea !important;
+}
 .card-header {
   height: auto !important;
 }

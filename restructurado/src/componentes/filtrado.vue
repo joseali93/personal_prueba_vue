@@ -139,7 +139,7 @@
 
       </b-card>
 
-      <div id="jose" class="cards2"  v-show="sel_conslta">
+      <div id="jose" class="cards2 bg-white"  v-show="sel_conslta">
 
         <router-view :consulta="consulta" :peticion="peticion"></router-view>
 

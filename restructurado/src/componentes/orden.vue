@@ -63,17 +63,7 @@ DE LA ORDEN DE SERVICIO -->
               <b-col>
                   <h3 class="text-primary">Centro de Costos</h3>
                   <preload v-if="load"></preload>
-                  <!--
-                  <b-form-select v-model="selected_center" class="mb-3"
-                  :options="centros" text-field="nombre" value-field="_id"
-                    @change.native="centrosseleccionado" :disabled="habilitar" v-else >
-                  </b-form-select>
 
-                  <v-select v-model="selected_center" label="nombre"
-                  placeholder="Seleccione el Centro de Costo" :options="centros"
-                  @input="centroSeleccionado()" :disabled="habilitar"
-                    ></v-select>
-                  -->
                   <v-select v-model="selected_center" label="nombre_concatenado"
                   placeholder=" Centro de Costo" :options="centros"
                   @input="centroSeleccionado()" :disabled="habilitar"
@@ -117,9 +107,10 @@ DE LA ORDEN DE SERVICIO -->
             </b-row>
             <b-row v-if="GeoReferenciacion==true">
                     <b-col>
+                       <h3 class="text-primary">Dirección</h3>
                     <b-form-group id="exampleInputGroup1"
                       class="text-primary"
-                        label="Dirección ">
+                        >
                             <b-form-input id="direccionGoogle"
                                 size=""
                                 ref="focusRemitente"
@@ -142,9 +133,10 @@ DE LA ORDEN DE SERVICIO -->
             </b-row>
             <b-row v-if="GeoReferenciacion==true">
                     <b-col>
+                       <h3 class="text-primary">Complemento</h3>
                     <b-form-group id="exampleInputGroup1"
                       class="text-primary"
-                        label="Complemento  ">
+                        >
                             <b-form-input id="complemento"
                                 size=""
                                 type="text"
@@ -165,12 +157,14 @@ DE LA ORDEN DE SERVICIO -->
             </b-row>
             <b-row v-if="GeoReferenciacion==false">
                     <b-col>
+                       <h3 class="text-primary">Dirección</h3>
                     <b-form-group id="exampleInputGroup1"
                       class="text-primary"
-                        label="Dirección  ">
+                        >
                             <b-form-input id="complemento"
                                 size=""
                                 type="text"
+                                ref="focusRemitente"
                                 v-model="remit.direccion "
                                 required
                                 
@@ -186,62 +180,7 @@ DE LA ORDEN DE SERVICIO -->
                     </b-form-group>
                     </b-col>
             </b-row>
-                <b-row>
-                    <b-col>
-                    <b-form-group id="exampleInputGroup2"
-                    class="text-primary"
-                        label="Contacto ">
-                            <b-form-input id="nombre"
-                                size=""
-                                type="text"
-                                v-model="remit.nombre"
-                                required
-                                placeholder="Nombre"
-                                maxlength="100"
-                                >
-                            </b-form-input>
-                    </b-form-group>
-                    </b-col>
-                </b-row>
-                <b-row>
-                    <b-col>
-                    <b-form-group id="exampleInputGroup2"
-                    class="text-primary"
-                        label="Num Identificacion ">
-                            <b-form-input id="identificacion"
-                                size=""
-                                type="text"
-                                v-model="remit.numero_identificacion"
-                                required
-                                placeholder="Numero de identificacion"
-                                maxlength="100"
-                                >
-                            </b-form-input>
-                    </b-form-group>
-                    </b-col>
-                </b-row>
-                <b-row>
-                    <b-col>
-                    <b-form-group id="exampleInputGroup3"
-                    class="text-primary"
-                        label="Teléfono " >
-                            <b-form-input id="telefono"
-                            size=""
-                                type="text"
-
-                                v-model="remit.telefono"
-                                required
-                                placeholder="Teléfono"
-                                maxlength="20">
-                            </b-form-input>
-                    </b-form-group>
-                    </b-col>
-                </b-row>
-
-
-                  </v-select>
-              </b-col>
-          </b-row>
+         
           <b-row v-if="GeoReferenciacion">
                   <b-col>
                   <h3 class="text-primary">Dirección</h3>
@@ -267,29 +206,7 @@ DE LA ORDEN DE SERVICIO -->
                   </b-form-group>
                   </b-col>
           </b-row>
-          <b-row>
-                  <b-col>
-                  <h3 class="text-primary">Dirección</h3>
-                  <b-form-group id="exampleInputGroup1"
-                    class="text-primary my-2">
-                          <b-form-input id="complemento"
-                              size=""
-                              type="text"
-                              v-model="remit.complemento"
-                              required
-
-                              placeholder="Torre, Apartamento, Oficina, Conjunto Residencial, Bodega"
-                              maxlength="100">
-                          </b-form-input>
-                          <!--
-                              @change="localizar()"
-                            @keypress="localizar()"
-                                @keyup.enter.native="localizar()"
-                            -->
-
-                  </b-form-group>
-                  </b-col>
-          </b-row>
+          
               <b-row>
                   <b-col>
                   <h3 class="text-primary">Contacto</h3>

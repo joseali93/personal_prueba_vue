@@ -1,9 +1,16 @@
 <template>
     <b-container fluid class="contenedorTotal">
 
-        <div class="breadPersonalizado">
-            <b-breadcrumb :items="items" />
-        </div>
+           <div class="breadcrumb-holder">
+      <div class="container-fluid">
+        <b-breadcrumb :items="items" />
+        <!-- <ul class="breadcrumb">
+          <li v-for="(item, i) in items" :key="i" class="breadcrumb-item">
+            <a :href="item.to">{{item.text}}</a>
+          </li>
+        </ul> -->
+      </div>
+    </div>
 
 
         <b-container fluid class="contenedorInterno">
