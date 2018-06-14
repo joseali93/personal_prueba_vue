@@ -11,25 +11,33 @@
       </div>
     </div>
 
-      <b-container fluid class="contenedorInterno">
+      <b-container fluid>
 
-      <b-card class="cards">
-        <b-row class="my-1 ">
-            <b-col class="float-right">
-                <b-btn class="float-right rounded"  variant="success" @click="MostrarModal()" >
-                    <i class="fa fa-plus-square-o" aria-hidden="true"></i> Movilizados
-                </b-btn>
-            </b-col>
+      <b-card class="mt-2">
+        <h3 slot="header" class="mb-0 encabezado">Entradas y salidas de proceso logístico</h3>
+        <b-row>
+          <b-col md="6">
+            <h3 class="text-primary">Proceso Logistico</h3>
+          </b-col>
+          <b-col md="6">
+          </b-col>
         </b-row>
         <b-row>
-            <h3 class="text-primary">Proceso Logistico</h3>
+          <b-col md="6">
             <b-form-select v-model="selected"  text-field="nombre" value-field="_id"
-            :options="procesosLog" class="mb-3" @input="procesoseleccionado">
+            :options="procesosLog" @input="procesoseleccionado">
             </b-form-select>
+          </b-col>
+          <b-col md="6">
+            <b-btn class="rounded btn-warning text-white" variant="success" @click="MostrarModal()">
+              <i class="fa fa fa-plus" aria-hidden="true"></i>&#32;Agregar movilizado
+            </b-btn>
+          </b-col>
         </b-row>
-        <b-row class="my-1">
-        <template v-for="(data,indice) in inputs.campos">
+        <div class="mt-2">
+          <template v-for="(data,indice) in inputs.campos">
             <template v-if="data.type=='text'">
+
                     <label class=" text-primary">{{ data.placeholder }}:</label>
                     <b-form-input
                     :id="data.id"
@@ -37,7 +45,6 @@
                     :placeholder="data.placeholder"
                     @input="digitar(data)"
                     :state="data.estado"></b-form-input>
-
             </template>
             <template v-if="data.type=='number'">
                     <label class=" text-primary">{{ data.placeholder }}:</label>
@@ -53,21 +60,19 @@
 
                 <h3 class=" text-primary">{{data.placeholder}}</h3>
 
-                 <b-form-select :id="data.id"  :value="valores(indice,data)"  text-field="nombre" value-field="_id"
-                 :options="opciones[indice]" @change="seleccionado(data)" class="mb-3"
-                 :state="data.estado">
+                <b-form-select :id="data.id"  :value="valores(indice,data)"  text-field="nombre" value-field="_id"
+                :options="opciones[indice]" @change="seleccionado(data)" :state="data.estado">
                 </b-form-select>
             </template>
-        </template>
-        </b-row>
+          </template>
+        </div>
         <b-row v-show="proceSeleccionado.atencion_courier==true">
-
           <b-col>
+            <h3 class="text-primary">Courier</h3>
             <b-form-select v-model="curier" text-field="nombre" value-field="_id" :options="curiers2" class="mb-3"
             :state="Scurier">
             </b-form-select>
           </b-col>
-
         </b-row>
         <b-row class="my-1 text-primary">
             <b-col class="my-3">
@@ -558,7 +563,7 @@ export default {
             })*/
           }
           else {
-            
+
             if(this.proceSeleccionado.atencion_courier==true){
               var envio ={
                 listadoMovilizados:varios,
@@ -765,8 +770,8 @@ export default {
                         );
             });
             }
-            
-            
+
+
 
           }
 
@@ -1104,8 +1109,8 @@ export default {
         }
         console.log(this.objeto);
         //console.log(this.inputs);
-        
-        
+
+
       }
     },
     procesoseleccionado(value) {
@@ -1114,7 +1119,7 @@ export default {
 
       this.manifiesto=false
       if (infoguardadoManifiesto == null || infoguardadoManifiesto == "null") {
-        var nvacio = { _id: null, nombre: "Por Favor Seleccione un Concepto" };
+        var nvacio = { _id: null, nombre: "Seleccione un concepto" };
         this.selected = value;
         console.log(this.selected);
         this.itemsmovilizados = [];
@@ -1601,7 +1606,7 @@ export default {
     var _this = this;
     var vacio = {
       _id: null,
-      nombre: "Por Favor Seleccione un Proceso logistico"
+      nombre: "Seleccione un proceso logistico"
     };
     var login = localStorage.getItem("storedData");
     var infologin = JSON.parse(login);

@@ -1,9 +1,6 @@
 <template>
-    <b-container fluid >
-
-        <h3>
-            Listado de ordenes de servicio:
-        </h3>
+      <b-card v-if="consulta.length" class="mt-2">
+        <h3 slot="header" class="mb-0 encabezado">Lista de ordenes de servicio</h3>
         <b-table :fields="fields" :per-page="5" :current-page="currentPage" :items="consulta" :bordered="true"
         thead-class=text-center tbody-class=text-center>
             <template slot="index" slot-scope="data">
@@ -30,8 +27,7 @@
         </b-table>
         <b-pagination size="md" :total-rows="consulta.length" v-model="currentPage" :per-page="5">
         </b-pagination>
-
-    </b-container>
+      </b-card>
 </template>
 
 <script>
@@ -431,7 +427,7 @@ export default {
              for(var a=0;a<inde.item.detalle.length;a++)
             {
                 var desti= inde.item.detalle[a].detalleslocal.destinatario
-                
+
                 var informacion = inde.item.detalle[a].detalleslocal.infor
                 var produc= inde.item.detalle[a].productoslocal._id
                 var serv = inde.item.detalle[a].servicioslocal._id
@@ -440,7 +436,7 @@ export default {
                 var llavesDesti
                 var respuestatrayectos
                 if(desti.propiedadesDinamicas){
-                    
+
                     llavesInfor=Object.keys(informacion)
                     llavesDesti=Object.keys(desti.propiedadesDinamicas)
                     llavesInfor.forEach(infor => {
@@ -452,14 +448,14 @@ export default {
                                         .then(response=>{
                                             estructura=response.data
                                             estructura.campos.forEach(element => {
-                                                
+
                                                 if(element.vmodel==destinatario){
                                                     this.axios.get(element.urlobjeto+test.id_OperadorLogistico._id)
                                                         .then(responseurl =>{
                                                             console.log(responseurl);
                                                             respuestatrayectos=responseurl.data
                                                             respuestatrayectos.forEach(elementosT => {
-                                                                
+
                                                                 if(eval('informacion.'+destinatario)==elementosT._id){
                                                                     informacion.trayectoobj={},
                                                                     informacion.trayectoobj={
@@ -474,7 +470,7 @@ export default {
                                             });
                                         });
                                 }
-                                
+
                             }
                             else{
                                 console.log("no son iguales");
@@ -483,7 +479,7 @@ export default {
                     });
                     console.log("itemmm");
                     console.log(inde.item);
-                    
+
                 }
                 else{
                     console.log("no existe");
@@ -522,7 +518,7 @@ export default {
                 bus.$emit('ocul',ocultar)
                 setTimeout(() => {
                     bus.$emit('ocultar', {
-                        ocultar 
+                        ocultar
                     })
                     }, )
                     var load=false
@@ -545,9 +541,9 @@ export default {
                                 'Intente nuevamente, por favor',
                                 'warning'
                                 )
-                    }) 
-            }   
-            
+                    })
+            }
+
         },
          mounted: function () {
              bus.$on('ocultar', function (userObject) {

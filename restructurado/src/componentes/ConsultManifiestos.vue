@@ -12,38 +12,34 @@
       </div>
     </div>
 
-        <b-container fluid class="contenedorInterno">
-            <b-card v-show="ocultar" class="cards">
+        <b-container fluid>
+            <b-card v-show="ocultar" class="mt-2">
+              <h3 slot="header" class="mb-0 encabezado">Manifiesto</h3>
                 <!--
             <header slot="header" class="content-heading">
                     <h3>Consultar Manifiestos</h3>
                         <small>Se permite la busqueda de Manifiestos seleccionando los siguientes filtros </small>
                 </header>
                 -->
+                <b-btn class="rounded my-2" variant="success" @click="limpiar">
+                    <i class="fa fa-eraser"></i>
+                </b-btn>
                 <b-row>
-                    <b-col>
-                        <b-btn class="float-right rounded" variant="success" @click="limpiar">
-                            <i class="fa fa-eraser"></i>
-
-                        </b-btn>
-                    </b-col>
+                  <b-col>
+                    <h3 class="text-primary">Número</h3>
+                      <b-form-group class="text-primary">
+                        <b-form-input v-model="nmanifiesto"
+                        :state="nmanifiestoestado"
+                        type="number"
+                        placeholder="Número"
+                        v-on:keyup.enter.native="consultar()"/>
+                      </b-form-group>
+                  </b-col>
                 </b-row>
                 <b-row>
                     <b-col>
-                        <b-form-group class="text-primary" label="Número de Manifiesto" >
-                            <b-form-input v-model="nmanifiesto"
-                            :state="nmanifiestoestado"
-                            type="number"
-                            placeholder="Número manifiesto"
-                            v-on:keyup.enter.native="consultar()"></b-form-input>
-                        </b-form-group>
-                    </b-col>
-                </b-row>
-                <b-row>
-                    <b-col>
-                        <b-form-group
-                        class="text-primary"
-                        label="Proceso Logístico">
+                      <h3 class="text-primary">Proceso Logístico</h3>
+                        <b-form-group class="text-primary">
                             <b-form-select v-model="procelogistica"  text-field="nombre"
                             :state="procelogisticaestado" value-field="_id"
                             :options="procesosLog" @input="procesoseleccionado">
@@ -53,17 +49,16 @@
                 </b-row>
                 <b-row>
                     <b-col>
-
-                            <b-form-group
-                            class="text-primary"
-                            label="Rango de Fechas" c>
-                                <date-picker disabled="true" id="fecha" width="500" v-model="time1" placeholder="Rango de Fechas" range lang="en"></date-picker>
-                            </b-form-group>
+                      <h3 class="text-primary">Rango de fechas</h3>
+                        <b-form-group class="text-primary" c>
+                          <date-picker disabled="true" id="fecha" width="500" v-model="time1" placeholder="Rango de Fechas" range lang="en">
+                          </date-picker>
+                        </b-form-group>
                     </b-col>
                 </b-row>
                 <b-row>
                     <b-col>
-                        <b-btn variant="success" class="float-right rounded" @click="consultar()">
+                        <b-btn variant="success" class="float-right rounded btn-warning text-white" @click="consultar()">
                             <i class="fa fa-search " aria-hidden="true"></i>
                             Consultar
                         </b-btn>

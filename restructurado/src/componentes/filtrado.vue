@@ -14,15 +14,8 @@
     </div>
 
     <b-container fluid>
-
-      <header class="content-heading" slot="header">
-
-        <h3>Consultar Ordenes de Servicio</h3>
-
-      </header>
-
-      <b-card class="cards" v-show="ocultar">
-
+      <b-card class="mt-2 border" v-show="ocultar">
+        <h3 slot="header" class="mb-0 encabezado">Información de filtrado</h3>
         <!--
 
         <header class="content-heading" slot="header">
@@ -34,7 +27,6 @@
         -->
 
         <div class="form-row">
-
           <b-form-group class="text-primary col-md-6" >
           <h3 class="text-primary">Clientes</h3>
             <!--
@@ -138,15 +130,8 @@
         </b-btn>
 
       </b-card>
-
-      <div id="jose" class="cards2 bg-white"  v-show="sel_conslta">
-
-        <router-view :consulta="consulta" :peticion="peticion"></router-view>
-
-      </div>
-
+      <router-view :consulta="consulta" :peticion="peticion"></router-view>
     </b-container>
-
   </b-container>
 
 </template>
