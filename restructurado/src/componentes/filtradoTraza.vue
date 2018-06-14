@@ -12,7 +12,7 @@
       </div>
     </div>
         <b-container fluid>
-            <b-card v-show="ocultartra" class="mt-2">
+            <b-card v-show="ocultartra" class="mt-2" header="Primary" header-bg-variant="primary">
               <h3 slot="header" class="mb-0 encabezado">Información del cliente</h3>
                  <b-row>
                    <b-col>
@@ -48,7 +48,7 @@
                     </b-col>
                 </b-row>
         </b-card>
-        <b-card class="mt-2"  v-show="ocultartra">
+        <b-card class="mt-2"  v-show="ocultartra" header="Primary" header-bg-variant="primary">
           <h3 slot="header" class="mb-0 encabezado">Información para filtrar</h3>
             <b-row>
                 <b-col>

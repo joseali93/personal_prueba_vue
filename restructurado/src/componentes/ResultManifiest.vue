@@ -1,6 +1,6 @@
 <template>
   <b-container>
-        <b-table  :items="consulta" :fields="fields"
+        <b-table :items="consulta" :fields="fields"
             :per-page="5" :current-page="currentPage" :bordered="true">
             <template slot="id_manifiesto" slot-scope="data">
                         {{data.item.id}}
@@ -10,12 +10,12 @@
                         {{data.item.estado_manifiesto}}
                  </label>
             </template>
-            
+
              <template slot="NombresYApellidoCourier" slot-scope="data" class=" text-capitalize">
                  <label class=" text-capitalize">
                      {{data.item.nombre_courier}} {{data.item.apellido_courier}}
                  </label>
-                        
+
             </template>
             <template slot="detalles" slot-scope="data">
                  <i class="btn btn-success fa fa-info"  @click="actualizar(data.item)"></i>
@@ -34,14 +34,14 @@
         </b-pagination>
         <!-- Modal Component -->
         <b-modal id="modal1" size="lg" ref="myModalRef" title="Información" class="text-primary"
-        
+
         no-close-on-backdrop
         no-close-on-esc>
             <div slot="modal-header" class="w-100">
                 <b-btn size="sm" class="float-left" variant="primary" @click="cerrarModal">
                 Cerrar
                 </b-btn>
-                
+
             </div>
             <b-container>
                 <b-row>
@@ -66,18 +66,18 @@
                     </b-col>
                 </b-row>
                 <b-row>
-                   
+
                     <b-col>
                         <b-table bordered fixed hover
                         :items="detalle.listaMovilizados"  :fields="fields2">
-                        
+
                         <template slot="id_orden" slot-scope="data">
                                 {{data.item.id_orden}}
                         </template>
                         <template slot="id_movilizado" slot-scope="data">
                                 {{data.item.id_movilizado}}
                         </template>
-                    
+
                         </b-table>
                     </b-col>
                 </b-row>
@@ -93,7 +93,7 @@ import {urlservicios} from '../main'
 import Preload from '../componentes/preload.vue'
 export default {
     data(){
-        
+
         return{
             detalle: '',
             currentPage:1,
@@ -158,15 +158,15 @@ export default {
                 itemsmodal.push(normalizado)
             }
             console.log(itemsmodal);
-            
+
              setTimeout(() => {
                         bus.$emit('modalinfo', {
                             itemsmodal,inforvaria
                         })
 
                         }, )
-            this.$router.push(value.modal)    
-                  
+            this.$router.push(value.modal)
+
         },
         actualizar(value){
             console.log("entro a actualizar");
@@ -176,16 +176,16 @@ export default {
             var ocultar=false
             setTimeout(() => {
                 bus.$emit('detallemanifiesto', {
-                    detalles 
+                    detalles
                 })
                 }, )
                 /*
             setTimeout(() => {
                 bus.$emit('ocultar', {
-                    ocultar 
+                    ocultar
                 })
-                }, )   
-                 
+                }, )
+
             this.$router.replace('/inicio/manifiestos/detalle')
                 */
                 this.$refs.myModalRef.show()

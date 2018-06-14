@@ -13,8 +13,8 @@
     </div>
 
         <b-container fluid>
-            <b-card v-show="ocultar" class="mt-2">
-              <h3 slot="header" class="mb-0 encabezado">Manifiesto</h3>
+            <b-card v-show="ocultar" header="Primary" header-bg-variant="primary" class="mt-2">
+              <h3 slot="header" class="mb-0">Manifiesto</h3>
                 <!--
             <header slot="header" class="content-heading">
                     <h3>Consultar Manifiestos</h3>
@@ -65,8 +65,7 @@
                     </b-col>
                 </b-row>
             </b-card>
-            <br>
-            <b-card class="cards">
+            <b-card class="mt-3">
                 <router-view :consulta="consulta"></router-view>
             </b-card>
 

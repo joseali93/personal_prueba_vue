@@ -14,31 +14,30 @@
        <b-container fluid>
         <b-row>
           <b-col md="6" offset-md="6">
-            <div class="d-inline-block float-right">
-              <b-btn class="rounded" variant="secondary" to="/inicio/orden" v-b-tooltip.hover title="Anterior">
+            <div class="d-inline-block float-right mt-3">
+              <b-btn class="rounded text-white" variant="warning" to="/inicio/orden" v-b-tooltip.hover title="Anterior">
                 <i class="fa fa-arrow-left"></i>Anterior
               </b-btn>
-              <b-btn class="rounded" variant="success" @click="envioServicio" v-b-tooltip.hover title="Finalizar">
+              <b-btn class="rounded text-white" variant="warning" @click="envioServicio" v-b-tooltip.hover title="Finalizar">
                 <i class="fa fa-check"></i>Finalizar
               </b-btn>
             </div>
           </b-col>
         </b-row>
-        <b-card-group deck >
-          <b-card class="cards"  id="card1">
-             <h3 slot="header" id="cardHeader">Detalle de servicios</h3>
+        <b-card-group deck class="mt-3">
+          <b-card class="border" header="Primary" header-bg-variant="primary">
+             <h3 slot="header" class="mb-0 encabezado">Detalle de servicios</h3></h3>
               <b-row>
                 <b-col md="6" offset-md="6">
-                    <b-btn class="rounded float-right" variant="danger"
+                    <b-btn class="rounded float-right text-white" variant="warning"
                     v-b-tooltip.hover title="Adicionar"
                     @click="abirmodal()"><i class="fa fa-plus"></i>
                     Adicionar
                     </b-btn>
                 </b-col>
               </b-row>
-              <br>
               <b-row>
-                  <b-table v-if="DetalleServicio && DetalleServicio.length" :fields="fields" :per-page="5" :current-page="currentPage" :items="DetalleServicio">
+                  <b-table v-if="DetalleServicio && DetalleServicio.length" class="mt-2" :fields="fields" :per-page="5" :current-page="currentPage" :items="DetalleServicio">
 
                       <template slot="eliminar" slot-scope="data" >
                           <i class="btn btn-danger fa fa-trash" v-on:click="eliminar(data.index)" ></i>
@@ -63,10 +62,10 @@
               </b-row>
 
           </b-card>
-          <b-card class="cards" id="card2">
-             <h3 slot="header" id="cardHeader" >Observaciones generales de recolección</h3>
+          <b-card class="border" header="Primary" header-bg-variant="primary">
+            <h3 slot="header" class="mb-0 encabezado">Observaciones generales de recolección</h3>
             <b-row>
-              <h6 class="text-primary">Observaciones</h6>
+              <h3 class="text-primary">Observaciones</h3>
             </b-row>
             <b-row>
               <b-form-textarea id="textarea1"
@@ -83,77 +82,72 @@
         <b-modal id="modalcrear" ref="Modal" title="Adicionar Registro"
             no-close-on-backdrop
             no-close-on-esc
-            size="lg" >
+            size="lg">
             <div slot="modal-header" class="w-100">
-                    <b-btn class="mt-3 rounded" variant="danger"  @click="hideModal">
-                      <i class="fa fa-times-circle" aria-hidden="true"></i>Cancelar
-                    </b-btn>
-                    <b-btn class="mt-3 float-right rounded" variant="success" v-on:click="ingresarOrden">
-                      <i class="fa fa-floppy-o">  </i> Guardar
-                    </b-btn>
+              <b-btn class="rounded" variant="danger" @click="hideModal">
+                <i class="fa fa-times-circle" aria-hidden="true"></i>&#32;Cancelar
+              </b-btn>
+              <b-btn class="float-right rounded" variant="success" v-on:click="ingresarOrden">
+                <i class="fa fa-floppy-o"></i>&#32;Guardar
+              </b-btn>
             </div>
-                <b-container fluid>
-                <b-row class=" my-1">
-                    <b-col>
-                    <v-select v-model="selectproduct" label="nombre" placeholder="Producto"
-                        :options="productosurl" @input="seleccionarServicio()">
-                    </v-select>
+            <b-container fluid>
+              <b-row class="mb-1">
+                <b-col>
+                <v-select v-model="selectproduct" label="nombre" placeholder="Producto"
+                    :options="productosurl" @input="seleccionarServicio()">
+                </v-select>
 
-                    </b-col>
-                    <b-col>
-                    <v-select v-model="selectservice" label="nombre" placeholder="Servicio"
-                        :disabled="habilitar"
-                        :options="serviciosurl" @input="camposNversion()">
-                    </v-select>
-                    </b-col>
-                </b-row>
+                </b-col>
+                <b-col>
+                <v-select v-model="selectservice" label="nombre" placeholder="Servicio"
+                    :disabled="habilitar"
+                    :options="serviciosurl" @input="camposNversion()">
+                </v-select>
+                </b-col>
+              </b-row>
                 <b-card no-body v-show="selectservice" class="border">
                   <b-tabs card v-model="tabIndex" class="cabecera-tabs">
                     <b-tab title="Información">
-                          <b-row class="my-2">
-                              <b-col>
-                                  <label class="col col-form-label col-form-label-sm text-primary" >Documento de referencia:</label>
-                              </b-col>
-                              <b-col cols="8">
-                                  <b-form-input type="text" class="form-control form-control-sm"
-                                    placeholder=" Factura, remisión, orden de compra..." v-model="detalles.referencia"
-                                    :state="estado.referencia"></b-form-input>
-                              </b-col>
-                          </b-row>
-                          <b-row  v-for="(data,indice) in inputs.campos" class="my-2">
-                              <template v-if="data.type!='select'" >
-                              <template v-if="data.espieza==false">
-                                <b-col  >
-                                    <label  class="col-sm col-form-label col-form-label-sm text-capitalize text-primary" :style="[data.style]" >{{data.nombre}}: </label>
-                                </b-col>
-                                <b-col  cols="8">
-                                    <input class="form-control form-control-sm"  :maxlength="data.maxlength" :type="data.type" :id="data.id" :style="[data.style,validatecampo]" :max="data.max" :min="data.min" :placeholder="data.placeholder" @keyup="Presiono(indice)"   required>
-                                </b-col>
-                              </template>
-                              </template>
-                          </b-row>
-                          <b-row v-show="selectservice" class="my-2">
-                            <b-col>
-                              <label  class="col-sm col-form-label col-form-label-sm text-capitalize text-primary" > Contenido </label>
-                            </b-col>
-                            <b-col cols="8">
-                              <b-form-input id="textarea1" type="text"
-                                v-model="detalles.contenido"
-                                class="form-control-sm"
-                                placeholder="Medicamentos, facturas, mercancías especiales, ...etc">
-                              </b-form-input>
-                            </b-col>
-                          </b-row>
-                          <b-form-row v-show="selectservice">
-                          <b-col>
-                          <b-form-textarea id="textarea1"
-                              v-model="detalles.observaciones"
-                              class="form-control-sm"
-                              placeholder="Ingrese las instrucciones a tener en cuenta para entrega, recolección y transporte."
-                              :rows="3"
-                              :max-rows="6">
-                          </b-form-textarea>
-                          </b-col>
+                      <b-row class="my-2">
+                        <b-col md="4">
+                          <h5 class="text-primary mt-2">Documento de referencia:</h5>
+                        </b-col>
+                        <b-col md="8">
+                          <b-form-input type="text" class="form-control form-control-sm"
+                            placeholder=" Factura, remisión, orden de compra..." v-model="detalles.referencia"
+                            :state="estado.referencia"/>
+                        </b-col>
+                      </b-row>
+                      <b-row v-for="(data,indice) in inputs.campos" :key="indice" v-if="data.type != 'select' && data.espieza == false" class="my-2">
+                        <b-col>
+                          <h5 class="text-primary mt-2">{{data.nombre}}:</h5>
+                        </b-col>
+                        <b-col  cols="8">
+                          <input class="form-control form-control-sm"  :maxlength="data.maxlength" :type="data.type" :id="data.id" :style="[data.style,validatecampo]" :max="data.max" :min="data.min" :placeholder="data.placeholder" @keyup="Presiono(indice)"   required>
+                        </b-col>
+                      </b-row>
+                      <b-row v-show="selectservice" class="my-2">
+                        <b-col>
+                          <h5 class="text-primary mt-2">Contenido:</h5>
+                        </b-col>
+                        <b-col cols="8">
+                          <b-form-input id="textarea1" type="text"
+                            v-model="detalles.contenido"
+                            class="form-control-sm"
+                            placeholder="Medicamentos, facturas, mercancías especiales, ...etc">
+                          </b-form-input>
+                        </b-col>
+                      </b-row>
+                      <b-form-textarea id="textarea1"
+                          v-model="detalles.observaciones"
+                          class="form-control-sm"
+                          placeholder="Ingrese las instrucciones a tener en cuenta para entrega, recolección y transporte."
+                          :rows="3"
+                          :max-rows="6"/>
+                      <b-form-row v-show="selectservice">
+                        <b-col>
+                        </b-col>
                       </b-form-row>
                     </b-tab>
                     <b-tab title="Detalle" :disabled="tabdinamico">
@@ -230,128 +224,116 @@
                                     </b-row>
                     </b-tab>
                     <b-tab title="Destinatario">
-                              <b-form-row v-show="selectservice" class="my-1">
-                                <b-col>
-                                    <label  class="col-sm col-form-label col-form-label-sm text-primary">Nombre: </label>
-                                </b-col>
-                                <b-col cols="9">
-                                      <v-select maxHeight="500px" label="nombre" :filterable="false" v-model=nombre_remitente
-                                        placeholder="Remitente" :options="optionsremitentes"
-                                          @input="Seleccionado" v-show="MostrarFiltro"
-                                          @search="onSearch">
-                                          <template slot="no-options" >
-                                            <p >Nombre del destinatario..</p>
-                                          </template>
-                                          <template slot="option" slot-scope="option">
-                                            <div class="d-center">
-                                              {{ option.nombre }}
-                                              </div>
-                                          </template>
-                                          <template slot="selected-option" scope="option">
-                                            <div class="selected d-center">
-                                              {{ option.nombre }}
-                                            </div>
-                                          </template>
+                      <b-form-row v-show="selectservice" class="my-1">
+                        <b-col md="4">
+                          <h5 class="text-primary font-weight-normal mt-2">Nombre:</h5>
+                        </b-col>
+                        <b-col md="8">
+                              <v-select maxHeight="500px" label="nombre" :filterable="false" v-model=nombre_remitente
+                                placeholder="Nombre" :options="optionsremitentes"
+                                  @input="Seleccionado" v-show="MostrarFiltro"
+                                  @search="onSearch">
+                                  <template slot="no-options" >
+                                    <p >Nombre del destinatario..</p>
+                                  </template>
+                                  <template slot="option" slot-scope="option">
+                                    <div class="d-center">
+                                      {{ option.nombre }}
+                                      </div>
+                                  </template>
+                                  <template slot="selected-option" scope="option">
+                                    <div class="selected d-center">
+                                      {{ option.nombre }}
+                                    </div>
+                                  </template>
 
-                                        </v-select>
-                                </b-col>
-                              </b-form-row>
-                            <!--
-                              <b-form-row v-show="selectservice&&mostrardestinatario&&monstrarNombre" class="my-1">
-                                  <b-col>
-                                      <label  class="col-sm col-form-label col-form-label-sm text-primary"> Nombre: </label>
-                                  </b-col>
-                                  <b-col  cols="9">
-                                      <b-form-input type="text" class="form-control form-control-sm"  placeholder="Nombre"
-                                      v-model="detalles.destinatario.nombre"
+                                </v-select>
+                        </b-col>
+                      </b-form-row>
+                      <!--
+                        <b-form-row v-show="selectservice&&mostrardestinatario&&monstrarNombre" class="my-1">
+                            <b-col>
+                                <label  class="col-sm col-form-label col-form-label-sm text-primary"> Nombre: </label>
+                            </b-col>
+                            <b-col  cols="9">
+                                <b-form-input type="text" class="form-control form-control-sm"  placeholder="Nombre"
+                                v-model="detalles.destinatario.nombre"
 
-                                      :state="null"
-                                      title="Num. Identificacion"></b-form-input>
-                                  </b-col>
-                              </b-form-row>
+                                :state="null"
+                                title="Num. Identificacion"></b-form-input>
+                            </b-col>
+                        </b-form-row>
+                      -->
+                      <b-form-row v-show="selectservice&&mostrardestinatario" class="my-1">
+                        <b-col md="4">
+                          <h5 class="text-primary font-weight-normal mt-2">Identificación:</h5>
+                        </b-col>
+                        <b-col md="8">
+                            <b-form-input type="number" class="form-control form-control-sm"  placeholder="Identificación"
+                              v-model="detalles.destinatario.numero_identificacion"
+                              v-b-popover.hover="'Se debe diligenciar sin puntos, en caso de NIT sin número de validación, ni guión'"
+                              title="Número de identificación"/>
+                            <!--<input type="text" class="form-control form-control-sm"  placeholder="Nombre" v-model="detalles.destinatario.nombre">
+                              @keyup.enter.tab.native="buscar('nuevo')"
+                            @keydown.tab.native="buscar('nuevo')"
                             -->
-                            <b-form-row v-show="selectservice&&mostrardestinatario" class="my-1">
-                                <b-col>
-                                    <label  class="col-sm col-form-label col-form-label-sm text-primary"> Identificación: </label>
-                                </b-col>
-                                <b-col  cols="9">
-                                    <b-form-input type="number" class="form-control form-control-sm"  placeholder="Identificación"
-                                    v-model="detalles.destinatario.numero_identificacion"
+                        </b-col>
+                      </b-form-row>
+                      <!-- {{nombre_remitente}} -->
+                      <b-form-row v-show="selectservice&&mostrardestinatario " >
+                        <b-col md="4">
+                          <h5 class="text-primary font-weight-normal mt-2">Dirección:</h5>
+                        </b-col>
+                        <b-col md="8">
+                          <b-form-input v-if="GeoReferenciacion==true"
+                            ref="focusDireccion"
+                            id="direccionGoogle2"
+                            type="text"
+                            placeholder="Dirección"
+                            required
+                            maxlength="100"
+                            @change="initAutocomplete"
+                            @input="initAutocomplete"
+                            v-model="detalles.destinatario.direccion"
+                            class="form-control form-control-sm"
+                              :state="estado.direccion"/>
+                            <b-form-input v-if="GeoReferenciacion==false"
+                            ref="focusDireccion"
+                              id="direccion"
+                                  type="text"
+                              placeholder="Dirección"
+                              required
+                              maxlength="100"
 
-                                     v-b-popover.hover="'Se debe diligenciar sin puntos, en caso de NIT sin número de validación, ni guión'"
-                                    title="Número de identificación"></b-form-input>
-                                    <!--<input type="text" class="form-control form-control-sm"  placeholder="Nombre" v-model="detalles.destinatario.nombre">
-                                     @keyup.enter.tab.native="buscar('nuevo')"
-                                    @keydown.tab.native="buscar('nuevo')"
-                                    -->
-                                </b-col>
-                            </b-form-row>
-                            <!-- {{nombre_remitente}} -->
-                            <b-form-row v-show="selectservice&&mostrardestinatario " >
+                              v-model="detalles.destinatario.direccion"
+                              class="form-control form-control-sm"
+                                :state="estado.direccion"
+                            />
+                              <!--
+                                  @input="localizar()"
+                                @keypress="localizar()"
+                                          v-model="detalles.destinatario.direccion"
 
+                                class="form-control form-control-sm"
+                                :state="estado.direccion"
+                                @input="localizar()"
+                                @keypress="localizar()"
+                              @keyup="algo()"
+                              -->
 
+                        </b-col>
 
-                                <b-col>
-                                    <label  class="col-sm col-form-label col-form-label-sm text-primary">Dirección: </label>
-                                </b-col>
-                                <b-col  cols="9">
-                                    <b-form-input v-if="GeoReferenciacion==true"
-                                    ref="focusDireccion"
-                                      id="direccionGoogle2"
-                                          type="text"
-                                     placeholder="Dirección"
-                                     required
-                                     maxlength="100"
-                                     @change="initAutocomplete"
-                                     @input="initAutocomplete"
-
-                                     v-model="detalles.destinatario.direccion"
-                                     class="form-control form-control-sm"
-                                        :state="estado.direccion"
-
-                                    > 
-                                    </b-form-input>
-                                    <b-form-input v-if="GeoReferenciacion==false"
-                                    ref="focusDireccion"
-                                      id="direccion" 
-                                          type="text"
-                                     placeholder="Dirección"
-                                     required
-                                     maxlength="100"
-                                     
-                                     v-model="detalles.destinatario.direccion"
-                                     class="form-control form-control-sm"
-                                        :state="estado.direccion"
-
-                                    > 
-                                    </b-form-input>
-                                     <!--
-                                         @input="localizar()"
-                                        @keypress="localizar()"
-                                                  v-model="detalles.destinatario.direccion"
-
-                                        class="form-control form-control-sm"
-                                        :state="estado.direccion"
-                                        @input="localizar()"
-                                        @keypress="localizar()"
-                                     @keyup="algo()"
-                                     -->
-
-                                </b-col>
-
-                            </b-form-row>
-                            <b-form-row v-show="selectservice&&mostrardestinatario" class="my-1">
-                                <b-col>
-                                    <label  class="col-sm col-form-label col-form-label-sm text-primary">Teléfono: </label>
-                                </b-col>
-                                <b-col  cols="9">
-
-                                    <input type="text" :style="validatecampoTel"  class="form-control form-control-sm"
-                                    id="telefono" @keyup="numeros(this)" placeholder="Teléfono"
-                                     v-model="detalles.destinatario.telefono">
-
-                                </b-col>
-                            </b-form-row>
+                      </b-form-row>
+                        <b-form-row v-show="selectservice&&mostrardestinatario" class="my-1">
+                          <b-col md="4">
+                            <h5 class="text-primary font-weight-normal mt-2">Teléfono:</h5>
+                          </b-col>
+                          <b-col md="8">
+                            <input type="text" :style="validatecampoTel"  class="form-control form-control-sm"
+                            id="telefono" @keyup="numeros(this)" placeholder="Teléfono"
+                              v-model="detalles.destinatario.telefono">
+                          </b-col>
+                        </b-form-row>
                     </b-tab>
                   </b-tabs>
                   <b-card-footer>
@@ -528,7 +510,7 @@
                                 </b-col>
                                 <b-col cols="9">
                                       <v-select maxHeight="500px" label="nombre" :filterable="false" v-model=destinatarioED
-                                        placeholder="Remitente" :options="optionsremitentes"
+                                        placeholder="Nombre" :options="optionsremitentes"
                                           @input="SeleccionadoED"
                                           @search="onSearchED">
                                           <template slot="no-options">
@@ -585,18 +567,18 @@
                                     <label  class="col-sm col-form-label col-form-label-sm">Dirección: </label>
                                 </b-col>
                                 <b-col>
-                                <b-form-input 
+                                <b-form-input
                                   v-if="GeoReferenciacion==true"
                                   id="direccionGoogle3" ref="focusDireccionED" type="text" class="form-control form-control-sm"  placeholder="Direccion" v-model="detalleseditar.destinatario.direccion"
                                     :state="estado.direccion"
 
                                     ></b-form-input>
-                                <b-form-input 
+                                <b-form-input
                                   v-if="GeoReferenciacion==false"
-                                  id="direccionGoogle" ref="focusDireccionED" type="text" class="form-control form-control-sm" 
+                                  id="direccionGoogle" ref="focusDireccionED" type="text" class="form-control form-control-sm"
                                    placeholder="Direccion sin google"
                                    v-model="detalleseditar.destinatario.direccion"
-                                    :state="estado.direccion"  
+                                    :state="estado.direccion"
                                     ></b-form-input>
                                     <!--
                                     <input type="text" class="form-control form-control-sm" id="editardire" placeholder="Direccion" v-model="detalleseditar.destinatario.direccion">
@@ -2146,7 +2128,7 @@ export default {
 
         swal("Oops...", "Falto completar algun campo", "error");
       } else {
-        
+
         this.objeto.objetoUnidades;
         this.objeto.objetoUnidades = this.itemsdinamicos;
         var servicioslocal = this.selectservicio;
@@ -2157,7 +2139,7 @@ export default {
         console.log("----objeto----");
         console.log(this.objeto);
         //CMBIOS ASIGNACION TRAYECTO AUTOMATICA
-        var desti= detalleslocal.destinatario                
+        var desti= detalleslocal.destinatario
         var informacion = detalleslocal.infor
         var produc= productoslocal._id
         var serv = servicioslocal._id
@@ -2166,7 +2148,7 @@ export default {
         var llavesDesti
         var respuestatrayectos
         if(desti.propiedadesDinamicas){
-                    
+
                     llavesInfor=Object.keys(informacion)
                     llavesDesti=Object.keys(desti.propiedadesDinamicas)
                     llavesInfor.forEach(infor => {
@@ -2176,17 +2158,17 @@ export default {
                                     eval('informacion.'+destinatario+'='+'desti.propiedadesDinamicas.'+destinatario)
                                     this.axios.get(urlservicios+"estructuraf/" +produc +"/" +serv)
                                         .then(response=>{
-                                         
+
                                             estructura=response.data
                                             estructura.campos.forEach(element => {
-                                        
+
                                                 if(element.vmodel==destinatario){
                                                     this.axios.get(element.urlobjeto+test.id_OperadorLogistico._id)
                                                         .then(responseurl =>{
                                                             console.log(responseurl);
                                                             respuestatrayectos=responseurl.data
                                                             respuestatrayectos.forEach(elementosT => {
-                                                                
+
                                                                 if(eval('informacion.'+destinatario)==elementosT._id){
                                                                     informacion.trayectoobj={},
                                                                     informacion.trayectoobj={
@@ -2201,7 +2183,7 @@ export default {
                                             });
                                         });
                                 }
-                                
+
                             }
                             else{
                                 console.log("no son iguales");
@@ -2210,7 +2192,7 @@ export default {
                     });
                     console.log("itemmm");
                     console.log();
-                    
+
                 }
                 else{
                     console.log("no existe");
@@ -2666,15 +2648,8 @@ export default {
 </script>
 
 <style>
-.cabecera-tabs > .card-header {
-  background-color: #ebeaea !important;
-}
-.card-header {
-  height: auto !important;
-}
 #cardHeader{
   background-color: #ffffff !important;
-
 }
 #card1 .card-header {
   background-color: #ffffff !important;
@@ -2715,9 +2690,6 @@ export default {
 .prueba {
   display: inline-table;
   margin-left: 15px;
-}
-.card {
-  margin-top: 2%;
 }
 .cards {
   box-shadow: 2px 2px 8px 4px rgba(0, 0, 0, 0.1);

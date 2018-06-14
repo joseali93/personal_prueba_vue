@@ -46,7 +46,7 @@
                 <template slot="id_movilizado" slot-scope="data">
                         {{data.item.id_movilizado}}
                 </template>
-               
+
                  </b-table>
             </b-col>
         </b-row>
@@ -69,21 +69,21 @@ export default {
                 {key:'unidades', label: 'Unidades'},
                 {key:'peso', label: 'Peso'},
             ],
-           
+
         }
     },
     methods:{
         volver()
         {
             console.log("entro a volver");
-            
+
             var ocultar=true
             setTimeout(() => {
                 bus.$emit('ocultar', {
-                    ocultar 
+                    ocultar
                 })
                 }, )
-            
+
             this.$router.replace('/inicio/manifiestos/resultado')
         }
     },
@@ -91,7 +91,7 @@ export default {
         var load=true
                     setTimeout(() => {
                         bus.$emit('load', {
-                            load 
+                            load
                         })
                 }, )
         bus.$on('detallemanifiesto', function (userObject) {
@@ -105,7 +105,7 @@ export default {
        var load=false
                     setTimeout(() => {
                         bus.$emit('load', {
-                            load 
+                            load
                         })
                 }, )
     }
