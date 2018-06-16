@@ -6,7 +6,15 @@
 
 <script>
 export default {
-
+    props: {
+        message: {
+            type: String,
+            required: false
+        }
+    },
+    mounted() {
+        console.log(this.message);
+    }
 }
 </script>
 

@@ -77,7 +77,7 @@
 
           <b-form-group class="text-primary col-md-6" >
             <h3 class="text-primary">Rango de fechas</h3>
-            <date-picker class="w-100" v-model="time1" range lang="es" :shortcuts="shortcuts" :confirm="true">
+            <date-picker class="w-100" v-model="time1" range lang="es" :shortcuts="shortcuts" :confirm="true" @confirm="dateSelected">
 
             </date-picker>
 
@@ -140,6 +140,7 @@ import {bus} from "../main"
 import {urlservicios} from '../main'
 import Preload from '../componentes/preload.vue'
 import moment from 'moment'
+import { getDatesRange } from './utils/datesRange.js';
 
 export default {
 
@@ -583,53 +584,56 @@ export default {
 
 
 
-        }
-
+        },
+      dateSelected(dateList = null) {
+        this.time1 = (getDatesRange(dateList));
+      }
     },
     updated: function () {
-        bus.$on('ocultar', function (userObject) {
-
+      bus.$on('ocultar', function (userObject) {
         this.ocultar = userObject.ocultar
       }.bind(this))
     },
     mounted: function () {
-        var fecha=new Date();
-        var _this=this
-        var d =new Date()
-        var year = d.getFullYear()
-        var month = d.getMonth()
-        var day = d.getDate()
-        var ant = new Date()
-        var monthante = ant.getMonth()-1
-        var dayante =ant.getDate()
-        d.setFullYear(year,month,day)
-        ant.setFullYear(year,monthante,dayante)
+      const getDates = (getDatesRange());
+      const startOfToday = (getDates[0]);
+      const endOfToday = (getDates[1]);
 
-       var mana=new Date(fecha.getTime() + 24*60*60*1000);
+      const fecha = (new Date());
+      // var d =new Date()
+      // var year = d.getFullYear()
+      // var month = d.getMonth()
+      // var day = d.getDate()
+      // var ant = new Date()
+      // var monthante = ant.getMonth()-1
+      // var dayante =ant.getDate()
+      // d.setFullYear(year,month,day)
+      // ant.setFullYear(year,monthante,dayante)
+      // var mana=new Date(instance.getTime() + 24*60*60*1000);
 
-
-        var HaceUnaSemana=new Date(fecha.getTime() - (24*60*60*1000)*7);
-        var HaceUnaSemanaDia = HaceUnaSemana.getDate()
-        var HaceUnaSemanaMes = HaceUnaSemana.getMonth()
-        var HaceUnaSemanaYear = HaceUnaSemana.getFullYear()
-        HaceUnaSemana.setFullYear(HaceUnaSemanaYear,HaceUnaSemanaMes,HaceUnaSemanaDia)
-        for(var p=0;p<this.shortcuts.length;p++){
-            if(p==1)
-            {
-                this.shortcuts[p].start=HaceUnaSemana
-                this.shortcuts[p].end=d
-            }
-            if(p==2)
-            {
-                this.shortcuts[p].start=ant
-                this.shortcuts[p].end=d
-            }
+      var HaceUnaSemana=new Date(fecha.getTime() - (24*60*60*1000)*7);
+      var HaceUnaSemanaDia = HaceUnaSemana.getDate()
+      var HaceUnaSemanaMes = HaceUnaSemana.getMonth()
+      var HaceUnaSemanaYear = HaceUnaSemana.getFullYear()
+      HaceUnaSemana.setFullYear(HaceUnaSemanaYear,HaceUnaSemanaMes,HaceUnaSemanaDia)
+      for(var p = 0;p < this.shortcuts.length; p++) {
+        if(p==1)
+        {
+          this.shortcuts[p].start = HaceUnaSemana;
+          this.shortcuts[p].end = endOfToday;
         }
-        //this.shortcuts[3].start=ant
-        //this.shortcuts[3].end=d
-
-        this.time1[1]= mana
-        this.time1[0] =ant
+        if(p==2)
+        {
+          this.shortcuts[p].start = startOfToday;
+          this.shortcuts[p].end = endOfToday;
+        }
+      }
+      // this.shortcuts[3].start = startOfToday;
+      // this.shortcuts[3].end = endOfToday;
+      this.time1 = [
+        startOfToday,
+        endOfToday
+      ];
         var concatday
         var bandera=true
 
@@ -689,7 +693,6 @@ export default {
                 this.clientes=response.data
                 this.selectedCL=Object.assign({},this.clientes[0])
                 //this.clientes.unshift(vacio)
-
             }).catch(function(error) {
              var load = false;
                 setTimeout(() => {

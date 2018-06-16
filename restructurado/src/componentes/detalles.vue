@@ -4,6 +4,8 @@
       <i class="fa fa-chevron-left" aria-hidden="true"></i>
       Volver
     </b-btn>
+    ------
+    {{id_cliente_local}}
     <b-card class="border my-2" header="Primary" header-bg-variant="primary">
       <div slot="header" class="w-100">
         <strong class="float-left ">Información de la orden de servicio</strong>
@@ -168,9 +170,10 @@
             :disabled="selec_disable"
             @onChange="pruebacambio"
             @input="updatecourier()"
-            @search="onSearch"
+            
             :resetOnOptionsChange="true"
           ></v-select>
+          
         </b-col>
       </b-row>
       <b-row>
@@ -332,6 +335,7 @@ import { CreateSocket } from './utils/socket'
 export default {
   data() {
     return {
+      courier_disable:false,
       validacionsockets:'',
       socket: null,
       medios_disable:false,
@@ -399,18 +403,18 @@ export default {
     },
     updatecourier(){
        var login = localStorage.getItem("storedData");
-    var infologin = JSON.parse(login);
-    if(infologin.id_OperadorLogistico.confirmacionSocket==true){
-        this.socket.on('CouriersActivos', (connectionList) => {
-            console.log(connectionList);
+      var infologin = JSON.parse(login);
+      if(infologin.id_OperadorLogistico.confirmacionSocket==true){
+          this.socket.on('CouriersActivos', (connectionList) => {
+              console.log(connectionList);
 
-            this.curiers=connectionList
-          });
-    }
+              this.curiers=connectionList
+            });
+      }
 
     },
     onSearch(search) {
-
+      console.log("on search");
         //loading(true);
       this.search(search, this);
 
@@ -419,6 +423,7 @@ export default {
   search(search){
     console.log(search);
     console.log("emito en searchs");
+    
     this.socket.on('CouriersActivos', (connectionList) => {
       console.log("emitio correcto");
                 //console.log(connectionList);
@@ -517,51 +522,51 @@ export default {
           var nombre;
           if(infologin.id_OperadorLogistico.confirmacionSocket==false){
             var load = true;
-          setTimeout(() => {
-            bus.$emit("load", {
-              load
+            setTimeout(() => {
+              bus.$emit("load", {
+                load
+              });
             });
-          });
 
 
-          this.axios
-            .get(
-              urlservicios +
-                "UsuariosCurier/" +
-                infologin.id_OperadorLogistico._id +
-                "/" +
-                this.model_medios._id
-            )
-            .then(response => {
-              this.curiers = response.data;
-              this.curiers.forEach(element2 => {
-                nombre = element2.nombre;
-                element2.nombre = nombre + " " + element2.apellido;
-                if (element2._id == this.selected_curier) {
-                  this.selected_curier = element2;
-                }
-              });
-              var load = false;
-              setTimeout(() => {
-                bus.$emit("load", {
-                  load
+            this.axios
+              .get(
+                urlservicios +
+                  "UsuariosCurier/" +
+                  infologin.id_OperadorLogistico._id +
+                  "/" +
+                  this.model_medios._id
+              )
+              .then(response => {
+                this.curiers = response.data;
+                this.curiers.forEach(element2 => {
+                  nombre = element2.nombre;
+                  element2.nombre = nombre + " " + element2.apellido;
+                  if (element2._id == this.selected_curier) {
+                    this.selected_curier = element2;
+                  }
                 });
-              });
-              //this.selec_disable=false
-            })
-            .catch(function(error) {
-              var load = false;
-              setTimeout(() => {
-                bus.$emit("load", {
-                  load
+                var load = false;
+                setTimeout(() => {
+                  bus.$emit("load", {
+                    load
+                  });
                 });
+                //this.selec_disable=false
+              })
+              .catch(function(error) {
+                var load = false;
+                setTimeout(() => {
+                  bus.$emit("load", {
+                    load
+                  });
+                });
+                swal(
+                  "Se presento un problema",
+                  "Intente nuevamente, por favor",
+                  "warning"
+                );
               });
-              swal(
-                "Se presento un problema",
-                "Intente nuevamente, por favor",
-                "warning"
-              );
-            });
           }
           else{
             console.log("emito");
@@ -571,9 +576,10 @@ export default {
             medio_transporte: this.model_medios._id,
             descripcion: 'orden'
           });
-
+            //this.curiers=
           this.socket.on('CouriersActivos', (connectionList) => {
-            //console.log(connectionList);
+            console.log("conexiones ");
+            console.log(connectionList);
             this.curiers=connectionList
           });
           }
@@ -963,7 +969,8 @@ export default {
                 load
               });
             });
-             }, 35000);
+            }, 35000)
+            // }, 35000);
             //----------------------------
             var load = true;
             setTimeout(() => {
@@ -1040,6 +1047,8 @@ export default {
 
     },
     asignar(seleccionado) {
+      console.log("tengo id cliente");
+      console.log(this.id_cliente_local);
       if (this.id_cliente_local != null) {
         var ocultar = true;
         var eliminar = this.vali;
@@ -1323,7 +1332,6 @@ export default {
     },
     asignarfinal(data){
       console.log("entro a asignar final");
-      console.log(data);
       if(data.mensaje.respuesta=="true"){
         this.currentUser.estado='Orden De Servicio Asignada'
         var obj = {
@@ -1371,7 +1379,7 @@ export default {
       else{
         console.log("no hago nada");
         swal(
-          'El courier ha rechazado la Orden',
+          data.mensaje.message,
           '',
           'warning'
         )
@@ -1448,8 +1456,8 @@ export default {
     var login = localStorage.getItem("storedData");
     var infologin = JSON.parse(login);
     var id_cliente;
-
-    if (infologin.id_cliente == undefined || infologin.id_cliente == null) {
+  
+    if (infologin.id_cliente) {
       this.selec_disable = false;
       this.id_cliente_local = infologin.id_cliente;
     }
@@ -1518,13 +1526,29 @@ export default {
         //console.log('conectado!!');
         //console.log(this.socket.instance.id);
       })
+      
+      this.socket.on('ListaConexiones', (data) => {
+        if(this.model_medios!=undefined&&this.model_medios!='undefined'&&
+            this.model_medios!=null){
+            this.socket.emit('MedioCourier', {
+                id_operadorlogistico:infologin.id_OperadorLogistico._id,
+                id_cliente:infologin._id,
+                medio_transporte: this.model_medios._id,
+                descripcion: 'orden'
+            });
+        }
+
+      })
       this.socket.on('messages', (data) => {
-        clearTimeout(this.validacionsockets)
-        //$.cbSpinner("hide");
-        console.log('------------------------------------');
+        
+        console.log('-----------servicio juan-------------------------');
         console.log(data);
         console.log('------------------------------------');
+        clearTimeout(this.validacionsockets)
+        //$.cbSpinner("hide");
+       
         this.asignarfinal(data)
+
         //this.message = (data.mensaje);
         var load = false;
           setTimeout(() => {
@@ -1535,8 +1559,7 @@ export default {
           });
       });
     }
-    console.log("----");
-    console.log(this.currentUser);
+    
 
 
   },

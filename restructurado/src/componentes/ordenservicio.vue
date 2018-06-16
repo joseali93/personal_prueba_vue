@@ -72,7 +72,8 @@
                   v-model="observacionesGeneral"
                   placeholder="Instrucciones a tener en cuenta para recolección"
                   :rows="3"
-                  :max-rows="6">
+                  :max-rows="6"
+                  maxlength="2000">
               </b-form-textarea>
             </b-row>
           </b-card>
@@ -135,7 +136,8 @@
                           <b-form-input id="textarea1" type="text"
                             v-model="detalles.contenido"
                             class="form-control-sm"
-                            placeholder="Medicamentos, facturas, mercancías especiales, ...etc">
+                            placeholder="Medicamentos, facturas, mercancías especiales, ...etc"
+                            maxlength="50">
                           </b-form-input>
                         </b-col>
                       </b-row>
@@ -441,7 +443,8 @@
                                       v-model="detalleseditar.contenido"
                                       placeholder="Ingrese el contenido"
                                       :rows="3"
-                                      :max-rows="6">
+                                      :max-rows="6"
+                                      maxlength="50">
                                   </b-form-textarea>
                               </b-row>
                         </b-tab>
@@ -1468,7 +1471,7 @@ export default {
           border: "1px solid  #ff8080"
         };
         return (document.getElementById("telefonoedit").value = "");
-      } else if (a.length >= 9) {
+      } else if (a.length >= 11) {
         // if no is more then the value
         swal("Oops...", "Maximo 10 digitos!", "error");
         this.validatecampoTel = {
@@ -1488,7 +1491,7 @@ export default {
           border: "1px solid  #ff8080"
         };
         return (document.getElementById("telefono").value = "");
-      } else if (a.length >= 9) {
+      } else if (a.length >= 11) {
         // if no is more then the value
         swal("Oops...", "Maximo 10 digitos!", "error");
         this.validatecampoTel = {

@@ -17,9 +17,12 @@
             <template slot="fecha_creacion" slot-scope="data">
                 {{data.item.fecha_creacion | formatdate}}
             </template>
-            <template slot="actualizar" slot-scope="data">
+            <template slot="fecha_ultima" slot-scope="data">
+                {{data.item.fecha_creacion | formatdate}}
+            </template>
+            <template slot="detalles" slot-scope="data">
 
-                <b-button variant="success" class="fa fa-pencil-square-o"  @click="actualizar(data)"></b-button>
+                <b-button variant="success" class="fa fa-info"  @click="actualizar(data)"></b-button>
 
                 <!--<router-link  to="/inicio/consultar"  tag="button" class-active="active" class="btn btn-warning fa fa-cogs"></router-link>
                 -->
@@ -58,8 +61,10 @@ export default {
                 'Cancelar',
                 { key: 'id', label:'# Orden de Servicio', sortable: true },
                 { key: 'fecha_creacion',label:'Fecha creación orden', sortable: false },
+                { key: 'fecha_ultima',label:'Fecha creación orden', sortable: false },
+   
                 'estado',
-                'actualizar',
+                'detalles',
 
             ],
         }
@@ -421,7 +426,7 @@ export default {
         actualizar(inde){
             var test2 = localStorage.getItem("storedData");
             var test = JSON.parse(test2);
-            console.log(inde);
+            //console.log(inde);
             var ocultar=false
             var inputstotales=[]
              for(var a=0;a<inde.item.detalle.length;a++)
@@ -435,6 +440,7 @@ export default {
                 var llavesInfor
                 var llavesDesti
                 var respuestatrayectos
+                /*
                 if(desti.propiedadesDinamicas){
 
                     llavesInfor=Object.keys(informacion)
@@ -484,7 +490,7 @@ export default {
                 else{
                     console.log("no existe");
                 }
-
+                */
 
 
                 var load = true;

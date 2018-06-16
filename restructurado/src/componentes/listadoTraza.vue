@@ -1,10 +1,13 @@
 <template>
-    <b-card v-if="consulta.length" class="mt-2">
+    <b-card v-if="consulta.length" class="mt-2" header="Primary" header-bg-variant="primary">
         <h3 slot="header" class="mb-0 encabezado">Lista de detalles</h3>
             <b-row>
                 <b-table  :items="consulta" :fields="fields"
                 :per-page="5" :current-page="currentPage" :bordered="true"
                 thead-class=text-center tbody-class="text-center text-capitalize">
+                    <template slot="cliente" slot-scope="data">
+                        {{data.item.cliente.nombre}}
+                    </template>
                     <template slot="id" slot-scope="data">
                         {{data.item.consec}}
                     </template>
@@ -833,8 +836,10 @@ export default {
             consu: {},
             existe: true,
             fields: [
+                
                 { key: 'id', sortable: true , label: 'N° Orden de Servicio'},
                 {key:'nmovilizado',  label: 'N° Movilizado'},
+                { key: 'cliente' , label: 'Cliente'},
                 {key:'nombre_proceso', label: 'Estado'},
                 {key:'fecha_creacion', label: 'Fecha Ultima Actualización'},
                 {key:'productoslocal', label: 'Producto'},

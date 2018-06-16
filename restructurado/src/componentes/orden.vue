@@ -347,6 +347,7 @@ export default {
   },
 
   methods: {
+
     initAutocomplete() {
       var longi;
       var latit;
@@ -432,10 +433,9 @@ export default {
           this.remit.numero_identificacion = "";
           this.remit.telefono = "";
         } else {
-          console.log("entro al else");
           this.remit = Object.assign({}, this.remitente);
           this.$nextTick(() => {
-            this.$refs.focusRemitente.focus();
+            //this.$refs.focusRemitente.focus();
           });
           //this.remitente=Object.assign({}, this.remitente);
         }
@@ -483,7 +483,6 @@ export default {
 
           }.bind(this), 345);
         }else{
-          console.log("entro al search con local");
           //this.remitente=remijson.nombre
           this.optionsdestinatarios=[]
           setTimeout(function(){
@@ -491,7 +490,6 @@ export default {
           .then(response => {
             if(response.data.destinatarios.length==0)
             {
-              console.log("no tengo destinatarios blanqueo");
               this.optionsdestinatarios=[]
               localStorage.removeItem("remitente");
               //this.remitente={}
@@ -962,15 +960,13 @@ export default {
               });
             });
         } else {
-          console.log("actualizo");
-          console.log(objetoremitente);
+         
           this.axios
             .post(
               urlservicios + "ActualizarDestinatario/" +  this.remit._id,
               objetoremitente
             )
             .then(response => {
-              console.log(response);
               var load = false;
               setTimeout(() => {
                 bus.$emit("load", {
@@ -980,7 +976,6 @@ export default {
               this.$router.replace("/inicio/ordenservicio");
             })
             .catch(function(error) {
-              console.log(error);
             });
         }
         /*
