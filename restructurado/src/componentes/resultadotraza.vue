@@ -6,7 +6,7 @@
                     Volver
                 </b-btn>
 
-        <b-card fluid class="mb-2 borderC">
+        <b-card class="border my-2" header="Primary" header-bg-variant="primary">
                <div slot="header" class="w-100">
                     <strong class="float-left ">Información de Remitente </strong>
                 </div>
@@ -32,7 +32,7 @@
                     </b-col>
                 </b-row>
         </b-card>
-        <b-card fluid    class="mb-2 borderC"  >
+        <b-card class="border my-2" header="Primary" header-bg-variant="primary">
              <div slot="header" class="w-100">
                     <strong class="float-left ">Información de Destinatario </strong>
                 </div>
@@ -60,11 +60,11 @@
                 </b-row>
         </b-card>
 
-            <b-card fluid    class="mb-2 borderC"   >
+        <b-card class="border my-2" header="Primary" header-bg-variant="primary">
                 <div slot="header" class="w-100">
                     <strong class="float-left ">Detalle  Movilizado</strong>
                 </div>
-        <b-col >
+        <b-col>
         <b-row>
                 <b-col>
                     <h3 class="text-primary">Numero Orden de Servicio:</h3>
@@ -141,7 +141,7 @@
 
         </b-col>
             </b-card>
-  <b-card fluid    class="mb-2 borderC"   >
+  <b-card class="border my-2" header="Primary" header-bg-variant="primary">
                 <div slot="header" class="w-100">
                     <strong class="float-left ">Seguimiento del Detalle:</strong>
                 </div>
@@ -254,7 +254,7 @@
                 Enviar Correo
                 </b-btn>
                 <b-collapse class="mt-2" id="todo">
-                            <b-card>
+                            <b-card class="border">
                                  <b-form inline>
                                 <b-form-input v-model="emailT"
                                     type="email"
@@ -275,7 +275,7 @@
             data-toggle="modal" lazy>
             <b-container>
                 <template v-for="(data,indice) in imgmodal.imagenes">
-                    <b-card no-body class="mb-1">
+                    <b-card no-body class="mb-1 border">
                         <b-card-header header-tag="header" class="p-1" role="tab">
                             <b-row>
                                 <b-col cols="8">
@@ -302,7 +302,7 @@
                             </b-card-body>
                         </b-collapse>
                         <b-collapse class="mt-2" :id="data.email">
-                            <b-card>
+                            <b-card class="border">
                                  <b-form inline>
                                 <b-form-input v-model="email"
                                     type="email"
@@ -322,7 +322,7 @@
                 Enviar Correo
                 </b-btn>
                 <b-collapse class="mt-2" id="todo">
-                            <b-card>
+                            <b-card class="border">
                                  <b-form inline>
                                 <b-form-input v-model="emailT"
                                     type="email"

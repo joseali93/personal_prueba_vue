@@ -12,7 +12,7 @@
       </div>
     </div>
         <b-container fluid>
-            <b-card v-show="ocultartra" class="mt-2" header="Primary" header-bg-variant="primary">
+            <b-card v-show="ocultartra" class="mt-2 border" header="Primary" header-bg-variant="primary">
               <h3 slot="header" class="mb-0 encabezado">Información del cliente</h3>
                  <b-row>
                    <b-col>
@@ -48,7 +48,7 @@
                     </b-col>
                 </b-row>
         </b-card>
-        <b-card class="mt-2"  v-show="ocultartra" header="Primary" header-bg-variant="primary">
+        <b-card class="mt-2 border"  v-show="ocultartra" header="Primary" header-bg-variant="primary">
           <h3 slot="header" class="mb-0 encabezado">Información para filtrar</h3>
             <b-row>
                 <b-col>
@@ -58,26 +58,12 @@
                     </b-form-group>
                 </b-col>
                 <b-col >
-                    <!-- <b-btn active-class class="float-right rounded" @click="limpiarfiltro">
-                        <i class="fa fa-refresh" aria-hidden="true"></i>
-                        Busqueda
-                    </b-btn> -->
+                    <b-btn active-class class="float-right rounded text-white" variant="warning" @click="limpiarfiltro">
+                        <i class="fa fa-eraser" aria-hidden="true"></i>&#32;Limpiar
+                    </b-btn>
                 </b-col>
             </b-row>
             <b-row v-show="prueba=='first'">
-                    <b-col>
-                      <h3 class="text-primary">Establecer rango de fechas</h3>
-                        <b-form-group
-                          class="text-primary">
-                            <date-picker disabled="true" id="fecha" width="430"
-                             @keyup.enter.native="consultar()"
-                            v-model="time1" placeholder="Rango de Fechas" range lang="en"
-                             :shortcuts="shortcuts" :confirm="true"
-                             @confirm="consultar()" ></date-picker>
-                        </b-form-group>
-                    </b-col>
-            </b-row>
-            <b-row v-show="prueba=='second'">
                     <b-col>
                       <h3 class="text-primary">Orden de servicio</h3>
                         <b-form-group  class="mb-3 text-primary">
@@ -106,6 +92,19 @@
                         </b-form-group>
                     </b-col>
             </b-row>
+            <b-row v-show="prueba=='second'">
+                    <b-col>
+                      <h3 class="text-primary">Establecer rango de fechas</h3>
+                        <b-form-group
+                          class="text-primary">
+                            <date-picker disabled="true" id="fecha" width="430"
+                              @keyup.enter.native="consultar()"
+                              v-model="time1" placeholder="Rango de Fechas" range lang="es"
+                              :shortcuts="shortcuts" :confirm="true" @confirm="consultar()">
+                            </date-picker>
+                        </b-form-group>
+                    </b-col>
+            </b-row>
             <b-row class="my-1">
                 <b-col>
                 <b-button @click="consultar()" variant="success" class="my-1 btn-warning text-white rounded">
@@ -115,7 +114,7 @@
                 </b-col>
             </b-row>
         </b-card>
-           <b-card class="mt-2" v-show="mostrarcard">
+           <b-card class="mt-2 border" v-show="mostrarcard">
                <!--
                     <router-view :consulta="consulta" :centro="selectedCC"
                     :cliente="selectedCL">
@@ -137,6 +136,7 @@ import { urlservicios } from "../main";
 import Preload from "../componentes/preload.vue";
 import DatePicker from "vue2-datepicker";
 import moment from "moment";
+import { getDatesRange } from './utils/datesRange.js';
 
 export default {
   components: {
@@ -193,8 +193,8 @@ export default {
       time1: [],
       validatecampo: "",
       options: [
-        { text: "Filtrar por rango de fechas", value: "first" },
-        { text: "Filtrar por orden, referencia, # movilizado", value: "second" }
+        { text: "Filtrar por orden, referencia, # movilizado", value: "first" },
+        { text: "Filtrar por rango de fechas", value: "second" }
       ],
       consulta: []
     };
@@ -315,16 +315,17 @@ export default {
     consultar() {
       var inicio, fin;
       var fecha = new Date();
-      var _this = this;
-      var d = new Date();
-      var year = d.getFullYear();
-      var month = d.getMonth();
-      var day = d.getDate();
-      var ant = new Date();
-      var monthante = ant.getMonth() - 1;
-      var dayante = ant.getDate();
-      d.setFullYear(year, month, day);
-      ant.setFullYear(year, monthante, dayante);
+      this.time1 = (getDatesRange(this.time1));
+      // var _this = this;
+      // var d = new Date();
+      // var year = d.getFullYear();
+      // var month = d.getMonth();
+      // var day = d.getDate();
+      // var ant = new Date();
+      // var monthante = ant.getMonth() - 1;
+      // var dayante = ant.getDate();
+      // d.setFullYear(year, month, day);
+      // ant.setFullYear(year, monthante, dayante);
 
       var mana = new Date(fecha.getTime() + 24 * 60 * 60 * 1000);
       var fechainicial = moment(this.time1[0]);
@@ -357,7 +358,7 @@ export default {
             this.centroseleccionado = this.centros[i];
           }
         }
-        if (this.prueba == "first") {
+        if (this.prueba == "second") {
           this.orden = "";
           this.referencia = "";
           this.nmovilizado = "";
@@ -798,22 +799,33 @@ export default {
     }
   },
   mounted: function() {
+    const instance = (new Date());
+    const firstDay = (new Date(instance.getFullYear(), instance.getMonth(), 1));
+    const lastDay = (new Date(instance.getFullYear(), instance.getMonth() + 1, 0));
+    const getDates = (getDatesRange([
+      firstDay,
+      lastDay
+    ]));
+    const startOfToday = (getDates[0]);
+    const endOfToday = (getDates[1]);
+
     //---------------- fechas
-    var fecha = new Date();
-    var _this = this;
-    var d = new Date();
-    var year = d.getFullYear();
-    var month = d.getMonth();
-    var day = d.getDate();
-    var ant = new Date();
-    var monthante = ant.getMonth() - 1;
-    var dayante = ant.getDate();
-    d.setFullYear(year, month, day);
-    ant.setFullYear(year, monthante, dayante);
+    // var fecha = new Date();
+    // var _this = this;
+    // var d = new Date();
+    // var year = d.getFullYear();
+    // var month = d.getMonth();
+    // var day = d.getDate();
+    // var ant = new Date();
+    // var monthante = ant.getMonth() - 1;
+    // var dayante = ant.getDate();
+    // d.setFullYear(year, month, day);
+    // ant.setFullYear(year, monthante, dayante);
 
-    var mana = new Date(fecha.getTime() + 24 * 60 * 60 * 1000);
 
-    var HaceUnaSemana = new Date(fecha.getTime() - 24 * 60 * 60 * 1000 * 7);
+    // var mana = new Date(fecha.getTime() + 24 * 60 * 60 * 1000);
+
+    var HaceUnaSemana = new Date(instance.getTime() - 24 * 60 * 60 * 1000 * 7);
     var HaceUnaSemanaDia = HaceUnaSemana.getDate();
     var HaceUnaSemanaMes = HaceUnaSemana.getMonth();
     var HaceUnaSemanaYear = HaceUnaSemana.getFullYear();
@@ -825,13 +837,16 @@ export default {
     for (var p = 0; p < this.shortcuts.length; p++) {
       if (p == 1) {
         this.shortcuts[p].start = HaceUnaSemana;
-        this.shortcuts[p].end = d;
-      }
-      if (p == 2) {
-        this.shortcuts[p].start = ant;
-        this.shortcuts[p].end = d;
+        this.shortcuts[p].end = endOfToday;
+      } else if (p == 2) {
+        this.shortcuts[p].start = startOfToday;
+        this.shortcuts[p].end = endOfToday;
       }
     }
+    this.time1 = [
+      startOfToday,
+      endOfToday
+    ];
     //this.time1[1]= mana
     //this.time1[0] =ant
     //-----------------------------------

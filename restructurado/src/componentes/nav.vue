@@ -2,15 +2,14 @@
 <!-- CONTENEDOR DE NAVBAR Y ASIDE-BAR-->
    <div>
      <preload v-show="load" ></preload>
-     <nav id="nav-prueba" class="side-navbar mCustomScrollbar _mCS_1 mCS_no_scrollbar">
+     <nav id="nav-prueba" class="side-navbar bg-dark mCustomScrollbar _mCS_1 mCS_no_scrollbar">
             <div id="mCSB_1" class="mCustomScrollBox mCS-light mCSB_vertical mCSB_inside" style="max-height: none;" tabindex="0">
             <div id="mCSB_1_container" class="mCSB_container mCS_y_hidden mCS_no_scrollbar_y" style="position: relative; top: 0px; left: 0px;" dir="ltr">
         <div class="side-navbar-wrapper">
             <div class="sidenav-header d-flex align-items-center justify-content-center">
-            <div class="sidenav-header-inner text-center " >
-              <b-link to="/inicio" class="active">
-                <b-img :src="servidor+imagen" fluid alt="Responsive image"
-                class="img-fluid   mCS_img_loaded imagenpersonalizada"/>
+            <div class="sidenav-header-inner text-center">
+              <b-link to="/inicio">
+                <b-img :src="servidor+imagen" fluid alt="Responsive image"/>
               </b-link>
             </div>
             <div class="sidenav-header-logo">
@@ -152,7 +151,7 @@
       </section>
 
       <!-- FOOTER  -->
-      <footer class="main-footer">
+      <footer class="main-footer bg-dark">
         <div class="container-fluid">
           <div class="row">
             <div class="col-sm-6">
@@ -366,8 +365,11 @@ nav.side-navbar .sidenav-header {
   background: white;
 }
 nav.side-navbar .sidenav-header img {
-  width: 39%;
+  width: 130px;
   height: auto;
+}
+nav.side-navbar .sidenav-header a:hover {
+  background-color: transparent !important;
 }
 imagen {
   width: 50px;

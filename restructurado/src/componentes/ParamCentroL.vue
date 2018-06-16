@@ -12,16 +12,18 @@
     </div>
 
         <b-container fluid>
-          <b-card class="cards">
+          <b-card class="border mt-2" header="Centros logísticos" header-bg-variant="primary" header-tag="h3" no-body>
             <b-card-body>
               <b-row >
-                <b-col >
-                  <b-btn class="float-right" variant="outline-success" @click="nuevocl">
-                  <i class="fa fa-plus"></i>
-                </b-btn>
-                <b-btn class="float-right" variant="outline-success"  @click="refrescarCentrosLogisticos()">
-                  <i class="fa fa-refresh"></i>
-                </b-btn>
+                <b-col md="2" offset-md="10">
+                  <div class="float-right mb-3">
+                    <b-btn variant="outline-success" @click="nuevocl">
+                      <i class="fa fa-plus"></i>
+                    </b-btn>
+                    <b-btn variant="outline-success"  @click="refrescarCentrosLogisticos()">
+                      <i class="fa fa-refresh"></i>
+                    </b-btn>
+                  </div>
                 </b-col>
 
               </b-row>

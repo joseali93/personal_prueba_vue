@@ -13,7 +13,7 @@
     </div>
 
         <b-container fluid>
-            <b-card v-show="ocultar" header="Primary" header-bg-variant="primary" class="mt-2">
+            <b-card v-show="ocultar" header="Primary" header-bg-variant="primary" class="my-2 border">
               <h3 slot="header" class="mb-0">Manifiesto</h3>
                 <!--
             <header slot="header" class="content-heading">
@@ -65,7 +65,7 @@
                     </b-col>
                 </b-row>
             </b-card>
-            <b-card class="mt-3">
+            <b-card class="mt-3 border" v-if="consulta.length">
                 <router-view :consulta="consulta"></router-view>
             </b-card>
 

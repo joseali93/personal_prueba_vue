@@ -13,17 +13,19 @@
     </div>
 
         <b-container fluid>
-            <b-card  class="cards"
-               >
+            <b-card class="border mt-2" no-body header="Primary" header-bg-variant="primary">
+              <h3 slot="header" class="mb-0 encabezado">Clientes</h3>
                 <b-card-body>
                     <b-row>
-                        <b-col>
-                            <b-btn variant="outline-success" class="mb-3 float-right" @click="ClienteNuevo()">
-                            <i class="fa fa-plus"></i>
+                        <b-col md="2" offset-md="10">
+                          <div class="float-right mb-3">
+                            <b-btn variant="outline-success" @click="ClienteNuevo()">
+                              <i class="fa fa-plus"></i>
                             </b-btn>
-                            <b-btn variant="outline-success" class="mb-3 float-right" @click="refrescarClientes()">
-                                <i class="fa fa-refresh"></i>
+                            <b-btn variant="outline-success" @click="refrescarClientes()">
+                              <i class="fa fa-refresh"></i>
                             </b-btn>
+                          </div>
                         </b-col>
                     </b-row>
 
