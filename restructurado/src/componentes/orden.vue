@@ -796,7 +796,10 @@ export default {
       }
     },
     actualizar: function() {
+<<<<<<< HEAD
 
+=======
+>>>>>>> 14-062-2018
       var load = true;
       setTimeout(() => {
         bus.$emit("load", {

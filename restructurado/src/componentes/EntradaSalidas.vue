@@ -26,10 +26,14 @@
 
       <b-container fluid>
 
+<<<<<<< HEAD
  
 
       <b-card class="mt-2" header="Primary" header-bg-variant="primary">
 
+=======
+      <b-card class="mt-2 border" header="Primary" header-bg-variant="primary">
+>>>>>>> 14-062-2018
         <h3 slot="header" class="mb-0 encabezado">Entradas y salidas de proceso logístico</h3>
 
         <b-row>

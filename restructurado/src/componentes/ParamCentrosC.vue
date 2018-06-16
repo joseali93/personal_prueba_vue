@@ -13,23 +13,24 @@
     </div>
 
         <b-container fluid>
-            <b-card class="cards"
-            >
+            <b-card class="border mt-2" header="Centro de costos" header-bg-variant="primary" header-tag="h3" no-body>
                 <b-card-body>
-
-                    <v-select class="mb-3" v-model="Cliente" label="nombre" placeholder="Cliente"
-                                :options="clientes" @input="SelectedClient()"></v-select>
-                    <b-input-group class="mb-3">
-                    <b-form-input v-model="Centro"
-                    type="text"
-                    placeholder="Nombre del Centro de Costo">
-                    </b-form-input>
-                    <b-btn variant="outline-success" v-show="Centro!=''&&Cliente!=null" @click="nuevocc">
-                    <i class="fa fa-plus"></i>
-                    </b-btn>
-                    </b-input-group>
-
-                    <b-table striped hover :items="CentrosTabla"  :current-page="currentPage" :per-page="perPage"
+                  <b-row>
+                    <b-col md="6">
+                      <v-select v-model="Cliente" label="nombre" placeholder="Cliente"
+                        :options="clientes" @input="SelectedClient()"></v-select>
+                    </b-col>
+                    <b-col md="6">
+                      <b-input-group>
+                        <b-form-input v-model="Centro" type="text" placeholder="Nombre del Centro de Costo">
+                        </b-form-input>
+                        <b-btn variant="outline-success" v-show="Centro!=''&&Cliente!=null" @click="nuevocc">
+                          <i class="fa fa-plus"></i>
+                        </b-btn>
+                      </b-input-group>
+                    </b-col>
+                  </b-row>
+                    <b-table class="mt-3" striped hover :items="CentrosTabla" v-if="CentrosTabla.length" :current-page="currentPage" :per-page="perPage"
                         :fields="fields" :filter="Centro" >
                         <template slot="editar" slot-scope="data">
                         <i class="btn btn-success fa fa-pencil" @click="editar(data)"></i>
@@ -37,9 +38,8 @@
                         <template slot="nombre" slot-scope="data">
                         <label class="text-capitalize">{{data.item.nombre}}</label>
                         </template>
-
                     </b-table>
-                <b-pagination size="md" :total-rows="CentrosTabla.length" v-model="currentPage" :per-page="perPage">
+                <b-pagination size="md" v-if="CentrosTabla.length" :total-rows="CentrosTabla.length" v-model="currentPage" :per-page="perPage">
                     </b-pagination>
                 </b-card-body>
             </b-card>

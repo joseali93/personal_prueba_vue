@@ -1,5 +1,9 @@
 <template>
+<<<<<<< HEAD
     <b-card v-if="consulta.length" class="mt-2" header="Primary" header-bg-variant="primary">
+=======
+    <b-card v-if="consulta.length" class="mt-2 border" header="Primary" header-bg-variant="primary">
+>>>>>>> 14-062-2018
         <h3 slot="header" class="mb-0 encabezado">Lista de detalles</h3>
             <b-row>
                 <b-table  :items="consulta" :fields="fields"
@@ -153,7 +157,7 @@
                 Enviar Correo
                 </b-btn>
                 <b-collapse class="mt-2" id="todo" v-model="showCollapse">
-                            <b-card>
+                            <b-card class="border">
                                  <b-form inline>
                                 <b-form-input v-model="emailT"
                                     type="email"
@@ -177,7 +181,7 @@
         <b-modal id="modalimagenes" ref="ModalImagenes" title="Evidencia Digital" lazy no-close-on-backdrop>
             <b-container>
                 <template v-for="(data,indice) in modalima.trazabilidad[0].imagenes">
-                    <b-card no-body class="mb-1">
+                    <b-card no-body class="mb-1 border">
                         <b-card-header header-tag="header" class="p-1 joseperso" role="tab">
                             <b-row>
                                 <b-col cols="8">
@@ -206,7 +210,7 @@
                             </b-card-body>
                         </b-collapse>
                         <b-collapse class="mt-2" :id="data.email" @click="algo">
-                            <b-card>
+                            <b-card class="border">
                                  <b-form inline>
                                 <b-form-input v-model="email"
                                     type="email"
@@ -231,7 +235,7 @@
                 Enviar Correo
                 </b-btn>
                 <b-collapse class="mt-2" id="todo" v-model="showCollapse">
-                            <b-card>
+                            <b-card class="border">
                                  <b-form inline>
                                 <b-form-input v-model="emailT"
                                     type="email"

@@ -1,6 +1,6 @@
 <template>
 	<b-container>
-    <b-btn @click="volver" class="mt-2" variant="success">
+    <b-btn @click="volver" class="mt-2 rounded text-white" variant="warning">
       <i class="fa fa-chevron-left" aria-hidden="true"></i>
       Volver
     </b-btn>
@@ -178,8 +178,10 @@
       </b-row>
       <b-row>
         <b-col>
-          <b-btn class="float-right rounded" size="lg" variant="success" @click="asignar(selected_curier)"
-          :disabled=desabilitarguardar()>Aceptar</b-btn>
+          <b-btn class="float-right rounded text-white" size="lg" variant="warning" @click="asignar(selected_curier)"
+          :disabled=desabilitarguardar()>
+            <i class="fa fa-check-circle"></i>&#32;Aceptar
+          </b-btn>
         </b-col>
       </b-row>
     </b-container>
@@ -190,7 +192,17 @@
 			no-close-on-backdrop
 		  size="lg">
 			<div slot="modal-header" class="w-100">
-				<h4 class="float-left m-0 text-secondary">Editar Registro - Numero de Movilizado {{info.detalle[indemodal].id}}</h4>
+        <b-row>
+          <b-col md="6">
+            <h4 class="m-0 text-secondary text-left">
+              <strong>Editar Registro</strong> - Numero de Movilizado {{info.detalle[indemodal].id}}</h4>
+          </b-col>
+          <b-col md="6">
+            <h4 class="m-0 text-secondary text-right">
+              <strong># Orden de servicio</strong> - {{ info.id }}
+            </h4>
+          </b-col>
+        </b-row>
 			</div>
 			<b-container fluid>
 				<b-row>
@@ -249,69 +261,64 @@
             </b-card>
 					</b-col>
 				</b-row>
-				<b-row class="mt-3 mb-2">
-					<b-col md="5">
-						<h4># Orden de servicio</h4>
-					</b-col>
-					<b-col md="7">
-						<h4>{{info.id}}</h4>
-					</b-col>
-				</b-row>
-				<b-row class="mb-2">
-					<b-col md="5">
-						<h5>Producto:</h5>
-					</b-col>
-					<b-col md="7">
-            <h5 class="text-secondary font-weight-normal">{{producto}}</h5>
-					</b-col>
-				</b-row>
-				<b-row class="mb-2">
-					<b-col md="5">
-						<h5>Servicio:</h5>
-					</b-col>
-					<b-col md="7">
-            <h5 class="text-secondary font-weight-normal">{{servicio}}</h5>
-					</b-col>
-				</b-row>
-        <b-row v-for="(data,indice) in inputs.campos" class="my-1 card-text">
-          <template v-if="data.type=='number'">
-            <b-col cols="5">
-              <label  class="col-form-label col-form-label-sm text-capitalize" :style="data.style" >{{data.nombre}}: </label>
+        <div class="mt-3">
+          <b-row class="mb-2">
+            <b-col md="5">
+              <h5>Producto:</h5>
             </b-col>
-            <b-col cols="7">
-              <input class="form-control form-control-sm"  :type="data.type" :id="data.id" :style="data.style" :max="data.max"
-                @keyup="Presiono(indice,data)" :placeholder="data.placeholder" :disabled="data.requerido_edi==false"
-                :value="values(data.id)" required>
+            <b-col md="7">
+              <h5 class="text-secondary font-weight-normal">{{producto}}</h5>
             </b-col>
-          </template>
-          <template v-if="data.type=='text'">
-            <b-col cols="5">
-              <label class="col-form-label col-form-label-sm text-capitalize" :style="data.style" >{{data.nombre}}: </label>
+          </b-row>
+          <!-- // ----------------------------------------------------------------------------- -->
+          <b-row class="mb-2">
+            <b-col md="5">
+              <h5>Servicio:</h5>
             </b-col>
-            <b-col cols="7">
-              <input class="form-control form-control-sm"  :type="data.type" :id="data.id" :style="data.style" :max="data.max"
-                @keyup="Presiono(indice,data)" :placeholder="data.placeholder" :disabled="data.requerido_edi==false"
-                :value="values(data.id)"  required>
+            <b-col md="7">
+              <h5 class="text-secondary font-weight-normal">{{servicio}}</h5>
             </b-col>
-          </template>
-          <template v-if="data.type=='select'" class="my-1 card-text">
-            <b-col cols="5">
-              <label class="col-form-label col-form-label-sm text-capitalize">{{data.nombre}}</label>
-            </b-col>
-            <b-col cols="7">
-              <!-- ------------------------------------------------------- -->
-              <b-form-select class="col-form-label col-form-label-sm "
-                :id="data.id" :options="trayectos" text-field="nombre" value-field="_id"
-                @input="seleccionar(data)" :value="valueseleccion(data,indice)"
-                :disabled="selec_disable">
-              </b-form-select>
-              <!-- ------------------------------------------------------- -->
-            </b-col>
-          </template>
-        </b-row>
-				<b-row v-if="itemsvariables.length">
-					<b-table striped hover :items="itemsvariables"></b-table>
-				</b-row>
+          </b-row>
+          <b-row v-for="(data,indice) in inputs.campos" class="my-1 card-text">
+            <template v-if="data.type=='number'">
+              <b-col cols="5">
+                <label  class="col-form-label col-form-label-sm text-capitalize" :style="data.style" >{{data.nombre}}: </label>
+              </b-col>
+              <b-col cols="7">
+                <input class="form-control form-control-sm"  :type="data.type" :id="data.id" :style="data.style" :max="data.max"
+                  @keyup="Presiono(indice,data)" :placeholder="data.placeholder" :disabled="data.requerido_edi==false"
+                  :value="values(data.id)" required>
+              </b-col>
+            </template>
+            <template v-if="data.type=='text'">
+              <b-col cols="5">
+                <label class="col-form-label col-form-label-sm text-capitalize" :style="data.style" >{{data.nombre}}: </label>
+              </b-col>
+              <b-col cols="7">
+                <input class="form-control form-control-sm"  :type="data.type" :id="data.id" :style="data.style" :max="data.max"
+                  @keyup="Presiono(indice,data)" :placeholder="data.placeholder" :disabled="data.requerido_edi==false"
+                  :value="values(data.id)"  required>
+              </b-col>
+            </template>
+            <template v-if="data.type=='select'" class="my-1 card-text">
+              <b-col cols="5">
+                <label class="col-form-label col-form-label-sm text-capitalize">{{data.nombre}}</label>
+              </b-col>
+              <b-col cols="7">
+                <!-- ------------------------------------------------------- -->
+                <b-form-select class="col-form-label col-form-label-sm "
+                  :id="data.id" :options="trayectos" text-field="nombre" value-field="_id"
+                  @input="seleccionar(data)" :value="valueseleccion(data,indice)"
+                  :disabled="selec_disable">
+                </b-form-select>
+                <!-- ------------------------------------------------------- -->
+              </b-col>
+            </template>
+          </b-row>
+          <b-row v-if="itemsvariables.length">
+            <b-table striped hover :items="itemsvariables"></b-table>
+          </b-row>
+        </div>
 			</b-container>
 			<div slot="modal-footer" class="w-100">
 				<b-btn class="mt-3 rounded" variant="danger"  @click="hideModal">
@@ -1183,6 +1190,7 @@ export default {
                 });
               });
               this.inputs = response.data;
+              console.log(0, this.inputs);
               this.campos = response.data.objeto;
               for (var i = 0; i < this.inputs.campos.length; i++) {
                 this.inputs.campos[i].diseable = "true";
@@ -1261,6 +1269,7 @@ export default {
                 });
               });
               this.inputs = response.data;
+              console.log(0, this.inputs);
               this.campos = response.data.objeto;
               this.campos.objetoUnidades = this.itemsvariables;
               for (var i = 0; i < this.inputs.campos.length; i++) {
@@ -1435,6 +1444,8 @@ export default {
         const { indiceActual, lista  } = (this.detalleTrayecto);
         const trayecto = (this.trayectos.find((t) => (t._id === idTrayecto)));
         lista[indiceActual] = (trayecto && trayecto._id) ? (trayecto) : (null);
+        // actualizar reactividad
+        this.$forceUpdate();
         console.log(this.detalleTrayecto);
       }
     }
@@ -1464,6 +1475,7 @@ export default {
     // -------------------------------------------------------
     const idUser = (setInterval(() => {
       if (this.currentUser && this.currentUser.detalle) {
+        console.log(12, this.currentUser);
         this.detalleTrayecto.lista = [];
         let count = (0);
         (function trayectos() {

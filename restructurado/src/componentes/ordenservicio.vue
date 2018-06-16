@@ -85,10 +85,10 @@
             no-close-on-esc
             size="lg">
             <div slot="modal-header" class="w-100">
-              <b-btn class="rounded" variant="danger" @click="hideModal">
+              <b-btn class="rounded text-white" variant="warning" @click="hideModal">
                 <i class="fa fa-times-circle" aria-hidden="true"></i>&#32;Cancelar
               </b-btn>
-              <b-btn class="float-right rounded" variant="success" v-on:click="ingresarOrden">
+              <b-btn class="rounded float-right text-white" variant="warning" v-on:click="ingresarOrden">
                 <i class="fa fa-floppy-o"></i>&#32;Guardar
               </b-btn>
             </div>
@@ -373,10 +373,10 @@
          no-close-on-backdrop
             no-close-on-esc size="lg">
             <div slot="modal-header" class="w-100">
-                    <b-btn class="mt-3" variant="danger"  @click="hideModal">
+                    <b-btn class="mt-3" variant="warning" @click="hideModal">
                     <i class="fa fa-times-circle" aria-hidden="true">  </i>
                     Cancelar</b-btn>
-                    <b-btn class="mt-3 float-right " variant="success" v-on:click="actualizar()">
+                    <b-btn class="mt-3 float-right" variant="warning" v-on:click="actualizar()">
                     <i class="fa fa-floppy-o"></i> Guardar
                     </b-btn>
             </div>
