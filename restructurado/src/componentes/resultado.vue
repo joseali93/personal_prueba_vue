@@ -17,7 +17,6 @@
                 v-show="data.item.estado!='orden de servicio cancelada'"></b-button>
 
             </template>
-            centro_costo
             <template slot="centro_costo" slot-scope="data">
                 {{data.item.id_centro_costo.nombre_concatenado}}
             </template>
