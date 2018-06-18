@@ -9,10 +9,17 @@
             <template slot="estado" slot-scope="data">
                 {{data.item.estado}}
             </template>
+             <template slot="punto_recoleccion" slot-scope="data">
+                {{data.item.remitente.nombre_contacto}}
+            </template>
             <template slot="Cancelar" slot-scope="data">
                 <b-button variant="danger" class="fa fa-ban" @click="cancelarOrden(data)"
                 v-show="data.item.estado!='orden de servicio cancelada'"></b-button>
 
+            </template>
+            centro_costo
+            <template slot="centro_costo" slot-scope="data">
+                {{data.item.id_centro_costo.nombre_concatenado}}
             </template>
             <template slot="fecha_creacion" slot-scope="data">
                 {{data.item.fecha_creacion | formatdate}}
@@ -60,16 +67,264 @@ export default {
             fields: [
                 'Cancelar',
                 { key: 'id', label:'# Orden de Servicio', sortable: true },
+                { key: 'punto_recoleccion',label:'Punto Recolección', sortable: false },
                 { key: 'fecha_creacion',label:'Fecha creación orden', sortable: false },
-                { key: 'fecha_ultima',label:'Fecha creación orden', sortable: false },
-   
                 'estado',
+                { key: 'centro_costo',label:'Centro de Costo', sortable: false },
+                { key: 'fecha_ultima',label:'Fecha Ultimo Estado', sortable: false },
                 'detalles',
 
             ],
         }
     },
     methods: {
+        cancelarOrden(value){
+            console.log(value);
+            var login = localStorage.getItem("storedData");
+            var infologin =JSON.parse(login);
+            console.log(infologin.id_cliente);
+            console.log(this.consulta);
+            if (infologin.id_cliente == undefined || infologin.id_cliente == null) {
+              if (typeof value.item === 'object') {
+                const { _id, estado, id_OperadorLogistico } = (value.item);
+                if (/^(Orden De Servicio Creada|Orden De Servicio Asignada)$/i.test(estado)) {
+                  const url = (`/logistica/ConceptoProcesoSistema/${id_OperadorLogistico}/2`);
+                  this.axios.get(url).then((response) => {
+                    const { conceptos } = (response.data);
+                    if (!conceptos || conceptos && !conceptos.length) {
+                      swal({
+                        type: 'warning',
+                        title: 'No se encontraron conceptos',
+                        text: 'Comunicarse con soporte',
+                        allowEscapeKey: false,
+                        allowOutsideClick: false,
+                        showConfirmButton: false,
+                        timer: 5000
+                      });
+                    } else {
+                      (function conceptList() {
+                        this.conceptos = (conceptos);
+                        const list = ($('<div class="list-group">'));
+                        let currentConcept = (null);
+                        this.conceptos.forEach((c) => {
+                          const concepto = ($(`
+                            <a href="javascript:void(0)"
+                              class="rounded-0 list-group-item list-group-item-action p-2">
+                                ${c.nombre}
+                            </a>
+                          `));
+                          concepto.hover(() => {
+                            concepto.not('.active').css('background-color', 'lightcyan');
+                          }, () => {
+                            concepto.not('.active').css('background-color', 'white');
+                          }).click((event) => {
+                            if (currentConcept !== c) {
+                              concepto.css('background-color', '');
+                              list.children().filter('.active')
+                                .removeClass('active');
+                              concepto.addClass('active');
+                              currentConcept = (c);
+                            }
+                          });
+                          list.append(concepto);
+                        });
+                        const content = ($(`
+                          <div class="card">
+                            <div class="card-body text-white bg-primary p-2">
+                              <div class="card-title mb-0">
+                                <h5 class="mb-0">Conceptos</h5>
+                              </div>
+                            </div>
+                          </div>
+                        `));
+                        content.append(list);
+                        swal({
+                          html: '',
+                          confirmButtonText: 'Continuar',
+                          onOpen() {
+                            const card = ($(swal.getContent()));
+                            card.prev('.swal2-header').remove();
+                            card.children('#swal2-content').append(content).show();
+                          }
+                        }).then((next) => {
+                          if (next.value && !currentConcept) {
+                            swal({
+                              type: 'question',
+                              title: 'Concepto no seleccionado',
+                              allowEscapeKey: false,
+                              allowOutsideClick: false,
+                              showConfirmButton: false,
+                              timer: 2000
+                            }).then(() => {
+                              conceptList.call(this);
+                            });
+                          } else if (next.value && currentConcept) {
+                            const { id_concepto } = (currentConcept);
+                            const url = (`/logistica/CancelarOrden/${_id}/${id_concepto}`);
+                            this.axios.get(url).then((response) => {
+                              const { message } = (response.data);
+                              swal({
+                                type: 'info',
+                                title: message,
+                                confirmButtonText: 'Cerrar'
+                              });
+                              // const index = (this.consulta.findIndex((c) => (c._id === _id)));
+                              // if (index >= 0)
+                              //     this.consulta.splice(index, 1);
+                              setTimeout(() => {
+                                value.item.estado = ('orden de servicio cancelada');
+                              }, 10);
+                            }, (error) => {
+                              swal({
+                                type: 'error',
+                                title: 'Ocurrió un error en el servicio CancelarOrden',
+                                text: JSON.stringify(error, null, 1),
+                                confirmButtonText: 'Cerrar'
+                              }).then(() => {
+                                conceptList.call(this);
+                              });
+                            });
+                          } else {
+                            currentConcept = (null);
+                          }
+                        });
+                        setTimeout(() => {
+                          if (list.height() >= 150) {
+                            list.css({
+                              display: 'block',
+                              maxHeight: '150px',
+                              overflowY: 'scroll',
+                              overflowX: 'hidden'
+                            });
+                          }
+                        }, 10);
+                      }).call(this);
+                    }
+                  }, (error) => {
+                    swal({
+                      type: 'error',
+                      title: 'Ocurrió un error en el servicio ConceptoProcesoSistema',
+                      text: JSON.stringify(error, null, 1),
+                      confirmButtonText: 'Cerrar'
+                    });
+                  });
+                } else {
+                  swal({
+                    type: 'warning',
+                    title: 'No se puede Cancelar',
+                    text: 'Porque el estado actual de la Orden no lo permite',
+                    confirmButtonText: 'Cerrar'
+                  });
+                }
+              }
+                // swal({
+                // title: 'Esta seguro que desea Cancelar la orden de servicio? ',
+                // text: "Luego no se podrá revertir el estado de la orden",
+                // type: 'warning',
+                // showCancelButton: true,
+                // confirmButtonColor: '#3085d6',
+                // cancelButtonColor: '#d33',
+                // cancelButtonText:'Salir',
+                // confirmButtonText: 'Confirmar'
+                // }).then((result) => {
+                //     if (result.value) {
+                //         console.log("elimino");
+                //         this.consulta.map((obj,ind)=>{
+                //     if(obj.id==value.item.id)
+                //         {
+                //             if(obj.estado=="Orden De Servicio Creada"||obj.estado=="Orden De Servicio Asignada")
+                //             {
+                //                 this.axios.get(urlservicios+"CancelarOrden/"+value.item._id)
+                //                     .then((response) => {
+                //                         console.log(response.data);
+                //                         if(response.data.message=="orden de servicio actualizada")
+                //                         {
+                //                             swal("Orden de servicio Cancelada!",'', "success");
+
+                //                         }
+                //                     })
+                //                 this.consulta.splice(ind,1)
+                //             }
+                //             else
+                //             {
+                //                 swal(
+                //                     "No se puede Eliminar",
+                //                     "Por que el estado actual de la Orden no lo permite",
+                //                     "error"
+                //                 );
+                //             }
+                //         }
+                //         })
+                //     }
+                //     else{
+                //         console.log("no elimino");
+                //     }
+                //     })
+            }
+            else{
+                console.log("hay cliente");
+                swal({
+                title: 'Esta seguro ?',
+                text: "Luego no se podra revertir el estado de la orden!",
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                cancelButtonText:'Cancelar',
+                confirmButtonText: 'Confirmar'
+                }).then((result) => {
+                    if (result.value) {
+                        console.log("elimino");
+                        this.consulta.map((obj,ind)=>{
+                    if(obj.id==value.item.id)
+                        {
+                            if(obj.estado=="Orden De Servicio Creada")
+                            {
+                                this.axios.get(urlservicios+"CancelarOrden/"+value.item._id)
+                                    .then((response) => {
+                                        console.log(response.data);
+                                        if(response.data.message=="orden de servicio actualizada")
+                                        {
+                                            this.consulta.splice(ind,1)
+                                            swal("Orden Eliminada!", "Orden de Servicio Cancelada!", "success");
+
+                                        }
+                                    })
+                                    .catch(function(error) {
+                                        var load = false;
+                                            setTimeout(() => {
+                                                bus.$emit("load", {
+                                                load
+                                                });
+                                            });
+                                            swal(
+                                                'Se presento un problema',
+                                                'Intente nuevamente, por favor',
+                                                'warning'
+                                                )
+                                    })
+
+                            }
+                            else
+                            {
+                                swal(
+                                    "No se puede Eliminar",
+                                    "Por que el estado actual de la Orden no lo permite",
+                                    "error"
+                                );
+                            }
+                        }
+                        })
+                    }
+                    else{
+                        console.log("no elimino");
+                    }
+                    })
+            }
+
+
+        },
+        /*
         cancelarOrden(value){
             console.log(value);
             var login = localStorage.getItem("storedData");

@@ -452,7 +452,7 @@ export default {
           });
         });
         this.axios
-          .get(urlservicios + "medios/")
+          .get(urlservicios+ "medios/")
           .then(response => {
             var load = false;
             setTimeout(() => {
@@ -479,7 +479,7 @@ export default {
 
             /*
             this.axios.get(
-                urlservicios +"UsuariosCurier/" +
+                urlservicios+"UsuariosCurier/" +
                   infologin.id_OperadorLogistico._id +
                   "/" +this.model_medios._id)
               .then(response2 => {
@@ -538,7 +538,7 @@ export default {
 
             this.axios
               .get(
-                urlservicios +
+                urlservicios+
                   "UsuariosCurier/" +
                   infologin.id_OperadorLogistico._id +
                   "/" +
@@ -577,6 +577,7 @@ export default {
           }
           else{
             console.log("emito");
+            console.log(this.socket);
           this.socket.emit('MedioCourier', {
             id_operadorlogistico:infologin.id_OperadorLogistico._id,
             id_cliente:infologin._id,
@@ -872,7 +873,7 @@ export default {
 
             //console.log(destina);
 
-            this.axios.post(urlservicios +"ActualizarTrayecto/" +this.currentUser._id +"/" +this.consecutivo,objeto)
+            this.axios.post(urlservicios+"ActualizarTrayecto/" +this.currentUser._id +"/" +this.consecutivo,objeto)
               .then(response => {
                 this.$refs.table.refresh();
                 var objeto2 = {
@@ -1005,7 +1006,7 @@ export default {
           });
         });
         this.axios
-          .post(urlservicios + "AsignarOrdenCurrier/", obj)
+          .post(urlservicios+ "AsignarOrdenCurrier/", obj)
           .then(response => {
             var load = false;
             setTimeout(() => {
@@ -1181,7 +1182,7 @@ export default {
           });
         });
         if (produc && serv) {
-          this.axios.get(urlservicios + "estructuraf/" + produc + "/" + serv)
+          this.axios.get(urlservicios+ "estructuraf/" + produc + "/" + serv)
             .then(response => {
               var load = false;
               setTimeout(() => {
@@ -1259,7 +1260,7 @@ export default {
           });
         });
         if (produc && serv) {
-          this.axios.get(urlservicios + "estructuraf/" + produc + "/" + serv)
+          this.axios.get(urlservicios+ "estructuraf/" + produc + "/" + serv)
             .then(response => {
               this.selec_disable=false
               var load = false;
@@ -1356,7 +1357,7 @@ export default {
           });
         });
         this.axios
-          .post(urlservicios + "AsignarOrdenCurrier/", obj)
+          .post(urlservicios+ "AsignarOrdenCurrier/", obj)
           .then(response => {
             var load = false;
             setTimeout(() => {
@@ -1408,7 +1409,7 @@ export default {
           });
         });
         this.axios
-          .post(urlservicios + "AsignarOrdenCurrier/", obj)
+          .post(urlservicios+ "AsignarOrdenCurrier/", obj)
           .then(response => {
             var load = false;
             setTimeout(() => {
@@ -1534,9 +1535,11 @@ export default {
         id_operador: infologin.id_OperadorLogistico._id
 
       }));
+      console.log("SOCKETTTTT");
+      console.log(this.socket);
       this.socket.on('connect', () => {
-        //console.log('conectado!!');
-        //console.log(this.socket.instance.id);
+        console.log('conectado!!');
+        console.log(this.socket.instance.id);
       })
       
       this.socket.on('ListaConexiones', (data) => {
@@ -1587,7 +1590,7 @@ export default {
       });
     });
     this.axios
-      .get(urlservicios + "medios/")
+      .get(urlservicios+ "medios/")
       .then(response => {
         var load = false;
         setTimeout(() => {

@@ -30,7 +30,6 @@ const enrutador = new VueRouter({
         mode: 'history'
     })
 //
-
 export var urlsocket = 'http://200.116.52.29:8080'
 //export var urlsocket = 'http://192.168.1.89:8080'
 export var urlservicios = 'http://200.116.52.29:3000/logistica/';

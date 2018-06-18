@@ -2108,9 +2108,9 @@ export default {
       if (
         this.selectproduct == "" ||
         this.selectservice == "" ||
-        //this.detalles.destinatario.nombre == "" ||
-        //this.detalles.destinatario.telefono == "" ||
-        //this.detalles.destinatario.direccion == "" ||
+        this.detalles.destinatario.nombre == "" ||
+        this.detalles.destinatario.telefono == "" ||
+        this.detalles.destinatario.direccion == "" ||
         pivote == true //  ||
         //this.detalles.referencia==''
       ) {

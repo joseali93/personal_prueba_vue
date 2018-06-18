@@ -613,7 +613,7 @@ export default {
                     });
                 });
                 this.axios
-                    .post(urlservicios + "GenerarManifiestoWeb", envio)
+                    .post(urlservicios+ "GenerarManifiestoWeb", envio)
                     .then(response => {
                         console.log(response);
                         if (response.data.validacion == true) {
@@ -821,7 +821,7 @@ export default {
                 console.log(itemsmodal);
                 console.log(inforvaria);
                 this.axios
-                    .post(urlservicios + "GenerarManifiestoWeb", envio)
+                    .post(urlservicios+ "GenerarManifiestoWeb", envio)
                     .then(response => {
                         console.log(response);
                         if (response.data.validacion == true) {
@@ -1431,7 +1431,7 @@ export default {
                             console.log("---------------");
                             console.log(this.objeto.id_curier)
                             this.axios.get(
-                                    urlservicios +
+                                    urlservicios+
                                     "MovilizadoProcesosLogistico/" +
                                     value +
                                     "/" +
@@ -1563,7 +1563,7 @@ export default {
                     });
                 } else {
                     this.axios.get(
-                            urlservicios +
+                            urlservicios+
                             "MovilizadoProcesosLogistico/" +
                             value +
                             "/" +
@@ -1762,8 +1762,8 @@ export default {
                     load
                 });
             });
-            console.log(urlservicios + "CamposProcesoLogisticosOperadores/" + infologin.id_OperadorLogistico._id + "/" + this.selected);
-            this.axios.get(urlservicios + "CamposProcesoLogisticosOperadores/" + infologin.id_OperadorLogistico._id + "/" + this.selected)
+            console.log(urlservicios+ "CamposProcesoLogisticosOperadores/" + infologin.id_OperadorLogistico._id + "/" + this.selected);
+            this.axios.get(urlservicios+ "CamposProcesoLogisticosOperadores/" + infologin.id_OperadorLogistico._id + "/" + this.selected)
                 .then(response => {
 
                     this.inputs = response.data;
@@ -1880,7 +1880,7 @@ export default {
                             });
                             this.axios
                                 .get(
-                                    urlservicios +
+                                    urlservicios+
                                     "UsuariosCurierOperador/" +
                                     infologin.id_OperadorLogistico._id
                                 )
@@ -2056,7 +2056,7 @@ export default {
                     console.log("hago peticion");
                     console.log(envio);
                     this.axios
-                        .post(urlservicios + "GenerarManifiestoWeb", envio)
+                        .post(urlservicios+ "GenerarManifiestoWeb", envio)
                         .then(response => {
                             console.log(response);
                             if (response.data.validacion == true) {
@@ -2179,7 +2179,7 @@ export default {
                 });
             });
             this.axios
-                .get(urlservicios + "Procesos/" + infologin.id_OperadorLogistico._id)
+                .get(urlservicios+ "Procesos/" + infologin.id_OperadorLogistico._id)
                 .then(response => {
                     var load = false;
                     setTimeout(() => {
@@ -2230,7 +2230,7 @@ export default {
                 });
             });
             this.axios
-                .get(urlservicios + "Procesos/" + infologin.id_OperadorLogistico._id)
+                .get(urlservicios+ "Procesos/" + infologin.id_OperadorLogistico._id)
                 .then(response => {
                     var load = false;
                     setTimeout(() => {

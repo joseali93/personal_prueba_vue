@@ -162,7 +162,7 @@ DE LA ORDEN DE SERVICIO -->
                                 size=""
                                 type="text"
                                 ref="focusRemitente"
-                                v-model="remit.direccion "
+                                v-model="remit.direccion"
                                 required
 
                                 placeholder="Calle, Carrera, Avenida..."
@@ -177,7 +177,7 @@ DE LA ORDEN DE SERVICIO -->
                     </b-form-group>
                     </b-col>
             </b-row>
-
+          <!--
           <b-row v-if="GeoReferenciacion">
                   <b-col>
                   <h3 class="text-primary">Dirección</h3>
@@ -194,16 +194,12 @@ DE LA ORDEN DE SERVICIO -->
                               placeholder="Dirección"
                               maxlength="100">
                           </b-form-input>
-                          <!--
-                              @change="localizar()"
-                            @keypress="localizar()"
-                                @keyup.enter.native="localizar()"
-                            -->
+                        
 
                   </b-form-group>
                   </b-col>
           </b-row>
-
+          -->
               <b-row>
                   <b-col>
                   <h3 class="text-primary">Contacto</h3>
@@ -562,7 +558,7 @@ export default {
             });
             this.axios
               .get(
-                urlservicios + "CentrosPorCliente/" + this.selected_client._id
+                urlservicios+ "CentrosPorCliente/" + this.selected_client._id
               )
               .then(response => {
                 this.centros = response.data;
@@ -589,7 +585,7 @@ export default {
             });
             this.axios
               .get(
-                urlservicios + "CentrosPorCliente/" + this.selected_client._id
+                urlservicios+ "CentrosPorCliente/" + this.selected_client._id
               )
               .then(response => {
                 this.centros = response.data;
@@ -643,7 +639,7 @@ export default {
             });
             this.axios
               .get(
-                urlservicios + "CentrosPorCliente/" + this.selected_client._id
+                urlservicios+ "CentrosPorCliente/" + this.selected_client._id
               )
               .then(response => {
                 this.centros = response.data;
@@ -670,7 +666,7 @@ export default {
 
             this.axios
               .get(
-                urlservicios + "CentrosPorCliente/" + this.selected_client._id
+                urlservicios+ "CentrosPorCliente/" + this.selected_client._id
               )
               .then(response => {
                 this.centros = response.data;
@@ -734,7 +730,7 @@ export default {
         });
         if (seleccion !== undefined) {
           this.axios
-            .get(urlservicios + "CentrosPorCliente/" + id_cliente)
+            .get(urlservicios+ "CentrosPorCliente/" + id_cliente)
             .then(response => {
               this.centros = response.data;
               this.centros.unshift(vacio);
@@ -776,7 +772,7 @@ export default {
           });
           if (seleccion !== undefined) {
             this.axios
-              .get(urlservicios + "CentrosPorCliente/" + seleccion.target.value)
+              .get(urlservicios+ "CentrosPorCliente/" + seleccion.target.value)
               .then(response => {
                 this.centros = response.data;
                 //this.centros.unshift(vacio);
@@ -795,7 +791,7 @@ export default {
         }
       }
     },
-    actualizar: function() {
+      actualizar: function() {
       var load = true;
       setTimeout(() => {
         bus.$emit("load", {
@@ -940,7 +936,7 @@ export default {
             id_cliente: this.selected_cliente._id
           };
           this.axios
-            .post(urlservicios + "CrearDestinatario", objetocrear)
+            .post(urlservicios+ "CrearDestinatario", objetocrear)
             .then(response => {
               var load = false;
               setTimeout(() => {
@@ -962,7 +958,7 @@ export default {
          
           this.axios
             .post(
-              urlservicios + "ActualizarDestinatario/" +  this.remit._id,
+              urlservicios+ "ActualizarDestinatario/" +  this.remit._id,
               objetoremitente
             )
             .then(response => {
@@ -1020,7 +1016,7 @@ export default {
 
       this.axios
         .get(
-          urlservicios +
+          urlservicios+
             "clientesOperador/" +
             test.id_OperadorLogistico._id +
             "/" +
@@ -1116,7 +1112,7 @@ export default {
       });
       this.axios
         .get(
-          urlservicios +
+          urlservicios+
             "clientesOperador/" +
             test.id_OperadorLogistico._id +
             "/" +
