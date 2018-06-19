@@ -15,11 +15,11 @@
         <b-row>
           <b-col md="6" offset-md="6">
             <div class="d-inline-block float-right mt-3">
-              <b-btn class="rounded text-white" variant="warning" to="/inicio/orden" v-b-tooltip.hover title="Anterior">
-                <i class="fa fa-arrow-left"></i>Anterior
+              <b-btn class="rounded text-white" variant="info" to="/inicio/orden" v-b-tooltip.hover title="Anterior">
+                <i class="fa fa-arrow-left"></i>&#32;Anterior
               </b-btn>
               <b-btn class="rounded text-white" variant="warning" @click="envioServicio" v-b-tooltip.hover title="Finalizar">
-                <i class="fa fa-check"></i>Finalizar
+                <i class="fa fa-check"></i>&#32;Finalizar
               </b-btn>
             </div>
           </b-col>
@@ -85,7 +85,7 @@
             no-close-on-esc
             size="lg">
             <div slot="modal-header" class="w-100">
-              <b-btn class="rounded text-white" variant="warning" @click="hideModal">
+              <b-btn class="rounded text-white" variant="danger" @click="hideModal">
                 <i class="fa fa-times-circle" aria-hidden="true"></i>&#32;Cancelar
               </b-btn>
               <b-btn class="rounded float-right text-white" variant="warning" v-on:click="ingresarOrden">
@@ -121,18 +121,18 @@
                         </b-col>
                       </b-row>
                       <b-row v-for="(data,indice) in inputs.campos" :key="indice" v-if="data.type != 'select' && data.espieza == false" class="my-2">
-                        <b-col>
+                        <b-col md="4">
                           <h5 class="text-primary mt-2">{{data.nombre}}:</h5>
                         </b-col>
-                        <b-col  cols="8">
+                        <b-col md="8">
                           <input class="form-control form-control-sm"  :maxlength="data.maxlength" :type="data.type" :id="data.id" :style="[data.style,validatecampo]" :max="data.max" :min="data.min" :placeholder="data.placeholder" @keyup="Presiono(indice)"   required>
                         </b-col>
                       </b-row>
                       <b-row v-show="selectservice" class="my-2">
-                        <b-col>
+                        <b-col md="4">
                           <h5 class="text-primary mt-2">Contenido:</h5>
                         </b-col>
-                        <b-col cols="8">
+                        <b-col md="8">
                           <b-form-input id="textarea1" type="text"
                             v-model="detalles.contenido"
                             class="form-control-sm"
@@ -156,10 +156,10 @@
                                 <b-row v-for="(data,indice) in inputs.campos" v-show="camposdinamicos">
                                 <template v-if="data.type!='select'" >
                                     <template v-if="data.espieza==true">
-                                    <b-col  >
-                                        <label  class="col-sm col-form-label col-form-label-sm text-capitalize text-primary" :style="[data.style]" >{{data.placeholder}}: </label>
+                                    <b-col md="4">
+                                      <h5 class="text-primary mt-2" :style="[data.style]">{{data.placeholder}}:</h5>
                                     </b-col>
-                                    <b-col >
+                                    <b-col md="8">
                                       <!--
                                         @keyup="Presiono(indice)"
                                         -->
@@ -228,28 +228,27 @@
                     <b-tab title="Destinatario">
                       <b-form-row v-show="selectservice" class="my-1">
                         <b-col md="4">
-                          <h5 class="text-primary font-weight-normal mt-2">Nombre:</h5>
+                          <h5 class="text-primary mt-2">Nombre:</h5>
                         </b-col>
                         <b-col md="8">
-                              <v-select maxHeight="500px" label="nombre" :filterable="false" v-model=nombre_remitente
-                                placeholder="Nombre" :options="optionsremitentes"
-                                  @input="Seleccionado" v-show="MostrarFiltro"
-                                  @search="onSearch">
-                                  <template slot="no-options" >
-                                    <p >Nombre del destinatario..</p>
-                                  </template>
-                                  <template slot="option" slot-scope="option">
-                                    <div class="d-center">
-                                      {{ option.nombre }}
-                                      </div>
-                                  </template>
-                                  <template slot="selected-option" scope="option">
-                                    <div class="selected d-center">
-                                      {{ option.nombre }}
-                                    </div>
-                                  </template>
-
-                                </v-select>
+                          <v-select maxHeight="500px" label="nombre" :filterable="false" v-model=nombre_remitente
+                            placeholder="Nombre" :options="optionsremitentes"
+                              @input="Seleccionado" v-show="MostrarFiltro"
+                              @search="onSearch">
+                              <template slot="no-options" >
+                                <p >Nombre del destinatario..</p>
+                              </template>
+                              <template slot="option" slot-scope="option">
+                                <div class="d-center">
+                                  {{ option.nombre }}
+                                  </div>
+                              </template>
+                              <template slot="selected-option" scope="option">
+                                <div class="selected d-center">
+                                  {{ option.nombre }}
+                                </div>
+                              </template>
+                          </v-select>
                         </b-col>
                       </b-form-row>
                       <!--
@@ -268,7 +267,7 @@
                       -->
                       <b-form-row v-show="selectservice&&mostrardestinatario" class="my-1">
                         <b-col md="4">
-                          <h5 class="text-primary font-weight-normal mt-2">Identificación:</h5>
+                          <h5 class="text-primary mt-2">Identificación:</h5>
                         </b-col>
                         <b-col md="8">
                             <b-form-input type="number" class="form-control form-control-sm"  placeholder="Identificación"
@@ -284,7 +283,7 @@
                       <!-- {{nombre_remitente}} -->
                       <b-form-row v-show="selectservice&&mostrardestinatario " >
                         <b-col md="4">
-                          <h5 class="text-primary font-weight-normal mt-2">Dirección:</h5>
+                          <h5 class="text-primary mt-2">Dirección:</h5>
                         </b-col>
                         <b-col md="8">
                           <b-form-input v-if="GeoReferenciacion==true"
@@ -328,11 +327,11 @@
                       </b-form-row>
                         <b-form-row v-show="selectservice&&mostrardestinatario" class="my-1">
                           <b-col md="4">
-                            <h5 class="text-primary font-weight-normal mt-2">Teléfono:</h5>
+                            <h5 class="text-primary mt-2">Teléfono:</h5>
                           </b-col>
                           <b-col md="8">
-                            <input type="text" :style="validatecampoTel"  class="form-control form-control-sm"
-                            id="telefono" @keyup="numeros(this)" placeholder="Teléfono"
+                            <input type="number" :style="validatecampoTel"  class="form-control form-control-sm"
+                            id="telefono" @keyup="numeros(this)" placeholder="Teléfono" maxlength="10" pattern="\d*"
                               v-model="detalles.destinatario.telefono">
                           </b-col>
                         </b-form-row>
@@ -373,12 +372,12 @@
          no-close-on-backdrop
             no-close-on-esc size="lg">
             <div slot="modal-header" class="w-100">
-                    <b-btn class="mt-3" variant="warning" @click="hideModal">
-                    <i class="fa fa-times-circle" aria-hidden="true">  </i>
-                    Cancelar</b-btn>
-                    <b-btn class="mt-3 float-right" variant="warning" v-on:click="actualizar()">
-                    <i class="fa fa-floppy-o"></i> Guardar
-                    </b-btn>
+              <b-btn class="rounded text-white" variant="danger" @click="hideModal">
+                <i class="fa fa-times-circle" aria-hidden="true"></i>&#32;Cancelar
+              </b-btn>
+              <b-btn class="rounded float-right text-white" variant="warning" v-on:click="actualizar()">
+                <i class="fa fa-floppy-o"></i>&#32;Guardar
+              </b-btn>
             </div>
                 <b-container fluid>
                   <b-row class=" my-1">
@@ -401,205 +400,191 @@
                       </v-select>
                       </b-col>
                   </b-row>
-
-                    <b-tabs  v-show="selectserviceED" v-model="tabIndexED" @input="cambiotab">
-                        <b-tab  title="Información">
-                                <b-row>
-                                        <b-col>
-                                            <label class="col col-form-label col-form-label-sm text-capitalize text-primary" >Documento Referencia:</label>
-                                        </b-col>
-                                        <b-col>
-                                            <b-form-input type="text" class="form-control form-control-sm "
-                                                                    placeholder="Referencia" v-model="detalleseditar.referencia"
-                                                                :state="estado.referencia"></b-form-input>
-                                        </b-col>
-                                </b-row>
-                                <b-row  v-for="(data,indice) in inputsED.campos" class="my-2">
-                                    <template v-if="data.type!='select'" >
-                                    <template v-if="data.espieza==false">
-                                    <b-col  >
-                                        <label  class="col-sm col-form-label col-form-label-sm text-capitalize text-primary" :style="[data.style]" >{{data.nombre}}: </label>
-                                    </b-col>
-                                    <b-col >
-                                        <input class="form-control form-control-sm"
-                                        :type="data.type" :id="data.id" :style="[data.style,validatecampo]"
-                                        :max="data.max" :placeholder="data.placeholder"
-                                        @keyup="PresionoED(indice)"  :value="valores(data.id)"      required>
-                                    </b-col>
-                                    </template>
-
-                                    </template>
-                                </b-row>
-                                <b-row class=" my-1">
-                                    <b-form-textarea id="textarea1"
-                                        v-model="detalleseditar.observaciones"
-                                        placeholder="Observaciones"
-                                        :rows="3"
-                                        :max-rows="6">
-                                    </b-form-textarea>
-                                </b-row>
-                              <b-row class=" my-1">
-                                  <b-form-textarea id="textarea1"
-                                      v-model="detalleseditar.contenido"
-                                      placeholder="Ingrese el contenido"
-                                      :rows="3"
-                                      :max-rows="6"
-                                      maxlength="50">
-                                  </b-form-textarea>
-                              </b-row>
-                        </b-tab>
-                        <b-tab title="Detalle" :disabled="tabdinamicoED">
-                        <!--
-
-                          -->
-                            <b-row v-for="(data,indice) in inputsED.campos" v-show="camposdinamicos">
-                            <template v-if="data.type!='select'" >
-                                <template v-if="data.espieza==true">
-                                <b-col  >
-                                    <label  class="col-sm col-form-label col-form-label-sm text-capitalize" :style="[data.style]" >{{data.nombre}}: </label>
-                                </b-col>
-                                <b-col >
-                                    <input class="form-control form-control-sm" :type="data.type"
-                                    :id="data.id" :style="[data.style,validatecampo]" :max="data.max"
-                                    :placeholder="data.placeholder" @keyup="PresionoED(indice)"   required>
-                                </b-col>
-                                </template>
-
-                            </template>
-                            </b-row>
-
-                            <b-row v-show="ocultardicionarED">
-                            <b-col class="d-flex flex-row-reverse">
-                                <b-btn variant="outline-success" active-class class="float-right" @click="adicionarRefED" v-show="camposdinamicos">
-                                <i class="fa fa-plus"></i>
-                                </b-btn>
-                            </b-col>
-                            </b-row>
-                            <b-row v-show="ocultareditarED">
-                            <b-col class="d-flex flex-row-reverse">
-                                <b-btn variant="outline-success" active-class class="float-right" @click="UpdateDinamicoED" v-show="camposdinamicos">
-                                <i class="fa fa-pencil"></i>
-                                </b-btn>
-                            </b-col>
-                            </b-row>
-
-                            <b-row>
-                            <b-table striped   hover :items="itemsdinamicos"  :fields="fieldsdinamicos"
-                            :per-page="3" :current-page="currentPageRef" v-show="camposdinamicos">
-                                <template slot="eliminar" slot-scope="data">
-                                  <b-btn  v-on:click="eliminarRef(data)" v-show="ocultardicionarED">
-                                    <i class="fa fa-trash" v-on:click="eliminarRef(data)" v-show="ocultardicionarED"
-                                    ></i>
-                                  </b-btn>
-                                  <!--
-                                    <i class="btn btn-danger fa fa-trash" v-on:click="eliminarRef(data)" v-show="ocultardicionarED"
-                                    v-b-popover.hover="'Permite eliminar'" title="Popover Title" ></i>
-                                    -->
-                                </template>
-                                <template slot="actualizar" slot-scope="data">
-                                    <i class="btn btn-primary fa fa-pencil" v-on:click="ActualizarRefED(data,data.index)" v-show="ocultardicionarED"
-                                    v-b-popover.hover="'Permite Actualizar'" ></i>
-                                </template>
-                                </b-table>
-                            <b-pagination size="md" :total-rows="itemsdinamicos.length" v-model="currentPageRef"
-                            :per-page="3" v-show="camposdinamicos">
-                            </b-pagination>
-                            </b-row>
-                        </b-tab>
-                        <b-tab title="Destinatario">
-                            <b-form-row  class="my-1">
-                                <b-col>
-                                    <label  class="col-sm col-form-label col-form-label-sm text-primary">Nombre: </label>
-                                </b-col>
-                                <b-col cols="9">
-                                      <v-select maxHeight="500px" label="nombre" :filterable="false" v-model=destinatarioED
-                                        placeholder="Nombre" :options="optionsremitentes"
-                                          @input="SeleccionadoED"
-                                          @search="onSearchED">
-                                          <template slot="no-options">
-                                            <p >Nombre del destinatario..</p>
-                                          </template>
-                                          <template slot="option" slot-scope="option">
-                                            <div class="d-center">
-                                              {{ option.nombre }}
-                                              </div>
-                                          </template>
-                                          <template slot="selected-option" scope="option">
-                                            <div class="selected d-center">
-                                              {{ option.nombre }}
-                                            </div>
-                                          </template>
-
-                                        </v-select>
-
-                                </b-col>
-                            </b-form-row>
-                            <b-form-row  class="my-1">
-                                <b-col>
-                                    <label  class="col-sm col-form-label col-form-label-sm"> Identificación: </label>
-                                </b-col>
-                                <b-col>
-                                    <b-form-input type="number" class="form-control form-control-sm"  placeholder="Indentidicación"
-                                    v-model="detalleseditar.destinatario.numero_identificacion"
-                                    @change="initAutocompleteED"
-                                     @input="initAutocompleteED"
-                                    :state="null"  v-b-popover.hover="'Se debe diligenciar sin puntos, en caso de NIT sin numero de validación, ni guion'" title="Num. Identificacion"></b-form-input>
-                                    <!--<input type="text"
-                                     @keyup.enter.tab.native="buscar('editar')"
-                                    @keydown.tab.native="buscar('editar')"
-                                    class="form-control form-control-sm"
-                                    placeholder="Nombre" v-model="detalles.destinatario.nombre">
-                                    -->
-                                </b-col>
-                            </b-form-row>
+                <b-card no-body v-show="selectserviceED" class="border my-2">
+                  <b-tabs card v-model="tabIndex" class="cabecera-tabs">
+                    <b-tab title="Información">
+                      <b-row class="my-2">
+                        <b-col md="4">
+                          <h5 class="text-primary mt-2">Documento de referencia:</h5>
+                        </b-col>
+                        <b-col md="8">
+                          <b-form-input type="text" class="form-control form-control-sm"
+                            placeholder="Referencia" v-model="detalleseditar.referencia"
+                            :state="estado.referencia"/>
+                        </b-col>
+                      </b-row>
+                      <b-row v-for="(data,indice) in inputsED.campos" :key="indice" v-if="data.type != 'select' && data.espieza == false" class="my-2">
+                        <b-col md="4">
+                          <h5 class="text-primary mt-2">{{data.nombre}}:</h5>
+                        </b-col>
+                        <b-col md="8">
+                          <input class="form-control form-control-sm"
+                            :type="data.type" :id="data.id" :style="[data.style,validatecampo]"
+                            :max="data.max" :placeholder="data.placeholder"
+                            @keyup="PresionoED(indice)" :value="valores(data.id)" required>
+                        </b-col>
+                      </b-row>
+                      <b-row class="my-2">
+                        <b-col md="4">
+                          <h5 class="text-primary mt-2">Contenido:</h5>
+                        </b-col>
+                        <b-col md="8">
+                          <b-form-input id="textarea1" type="text"
+                            v-model="detalleseditar.contenido"
+                            class="form-control-sm"
+                            placeholder="Contenido"
+                            maxlength="50">
+                          </b-form-input>
+                        </b-col>
+                      </b-row>
+                      <b-form-textarea id="textarea1"
+                          v-model="detalleseditar.observaciones"
+                          class="form-control-sm"
+                          placeholder="Instrucciones a tener en cuenta para entrega, recolección y transporte."
+                          :rows="3"
+                          :max-rows="6"/>
+                      <b-form-row v-show="selectservice">
+                        <b-col>
+                        </b-col>
+                      </b-form-row>
+                    </b-tab>
+                    <b-tab title="Detalle" :disabled="tabdinamicoED">
+                      <b-row v-for="(data,indice) in inputsED.campos" :key="indice" v-if="data.type != 'select' && data.espieza == true" class="my-2">
+                        <b-col md="4">
+                          <h5 class="text-primary mt-2" :style="[data.style]">{{data.nombre}}:</h5>
+                        </b-col>
+                        <b-col md="8">
+                          <input class="form-control form-control-sm" :type="data.type"
+                            :id="data.id" :style="[data.style,validatecampo]" :max="data.max"
+                            :placeholder="data.placeholder" @keyup="PresionoED(indice)" required>
+                        </b-col>
+                      </b-row>
+                      <b-row v-show="ocultardicionarED">
+                        <b-col class="d-flex flex-row-reverse">
+                          <b-btn variant="outline-success" active-class class="float-right" @click="adicionarRefED" v-show="camposdinamicos">
+                            <i class="fa fa-plus"></i>
+                          </b-btn>
+                        </b-col>
+                      </b-row>
+                      <b-row v-show="ocultareditarED">
+                        <b-col class="d-flex flex-row-reverse">
+                          <b-btn variant="outline-success" active-class class="float-right" @click="UpdateDinamicoED" v-show="camposdinamicos">
+                            <i class="fa fa-pencil"></i>
+                          </b-btn>
+                        </b-col>
+                      </b-row>
+                      <b-row>
+                        <b-table striped hover :items="itemsdinamicos" :fields="fieldsdinamicos"
+                          :per-page="3" :current-page="currentPageRef" v-show="camposdinamicos">
+                          <template slot="eliminar" slot-scope="data">
+                            <b-btn  v-on:click="eliminarRef(data)" v-show="ocultardicionarED">
+                              <i class="fa fa-trash" v-on:click="eliminarRef(data)" v-show="ocultardicionarED"
+                              ></i>
+                            </b-btn>
                             <!--
-                            <b-form-row class="my-1">
-                                <b-col>
-                                    <label  class="col-sm col-form-label col-form-label-sm">Nombre: </label>
-                                </b-col>
-                                <b-col>
-                                <b-form-input type="text" class="form-control form-control-sm"  placeholder="Nombre" v-model="detalleseditar.destinatario.nombre"
-                                    :state="estado.nombre"></b-form-input>
+                              <i class="btn btn-danger fa fa-trash" v-on:click="eliminarRef(data)" v-show="ocultardicionarED"
+                              v-b-popover.hover="'Permite eliminar'" title="Popover Title" ></i>
+                              -->
+                          </template>
+                          <template slot="actualizar" slot-scope="data">
+                              <i class="btn btn-primary fa fa-pencil" v-on:click="ActualizarRefED(data,data.index)" v-show="ocultardicionarED"
+                              v-b-popover.hover="'Permite Actualizar'" ></i>
+                          </template>
+                        </b-table>
+                        <b-pagination size="md" :total-rows="itemsdinamicos.length" v-model="currentPageRef"
+                        :per-page="3" v-show="camposdinamicos">
+                        </b-pagination>
+                      </b-row>
+                    </b-tab>
+                    <b-tab title="Destinatario">
+                      <b-form-row class="my-1">
+                        <b-col>
+                          <h5 class="text-primary mt-2">Nombre:</h5>
+                        </b-col>
+                        <b-col cols="9">
+                          <v-select maxHeight="500px" label="nombre" :filterable="false" v-model=destinatarioED
+                            placeholder="Nombre" :options="optionsremitentes"
+                            @input="SeleccionadoED"
+                            @search="onSearchED">
+                            <template slot="no-options">
+                              <p>Nombre del destinatario..</p>
+                            </template>
+                            <template slot="option" slot-scope="option">
+                              <div class="d-center">
+                                {{ option.nombre }}
+                                </div>
+                            </template>
+                            <template slot="selected-option" scope="option">
+                              <div class="selected d-center">
+                                {{ option.nombre }}
+                              </div>
+                            </template>
+                          </v-select>
+                        </b-col>
+                      </b-form-row>
+                      <b-form-row  class="my-1">
+                          <b-col>
+                            <h5 class="text-primary mt-2">Identificación:</h5>
+                          </b-col>
+                          <b-col>
+                              <b-form-input type="number" class="form-control form-control-sm"  placeholder="Indentidicación"
+                              v-model="detalleseditar.destinatario.numero_identificacion"
+                              @change="initAutocompleteED"
+                                @input="initAutocompleteED"
+                              :state="null"  v-b-popover.hover="'Se debe diligenciar sin puntos, en caso de NIT sin numero de validación, ni guion'" title="Num. Identificacion"></b-form-input>
+                              <!--<input type="text"
+                                @keyup.enter.tab.native="buscar('editar')"
+                              @keydown.tab.native="buscar('editar')"
+                              class="form-control form-control-sm"
+                              placeholder="Nombre" v-model="detalles.destinatario.nombre">
+                              -->
+                          </b-col>
+                      </b-form-row>
+                      <!--
+                      <b-form-row class="my-1">
+                          <b-col>
+                              <label  class="col-sm col-form-label col-form-label-sm">Nombre: </label>
+                          </b-col>
+                          <b-col>
+                          <b-form-input type="text" class="form-control form-control-sm"  placeholder="Nombre" v-model="detalleseditar.destinatario.nombre"
+                              :state="estado.nombre"></b-form-input>
 
 
-                                </b-col>
-                                -->
-                            </b-form-row>
-                            <b-form-row class="my-1">
-                                <b-col>
-                                    <label  class="col-sm col-form-label col-form-label-sm">Dirección: </label>
-                                </b-col>
-                                <b-col>
-                                <b-form-input
-                                  v-if="GeoReferenciacion==true"
-                                  id="direccionGoogle3" ref="focusDireccionED" type="text" class="form-control form-control-sm"  placeholder="Direccion" v-model="detalleseditar.destinatario.direccion"
-                                    :state="estado.direccion"
-
-                                    ></b-form-input>
-                                <b-form-input
-                                  v-if="GeoReferenciacion==false"
-                                  id="direccionGoogle" ref="focusDireccionED" type="text" class="form-control form-control-sm"
-                                   placeholder="Direccion sin google"
-                                   v-model="detalleseditar.destinatario.direccion"
-                                    :state="estado.direccion"
-                                    ></b-form-input>
-                                    <!--
-                                    <input type="text" class="form-control form-control-sm" id="editardire" placeholder="Direccion" v-model="detalleseditar.destinatario.direccion">
-                                    -->
-                                </b-col>
-                            </b-form-row>
-                            <b-form-row class="my-1">
-                                <b-col>
-                                    <label  class="col-sm col-form-label col-form-label-sm">Telefono: </label>
-                                </b-col>
-                                <b-col>
-                                    <input type="text" :style="validatecampoTel" class="form-control form-control-sm" id="telefonoedit"  @keyup="numeroseditar(this)"  placeholder="Telefono" v-model="detalleseditar.destinatario.telefono">
-                                </b-col>
-                            </b-form-row>
-                        </b-tab>
-                    </b-tabs>
-                </b-container>
-                <div slot="modal-footer" class="w-100"></div>
+                          </b-col>
+                          -->
+                      <b-form-row class="my-1">
+                        <b-col>
+                          <h5 class="text-primary mt-2">Dirección:</h5>
+                        </b-col>
+                        <b-col>
+                          <b-form-input v-if="GeoReferenciacion==true" id="direccionGoogle3"
+                            ref="focusDireccionED" type="text" class="form-control form-control-sm"
+                            placeholder="Direccion" v-model="detalleseditar.destinatario.direccion"
+                            :state="estado.direccion"></b-form-input>
+                          <b-form-input v-if="GeoReferenciacion==false" id="direccionGoogle"
+                            ref="focusDireccionED" type="text" class="form-control form-control-sm"
+                            placeholder="Direccion sin google" v-model="detalleseditar.destinatario.direccion"
+                            :state="estado.direccion"></b-form-input>
+                            <!--
+                            <input type="text" class="form-control form-control-sm" id="editardire" placeholder="Direccion" v-model="detalleseditar.destinatario.direccion">
+                            -->
+                        </b-col>
+                      </b-form-row>
+                      <b-form-row class="my-1">
+                        <b-col>
+                          <h5 class="text-primary mt-2">Teléfono:</h5>
+                        </b-col>
+                        <b-col>
+                          <input type="text" :style="validatecampoTel" class="form-control form-control-sm"
+                            id="telefonoedit"  @keyup="numeroseditar(this)"  placeholder="Telefono"
+                            v-model="detalleseditar.destinatario.telefono">
+                        </b-col>
+                      </b-form-row>
+                    </b-tab>
+                  </b-tabs>
+                </b-card>
+              </b-container>
+            <div slot="modal-footer" class="w-100"></div>
         </b-modal>
     </b-container>
 </template>
@@ -2196,7 +2181,7 @@ export default {
                     });
                     console.log("itemmm");
                     console.log(informacion);
-                    
+
                 }
                 else{
                     console.log("no existe");
@@ -2741,5 +2726,7 @@ export default {
         text-overflow: ellipsis;
         width: 400px;
       }
-
+.card-header {
+  height: auto;
+}
 </style>

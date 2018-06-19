@@ -150,18 +150,16 @@
                 </b-form-group>
            </b-container>
             <div slot="modal-footer" class="w-100">
-                <b-btn size="sm" class="float-right" variant="primary" @click="adicionarCliente()">
-                Guardar
+                <b-btn size="sm" class="float-right text-white rounded" variant="warning" @click="adicionarCliente()">
+                  <i class="fa fa-floppy-o"></i>&#32;Guardar
                 </b-btn>
-                <b-btn size="sm" class="float-left" variant="danger" @click="cerrarModal()">
-                Cerrar
+                <b-btn size="sm" class="float-left text-white rounded" variant="danger" @click="cerrarModal()">
+                  <i class="fa fa-times-circle"></i>&#32;Cerrar
                 </b-btn>
             </div>
             <div slot="modal-header" class="w-100">
                 <strong >Crear Cliente</strong>
-                <b-btn size="sm" class="float-right" variant="danger" @click="cerrarModal()">
-                X
-                </b-btn>
+                <b-btn size="sm" class="float-right rounded" variant="danger" @click="cerrarModal()">&times;</b-btn>
             </div>
         </b-modal>
         <!-- Modal Editar Cliente -->
@@ -240,18 +238,15 @@
                 </b-form-group>
            </b-container>
            <div slot="modal-header" class="w-100">
-                <strong >Crear Cliente</strong>
-                <b-btn size="sm" class="float-right" variant="outline-danger" @click="cerrarModal()">
-                X
-                </b-btn>
+              <strong>Editar Cliente</strong>
             </div>
 
            <div slot="modal-footer" class="w-100">
-                <b-btn size="sm" class="float-right" variant="primary" @click="actualizarCliente()">
-                Guardar
+                <b-btn size="sm" class="float-right text-white rounded" variant="warning" @click="actualizarCliente()">
+                  <i class="fa fa-floppy-o"></i>&#32;Guardar
                 </b-btn>
-                <b-btn size="sm" class="float-left" variant="danger" @click="cerrarModal()">
-                Cerrar
+                <b-btn size="sm" class="float-left text-white rounded" variant="danger" @click="cerrarModal()">
+                  <i class="fa fa-times-circle"></i>&#32;Cerrar
                 </b-btn>
             </div>
         </b-modal>
