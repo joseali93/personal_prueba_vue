@@ -105,6 +105,7 @@ export default {
                         this.conceptos = (conceptos);
                         const list = ($('<div class="list-group">'));
                         let currentConcept = (null);
+                        console.log('conceptos :', this.conceptos);
                         this.conceptos.forEach((c) => {
                           const concepto = ($(`
                             <a href="javascript:void(0)"
@@ -753,6 +754,7 @@ export default {
                     load
                     });
                 });
+
                 this.axios.get(urlservicios+"estructuraf/" +produc +
                 "/" +serv).
                 then(response => {

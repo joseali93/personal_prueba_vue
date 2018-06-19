@@ -131,7 +131,7 @@
           <template slot="editar" slot-scope="data" v-if="detalleTrayecto.lista.length">
             <i
             v-bind:class="[`btn ${(detalleTrayecto.lista[devolverIndice(data.index)]) ? ('btn-success') : ('btn-danger')} fa fa-table rounded`]"
-            v-on:click.stop="actualizar(devolverIndice(data.index),data.item.id)"></i>
+            v-on:click.stop="actualizar(devolverIndice(data.index), data.item.id)"></i>
           </template>
           <!-- ------------------------------------------------------- -->
         </b-table>
@@ -307,7 +307,7 @@
                 <b-form-select class="col-form-label col-form-label-sm"
                   :id="data.id" :options="trayectos" text-field="nombre" value-field="_id"
                   @change="cambioTrayecto" @input="seleccionar(data)"
-                  :value="(trayectoActual) ? (trayectoActual._id) : (null)"
+                  :value="(detalleTrayecto.trayectoActual) ? (detalleTrayecto.trayectoActual._id) : (null)"
                   :disabled="selec_disable">
                 </b-form-select>
                 <!-- ------------------------------------------------------- -->
@@ -386,9 +386,9 @@ export default {
       selection: null,
       trayectos: null,
       // -------------------------------------------------------
-      trayectoActual: null,
       detalleTrayecto: {
         indiceActual: null,
+        trayectoActual: null,
         lista: []
       },
       // -------------------------------------------------------
@@ -406,12 +406,6 @@ export default {
     }
   },
   methods: {
-    cambioTrayecto(id) {
-      this.trayectoSeleccionado(id);
-    },
-    devolverIndice(indice) {
-      return (((this.currentPage - 1) * this.totalRows) + indice);
-    },
     pruebacambio(){
       // console.log("entro a cambios");
     },
@@ -440,7 +434,7 @@ export default {
 
     this.socket.on('CouriersActivos', (connectionList) => {
       // console.log("emitio correcto");
-                //// console.log(connectionList);
+                // console.log(connectionList);
                 this.curiers=connectionList
               });
 
@@ -763,6 +757,11 @@ export default {
       this.indices = "";
       this.consecutivo = "";
       this.selection = "";
+      // ----------------------------------------
+      const { indiceActual, trayectoActual, lista } = (this.detalleTrayecto);
+      if (lista[indiceActual] !== void 0 && lista[indiceActual] !== trayectoActual)
+          lista[indiceActual] = (trayectoActual);
+      // ----------------------------------------
       this.$refs.ModalAct.hide();
     },
     ingresarTrayectos() {
@@ -775,19 +774,21 @@ export default {
         if (this.info.estado == "orden de servicio cancelada") {
           swal("Cuidado!", "Orden de Servicio Cancelada", "warning");
         } else {
-          this.selection = this.campos.id_trayecto;
-          if (
-            this.selection == "" ||
-            this.selection == "000000000000000000000000"
-          ) {
-            this.detallesactualizar = "";
-            this.itemsvariables = "";
-            this.inputs = "";
-            this.campos = "";
-            this.indices = "";
-            this.consecutivo = "";
-            this.selection = "";
-          } else {
+          // this.selection = this.campos.id_trayecto;
+          // ----------------------------------------
+          this.trayectoSeleccionado(this.selection);
+          // ----------------------------------------
+          // if (!this.selection || this.selection == "000000000000000000000000" ) {
+            // this.$refs.ModalAct.hide();
+            // return;
+            // this.detallesactualizar = "";
+            // this.itemsvariables = "";
+            // this.inputs = "";
+            // this.campos = "";
+            // this.indices = "";
+            // this.consecutivo = "";
+            // this.selection = "";
+          // } else {
             for (var x = 0; x < this.trayectos.length; x++) {
               if (this.trayectos[x]._id == this.selection) {
                 nombresel = this.trayectos[x].nombre;
@@ -798,9 +799,10 @@ export default {
 
             var objeto = {
               id_trayecto: this.selection,
-              nombre: nombresel,
+              nombre: (this.selection) ? (nombresel) : (null),
               campos: this.campos
             };
+            console.log(objeto);
 
             this.$refs.table.refresh();
             /*
@@ -836,40 +838,39 @@ export default {
             var propiedadesDinamicas
 
             llavescampos.forEach(element => {
-              // // console.log("elemenr llaves");
-              // // console.log(element);
+              // console.log("elemenr llaves");
+              // console.log(element);
               if(enviodestinatario.vmodel==element){
 
                   josea[element]=this.selection
-                  // // console.log(josea);
+                  // console.log(josea);
                  var objdestinatario={
                    propiedadesDinamicas: josea
                  }
-                 // // console.log("-------");
-                  // // console.log(objdestinatario.propiedadesDinamicas.id_trayecto);
+                 // console.log("-------");
+                  // console.log(objdestinatario.propiedadesDinamicas.id_trayecto);
 
                 this.axios.get(urlservicios+"obtenerDestinatario/"+this.currentUser.detalle[this.indemodal].detalleslocal.destinatario.numero_identificacion)
               .then(response =>{
                 destina=response.data.destinatarios
-                // // console.log(destina);
+                // console.log(destina);
 
 
 
 
                 this.axios.post(urlservicios+"ActualizarDestinatario" +"/" +destina._id,objdestinatario)
                   .then(responsedestinatario =>{
-                    // // console.log(responsedestinatario);
+                    // console.log(responsedestinatario);
                   })
 
               });
 
-                  // // console.log(objdestinatario);
+                  // console.log(objdestinatario);
               }
             });
 
 
-            //// // console.log(destina);
-
+            // console.log(destina);
             this.axios.post(urlservicios+"ActualizarTrayecto/" +this.currentUser._id +"/" +this.consecutivo,objeto)
               .then(response => {
                 this.$refs.table.refresh();
@@ -922,13 +923,13 @@ export default {
                   "warning"
                 );
               });
-          }
+          // }
         }
       }
     },
 
     asignarcurier(seleccionado) {
-      // // console.log(this.currentUser);
+      // console.log(this.currentUser);
       var login = localStorage.getItem("storedData");
       var infologin = JSON.parse(login);
       if (
@@ -1052,8 +1053,8 @@ export default {
 
     },
     asignar(seleccionado) {
-      // // console.log("tengo id cliente");
-      // // console.log(this.id_cliente_local);
+      // console.log("tengo id cliente");
+      // console.log(this.id_cliente_local);
       if (this.id_cliente_local != null) {
         var ocultar = true;
         var eliminar = this.vali;
@@ -1139,8 +1140,11 @@ export default {
       }
     },
     actualizar(indice, consecutivo, callback, hidden) {
-      this.trayectoActual = (this.detalleTrayecto.lista[indice]);
-      // // console.log('entro',this.detalleTrayecto.lista);
+      // ------------------------------------------
+      const { lista } = (this.detalleTrayecto);
+      this.selection = (lista[indice]) ? (lista[indice]._id) : (null);
+      this.detalleTrayecto.trayectoActual = (lista[indice]);
+      // ------------------------------------------
       var produc
       var serv
       this.currentUser.detalle.forEach((element,i )=> {
@@ -1207,11 +1211,16 @@ export default {
                           load
                         });
                       });
-                      this.detalleTrayecto.indiceActual = (indice);
-                      if (this.detalleTrayecto.lista[indice])
-                          this.trayectoSeleccionado(this.detalleTrayecto.lista[indice]._id);
+                      // ------------------------------------------
+                      if (this.detalleTrayecto.lista[indice]) {
+                        this.detalleTrayecto.indiceActual = (indice);
+                        this.trayectoSeleccionado(this.detalleTrayecto.lista[indice]._id);
+                      } else {
+                        this.detalleTrayecto.indiceActual = (0);
+                      }
                       if (typeof callback === 'function')
                           callback();
+                      // ------------------------------------------
                     })
                     .catch(function(error) {
                       var load = false;
@@ -1298,13 +1307,16 @@ export default {
                           load
                         });
                       });
-                      this.detalleTrayecto.indiceActual = (indice);
-                      // console.log(true, indice);
-                      // console.log('lista', this.detalleTrayecto.lista);
-                      if (this.detalleTrayecto.lista[indice])
-                          this.trayectoSeleccionado(this.detalleTrayecto.lista[indice]._id);
+                      // ------------------------------------------
+                      if (this.detalleTrayecto.lista[indice]) {
+                        this.detalleTrayecto.indiceActual = (indice);
+                        this.trayectoSeleccionado(this.detalleTrayecto.lista[indice]._id);
+                      } else {
+                        this.detalleTrayecto.indiceActual = (0);
+                      }
                       if (typeof callback === 'function')
                           callback();
+                      // ------------------------------------------
                     })
                     .catch(function(error) {
                       var load = false;
@@ -1446,10 +1458,21 @@ export default {
 
     },
     // -------------------------------------------------------
+    devolverIndice(indice) {
+      return (((this.currentPage - 1) * this.totalRows) + indice);
+    },
+    getTrayecto(idTrayecto) {
+      return (this.trayectos) ? (this.trayectos.find((t) => (t._id === idTrayecto))) : (null);
+    },
+    cambioTrayecto(id) {
+      const trayecto = (this.getTrayecto(id));
+      this.selection = (trayecto) ? (trayecto._id) : (null);
+      // this.trayectoSeleccionado(id);
+    },
     trayectoSeleccionado(idTrayecto) {
       if (this.trayectos) {
-        const { indiceActual, lista  } = (this.detalleTrayecto);
-        const trayecto = (this.trayectos.find((t) => (t._id === idTrayecto)));
+        const { indiceActual, lista } = (this.detalleTrayecto);
+        const trayecto = (this.getTrayecto(idTrayecto));
         lista[indiceActual] = (trayecto && trayecto._id) ? (trayecto) : (null);
         this.$forceUpdate();
       }
@@ -1483,6 +1506,8 @@ export default {
         this.detalleTrayecto.lista = [];
         let count = (0);
         (function trayectos() {
+          // if (count === this.currentUser.detalle.length - 1)
+          //     console.log(true, this.detalleTrayecto);
           if (count >= this.currentUser.detalle.length)
               return;
           const detalle = (this.currentUser.detalle[count]);
@@ -1529,14 +1554,11 @@ export default {
     );
     var login = localStorage.getItem("storedData");
     var infologin = JSON.parse(login);
-    //// console.log(infologin);
+    // console.log(infologin);
     if(infologin.id_OperadorLogistico.confirmacionSocket==true){
       this.socket = (new CreateSocket({
-
         id_cliente: infologin._id,
-
         id_operador: infologin.id_OperadorLogistico._id
-
       }));
       // console.log("SOCKETTTTT");
       // console.log(this.socket);
