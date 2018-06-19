@@ -4,10 +4,6 @@
       <i class="fa fa-chevron-left" aria-hidden="true"></i>
       Volver
     </b-btn>
-<<<<<<< HEAD
-
-=======
->>>>>>> 18-06-2018
     <b-card class="border my-2" header="Primary" header-bg-variant="primary">
       <div slot="header" class="w-100">
         <strong class="float-left ">Información de la orden de servicio</strong>
@@ -430,22 +426,12 @@ export default {
       return (((this.currentPage - 1) * this.totalRows) + indice);
     },
     pruebacambio(){
-<<<<<<< HEAD
-=======
-      // console.log("entro a cambios");
->>>>>>> 18-06-2018
     },
     updatecourier(){
-      console.log("... update courier-...");
-      console.log(this.currentUser.id_courier);
        var login = localStorage.getItem("storedData");
       var infologin = JSON.parse(login);
       if(infologin.id_OperadorLogistico.confirmacionSocket==true){
           this.socket.on('CouriersActivos', (connectionList) => {
-<<<<<<< HEAD
-=======
-              // console.log(connectionList);
->>>>>>> 18-06-2018
 
               this.curiers=connectionList
             });
@@ -453,27 +439,14 @@ export default {
 
     },
     onSearch(search) {
-<<<<<<< HEAD
-=======
-      // console.log("on search");
->>>>>>> 18-06-2018
         //loading(true);
       this.search(search, this);
 
     },
 
   search(search){
-<<<<<<< HEAD
     
     this.socket.on('CouriersActivos', (connectionList) => {
-=======
-    // console.log(search);
-    // console.log("emito en searchs");
-
-    this.socket.on('CouriersActivos', (connectionList) => {
-      // console.log("emitio correcto");
-                //// console.log(connectionList);
->>>>>>> 18-06-2018
                 this.curiers=connectionList
               });
 
@@ -484,11 +457,6 @@ export default {
       var infologin = JSON.parse(login);
 
       if (typeof this.model_medios == "string") {
-<<<<<<< HEAD
-        console.log("tengo id medio");
-=======
-        // console.log(this.model_medios);
->>>>>>> 18-06-2018
         var load = true;
         setTimeout(() => {
           bus.$emit("load", {
@@ -527,7 +495,6 @@ export default {
                   infologin.id_OperadorLogistico._id +
                   "/" +this.model_medios._id)
               .then(response2 => {
-<<<<<<< HEAD
                 this.curiers = response2.data;
                 //this.selec_disable=false
                 var nombre;
@@ -536,23 +503,6 @@ export default {
                   element2.nombre = nombre + " " + element2.apellido;
                   if (element2._id == this.selected_curier) {
                     this.selected_curier = element2;
-=======
-                // console.log("hacemos peticion de courier");
-                this.curiers = response2.data;
-                // console.log(response2);
-                //this.selec_disable=false
-                var nombre;
-                // console.log(this.curiers);
-                this.curiers.forEach(element2 => {
-                  // console.log("tenemos segundo courier");
-                  nombre = element2.nombre;
-                  element2.nombre = nombre + " " + element2.apellido;
-                  // console.log(element2);
-                  if (element2._id == this.selected_curier) {
-                    this.selected_curier = element2;
-                    // console.log("-----------------");
-                    // console.log(element2);
->>>>>>> 18-06-2018
                   }
                   var load = false;
                   setTimeout(() => {
@@ -581,10 +531,6 @@ export default {
       } 
       else {
         if (this.model_medios != null) {
-<<<<<<< HEAD
-=======
-          // console.log("no tengo medios");
->>>>>>> 18-06-2018
           var nombre;
           if(infologin.id_OperadorLogistico.confirmacionSocket==false){
             var load = true;
@@ -635,12 +581,6 @@ export default {
               });
           }
           else{
-<<<<<<< HEAD
-
-=======
-            // console.log("emito");
-            // console.log(this.socket);
->>>>>>> 18-06-2018
           this.socket.emit('MedioCourier', {
             id_operadorlogistico:infologin.id_OperadorLogistico._id,
             id_cliente:infologin._id,
@@ -649,12 +589,6 @@ export default {
           });
             //this.curiers=
           this.socket.on('CouriersActivos', (connectionList) => {
-<<<<<<< HEAD
-
-=======
-            // console.log("conexiones ");
-            // console.log(connectionList);
->>>>>>> 18-06-2018
             this.curiers=connectionList
           });
           }
@@ -665,10 +599,6 @@ export default {
         }
         else {
           //this.selec_disable=true
-<<<<<<< HEAD
-=======
-           // console.log("no tiene medios");
->>>>>>> 18-06-2018
         }
       }
     },
@@ -875,10 +805,6 @@ export default {
               });
             });
             */
-<<<<<<< HEAD
-
-=======
->>>>>>> 18-06-2018
             var enviodestinatario
             var load = true;
                 setTimeout(() => {
@@ -904,60 +830,30 @@ export default {
             var propiedadesDinamicas
 
             llavescampos.forEach(element => {
-<<<<<<< HEAD
               if(enviodestinatario.vmodel==element){
 
                   josea[element]=this.selection
                  var objdestinatario={
                    propiedadesDinamicas: josea
                  }
-=======
-              // // console.log("elemenr llaves");
-              // // console.log(element);
-              if(enviodestinatario.vmodel==element){
-
-                  josea[element]=this.selection
-                  // // console.log(josea);
-                 var objdestinatario={
-                   propiedadesDinamicas: josea
-                 }
-                 // // console.log("-------");
-                  // // console.log(objdestinatario.propiedadesDinamicas.id_trayecto);
->>>>>>> 18-06-2018
 
                 this.axios.get(urlservicios+"obtenerDestinatario/"+this.currentUser.detalle[this.indemodal].detalleslocal.destinatario.numero_identificacion)
               .then(response =>{
                 destina=response.data.destinatarios
-<<<<<<< HEAD
-=======
-                // // console.log(destina);
->>>>>>> 18-06-2018
 
 
 
 
                 this.axios.post(urlservicios+"ActualizarDestinatario" +"/" +destina._id,objdestinatario)
                   .then(responsedestinatario =>{
-<<<<<<< HEAD
-=======
-                    // // console.log(responsedestinatario);
->>>>>>> 18-06-2018
                   })
 
               });
 
-<<<<<<< HEAD
-=======
-                  // // console.log(objdestinatario);
->>>>>>> 18-06-2018
               }
             });
 
 
-<<<<<<< HEAD
-=======
-            //// // console.log(destina);
->>>>>>> 18-06-2018
 
             this.axios.post(urlservicios+"ActualizarTrayecto/" +this.currentUser._id +"/" +this.consecutivo,objeto)
               .then(response => {
@@ -1017,10 +913,6 @@ export default {
     },
 
     asignarcurier(seleccionado) {
-<<<<<<< HEAD
-=======
-      // // console.log(this.currentUser);
->>>>>>> 18-06-2018
       var login = localStorage.getItem("storedData");
       var infologin = JSON.parse(login);
       if (
@@ -1144,11 +1036,6 @@ export default {
 
     },
     asignar(seleccionado) {
-<<<<<<< HEAD
-=======
-      // // console.log("tengo id cliente");
-      // // console.log(this.id_cliente_local);
->>>>>>> 18-06-2018
       if (this.id_cliente_local != null) {
         var ocultar = true;
         var eliminar = this.vali;
@@ -1235,7 +1122,6 @@ export default {
     },
     actualizar(indice, consecutivo, callback, hidden) {
       this.trayectoActual = (this.detalleTrayecto.lista[indice]);
-      // // console.log('entro',this.detalleTrayecto.lista);
       var produc
       var serv
       this.currentUser.detalle.forEach((element,i )=> {
@@ -1353,13 +1239,9 @@ export default {
             load
           });
         });
-// console.log('entro2',this.detalleTrayecto.lista);
         if (produc && serv) {
-          // console.log('entro3',this.detalleTrayecto.lista);
           this.axios.get(urlservicios+ "estructuraf/" + produc + "/" + serv)
             .then(response => {
-              // console.log(response)
-// console.log('entro4',this.detalleTrayecto.lista);
               this.selec_disable=false
               var load = false;
               setTimeout(() => {
@@ -1394,8 +1276,6 @@ export default {
                         });
                       });
                       this.detalleTrayecto.indiceActual = (indice);
-                      // console.log(true, indice);
-                      // console.log('lista', this.detalleTrayecto.lista);
                       if (this.detalleTrayecto.lista[indice])
                           this.trayectoSeleccionado(this.detalleTrayecto.lista[indice]._id);
                       if (typeof callback === 'function')
@@ -1442,10 +1322,6 @@ export default {
 
     },
     asignarfinal(data){
-<<<<<<< HEAD
-=======
-      // console.log("entro a asignar final");
->>>>>>> 18-06-2018
       if(data.mensaje.respuesta=="true"){
         this.currentUser.estado='Orden De Servicio Asignada'
         var obj = {
@@ -1491,10 +1367,6 @@ export default {
 
       }
       else{
-<<<<<<< HEAD
-=======
-        // console.log("no hago nada");
->>>>>>> 18-06-2018
         swal(
           data.mensaje.message,
           '',
@@ -1562,11 +1434,6 @@ export default {
     selection(n, o) {}
   },
   mounted: function() {
-<<<<<<< HEAD
-=======
-    // console.log("montado");
-    // console.log(this.currentUser);
->>>>>>> 18-06-2018
     bus.$on(
       "ocultar",
       function(userObject) {
@@ -1633,10 +1500,6 @@ export default {
     );
     var login = localStorage.getItem("storedData");
     var infologin = JSON.parse(login);
-<<<<<<< HEAD
-=======
-    //// console.log(infologin);
->>>>>>> 18-06-2018
     if(infologin.id_OperadorLogistico.confirmacionSocket==true){
       this.socket = (new CreateSocket({
 
@@ -1645,15 +1508,7 @@ export default {
         id_operador: infologin.id_OperadorLogistico._id
 
       }));
-<<<<<<< HEAD
       this.socket.on('connect', () => {
-=======
-      // console.log("SOCKETTTTT");
-      // console.log(this.socket);
-      this.socket.on('connect', () => {
-        // console.log('conectado!!');
-        // console.log(this.socket.instance.id);
->>>>>>> 18-06-2018
       })
 
       this.socket.on('ListaConexiones', (data) => {
@@ -1669,14 +1524,8 @@ export default {
 
       })
       this.socket.on('messages', (data) => {
-<<<<<<< HEAD
-        
-=======
 
-        // console.log('-----------servicio juan-------------------------');
-        // console.log(data);
-        // console.log('------------------------------------');
->>>>>>> 18-06-2018
+
         clearTimeout(this.validacionsockets)
         //$.cbSpinner("hide");
 
