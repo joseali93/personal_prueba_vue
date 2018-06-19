@@ -58,7 +58,7 @@
                     </b-form-group>
                 </b-col>
                 <b-col >
-                    <b-btn active-class class="float-right rounded text-white" variant="warning" @click="limpiarfiltro">
+                    <b-btn active-class class="float-right rounded text-white" variant="info" @click="limpiarfiltro">
                         <i class="fa fa-eraser" aria-hidden="true"></i>&#32;Limpiar
                     </b-btn>
                 </b-col>

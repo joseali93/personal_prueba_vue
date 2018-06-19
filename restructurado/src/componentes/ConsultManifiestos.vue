@@ -21,7 +21,7 @@
                         <small>Se permite la busqueda de Manifiestos seleccionando los siguientes filtros </small>
                 </header>
                 -->
-                <b-btn class="rounded my-2" variant="success" @click="limpiar">
+                <b-btn class="rounded my-2" variant="info" @click="limpiar">
                     <i class="fa fa-eraser"></i>
                 </b-btn>
                 <b-row>

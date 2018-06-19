@@ -365,7 +365,7 @@ nav.side-navbar .sidenav-header {
   background: white;
 }
 nav.side-navbar .sidenav-header img {
-  width: 130px;
+  width: 100px;
   height: auto;
 }
 nav.side-navbar .sidenav-header a:hover {

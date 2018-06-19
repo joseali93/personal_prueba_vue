@@ -194,7 +194,7 @@ DE LA ORDEN DE SERVICIO -->
                               placeholder="Dirección"
                               maxlength="100">
                           </b-form-input>
-                        
+
 
                   </b-form-group>
                   </b-col>
@@ -955,7 +955,7 @@ export default {
               });
             });
         } else {
-         
+
           this.axios
             .post(
               urlservicios+ "ActualizarDestinatario/" +  this.remit._id,
@@ -1261,5 +1261,8 @@ export default {
 .dashboard-header section-padding {
   padding-top: 1px;
   padding-bottom: 01px;
+}
+.card-header {
+  height: auto;
 }
 </style>
