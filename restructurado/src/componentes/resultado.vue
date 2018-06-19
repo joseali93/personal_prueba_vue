@@ -86,7 +86,7 @@ export default {
             if (infologin.id_cliente == undefined || infologin.id_cliente == null) {
               if (typeof value.item === 'object') {
                 const { _id, estado, id_OperadorLogistico } = (value.item);
-                if (/^(Orden De Servicio Creada|Orden De Servicio Asignada)$/i.test(estado)) {
+                if (/^(Orden De Servicio Creada|Orden De Servicio Asignada|Orden de servicio en parada en ruta)$/i.test(estado)) {
                   const url = (`/logistica/ConceptoProcesoSistema/${id_OperadorLogistico}/2`);
                   this.axios.get(url).then((response) => {
                     const { conceptos } = (response.data);

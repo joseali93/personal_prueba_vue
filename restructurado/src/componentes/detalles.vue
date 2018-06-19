@@ -4,8 +4,7 @@
       <i class="fa fa-chevron-left" aria-hidden="true"></i>
       Volver
     </b-btn>
-    ------
-    {{id_cliente_local}}
+
     <b-card class="border my-2" header="Primary" header-bg-variant="primary">
       <div slot="header" class="w-100">
         <strong class="float-left ">Información de la orden de servicio</strong>
@@ -129,6 +128,12 @@
           <template slot="servicioslocal" slot-scope="data">
             {{data.value.nombre}}
           </template>
+          <template slot="destinatario" slot-scope="data">
+            {{data.item.detalleslocal.destinatario.nombre}}
+          </template>
+          <template slot="doc_referencia" slot-scope="data">
+            {{data.item.detalleslocal.referencia}}
+          </template>
           <!-- ------------------------------------------------------- -->
           <template slot="editar" slot-scope="data" v-if="detalleTrayecto.lista.length">
             <i
@@ -165,6 +170,7 @@
           @input="updatecourier()"
             @search="onSearch"
           -->
+
           <v-select v-model="selected_curier" label="nombre" placeholder="Courier"
             :options="curiers"
             :disabled="selec_disable"
@@ -376,6 +382,12 @@ export default {
         { key: "consecutivo", label: "N. Movilizado" },
         { key: "productoslocal", label: "Productos" },
         { key: "servicioslocal", label: "Servicios" },
+        { key: "destinatario", label: "Destinatario" },
+        { key: "doc_referencia", label: "Documento Referencia" },
+
+        
+
+
         "editar"
       ],
       currentPage: 1,
@@ -406,14 +418,14 @@ export default {
   },
   methods: {
     pruebacambio(){
-      console.log("entro a cambios");
     },
     updatecourier(){
+      console.log("... update courier-...");
+      console.log(this.currentUser.id_courier);
        var login = localStorage.getItem("storedData");
       var infologin = JSON.parse(login);
       if(infologin.id_OperadorLogistico.confirmacionSocket==true){
           this.socket.on('CouriersActivos', (connectionList) => {
-              console.log(connectionList);
 
               this.curiers=connectionList
             });
@@ -421,19 +433,14 @@ export default {
 
     },
     onSearch(search) {
-      console.log("on search");
         //loading(true);
       this.search(search, this);
 
     },
 
   search(search){
-    console.log(search);
-    console.log("emito en searchs");
     
     this.socket.on('CouriersActivos', (connectionList) => {
-      console.log("emitio correcto");
-                //console.log(connectionList);
                 this.curiers=connectionList
               });
 
@@ -444,7 +451,7 @@ export default {
       var infologin = JSON.parse(login);
 
       if (typeof this.model_medios == "string") {
-        console.log(this.model_medios);
+        console.log("tengo id medio");
         var load = true;
         setTimeout(() => {
           bus.$emit("load", {
@@ -483,21 +490,14 @@ export default {
                   infologin.id_OperadorLogistico._id +
                   "/" +this.model_medios._id)
               .then(response2 => {
-                console.log("hacemos peticion de courier");
                 this.curiers = response2.data;
-                console.log(response2);
                 //this.selec_disable=false
                 var nombre;
-                console.log(this.curiers);
                 this.curiers.forEach(element2 => {
-                  console.log("tenemos segundo courier");
                   nombre = element2.nombre;
                   element2.nombre = nombre + " " + element2.apellido;
-                  console.log(element2);
                   if (element2._id == this.selected_curier) {
                     this.selected_curier = element2;
-                    console.log("-----------------");
-                    console.log(element2);
                   }
                   var load = false;
                   setTimeout(() => {
@@ -523,9 +523,9 @@ export default {
             );
           });
 
-      } else {
+      } 
+      else {
         if (this.model_medios != null) {
-          console.log("no tengo medios");
           var nombre;
           if(infologin.id_OperadorLogistico.confirmacionSocket==false){
             var load = true;
@@ -576,8 +576,7 @@ export default {
               });
           }
           else{
-            console.log("emito");
-            console.log(this.socket);
+
           this.socket.emit('MedioCourier', {
             id_operadorlogistico:infologin.id_OperadorLogistico._id,
             id_cliente:infologin._id,
@@ -586,8 +585,7 @@ export default {
           });
             //this.curiers=
           this.socket.on('CouriersActivos', (connectionList) => {
-            console.log("conexiones ");
-            console.log(connectionList);
+
             this.curiers=connectionList
           });
           }
@@ -595,9 +593,9 @@ export default {
           /*
 
             */
-        } else {
+        }
+        else {
           //this.selec_disable=true
-           console.log("no tiene medios");
         }
       }
     },
@@ -806,11 +804,7 @@ export default {
               });
             });
             */
-            console.log("objeto");
-            console.log(objeto);
-            console.log(this.currentUser);
-            console.log(this.indemodal);
-            console.log(this.inputs);
+
             var enviodestinatario
             var load = true;
                 setTimeout(() => {
@@ -824,7 +818,6 @@ export default {
                 enviodestinatario=element
               }
             });
-            console.log(enviodestinatario);
             var load = false;
                 setTimeout(() => {
                   bus.$emit("load", {
@@ -833,45 +826,34 @@ export default {
                 });
             var destina
             var llavescampos =Object.keys(this.inputs.objeto)
-            console.log("------");
-            console.log(llavescampos);
             var josea={}
             var propiedadesDinamicas
 
             llavescampos.forEach(element => {
-              console.log("elemenr llaves");
-              console.log(element);
               if(enviodestinatario.vmodel==element){
 
                   josea[element]=this.selection
-                  console.log(josea);
                  var objdestinatario={
                    propiedadesDinamicas: josea
                  }
-                 console.log("-------");
-                  console.log(objdestinatario.propiedadesDinamicas.id_trayecto);
 
                 this.axios.get(urlservicios+"obtenerDestinatario/"+this.currentUser.detalle[this.indemodal].detalleslocal.destinatario.numero_identificacion)
               .then(response =>{
                 destina=response.data.destinatarios
-                console.log(destina);
 
 
 
 
                 this.axios.post(urlservicios+"ActualizarDestinatario" +"/" +destina._id,objdestinatario)
                   .then(responsedestinatario =>{
-                    console.log(responsedestinatario);
                   })
 
               });
 
-                  console.log(objdestinatario);
               }
             });
 
 
-            //console.log(destina);
 
             this.axios.post(urlservicios+"ActualizarTrayecto/" +this.currentUser._id +"/" +this.consecutivo,objeto)
               .then(response => {
@@ -931,7 +913,6 @@ export default {
     },
 
     asignarcurier(seleccionado) {
-      console.log(this.currentUser);
       var login = localStorage.getItem("storedData");
       var infologin = JSON.parse(login);
       if (
@@ -1055,8 +1036,6 @@ export default {
 
     },
     asignar(seleccionado) {
-      console.log("tengo id cliente");
-      console.log(this.id_cliente_local);
       if (this.id_cliente_local != null) {
         var ocultar = true;
         var eliminar = this.vali;
@@ -1191,7 +1170,6 @@ export default {
                 });
               });
               this.inputs = response.data;
-              console.log(0, this.inputs);
               this.campos = response.data.objeto;
               for (var i = 0; i < this.inputs.campos.length; i++) {
                 this.inputs.campos[i].diseable = "true";
@@ -1270,7 +1248,6 @@ export default {
                 });
               });
               this.inputs = response.data;
-              console.log(0, this.inputs);
               this.campos = response.data.objeto;
               this.campos.objetoUnidades = this.itemsvariables;
               for (var i = 0; i < this.inputs.campos.length; i++) {
@@ -1341,7 +1318,6 @@ export default {
 
     },
     asignarfinal(data){
-      console.log("entro a asignar final");
       if(data.mensaje.respuesta=="true"){
         this.currentUser.estado='Orden De Servicio Asignada'
         var obj = {
@@ -1387,7 +1363,6 @@ export default {
 
       }
       else{
-        console.log("no hago nada");
         swal(
           data.mensaje.message,
           '',
@@ -1447,7 +1422,6 @@ export default {
         lista[indiceActual] = (trayecto && trayecto._id) ? (trayecto) : (null);
         // actualizar reactividad
         this.$forceUpdate();
-        console.log(this.detalleTrayecto);
       }
     }
     // -------------------------------------------------------
@@ -1457,8 +1431,6 @@ export default {
     selection(n, o) {}
   },
   mounted: function() {
-    console.log("montado");
-    console.log(this.currentUser);
     bus.$on(
       "ocultar",
       function(userObject) {
@@ -1476,7 +1448,6 @@ export default {
     // -------------------------------------------------------
     const idUser = (setInterval(() => {
       if (this.currentUser && this.currentUser.detalle) {
-        console.log(12, this.currentUser);
         this.detalleTrayecto.lista = [];
         let count = (0);
         (function trayectos() {
@@ -1513,7 +1484,7 @@ export default {
         if (this.currentUser.leido == false) {
           this.leido = "No";
         }
-        if (this.currentUser.id_courier == "000000000000000000000000") {
+        if (this.currentUser.id_courier== undefined) {
           this.selected_curier = null;
         } else {
           this.selected_curier = this.currentUser.id_courier;
@@ -1526,7 +1497,6 @@ export default {
     );
     var login = localStorage.getItem("storedData");
     var infologin = JSON.parse(login);
-    //console.log(infologin);
     if(infologin.id_OperadorLogistico.confirmacionSocket==true){
       this.socket = (new CreateSocket({
 
@@ -1535,11 +1505,7 @@ export default {
         id_operador: infologin.id_OperadorLogistico._id
 
       }));
-      console.log("SOCKETTTTT");
-      console.log(this.socket);
       this.socket.on('connect', () => {
-        console.log('conectado!!');
-        console.log(this.socket.instance.id);
       })
       
       this.socket.on('ListaConexiones', (data) => {
@@ -1556,9 +1522,6 @@ export default {
       })
       this.socket.on('messages', (data) => {
         
-        console.log('-----------servicio juan-------------------------');
-        console.log(data);
-        console.log('------------------------------------');
         clearTimeout(this.validacionsockets)
         //$.cbSpinner("hide");
        

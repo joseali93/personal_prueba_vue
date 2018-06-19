@@ -968,7 +968,7 @@ export default {
       else{
           this.detalleseditar.destinatario=this.destinatarioED
         this.$nextTick(() => {
-          this.$refs.focusDireccionED.focus();
+          //this.$refs.focusDireccionED.focus();
          });
       }
         /*
@@ -1078,7 +1078,7 @@ export default {
       else{
          this.detalles.destinatario=this.nombre_remitente
          this.$nextTick(() => {
-          this.$refs.focusDireccion.focus();
+          //this.$refs.focusDireccion.focus();
          });
 
       }
@@ -1106,6 +1106,7 @@ export default {
             if(response.data.destinatarios.length==0)
                 {
                 this.optionsremitentes=[]
+                this.nombre_remitente={}
                 this.nombre_remitente.nombre=search
                 this.nombre_remitente.direccion=''
                 this.nombre_remitente.telefono=''
