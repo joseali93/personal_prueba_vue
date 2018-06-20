@@ -12,6 +12,13 @@
              <template slot="punto_recoleccion" slot-scope="data">
                 {{data.item.remitente.nombre_contacto}}
             </template>
+            <template slot="observaciones" slot-scope="data">
+                {{data.item.observaciones}}
+            </template>
+            <template slot="tipo_servicio" slot-scope="data">
+                {{data.item.detalle[0].servicioslocal.nombre}}
+            </template>
+            
             <template slot="Cancelar" slot-scope="data">
                 <b-button variant="danger" class="fa fa-ban" @click="cancelarOrden(data)"
                 v-show="data.item.estado!='orden de servicio cancelada'"></b-button>
@@ -23,9 +30,7 @@
             <template slot="fecha_creacion" slot-scope="data">
                 {{data.item.fecha_creacion | formatdate}}
             </template>
-            <template slot="fecha_ultima" slot-scope="data">
-                {{data.item.fecha_creacion | formatdate}}
-            </template>
+
             <template slot="detalles" slot-scope="data">
 
                 <b-button variant="success" class="fa fa-info"  @click="actualizar(data)"></b-button>
@@ -66,11 +71,12 @@ export default {
             fields: [
                 'Cancelar',
                 { key: 'id', label:'# Orden de Servicio', sortable: true },
+                { key: 'tipo_servicio',label:'Tipo de Servicio', sortable: false },
                 { key: 'punto_recoleccion',label:'Punto Recolección', sortable: false },
                 { key: 'fecha_creacion',label:'Fecha creación orden', sortable: false },
                 'estado',
+               { key: 'observaciones',label:'Observaciones', sortable: false },
                 { key: 'centro_costo',label:'Centro de Costo', sortable: false },
-                { key: 'fecha_ultima',label:'Fecha Ultimo Estado', sortable: false },
                 'detalles',
 
             ],

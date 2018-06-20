@@ -32,8 +32,9 @@ DE LA ORDEN DE SERVICIO -->
           </b-col>
           <b-col v-show="prueba=='second'" >
               <h3 class="text-primary"> Fecha </h3>
-              <b-form-input  type="date" v-model="fecha"></b-form-input>
+              <b-form-input  type="date" v-model="fecha" @change="fechaSeleccionada"></b-form-input>
           </b-col>
+          <!--
             <b-col v-show="prueba=='second'" >
               <h3 class="text-primary"> Hora inicio </h3>
               <b-form-input  type="number" v-model="horaInicio"></b-form-input>
@@ -42,6 +43,7 @@ DE LA ORDEN DE SERVICIO -->
               <h3 class="text-primary"> Hora fin </h3>
               <b-form-input  type="number" v-model="horaFin"></b-form-input>
           </b-col>
+          -->
         </b-row>
           <b-row>
               <b-col>
@@ -269,7 +271,7 @@ import Preload from "../componentes/preload.vue";
 import { bus } from "../main";
 import { urlservicios } from "../main";
 import axios from "axios";
-
+import moment from 'moment'
 export default {
   components: {
     Preload
@@ -343,6 +345,33 @@ export default {
   },
 
   methods: {
+    fechaSeleccionada(value){
+      if(value== null||value==''){
+        console.log("no hago nada");
+      }
+      else{
+        var partes=value.split('-')
+        var fechaSeleccion = new Date(partes[0], partes[1] - 1, partes[2])
+        moment(fechaSeleccion.toDateString()).format("YYYY-MM-DD")
+        var fechahoy = new Date()
+        moment(fechahoy).format("YYYY-MM-DD")
+        console.log(moment(fechahoy).format("YYYY-MM-DD"));
+        if(moment(fechaSeleccion.toDateString()).format("YYYY-MM-DD")<moment(fechahoy).format("YYYY-MM-DD")){
+          swal(
+            'Advertencia',
+            'No se pueden asignar fechas anteriores!',
+            'warning'
+          )
+          this.fecha=null
+        }
+        else{
+          console.log("la fecha seleccionada es mayor o igual");
+        }
+      }
+      console.log("selecciono fechaa");
+      console.log(value);
+      
+    },
 
     initAutocomplete() {
       var longi;

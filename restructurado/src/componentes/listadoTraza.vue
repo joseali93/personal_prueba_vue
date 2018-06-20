@@ -14,11 +14,18 @@
                     <template slot="nmovilizado" slot-scope="data">
                         {{data.item.id}}
                     </template>
+                    <template slot="doc_referencia" slot-scope="data">
+                        {{data.item.detalleslocal.referencia}}
+                    </template>
                     <template slot="fecha_creacion" slot-scope="data">
                        <p > {{data.item.fecha_estado |formatdate}}</p>
                     </template>
                     <template slot="productoslocal" slot-scope="data" >
                         {{data.item.productoslocal.nombre}}
+                    </template>
+                                  ,
+                     <template slot="courier_actual" slot-scope="data" v-if="data.item.id_courier_actual">
+                        {{data.item.id_courier_actual.nombre}}  {{data.item.id_courier_actual.apellido}}
                     </template>
                     <template slot="servicioslocal" slot-scope="data">
                         {{data.item.servicioslocal.nombre}}
@@ -839,11 +846,13 @@ export default {
                 
                 { key: 'id', sortable: true , label: 'N° Orden de Servicio'},
                 {key:'nmovilizado',  label: 'N° Movilizado'},
+                { key: 'doc_referencia' , label: 'Doc Referencia'},
                 { key: 'cliente' , label: 'Cliente'},
                 {key:'nombre_proceso', label: 'Estado'},
                 {key:'fecha_creacion', label: 'Fecha Ultima Actualización'},
                 {key:'productoslocal', label: 'Producto'},
                 {key:'servicioslocal', label: 'Servicio'},
+                {key:'courier_actual', label: 'Courier Actual'},
                 {key:'imagenes', label: 'Prueba de Entrega'},
                 'detalles'
             ],
