@@ -270,7 +270,7 @@ export default {
         consultar: function(){
 
             this.sel_conslta=true
-            console.log();
+
             ///ObtenerOrdenesFiltrado/:consecutivo/:estado/:id_remitente/:id_centro/:fecha_inicio/:fecha_final
             var cliente
             var centrocosto
@@ -303,6 +303,7 @@ export default {
             console.log(cantidaddias);
             console.log(this.time1);
             */
+
             if(cantidaddias>32||this.time1=='')
             {
                 //console.log("tiempo mayor de 30 dias");
@@ -364,7 +365,7 @@ export default {
                                 load
                             })
                             }, )
-
+                    console.log("URL",urlservicios);
                     this.axios.get(urlservicios+"ObtenerOrdenesFiltrado/"+infologin.id_OperadorLogistico._id+"/"+this.filter+"/"+esadoconsulta+
                     "/"+cliente+"/"+centrocosto+"/"+inicio+"/"+fin)
                     .then((response) => {

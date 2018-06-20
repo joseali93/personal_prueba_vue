@@ -207,50 +207,55 @@
                                                             {{data.value.nombre}}
                                                             </template>
                                                             <template
-                                                                slot="servicioslocal"
-                                                                slot-scope="data"
-                                                            >
-                                                                {{data.value.nombre}}
-                                                                </template>
-                                                                <template
                                                                     slot="destinatario"
                                                                     slot-scope="data"
                                                                 >
                                                                     {{data.item.detalleslocal.destinatario.nombre}}
                                                                     </template>
-                                                                    <template
+                                                            <template
                                                                         slot="doc_referencia"
-                                                                        slot-scope="data"
-                                                                    >
+                                                                        slot-scope="data" >
                                                                         {{data.item.detalleslocal.referencia}}
                                                                         </template>
+                                                            doc_referencia
+                                                            <template
+                                                                slot="servicioslocal"
+                                                                slot-scope="data"
+                                                            >
+                                                                {{data.value.nombre}}
+                                                                </template>
+                                                                <!-- ------------------------------------------------------- -->
+                                                                <template
+                                                                    slot="editar"
+                                                                    slot-scope="data"
+                                                                    v-if="detalleTrayecto.lista.length"
+                                                                >
+                                                                    <i
+                                                                        v-bind:class="[`btn ${(existeTrayectoActual(data.index)) ? ('btn-success') : ('btn-danger')} fa fa-table rounded`]"
+                                                                        v-on:click.stop="actualizar(devolverIndiceActual(data.index), data.item.id)"
+                                                                    ></i>
+                                                                        </template>
                                                                         <!-- ------------------------------------------------------- -->
-                                                                        <template
-                                                                            slot="editar"
-                                                                            slot-scope="data"
-                                                                            v-if="detalleTrayecto.lista.length"
+                                                                        </b-table>
+                                                                        <b-pagination
+                                                                            size="md"
+                                                                            :total-rows="this.currentUser.detalle.length"
+                                                                            v-model="currentPage"
+                                                                            :per-page="totalRows"
                                                                         >
-                                                                            <i
-                                                                                v-bind:class="[`btn ${(detalleTrayecto.lista[devolverIndice(data.index)]) ? ('btn-success') : ('btn-danger')} fa fa-table rounded`]"
-                                                                                v-on:click.stop="actualizar(devolverIndice(data.index),data.item.id)"
-                                                                            ></i>
-                                                                                </template>
-                                                                                <!-- ------------------------------------------------------- -->
-                                                                                </b-table>
-                                                                                <b-pagination
-                                                                                    size="md"
-                                                                                    :total-rows="this.currentUser.detalle.length"
-                                                                                    v-model="currentPage"
-                                                                                    :per-page="totalRows"
-                                                                                >
-                                                                                    </b-pagination>
+                                                                            </b-pagination>
                                             </b-row>
                                             </b-card>
                                             <b-container>
                                                 <b-row class="my-3">
                                                     <b-col>
                                                         <h4 class="text-primary">Medio de transporte: </h4>
-
+                                                        <!--
+          <b-form-select v-model="selected_curier" class="mb-3"  :options="curiers" text-field="nombre"
+          value-field="_id" :state="statuscourier"
+          @change.native="selectcuriers" :disabled="selec_disable">
+          </b-form-select>
+          -->
                                                         <v-select
                                                             v-model="model_medios"
                                                             label="tipo"
@@ -262,18 +267,23 @@
                                                     </b-col>
                                                     <b-col>
                                                         <h4 class="text-primary">Courier: </h4>
-                                                        {{idCourier}}
+                                                        <!--
+          <b-form-select v-model="selected_curier" class="mb-3"  :options="curiers" text-field="nombre"
+          value-field="_id" :state="statuscourier"
+          @change.native="selectcuriers" :disabled="selec_disable">
+          </b-form-select>
+          @input="updatecourier()"
+            @search="onSearch"
+          -->
                                                         <v-select
                                                             v-model="selected_curier"
                                                             label="nombre"
                                                             placeholder="Courier"
                                                             :options="curiers"
                                                             :disabled="selec_disable"
+                                                            @onChange="pruebacambio"
                                                             @input="updatecourier()"
                                                         ></v-select>
-                                                        <!--
-                                                              
-                                                            -->
 
                                                     </b-col>
                                                 </b-row>
@@ -393,7 +403,7 @@
                                                         <div class="mt-3">
                                                             <b-row class="mb-2">
                                                                 <b-col md="5">
-                                                                    <h5>Producto:</h5>
+                                                                    <h5 class="mt-1">Producto:</h5>
                                                                 </b-col>
                                                                 <b-col md="7">
                                                                     <h5 class="text-secondary font-weight-normal">{{producto}}</h5>
@@ -402,24 +412,51 @@
                                                             <!-- // ----------------------------------------------------------------------------- -->
                                                             <b-row class="mb-2">
                                                                 <b-col md="5">
-                                                                    <h5>Servicio:</h5>
+                                                                    <h5 class="mt-1">Servicio:</h5>
                                                                 </b-col>
                                                                 <b-col md="7">
                                                                     <h5 class="text-secondary font-weight-normal">{{servicio}}</h5>
                                                                 </b-col>
                                                             </b-row>
+                                                            <!-- ----------------------------------- -->
+                                                            <b-row  class="mb-2">
+                                                                <b-col md="5">
+                                                                    <h5 class="mt-1">Contenido:</h5>
+                                                                </b-col>
+                                                                <b-col md="7">
+                                                                    <input
+                                                                        class="form-control form-control-sm"
+                                                                        placeholder="Contenido"
+                                                                        :disabled="true"
+                                                                        :value="getDetalle.contenido"
+                                                                    >
+                                                                </b-col>
+                                                            </b-row>
+                                                            <b-row  class="mb-2">
+                                                                <b-col md="5">
+                                                                    <h5 class="mt-1">Observaciones:</h5>
+                                                                </b-col>
+                                                                <b-col md="7">
+                                                                    <textarea
+                                                                        class="form-control form-control-sm"
+                                                                        placeholder="Contenido"
+                                                                        :disabled="true"
+                                                                        :value="getDetalle.observaciones"
+                                                                    >
+                                                                        </textarea>
+                                                                </b-col>
+                                                            </b-row>
+                                                            <!-- ----------------------------------- -->
                                                             <b-row
                                                                 v-for="(data,indice) in inputs.campos"
+                                                                :key="indice"
                                                                 class="my-1 card-text"
                                                             >
                                                                 <template v-if="data.type=='number'">
-                                                                    <b-col cols="5">
-                                                                        <label
-                                                                            class="col-form-label col-form-label-sm text-capitalize"
-                                                                            :style="data.style"
-                                                                        >{{data.nombre}}: </label>
+                                                                    <b-col md="5">
+                                                                        <h5 class="mt-1">{{data.nombre}}:</h5>
                                                                     </b-col>
-                                                                    <b-col cols="7">
+                                                                    <b-col md="7">
                                                                         <input
                                                                             class="form-control form-control-sm"
                                                                             :type="data.type"
@@ -435,13 +472,10 @@
                                                                     </b-col>
                                                                 </template>
                                                                 <template v-if="data.type=='text'">
-                                                                    <b-col cols="5">
-                                                                        <label
-                                                                            class="col-form-label col-form-label-sm text-capitalize"
-                                                                            :style="data.style"
-                                                                        >{{data.nombre}}: </label>
+                                                                    <b-col md="5">
+                                                                        <h5 class="mt-1">{{data.nombre}}:</h5>
                                                                     </b-col>
-                                                                    <b-col cols="7">
+                                                                    <b-col md="7">
                                                                         <input
                                                                             class="form-control form-control-sm"
                                                                             :type="data.type"
@@ -460,10 +494,10 @@
                                                                     v-if="data.type=='select'"
                                                                     class="my-1 card-text"
                                                                 >
-                                                                    <b-col cols="5">
-                                                                        <label class="col-form-label col-form-label-sm text-capitalize">{{data.nombre}}</label>
+                                                                    <b-col md="5">
+                                                                        <h5 class="mt-1">{{data.nombre}}:</h5>
                                                                     </b-col>
-                                                                    <b-col cols="7">
+                                                                    <b-col md="7">
                                                                         <!-- ------------------------------------------------------- -->
                                                                         <b-form-select
                                                                             class="col-form-label col-form-label-sm"
@@ -473,7 +507,7 @@
                                                                             value-field="_id"
                                                                             @change="cambioTrayecto"
                                                                             @input="seleccionar(data)"
-                                                                            :value="(trayectoActual) ? (trayectoActual._id) : (null)"
+                                                                            :value="(detalleTrayecto.trayectoActual) ? (detalleTrayecto.trayectoActual._id) : (null)"
                                                                             :disabled="selec_disable"
                                                                         >
                                                                             </b-form-select>
@@ -520,10 +554,6 @@
 </b-container>
 </template>
 
-
-
-
-
 <script>
 import {
     bus
@@ -539,8 +569,8 @@ import {
 export default {
     data() {
         return {
-            idCourier:'',
-            idMedio:'',
+            idCourier: '',
+            idMedio: '',
             totalRows: 5,
             courier_disable: false,
             validacionsockets: '',
@@ -591,25 +621,23 @@ export default {
                     key: "doc_referencia",
                     label: "Documento Referencia"
                 },
-
-
-
-
                 "editar"
             ],
             currentPage: 1,
             currentUser: "",
-            selected_curier:'',
+            selected_curier: '',
             curiers: [],
             Documento: "",
             selection: null,
             trayectos: null,
             // -------------------------------------------------------
-            trayectoActual: null,
+            // -------------------------------------------------------
             detalleTrayecto: {
                 indiceActual: null,
+                trayectoActual: null,
                 lista: []
             },
+            // -------------------------------------------------------
             // -------------------------------------------------------
             indices: "",
             inputs: "",
@@ -636,56 +664,44 @@ export default {
             var login = localStorage.getItem("storedData");
             var infologin = JSON.parse(login);
             console.log(this.selected_curier);
-            if(this.selected_curier==null||this.selected_curier==''||
-                this.selected_curier===null|this.selected_curier===''){
-                    console.log("va nulo")
-                    if(this.idCourier){
-                        console.log(this.idCourier);
-                        console.log(this.curiers);
-                    }
-                    else{
-
-                    }
-            }
-            else{
+            if (this.selected_curier == null || this.selected_curier == '' ||
+                this.selected_curier === null | this.selected_curier === '') {
+                console.log("va nulo")
+                if (this.idCourier) {
+                    console.log(this.idCourier);
+                    console.log(this.curiers);
+                } else {}
+            } else {
                 console.log("tiene courier");
-                if(this.idCourier){
+                if (this.idCourier) {
                     console.log(this.idCourier);
                     console.log(this.curiers);
                     this.axios.get(urlservicios + "UsuariosCurier/" + infologin.id_OperadorLogistico._id + "/" + this.idMedio)
-                            .then(response => {
-                                this.curiers = response.data;
-                                this.curiers.forEach(element => {
-                                    if(element._id==this.idCourier){
-                                        console.log("tengo uno");
-                                        this.selected_curier=element.nombre
-                                    }
+                        .then(response => {
+                            this.curiers = response.data;
+                            this.curiers.forEach(element => {
+                                if (element._id == this.idCourier) {
+                                    console.log("tengo uno");
+                                    this.selected_curier = element.nombre
+                                }
+                            });
+                            var load = false;
+                            setTimeout(() => {
+                                bus.$emit("load", {
+                                    load
                                 });
-                                var load = false;
-                                setTimeout(() => {
-                                    bus.$emit("load", {
-                                        load
-                                    });
-                                });
-                                //this.selec_disable=false
-                            })
-
-
-                }
-                else{
-
-                }
+                            });
+                            //this.selec_disable=false
+                        })
+                } else {}
             }
-            
 
 
-            
         },
         vehic() {
             var login = localStorage.getItem("storedData");
             var infologin = JSON.parse(login);
-
-            if (typeof(this.model_medios) == "string") {
+            if (typeof (this.model_medios) == "string") {
                 if (infologin.id_OperadorLogistico.confirmacionSocket == false) {
                     var load = true;
                     setTimeout(() => {
@@ -701,16 +717,12 @@ export default {
                                     load
                                 });
                             });
-
                             this.medios = response.data;
                             this.medios.forEach(element => {
                                 if (element._id == this.model_medios) {
                                     this.model_medios = element;
-
                                 }
-
                             });
-
                             var load = false;
                             setTimeout(() => {
                                 bus.$emit("load", {
@@ -730,9 +742,9 @@ export default {
                                 "Intente nuevamente, por favor",
                                 "warning"
                             );
-                    });
-                } 
-               if (typeof(this.model_medios) == "object") {
+                        });
+                }
+                if (typeof (this.model_medios) == "object") {
                     var load = true;
                     setTimeout(() => {
                         bus.$emit("load", {
@@ -747,16 +759,12 @@ export default {
                                     load
                                 });
                             });
-
                             this.medios = response.data;
                             this.medios.forEach(element => {
                                 if (element._id == this.model_medios) {
                                     this.model_medios = element;
-
                                 }
-
                             });
-
                             var load = false;
                             setTimeout(() => {
                                 bus.$emit("load", {
@@ -776,7 +784,7 @@ export default {
                                 "Intente nuevamente, por favor",
                                 "warning"
                             );
-                    });
+                        });
                 }
             } else {
                 if (this.model_medios != null) {
@@ -788,12 +796,10 @@ export default {
                                 load
                             });
                         });
-
-
                         this.axios.get(urlservicios + "UsuariosCurier/" + infologin.id_OperadorLogistico._id + "/" + this.model_medios._id)
                             .then(response => {
                                 this.curiers = response.data;
-                                
+
                                 var load = false;
                                 setTimeout(() => {
                                     bus.$emit("load", {
@@ -816,36 +822,33 @@ export default {
                                 );
                             });
                     } else {
-                        if(this.currentUser.id_courier){
+                        if (this.currentUser.id_courier) {
                             this.axios.get(urlservicios + "UsuariosCurier/" + infologin.id_OperadorLogistico._id + "/" + this.model_medios._id)
-                            .then(response => {
-                                this.curiers = response.data;
-                                
+                                .then(response => {
+                                    this.curiers = response.data;
 
-                                var load = false;
-                                setTimeout(() => {
-                                    bus.$emit("load", {
-                                        load
+                                    var load = false;
+                                    setTimeout(() => {
+                                        bus.$emit("load", {
+                                            load
+                                        });
+                                    });
+                                    //this.selec_disable=false
+                                })
+                                .catch(function (error) {
+                                    var load = false;
+                                    setTimeout(() => {
+                                        bus.$emit("load", {
+                                            load
+                                        });
                                     });
                                 });
-                                //this.selec_disable=false
-                            })
-                            .catch(function (error) {
-                                var load = false;
-                                setTimeout(() => {
-                                    bus.$emit("load", {
-                                        load
-                                    });
-                                });
-
-                            });
-                        }
-                        else{
+                        } else {
                             this.socket.emit('MedioCourier', {
-                            id_operadorlogistico: infologin.id_OperadorLogistico._id,
-                            id_cliente: infologin._id,
-                            medio_transporte: this.model_medios._id,
-                            descripcion: 'orden'
+                                id_operadorlogistico: infologin.id_OperadorLogistico._id,
+                                id_cliente: infologin._id,
+                                medio_transporte: this.model_medios._id,
+                                descripcion: 'orden'
                             });
                             //this.curiers=
                             this.socket.on('CouriersActivos', (connectionList) => {
@@ -853,7 +856,7 @@ export default {
                             });
                         }
                     }
-                        
+
                 } else {
                     //this.selec_disable=true
                 }
@@ -914,7 +917,6 @@ export default {
                             id_trayecto: eval("this.campos." + value.vmodel),
                             nombre: this.trayectos[x].nombre
                         };
-
                         if (
                             this.currentUser.detalle[this.indices].detalleslocal.infor
                             .trayecto == undefined ||
@@ -936,7 +938,6 @@ export default {
                             this.currentUser.detalle[
                                 this.indices
                             ].detalleslocal.infor.trayectoobj = trayectoobj;
-
                             this.currentUser.detalle[
                                 this.indices
                             ].detalleslocal.infor.trayecto = this.trayectos[x].nombre;
@@ -960,7 +961,6 @@ export default {
             });
             this.$router.replace("/inicio/consultar/resultado");
         },
-
         Presiono(indi, dato) {
             if (
                 document.getElementById(this.inputs.campos[indi].id).value == null ||
@@ -1011,6 +1011,16 @@ export default {
             this.indices = "";
             this.consecutivo = "";
             this.selection = "";
+            // ----------------------------------------
+            const {
+                indiceActual,
+                trayectoActual,
+                lista
+            } = (this.detalleTrayecto);
+            if (lista[indiceActual] !== void 0 && lista[indiceActual])
+                if (lista[indiceActual].trayecto !== trayectoActual)
+                    lista[indiceActual].trayecto = (trayectoActual);
+            // ----------------------------------------
             this.$refs.ModalAct.hide();
         },
         ingresarTrayectos() {
@@ -1019,7 +1029,154 @@ export default {
             } else {
                 this.$refs.table.refresh();
                 var nombresel;
-
+                if (this.info.estado == "orden de servicio cancelada") {
+                    swal("Cuidado!", "Orden de Servicio Cancelada", "warning");
+                } else {
+                    // this.selection = this.campos.id_trayecto;
+                    // ----------------------------------------
+                    this.actualizarTrayecto(this.selection);
+                    // ----------------------------------------
+                    // if (!this.selection || this.selection == "000000000000000000000000" ) {
+                    // this.$refs.ModalAct.hide();
+                    // return;
+                    // this.detallesactualizar = "";
+                    // this.itemsvariables = "";
+                    // this.inputs = "";
+                    // this.campos = "";
+                    // this.indices = "";
+                    // this.consecutivo = "";
+                    // this.selection = "";
+                    // } else {
+                    for (var x = 0; x < this.trayectos.length; x++) {
+                        if (this.trayectos[x]._id == this.selection) {
+                            nombresel = this.trayectos[x].nombre;
+                        }
+                    }
+                    var prueba = this.currentUser.detalle[this.indices].detalleslocal
+                        .infor;
+                    var objeto = {
+                        id_trayecto: this.selection,
+                        nombre: (this.selection) ? (nombresel) : (null),
+                        campos: this.campos
+                    };
+                    console.log(objeto);
+                    this.$refs.table.refresh();
+                    /*
+                    var load = true;
+                    setTimeout(() => {
+                    bus.$emit("load", {
+                        load
+                    });
+                    });
+                    */
+                    var enviodestinatario
+                    var load = true;
+                    setTimeout(() => {
+                        bus.$emit("load", {
+                            load
+                        });
+                    });
+                    this.inputs.campos.forEach(element => {
+                        if (element.HeredaDestinatario == true) {
+                            enviodestinatario = element
+                        }
+                    });
+                    var load = false;
+                    setTimeout(() => {
+                        bus.$emit("load", {
+                            load
+                        });
+                    });
+                    var destina
+                    var llavescampos = Object.keys(this.inputs.objeto)
+                    var josea = {}
+                    var propiedadesDinamicas
+                    llavescampos.forEach(element => {
+                        // console.log("elemenr llaves");
+                        // console.log(element);
+                        if (enviodestinatario.vmodel == element) {
+                            josea[element] = this.selection
+                            // console.log(josea);
+                            var objdestinatario = {
+                                propiedadesDinamicas: josea
+                            }
+                            // console.log("-------");
+                            // console.log(objdestinatario.propiedadesDinamicas.id_trayecto);
+                            this.axios.get(urlservicios + "obtenerDestinatario/" + this.currentUser.detalle[this.indemodal].detalleslocal.destinatario.numero_identificacion)
+                                .then(response => {
+                                    destina = response.data.destinatarios
+                                    // console.log(destina);
+                                    this.axios.post(urlservicios + "ActualizarDestinatario" + "/" + destina._id, objdestinatario)
+                                        .then(responsedestinatario => {
+                                            // console.log(responsedestinatario);
+                                        })
+                                });
+                            // console.log(objdestinatario);
+                        }
+                    });
+                    // console.log(destina);
+                    this.axios.post(urlservicios + "ActualizarTrayecto/" + this.currentUser._id + "/" + this.consecutivo, objeto)
+                        .then(response => {
+                            this.$refs.table.refresh();
+                            var objeto2 = {
+                                id_trayecto: this.selection,
+                                campos: this.campos,
+                                indice: this.indices,
+                                detalle: this.currentUser.detalle[this.indices].id
+                            };
+                            if (this.id_trayectos.length == 0) {
+                                this.id_trayectos.push(objeto2);
+                            } else {
+                                this.id_trayectos.forEach((obj, ind) => {
+                                    if (obj.indice == this.indices) {
+                                        this.id_trayectos.splice(obj, 1);
+                                        this.id_trayectos.push(objeto2);
+                                    } else {
+                                        this.id_trayectos.push(objeto2);
+                                    }
+                                });
+                            }
+                            this.$refs.table.refresh();
+                            this.selection = "";
+                            this.detallesactualizar = "";
+                            this.itemsvariables = "";
+                            this.inputs = "";
+                            this.campos = "";
+                            this.indices = "";
+                            this.consecutivo = "";
+                            this.selection = "";
+                            this.$refs.ModalAct.hide();
+                            var load = false;
+                            setTimeout(() => {
+                                bus.$emit("load", {
+                                    load
+                                });
+                            });
+                        })
+                        .catch(function (error) {
+                            var load = false;
+                            setTimeout(() => {
+                                bus.$emit("load", {
+                                    load
+                                });
+                            });
+                            swal(
+                                "Se presento un problema",
+                                "Intente nuevamente, por favor",
+                                "warning"
+                            );
+                        });
+                    // }
+                }
+            }
+        },
+        /*
+        ingresarTrayectos() {
+            if (this.id_cliente_local != null) {
+                this.$refs.ModalAct.hide();
+            } else {
+                this.$refs.table.refresh();
+                var nombresel;
                 if (this.info.estado == "orden de servicio cancelada") {
                     swal("Cuidado!", "Orden de Servicio Cancelada", "warning");
                 } else {
@@ -1043,13 +1200,11 @@ export default {
                         }
                         var prueba = this.currentUser.detalle[this.indices].detalleslocal
                             .infor;
-
                         var objeto = {
                             id_trayecto: this.selection,
                             nombre: nombresel,
                             campos: this.campos
                         };
-
                         this.$refs.table.refresh();
                         /*
                         var load = true;
@@ -1058,7 +1213,7 @@ export default {
                             load
                           });
                         });
-                        */
+                        
                         var enviodestinatario
                         var load = true;
                         setTimeout(() => {
@@ -1081,32 +1236,20 @@ export default {
                         var llavescampos = Object.keys(this.inputs.objeto)
                         var josea = {}
                         var propiedadesDinamicas
-
                         llavescampos.forEach(element => {
                             if (enviodestinatario.vmodel == element) {
-
                                 josea[element] = this.selection
                                 var objdestinatario = {
                                     propiedadesDinamicas: josea
                                 }
-
                                 this.axios.get(urlservicios + "obtenerDestinatario/" + this.currentUser.detalle[this.indemodal].detalleslocal.destinatario.numero_identificacion)
                                     .then(response => {
                                         destina = response.data.destinatarios
-
-
-
-
                                         this.axios.post(urlservicios + "ActualizarDestinatario" + "/" + destina._id, objdestinatario)
                                             .then(responsedestinatario => {})
-
                                     });
-
                             }
                         });
-
-
-
                         this.axios.post(urlservicios + "ActualizarTrayecto/" + this.currentUser._id + "/" + this.consecutivo, objeto)
                             .then(response => {
                                 this.$refs.table.refresh();
@@ -1123,7 +1266,6 @@ export default {
                                         if (obj.indice == this.indices) {
                                             this.id_trayectos.splice(obj, 1);
                                             this.id_trayectos.push(objeto2);
-
                                         } else {
                                             this.id_trayectos.push(objeto2);
                                         }
@@ -1163,7 +1305,7 @@ export default {
                 }
             }
         },
-
+        */
         asignarcurier(seleccionado) {
             var login = localStorage.getItem("storedData");
             var infologin = JSON.parse(login);
@@ -1177,7 +1319,6 @@ export default {
                 this.statuscourier = false;
             } else {
                 if (infologin.id_OperadorLogistico.confirmacionSocket == true) {
-
                     if (this.currentUser.estado == 'Orden De Servicio Asignada' && (this.currentUser.id_courier == seleccionado._id || this.selected_curier._id == seleccionado._id)) {
                         swal(
                             'ya la tiene asignada este courier',
@@ -1219,17 +1360,13 @@ export default {
                                 load
                             });
                         });
-
-
                     }
-
                 } else {
                     var obj = {
                         id_orden: this.currentUser._id,
                         id_curier: seleccionado._id,
                         id_medio: this.model_medios._id
                     };
-
                     this.statuscourier = null;
                     var load = true;
                     setTimeout(() => {
@@ -1265,12 +1402,8 @@ export default {
                             );
                         });
                 }
-                
-
-
 
             }
-
         },
         asignar(seleccionado) {
             if (this.id_cliente_local != null) {
@@ -1290,16 +1423,13 @@ export default {
                 var contador = 0;
                 var pendi = [];
                 var correcto = [];
-
                 if (this.id_trayectos.length == 0) {
                     for (var x = 0; x < this.currentUser.detalle.length; x++) {
-
                         var llavesinfor = Object.keys(
                             this.currentUser.detalle[x].detalleslocal.infor
                         );
                         for (var y = 0; y < llavesinfor.length; y++) {
                             if (llavesinfor[y] != "trayectoobj") {} else {
-
                                 banderasinT = true;
                                 contador = contador + 1;
                                 correcto.push(x);
@@ -1313,12 +1443,10 @@ export default {
                             this.currentUser.detalle[x].detalleslocal.infor
                         );
                         for (var y = 0; y < llavesinfor.length; y++) {
-
                             if (llavesinfor[y] != "trayectoobj") {} else {
                                 /*
                 if(typeof(eval('this.currentUser.detalle[x].detalleslocal.infor.'+llavesinfor[y]))!='object')
                 {
-
                 }
                 */
                                 banderasinT = true;
@@ -1330,12 +1458,9 @@ export default {
                     }
                 }
                 for (var o = 0; o < pendi.length; o++) {
-
-
                     pendi[o] = pendi[o]++;
                     for (var p = 0; p < correcto.length; p++) {
                         if (pendi[o] == correcto[p]) {
-
                             pendi.splice(o, 1);
                         }
                     }
@@ -1343,7 +1468,6 @@ export default {
                 for (var o = 0; o < pendi.length; o++) {
                     pendi[o]++;
                 }
-
                 if (contador == this.currentUser.detalle.length) {
                     this.asignarcurier(seleccionado);
                 } else {
@@ -1355,6 +1479,216 @@ export default {
                 }
             }
         },
+            actualizar(indice, consecutivo, callback, hidden) {
+      // ------------------------------------------
+      const { lista } = (this.detalleTrayecto);
+      this.detalleTrayecto.trayectoActual = (lista[indice]) ? (lista[indice].trayecto) : (null);
+      if (lista[indice] && lista[indice].trayecto)
+          this.selection = (lista[indice].trayecto._id) ? (lista[indice].trayecto._id) : (null);
+      // ------------------------------------------
+      var produc
+      var serv
+      this.currentUser.detalle.forEach((element,i )=> {
+        if(element.id==consecutivo){
+          this.indemodal=i
+          this.servicio =element.servicioslocal.nombre;
+          this.producto=element.productoslocal.nombre;
+          this.itemsvariables=element.detalleslocal.infor.objetoUnidades;
+          produc= element.productoslocal._id;
+          serv=element.servicioslocal._id
+          this.detallesactualizar=element.detalleslocal
+        }
+      });
+      //this.indemodal = indice;
+      this.consecutivo = consecutivo;
+      var vacio = { _id: null, nombre: "Por Favor Seleccione un Trayecto" };
+      if (
+        this.info.estado == "orden de servicio cancelada" ||
+        this.info.estado == "Orden De Servicio Recogida" ||
+        this.info.estado == "Orden de servicio cerrada") {
+        this.indices = this.indemodal;
+        /*
+        this.detallesactualizar = this.currentUser.detalle[indice].detalleslocal;
+        this.servicio = this.currentUser.detalle[indice].servicioslocal.nombre;
+        this.producto = this.currentUser.detalle[indice].productoslocal.nombre;
+        this.itemsvariables = this.currentUser.detalle[indice].detalleslocal.infor.objetoUnidades;
+        var produc = this.currentUser.detalle[indice].productoslocal._id;
+        var serv = this.currentUser.detalle[indice].servicioslocal._id;
+        */
+        var load = true;
+        this.selec_disable=false
+        setTimeout(() => {
+          bus.$emit("load", {
+            load
+          });
+        });
+        if (produc && serv) {
+          this.axios.get(urlservicios+ "estructuraf/" + produc + "/" + serv)
+            .then(response => {
+              var load = false;
+              setTimeout(() => {
+                bus.$emit("load", {
+                  load
+                });
+              });
+              this.inputs = response.data;
+              this.campos = response.data.objeto;
+              for (var i = 0; i < this.inputs.campos.length; i++) {
+                this.inputs.campos[i].diseable = "true";
+                if (this.inputs.campos[i].type == "select") {
+                  var login = localStorage.getItem("storedData");
+                  var infologin = JSON.parse(login);
+                  //document.getElementById(this.inputs.campos[i].id).value = null;
+                  this.axios.get(this.inputs.campos[i].urlobjeto +infologin.id_OperadorLogistico._id)
+                    .then(response22 => {
+                      this.trayectos = response22.data;
+                      this.trayectos.unshift(vacio);
+                      var load = false;
+                      setTimeout(() => {
+                        bus.$emit("load", {
+                          load
+                        });
+                      });
+                      // ------------------------------------------
+                      const { lista } = (this.detalleTrayecto);
+                      if (lista[indice] && lista[indice].trayecto) {
+                        this.detalleTrayecto.indiceActual = (indice);
+                        this.actualizarTrayecto(lista[indice].trayecto._id);
+                      } else {
+                        this.detalleTrayecto.indiceActual = (0);
+                      }
+                      if (typeof callback === 'function')
+                          callback();
+                      // ------------------------------------------
+                    })
+                    .catch(function(error) {
+                      var load = false;
+                      setTimeout(() => {
+                        bus.$emit("load", {
+                          load
+                        });
+                      });
+                      swal(
+                        "Se presento un problema",
+                        "Intente nuevamente, por favor",
+                        "warning"
+                      );
+                    });
+                } else {
+                }
+                if (!hidden)
+                    this.$refs.ModalAct.show();
+              }
+            })
+        } else {
+          if (typeof callback === 'function')
+              callback();
+        }
+      } else {
+        this.indices = this.indemodal;
+        /*
+        this.detallesactualizar = this.currentUser.detalle[
+          indice
+        ].detalleslocal;
+        this.itemsvariables = this.currentUser.detalle[
+          indice
+        ].detalleslocal.infor.objetoUnidades;
+        this.servicio = this.currentUser.detalle[indice].servicioslocal.nombre;
+        this.producto = this.currentUser.detalle[indice].productoslocal.nombre;
+        var produc = this.currentUser.detalle[indice].productoslocal._id;
+        var serv = this.currentUser.detalle[indice].servicioslocal._id;
+        */
+        var load = true;
+        setTimeout(() => {
+          bus.$emit("load", {
+            load
+          });
+        });
+        if (produc && serv) {
+          this.axios.get(urlservicios+ "estructuraf/" + produc + "/" + serv)
+            .then(response => {
+              this.selec_disable=false
+              var load = false;
+              setTimeout(() => {
+                bus.$emit("load", {
+                  load
+                });
+              });
+              this.inputs = response.data;
+              this.campos = response.data.objeto;
+              this.campos.objetoUnidades = this.itemsvariables;
+              for (var i = 0; i < this.inputs.campos.length; i++) {
+                if (this.inputs.campos[i].type == "select") {
+                  var login = localStorage.getItem("storedData");
+                  var infologin = JSON.parse(login);
+                  var load = true;
+                  setTimeout(() => {
+                    bus.$emit("load", {
+                      load
+                    });
+                  });
+                  this.axios.get(this.inputs.campos[i].urlobjeto +infologin.id_OperadorLogistico._id)
+                    .then(response => {
+                      this.trayectos = response.data;
+                      this.trayectos.unshift(vacio);
+                      var load = false;
+                      setTimeout(() => {
+                        bus.$emit("load", {
+                          load
+                        });
+                      });
+                      // ------------------------------------------
+                      const { lista } = (this.detalleTrayecto);
+                      if (lista[indice] && lista[indice].trayecto) {
+                        this.detalleTrayecto.indiceActual = (indice);
+                        this.actualizarTrayecto(lista[indice].trayecto._id);
+                      } else {
+                        this.detalleTrayecto.indiceActual = (0);
+                      }
+                      if (typeof callback === 'function')
+                          callback();
+                      // ------------------------------------------
+                    })
+                    .catch(function(error) {
+                      var load = false;
+                      setTimeout(() => {
+                        bus.$emit("load", {
+                          load
+                        });
+                      });
+                      swal(
+                        "Se presento un problema",
+                        "Intente nuevamente, por favor",
+                        "warning"
+                      );
+                    });
+                } else {
+                }
+              }
+              if (!hidden)
+                  this.$refs.ModalAct.show();
+            })
+            .catch(function(error) {
+              var load = false;
+              setTimeout(() => {
+                bus.$emit("load", {
+                  load
+                });
+              });
+              swal(
+                "Se presento un problema",
+                "Intente nuevamente, por favor",
+                "warning"
+              );
+            });
+        } else {
+          if (typeof callback === 'function')
+              callback();
+        }
+      }
+      //this.$refs.ModalAct.show()
+    },
+        /*
         actualizar(indice, consecutivo, callback, hidden) {
             this.trayectoActual = (this.detalleTrayecto.lista[indice]);
             var produc
@@ -1362,7 +1696,6 @@ export default {
             this.currentUser.detalle.forEach((element, i) => {
                 if (element.id == consecutivo) {
                     this.indemodal = i
-
                     this.servicio = element.servicioslocal.nombre;
                     this.producto = element.productoslocal.nombre;
                     this.itemsvariables = element.detalleslocal.infor.objetoUnidades;
@@ -1373,7 +1706,6 @@ export default {
             });
             //this.indemodal = indice;
             this.consecutivo = consecutivo;
-
             var vacio = {
                 _id: null,
                 nombre: "Por Favor Seleccione un Trayecto"
@@ -1390,7 +1722,7 @@ export default {
                 this.itemsvariables = this.currentUser.detalle[indice].detalleslocal.infor.objetoUnidades;
                 var produc = this.currentUser.detalle[indice].productoslocal._id;
                 var serv = this.currentUser.detalle[indice].servicioslocal._id;
-                */
+                
                 var load = true;
                 this.selec_disable = false
                 setTimeout(() => {
@@ -1415,7 +1747,6 @@ export default {
                                     var login = localStorage.getItem("storedData");
                                     var infologin = JSON.parse(login);
                                     //document.getElementById(this.inputs.campos[i].id).value = null;
-
                                     this.axios.get(this.inputs.campos[i].urlobjeto + infologin.id_OperadorLogistico._id)
                                         .then(response22 => {
                                             this.trayectos = response22.data;
@@ -1445,7 +1776,6 @@ export default {
                                                 "warning"
                                             );
                                         });
-
                                 } else {}
                                 if (!hidden)
                                     this.$refs.ModalAct.show();
@@ -1457,7 +1787,6 @@ export default {
                 }
             } else {
                 this.indices = this.indemodal;
-
                 /*
                 this.detallesactualizar = this.currentUser.detalle[
                   indice
@@ -1469,7 +1798,7 @@ export default {
                 this.producto = this.currentUser.detalle[indice].productoslocal.nombre;
                 var produc = this.currentUser.detalle[indice].productoslocal._id;
                 var serv = this.currentUser.detalle[indice].servicioslocal._id;
-                */
+                *
                 var load = true;
                 setTimeout(() => {
                     bus.$emit("load", {
@@ -1486,16 +1815,13 @@ export default {
                                     load
                                 });
                             });
-
                             this.inputs = response.data;
                             this.campos = response.data.objeto;
                             this.campos.objetoUnidades = this.itemsvariables;
-
                             for (var i = 0; i < this.inputs.campos.length; i++) {
                                 if (this.inputs.campos[i].type == "select") {
                                     var login = localStorage.getItem("storedData");
                                     var infologin = JSON.parse(login);
-
                                     var load = true;
                                     setTimeout(() => {
                                         bus.$emit("load", {
@@ -1555,8 +1881,8 @@ export default {
                 }
             }
             //this.$refs.ModalAct.show()
-
         },
+        */
         asignarfinal(data) {
             if (data.mensaje.respuesta == "true") {
                 this.currentUser.estado = 'Orden De Servicio Asignada'
@@ -1599,7 +1925,6 @@ export default {
                             "warning"
                         );
                     });
-
             } else {
                 swal(
                     data.mensaje.message,
@@ -1613,7 +1938,6 @@ export default {
                 id_curier: seleccionado._id,
                 id_medio: this.model_medios._id
               };
-
               this.statuscourier = null;
               var load = true;
               setTimeout(() => {
@@ -1650,22 +1974,39 @@ export default {
                   );
                 });
                 */
-
         },
-        // -------------------------------------------------------
-        trayectoSeleccionado(idTrayecto) {
-            if (this.trayectos) {
-                const {
-                    indiceActual,
-                    lista
-                } = (this.detalleTrayecto);
-                const trayecto = (this.trayectos.find((t) => (t._id === idTrayecto)));
-                lista[indiceActual] = (trayecto && trayecto._id) ? (trayecto) : (null);
-                this.$forceUpdate();
-            }
-        }
-        // -------------------------------------------------------
+// -------------------------------------------------------
+    devolverIndiceActual(indice) {
+      return (((this.currentPage - 1) * this.totalRows) + indice);
     },
+    getTrayecto(idTrayecto) {
+      return (this.trayectos) ? (this.trayectos.find((t) => (t._id === idTrayecto))) : (null);
+    },
+    cambioTrayecto(id) {
+      const trayecto = (this.getTrayecto(id));
+      this.selection = (trayecto && trayecto._id) ? (trayecto._id) : (null);
+    },
+    existeTrayectoActual(indice) {
+      const obtenerIndice = (this.devolverIndiceActual(indice));
+      const { lista } = (this.detalleTrayecto);
+      return (lista[obtenerIndice] && lista[obtenerIndice].trayecto);
+    },
+    actualizarTrayecto(idTrayecto) {
+      if (this.trayectos) {
+        const { indiceActual, lista } = (this.detalleTrayecto);
+        const trayecto = (this.getTrayecto(idTrayecto));
+        lista[indiceActual].trayecto = (trayecto && trayecto._id) ? (trayecto) : (null);
+        // this.$forceUpdate();
+      }
+    }
+    // -------------------------------------------------------
+    },
+    computed: {
+    getDetalle() {
+      const { indiceActual, lista } = (this.detalleTrayecto);
+      return (lista[indiceActual]);
+    }
+  },
     watch: {
         currentUser(n, o) {},
         selection(n, o) {}
@@ -1680,36 +2021,41 @@ export default {
         var login = localStorage.getItem("storedData");
         var infologin = JSON.parse(login);
         var id_cliente;
-
         if (infologin.id_cliente) {
             this.selec_disable = false;
             this.id_cliente_local = infologin.id_cliente;
         }
-        // -------------------------------------------------------
-        const idUser = (setInterval(() => {
-            if (this.currentUser && this.currentUser.detalle) {
-                this.detalleTrayecto.lista = [];
-                let count = (0);
-                (function trayectos() {
-                    if (count >= this.currentUser.detalle.length)
-                        return;
-                    const detalle = (this.currentUser.detalle[count]);
-                    this.actualizar(count, detalle.id, () => {
-                        if (this.trayectos) {
-                            const infor = (detalle.detalleslocal.infor);
-                            this.detalleTrayecto.lista[count] = (this.trayectos.find((t) =>
-                                (t._id === infor.id_trayecto)) || null);
-                        } else {
-                            this.detalleTrayecto.lista[count] = (null);
-                        }
-                        count++;
-                        trayectos.call(this);
-                    }, true);
-                }).call(this);
-                clearInterval(idUser);
+    // -------------------------------------------------------
+    const idUser = (setInterval(() => {
+      if (this.currentUser && this.currentUser.detalle) {
+        this.detalleTrayecto.lista = [];
+        let count = (0);
+        (function trayectos() {
+          // if (count === this.currentUser.detalle.length - 1)
+          //     console.log(true, this.detalleTrayecto);
+          if (count >= this.currentUser.detalle.length)
+              return;
+          const detalle = (this.currentUser.detalle[count]);
+          this.actualizar(count, detalle.id, () => {
+            if (this.trayectos) {
+              const { observaciones, contenido, infor } = (detalle.detalleslocal);
+              const trayecto = (this.trayectos.find((t) => (t._id === infor.id_trayecto)) || null);
+              this.detalleTrayecto.lista[count] = {
+                trayecto,
+                contenido,
+                observaciones
+              };
+            } else {
+              this.detalleTrayecto.lista[count] = (null);
             }
-        }, 10));
-        // -------------------------------------------------------
+            count++;
+            trayectos.call(this);
+          }, true);
+        }).call(this);
+        clearInterval(idUser);
+      }
+    }, 10));
+    // -------------------------------------------------------
     },
     created: function () {
         bus.$on(
@@ -1724,16 +2070,15 @@ export default {
                 if (this.currentUser.leido == false) {
                     this.leido = "No";
                 }
-                if (typeof(this.currentUser.id_courier)=== "undefined") {
-                   //this.selected_curier = this.currentUser.id_courier;
+                if (typeof (this.currentUser.id_courier) === "undefined") {
+                    //this.selected_curier = this.currentUser.id_courier;
                     //this.selected_curier='jose'
                     this.selected_curier = null;
                 } else {
-
                     this.selected_curier = this.currentUser.id_courier;
-                    this.idCourier=this.currentUser.id_courier
+                    this.idCourier = this.currentUser.id_courier
                     this.model_medios = this.currentUser.id_medio;
-                    this.idMedio= this.currentUser.id_medio;
+                    this.idMedio = this.currentUser.id_medio;
                     //his.updatecourier()
                 }
                 this.vali = userObject.inde;
@@ -1745,14 +2090,10 @@ export default {
         var infologin = JSON.parse(login);
         if (infologin.id_OperadorLogistico.confirmacionSocket == true) {
             this.socket = (new CreateSocket({
-
                 id_cliente: infologin._id,
-
                 id_operador: infologin.id_OperadorLogistico._id
-
             }));
             this.socket.on('connect', () => {})
-
             this.socket.on('ListaConexiones', (data) => {
                 if (this.model_medios != undefined && this.model_medios != 'undefined' &&
                     this.model_medios != null) {
@@ -1763,16 +2104,11 @@ export default {
                         descripcion: 'orden'
                     });
                 }
-
             })
             this.socket.on('messages', (data) => {
-
-
                 clearTimeout(this.validacionsockets)
                 //$.cbSpinner("hide");
-
                 this.asignarfinal(data)
-
                 //this.message = (data.mensaje);
                 var load = false;
                 setTimeout(() => {
@@ -1783,9 +2119,6 @@ export default {
                 });
             });
         }
-
-
-
     },
     beforeCreate: function () {
         var vacio = {
@@ -1828,6 +2161,7 @@ export default {
     }
 };
 </script>
+
 
 
 
