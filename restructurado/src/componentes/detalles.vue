@@ -130,8 +130,8 @@
           <!-- ------------------------------------------------------- -->
           <template slot="editar" slot-scope="data" v-if="detalleTrayecto.lista.length">
             <i
-            v-bind:class="[`btn ${(detalleTrayecto.lista[devolverIndice(data.index)]) ? ('btn-success') : ('btn-danger')} fa fa-table rounded`]"
-            v-on:click.stop="actualizar(devolverIndice(data.index), data.item.id)"></i>
+            v-bind:class="[`btn ${(existeTrayectoActual(data.index)) ? ('btn-success') : ('btn-danger')} fa fa-table rounded`]"
+            v-on:click.stop="actualizar(devolverIndiceActual(data.index), data.item.id)"></i>
           </template>
           <!-- ------------------------------------------------------- -->
         </b-table>
@@ -262,7 +262,7 @@
         <div class="mt-3">
           <b-row class="mb-2">
             <b-col md="5">
-              <h5>Producto:</h5>
+              <h5 class="mt-1">Producto:</h5>
             </b-col>
             <b-col md="7">
               <h5 class="text-secondary font-weight-normal">{{producto}}</h5>
@@ -271,38 +271,59 @@
           <!-- // ----------------------------------------------------------------------------- -->
           <b-row class="mb-2">
             <b-col md="5">
-              <h5>Servicio:</h5>
+              <h5 class="mt-1">Servicio:</h5>
             </b-col>
             <b-col md="7">
               <h5 class="text-secondary font-weight-normal">{{servicio}}</h5>
             </b-col>
           </b-row>
-          <b-row v-for="(data,indice) in inputs.campos" class="my-1 card-text">
+          <!-- ----------------------------------- -->
+          <b-row class="mb-2">
+            <b-col md="5">
+              <h5 class="mt-1">Contenido:</h5>
+            </b-col>
+            <b-col md="7">
+              <input class="form-control form-control-sm" placeholder="Contenido"
+                :disabled="true" :value="getDetalle.contenido">
+            </b-col>
+          </b-row>
+          <b-row class="mb-2">
+            <b-col md="5">
+              <h5 class="mt-1">Observaciones:</h5>
+            </b-col>
+            <b-col md="7">
+              <textarea class="form-control form-control-sm" placeholder="Contenido"
+                :disabled="true" :value="getDetalle.observaciones">
+              </textarea>
+            </b-col>
+          </b-row>
+          <!-- ----------------------------------- -->
+          <b-row v-for="(data,indice) in inputs.campos" :key="indice" class="my-1 card-text">
             <template v-if="data.type=='number'">
-              <b-col cols="5">
-                <label  class="col-form-label col-form-label-sm text-capitalize" :style="data.style" >{{data.nombre}}: </label>
+              <b-col md="5">
+                <h5 class="mt-1">{{data.nombre}}:</h5>
               </b-col>
-              <b-col cols="7">
+              <b-col md="7">
                 <input class="form-control form-control-sm"  :type="data.type" :id="data.id" :style="data.style" :max="data.max"
                   @keyup="Presiono(indice,data)" :placeholder="data.placeholder" :disabled="data.requerido_edi==false"
                   :value="values(data.id)" required>
               </b-col>
             </template>
             <template v-if="data.type=='text'">
-              <b-col cols="5">
-                <label class="col-form-label col-form-label-sm text-capitalize" :style="data.style" >{{data.nombre}}: </label>
+              <b-col md="5">
+                <h5 class="mt-1">{{data.nombre}}:</h5>
               </b-col>
-              <b-col cols="7">
+              <b-col md="7">
                 <input class="form-control form-control-sm"  :type="data.type" :id="data.id" :style="data.style" :max="data.max"
                   @keyup="Presiono(indice,data)" :placeholder="data.placeholder" :disabled="data.requerido_edi==false"
                   :value="values(data.id)"  required>
               </b-col>
             </template>
             <template v-if="data.type=='select'" class="my-1 card-text">
-              <b-col cols="5">
-                <label class="col-form-label col-form-label-sm text-capitalize">{{data.nombre}}</label>
+              <b-col md="5">
+                <h5 class="mt-1">{{data.nombre}}:</h5>
               </b-col>
-              <b-col cols="7">
+              <b-col md="7">
                 <!-- ------------------------------------------------------- -->
                 <b-form-select class="col-form-label col-form-label-sm"
                   :id="data.id" :options="trayectos" text-field="nombre" value-field="_id"
@@ -759,8 +780,9 @@ export default {
       this.selection = "";
       // ----------------------------------------
       const { indiceActual, trayectoActual, lista } = (this.detalleTrayecto);
-      if (lista[indiceActual] !== void 0 && lista[indiceActual] !== trayectoActual)
-          lista[indiceActual] = (trayectoActual);
+      if (lista[indiceActual] !== void 0 && lista[indiceActual])
+          if (lista[indiceActual].trayecto !== trayectoActual)
+              lista[indiceActual].trayecto = (trayectoActual);
       // ----------------------------------------
       this.$refs.ModalAct.hide();
     },
@@ -776,7 +798,7 @@ export default {
         } else {
           // this.selection = this.campos.id_trayecto;
           // ----------------------------------------
-          this.trayectoSeleccionado(this.selection);
+          this.actualizarTrayecto(this.selection);
           // ----------------------------------------
           // if (!this.selection || this.selection == "000000000000000000000000" ) {
             // this.$refs.ModalAct.hide();
@@ -1142,8 +1164,9 @@ export default {
     actualizar(indice, consecutivo, callback, hidden) {
       // ------------------------------------------
       const { lista } = (this.detalleTrayecto);
-      this.selection = (lista[indice]) ? (lista[indice]._id) : (null);
-      this.detalleTrayecto.trayectoActual = (lista[indice]);
+      this.detalleTrayecto.trayectoActual = (lista[indice]) ? (lista[indice].trayecto) : (null);
+      if (lista[indice] && lista[indice].trayecto)
+          this.selection = (lista[indice].trayecto._id) ? (lista[indice].trayecto._id) : (null);
       // ------------------------------------------
       var produc
       var serv
@@ -1212,9 +1235,10 @@ export default {
                         });
                       });
                       // ------------------------------------------
-                      if (this.detalleTrayecto.lista[indice]) {
+                      const { lista } = (this.detalleTrayecto);
+                      if (lista[indice] && lista[indice].trayecto) {
                         this.detalleTrayecto.indiceActual = (indice);
-                        this.trayectoSeleccionado(this.detalleTrayecto.lista[indice]._id);
+                        this.actualizarTrayecto(lista[indice].trayecto._id);
                       } else {
                         this.detalleTrayecto.indiceActual = (0);
                       }
@@ -1267,13 +1291,9 @@ export default {
             load
           });
         });
-// console.log('entro2',this.detalleTrayecto.lista);
         if (produc && serv) {
-          // console.log('entro3',this.detalleTrayecto.lista);
           this.axios.get(urlservicios+ "estructuraf/" + produc + "/" + serv)
             .then(response => {
-              // console.log(response)
-// console.log('entro4',this.detalleTrayecto.lista);
               this.selec_disable=false
               var load = false;
               setTimeout(() => {
@@ -1308,9 +1328,10 @@ export default {
                         });
                       });
                       // ------------------------------------------
-                      if (this.detalleTrayecto.lista[indice]) {
+                      const { lista } = (this.detalleTrayecto);
+                      if (lista[indice] && lista[indice].trayecto) {
                         this.detalleTrayecto.indiceActual = (indice);
-                        this.trayectoSeleccionado(this.detalleTrayecto.lista[indice]._id);
+                        this.actualizarTrayecto(lista[indice].trayecto._id);
                       } else {
                         this.detalleTrayecto.indiceActual = (0);
                       }
@@ -1458,7 +1479,7 @@ export default {
 
     },
     // -------------------------------------------------------
-    devolverIndice(indice) {
+    devolverIndiceActual(indice) {
       return (((this.currentPage - 1) * this.totalRows) + indice);
     },
     getTrayecto(idTrayecto) {
@@ -1466,18 +1487,29 @@ export default {
     },
     cambioTrayecto(id) {
       const trayecto = (this.getTrayecto(id));
-      this.selection = (trayecto) ? (trayecto._id) : (null);
-      // this.trayectoSeleccionado(id);
+      this.selection = (trayecto && trayecto._id) ? (trayecto._id) : (null);
     },
-    trayectoSeleccionado(idTrayecto) {
+    existeTrayectoActual(indice) {
+      const obtenerIndice = (this.devolverIndiceActual(indice));
+      const { lista } = (this.detalleTrayecto);
+      return (lista[obtenerIndice] && lista[obtenerIndice].trayecto);
+    },
+    actualizarTrayecto(idTrayecto) {
       if (this.trayectos) {
         const { indiceActual, lista } = (this.detalleTrayecto);
         const trayecto = (this.getTrayecto(idTrayecto));
-        lista[indiceActual] = (trayecto && trayecto._id) ? (trayecto) : (null);
-        this.$forceUpdate();
+        lista[indiceActual].trayecto = (trayecto && trayecto._id) ? (trayecto) : (null);
+        // this.$forceUpdate();
       }
     }
     // -------------------------------------------------------
+  },
+  // -------------------------------------------------------
+  computed: {
+    getDetalle() {
+      const { indiceActual, lista } = (this.detalleTrayecto);
+      return (lista[indiceActual]);
+    }
   },
   watch: {
     currentUser(n, o) {},
@@ -1513,9 +1545,13 @@ export default {
           const detalle = (this.currentUser.detalle[count]);
           this.actualizar(count, detalle.id, () => {
             if (this.trayectos) {
-              const infor = (detalle.detalleslocal.infor);
-              this.detalleTrayecto.lista[count] = (this.trayectos.find((t) =>
-                (t._id === infor.id_trayecto)) || null);
+              const { observaciones, contenido, infor } = (detalle.detalleslocal);
+              const trayecto = (this.trayectos.find((t) => (t._id === infor.id_trayecto)) || null);
+              this.detalleTrayecto.lista[count] = {
+                trayecto,
+                contenido,
+                observaciones
+              };
             } else {
               this.detalleTrayecto.lista[count] = (null);
             }
