@@ -268,7 +268,6 @@
               <h5 class="text-secondary font-weight-normal">{{producto}}</h5>
             </b-col>
           </b-row>
-          <!-- // ----------------------------------------------------------------------------- -->
           <b-row class="mb-2">
             <b-col md="5">
               <h5 class="mt-1">Servicio:</h5>
@@ -278,25 +277,27 @@
             </b-col>
           </b-row>
           <!-- ----------------------------------- -->
-          <b-row class="mb-2">
-            <b-col md="5">
-              <h5 class="mt-1">Contenido:</h5>
-            </b-col>
-            <b-col md="7">
-              <input class="form-control form-control-sm" placeholder="Contenido"
-                :disabled="true" :value="getDetalle.contenido">
-            </b-col>
-          </b-row>
-          <b-row class="mb-2">
-            <b-col md="5">
-              <h5 class="mt-1">Observaciones:</h5>
-            </b-col>
-            <b-col md="7">
-              <textarea class="form-control form-control-sm" placeholder="Contenido"
-                :disabled="true" :value="getDetalle.observaciones">
-              </textarea>
-            </b-col>
-          </b-row>
+          <template v-if="getDetalle">
+            <b-row class="mb-2">
+              <b-col md="5">
+                <h5 class="mt-1">Contenido:</h5>
+              </b-col>
+              <b-col md="7">
+                <input class="form-control form-control-sm" placeholder="Contenido"
+                  :disabled="true" :value="getDetalle.contenido || 'No hay contenido'">
+              </b-col>
+            </b-row>
+            <b-row class="mb-2">
+              <b-col md="5">
+                <h5 class="mt-1">Observaciones:</h5>
+              </b-col>
+              <b-col md="7">
+                <textarea class="form-control form-control-sm" placeholder="Contenido"
+                  :disabled="true" :value="getDetalle.observaciones || 'No hay observaciones'">
+                </textarea>
+              </b-col>
+            </b-row>
+          </template>
           <!-- ----------------------------------- -->
           <b-row v-for="(data,indice) in inputs.campos" :key="indice" class="my-1 card-text">
             <template v-if="data.type=='number'">
@@ -781,8 +782,11 @@ export default {
       // ----------------------------------------
       const { indiceActual, trayectoActual, lista } = (this.detalleTrayecto);
       if (lista[indiceActual] !== void 0 && lista[indiceActual])
-          if (lista[indiceActual].trayecto !== trayectoActual)
-              lista[indiceActual].trayecto = (trayectoActual);
+          if (lista[indiceActual].trayecto !== trayectoActual) {
+            lista[indiceActual].trayecto = (trayectoActual);
+            this.selection = (trayectoActual && trayectoActual._id) ?
+              (trayectoActual._id) : (null);
+          }
       // ----------------------------------------
       this.$refs.ModalAct.hide();
     },
@@ -824,7 +828,7 @@ export default {
               nombre: (this.selection) ? (nombresel) : (null),
               campos: this.campos
             };
-            console.log(objeto);
+            // console.log(objeto);
 
             this.$refs.table.refresh();
             /*
@@ -1236,9 +1240,10 @@ export default {
                       });
                       // ------------------------------------------
                       const { lista } = (this.detalleTrayecto);
-                      if (lista[indice] && lista[indice].trayecto) {
+                      if (lista[indice] !== void 0) {
                         this.detalleTrayecto.indiceActual = (indice);
-                        this.actualizarTrayecto(lista[indice].trayecto._id);
+                        this.actualizarTrayecto((lista[indice] && lista[indice].trayecto) ?
+                          (lista[indice].trayecto._id) : (null));
                       } else {
                         this.detalleTrayecto.indiceActual = (0);
                       }
@@ -1329,9 +1334,10 @@ export default {
                       });
                       // ------------------------------------------
                       const { lista } = (this.detalleTrayecto);
-                      if (lista[indice] && lista[indice].trayecto) {
+                      if (lista[indice] !== void 0) {
                         this.detalleTrayecto.indiceActual = (indice);
-                        this.actualizarTrayecto(lista[indice].trayecto._id);
+                        this.actualizarTrayecto((lista[indice] && lista[indice].trayecto) ?
+                          (lista[indice].trayecto._id) : (null));
                       } else {
                         this.detalleTrayecto.indiceActual = (0);
                       }
@@ -1499,7 +1505,8 @@ export default {
         const { indiceActual, lista } = (this.detalleTrayecto);
         const trayecto = (this.getTrayecto(idTrayecto));
         lista[indiceActual].trayecto = (trayecto && trayecto._id) ? (trayecto) : (null);
-        // this.$forceUpdate();
+        this.$forceUpdate();
+        console.log(this.detalleTrayecto);
       }
     }
     // -------------------------------------------------------
@@ -1511,6 +1518,7 @@ export default {
       return (lista[indiceActual]);
     }
   },
+  // -------------------------------------------------------
   watch: {
     currentUser(n, o) {},
     selection(n, o) {}
@@ -1544,17 +1552,14 @@ export default {
               return;
           const detalle = (this.currentUser.detalle[count]);
           this.actualizar(count, detalle.id, () => {
-            if (this.trayectos) {
-              const { observaciones, contenido, infor } = (detalle.detalleslocal);
-              const trayecto = (this.trayectos.find((t) => (t._id === infor.id_trayecto)) || null);
-              this.detalleTrayecto.lista[count] = {
-                trayecto,
-                contenido,
-                observaciones
-              };
-            } else {
-              this.detalleTrayecto.lista[count] = (null);
-            }
+            const { observaciones, contenido, infor } = (detalle.detalleslocal);
+            const trayecto = (this.trayectos) ?
+              (this.trayectos.find((t) => (t._id === infor.id_trayecto)) || null) : (null);
+            this.detalleTrayecto.lista[count] = {
+              trayecto,
+              contenido,
+              observaciones
+            };
             count++;
             trayectos.call(this);
           }, true);
@@ -1635,9 +1640,6 @@ export default {
           });
       });
     }
-
-
-
   },
   beforeCreate: function() {
     var vacio = { _id: null, nombre: "Por Favor Seleccione un Cliente" };
