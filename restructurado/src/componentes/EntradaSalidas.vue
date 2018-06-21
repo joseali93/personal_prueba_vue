@@ -168,130 +168,67 @@
 
        <!-- Modal Component -->
 
-        <b-modal id="modal1" ref="myModalRef" title="Movilizados" class="text-primary" size="lg" :no-close-on-esc="true">
-
-            <b-container fluid>
-
-                 <b-row class="my-1">
-
-                    <b-col>
-
-                        <b-form-select v-model="concepto" :options="listadoconcepto"
-
-                         text-field="nombre" value-field="_id" class="my-1">
-
-                        </b-form-select>
-
-                    </b-col>
-
-                </b-row>
-
+        <b-modal id="modal1" ref="myModalRef" size="lg" :no-close-on-esc="true">
+          <div slot="modal-header">
+            <h2 class="text-secondary m-0">Movilizados</h2>
+          </div>
+          <b-container fluid>
                 <b-row class="my-1">
-
-                    <b-col >
-
-                        <b-form-input v-model="text1"
-
-                        class="float-left"
-
-                        type="number"
-
-                        id="nmovilizado"
-
-                        placeholder="Número Movilizado" @keyup.enter.native="adicionar(text1)"
-
-                        v-b-tooltip.hover title="Número de Movilizado!"></b-form-input>
-
-
-
-                    </b-col>
-
-                </b-row>
-
-
-
-                <b-row class="my-1 text-primary">
-
-                    <b-col class="my-3 ">
-
-                      <h3 ></h3>
-
-                        Total de Movilizados :
-
-                        <strong>
-
-                        {{itemsmovilizados.length}}
-
-                        </strong>
-
-                    </b-col>
-
-                    <b-col  class="my-3">
-
-                        Total de Unidades :
-
-                        <strong>
-
-                        {{mostrar()}}
-
-                        </strong>
-
-                    </b-col>
-
-                </b-row>
-
-                <b-row>
-
-                    <b-col>
-
-                        <h3 class="text-primary">Listado de Movilizados:</h3>
-
-                            <b-table striped hover :fields="fields" :items="itemsmovilizados"
-
-                            :per-page="5" :current-page="currentPage">
-
-                                <template slot="elimnar" slot-scope="data">
-
-                                    <b-btn variant="danger" @click="borrar(data)">
-
-                                        <i class="fa fa-trash-o" aria-hidden="true"></i>
-
-                                    </b-btn>
-
-                                </template>
-
-                                <template slot="nmovilizado" slot-scope="data">
-
-                                {{data.item.id}}
-
-                                </template>
-
-                                <template slot="unidades" slot-scope="data">
-
-                                {{data.item.unidades}}
-
-                                </template>
-
-                                <template slot="concepto" slot-scope="data">
-
-                                {{data.item.concepto.nombre}}
-
-                                </template>
-
-                            </b-table>
-
-                            <b-pagination size="md" :total-rows="itemsmovilizados.length"
-
-                            v-model="currentPage" :per-page="5">
-
-                            </b-pagination>
-
-                    </b-col>
-
-                </b-row>
-
-            </b-container>
-
+                  <b-col>
+                      <b-form-select v-model="concepto" :options="listadoconcepto"
+                        text-field="nombre" value-field="_id" class="my-1">
+                      </b-form-select>
+                  </b-col>
+              </b-row>
+              <b-row class="my-1">
+                  <b-col >
+                      <b-form-input v-model="text1"
+                      class="float-left"
+                      type="number"
+                      id="nmovilizado"
+                      placeholder="Número Movilizado" @keyup.enter.native="adicionar(text1)"
+                      v-b-tooltip.hover title="Número de Movilizado!"></b-form-input>
+                  </b-col>
+              </b-row>
+              <b-row class="mt-3 text-primary text-center font-weight-normal">
+                <b-col md="6">
+                  <h3 class="mb-0">Total de Movilizados:</h3>
+                  <h4 class="mb-0 mt-1">{{ itemsmovilizados.length }}</h4>
+                </b-col>
+                <b-col md="6">
+                  <h3 class="mb-0">Total de Unidades:</h3>
+                  <h4 class="mb-0 mt-1">{{ mostrar() }}</h4>
+                </b-col>
+              </b-row>
+              <b-card v-if="itemsmovilizados.length" header="Primary" header-bg-variant="primary" class="my-2 border">
+                <h3 slot="header" class="mb-0">Listado de movilizados</h3>
+                <b-table striped hover :fields="fields" :items="itemsmovilizados"
+                :per-page="5" :current-page="currentPage">
+                    <template slot="elimnar" slot-scope="data">
+                        <b-btn variant="danger" @click="borrar(data)">
+                            <i class="fa fa-trash-o" aria-hidden="true"></i>
+                        </b-btn>
+                    </template>
+                    <template slot="nmovilizado" slot-scope="data">
+                    {{data.item.id}}
+                    </template>
+                    <template slot="unidades" slot-scope="data">
+                    {{data.item.unidades}}
+                    </template>
+                    <template slot="concepto" slot-scope="data">
+                    {{data.item.concepto.nombre}}
+                    </template>
+                </b-table>
+                <b-pagination size="md" :total-rows="itemsmovilizados.length"
+                v-model="currentPage" :per-page="5">
+                </b-pagination>
+              </b-card>
+          </b-container>
+          <div slot="modal-footer">
+            <b-button class="rounded" size="md" variant="info" @click="$refs.myModalRef.hide()">
+              <i class="fa fa-times-circle"></i>&#32;Cerrar
+            </b-button>
+          </div>
         </b-modal>
 
 
