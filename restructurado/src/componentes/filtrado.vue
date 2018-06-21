@@ -269,7 +269,6 @@ export default {
         },
         consultar: function(){
 
-
             this.sel_conslta=true
 
             ///ObtenerOrdenesFiltrado/:consecutivo/:estado/:id_remitente/:id_centro/:fecha_inicio/:fecha_final

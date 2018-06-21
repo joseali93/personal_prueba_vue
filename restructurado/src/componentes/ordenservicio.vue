@@ -2535,7 +2535,7 @@ export default {
           id_OperadorLogistico: infologin.id_OperadorLogistico._id,
           id_usuario: infologin._id,
           id_centro_costo: selecc.selected_center,
-            fecha_creacion:jsonfechareal.fecha+"T08:00:00-05:00",
+            fecha_creacion:jsonfechareal.fecha+" 00:00:00.000Z UTC",
             //fecha_real:
             //fecha_creacion: today.toISOString(),
           id_cliente: selecc.selected_client,

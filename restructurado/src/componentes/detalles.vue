@@ -1,166 +1,273 @@
 <template>
-    <b-container>
-        <b-btn @click="volver" class="mt-2 rounded text-white" variant="danger">
-            <i class="fa fa-chevron-left" aria-hidden="true"></i> Volver
-        </b-btn>
-        <b-card class="border my-2" header="Primary" header-bg-variant="primary">
-            <div slot="header" class="w-100">
-                <strong class="float-left ">Información de la orden de servicio</strong>
-            </div>
-            <b-row class="text-center">
-                <b-col md="3">
-                    <p class="text-primary" style="font-size:25px;">Orden de Servicio</p>
-                </b-col>
-                <b-col md="3">
-                    <p class="text-primary" style="font-size:25px;">Fecha Creación</p>
-                </b-col>
-                <b-col md="3">
-                    <p class="text-primary" style="font-size:25px;">Estado</p>
-                </b-col>
-                <b-col md="3">
-                    <p class="text-primary" style="font-size:25px;">Leída por courier</p>
-                </b-col>
-            </b-row>
-            <b-row class="text-center">
-                <b-col md="3">
-                    <h2 class="text-secondary" style="font-size:18px;">{{info.id}}</h2>
-                </b-col>
-                <b-col md="3">
-                    <h2 class="text-secondary" style="font-size:18px;">{{currentUser.fecha_creacion | formatdate}}</h2>
-                </b-col>
-                <b-col md="3">
-                    <h2 class="text-secondary" style="font-size:18px;">{{currentUser.estado}}</h2>
-                </b-col>
-                <b-col md="3">
-                    <h2 class="text-secondary text-uppercase" style="font-size:18px;">{{leido}}</h2>
-                </b-col>
-            </b-row>
-        </b-card>
-        <b-card class="border my-2" header="Primary" header-bg-variant="primary">
-            <div slot="header" class="w-100">
-                <strong class="float-left ">Información del cliente</strong>
-            </div>
-            <b-row class="mb-2">
-                <b-col>
-                    <b-row>
-                        <b-col>
-                            <h4 class="text-primary">Cliente:</h4>
+<b-container>
+    <b-btn
+        @click="volver"
+        class="mt-2 rounded text-white"
+        variant="danger"
+    >
+        <i
+            class="fa fa-chevron-left"
+            aria-hidden="true"
+        ></i>
+            Volver
+            </b-btn>
+            <b-card
+                class="border my-2"
+                header="Primary"
+                header-bg-variant="primary"
+            >
+                <div
+                    slot="header"
+                    class="w-100"
+                >
+                    <strong class="float-left ">Información de la orden de servicio</strong>
+                    </div>
+                    <b-row class="text-center">
+                        <b-col md="3">
+                            <p
+                                class="text-primary"
+                                style="font-size:25px;"
+                            >Orden de Servicio</p>
                         </b-col>
-                        <b-col cols="8">
-                            <p class="text-capitalize" style="font-size:20px;">{{currentUser.id_cliente.nombre}}</p>
+                        <b-col md="3">
+                            <p
+                                class="text-primary"
+                                style="font-size:25px;"
+                            >Fecha Creación</p>
+                        </b-col>
+                        <b-col md="3">
+                            <p
+                                class="text-primary"
+                                style="font-size:25px;"
+                            >Estado</p>
+                        </b-col>
+                        <b-col md="3">
+                            <p
+                                class="text-primary"
+                                style="font-size:25px;"
+                            >Leída por courier</p>
                         </b-col>
                     </b-row>
-                    <b-row>
-                        <b-col>
-                            <h4 class="text-primary">Dirección Cliente:</h4>
+                    <b-row class="text-center">
+                        <b-col md="3">
+                            <h2
+                                class="text-secondary"
+                                style="font-size:18px;"
+                            >{{info.id}}</h2>
                         </b-col>
-                        <b-col cols="8">
-                            <p class="text-capitalize" style="font-size:20px;">{{currentUser.id_cliente.direccion}}</p>
+                        <b-col md="3">
+                            <h2
+                                class="text-secondary"
+                                style="font-size:18px;"
+                            >{{currentUser.fecha_creacion | formatdate}}</h2>
                         </b-col>
-                    </b-row>
-                    <b-row>
-                        <b-col>
-                            <h4 class="text-primary">Centro de Costo:</h4>
+                        <b-col md="3">
+                            <h2
+                                class="text-secondary"
+                                style="font-size:18px;"
+                            >{{currentUser.estado}}</h2>
                         </b-col>
-                        <b-col cols="8">
-                            <p class="text-capitalize" style="font-size:20px;">{{currentUser.id_centro_costo.nombre}}</p>
-                        </b-col>
-                    </b-row>
-                    <b-row>
-                        <b-col>
-                            <h4 class="text-primary">Dirección Centro de Costo:</h4>
-                        </b-col>
-                        <b-col cols="8">
-                            <p class="text-capitalize" style="font-size:20px;">{{currentUser.id_centro_costo.direccion}}</p>
-                        </b-col>
-                    </b-row>
-                </b-col>
-            </b-row>
-        </b-card>
-        <b-card class="border my-2" header="Primary" header-bg-variant="primary">
-            <div slot="header" class="w-100">
-                <strong class="float-left">Información de recolección</strong>
-            </div>
-            <b-row class="mb-2">
-                <b-col>
-                    <b-row>
-                        <b-col>
-                            <h4 class="text-primary">Dirección</h4>
-                        </b-col>
-                        <b-col cols="8">
-                            <p style="font-size:20px;">{{currentUser.remitente.direccion_recogida}}</p>
+                        <b-col md="3">
+                            <h2
+                                class="text-secondary text-uppercase"
+                                style="font-size:18px;"
+                            >{{leido}}</h2>
                         </b-col>
                     </b-row>
-                    <b-row>
-                        <b-col>
-                            <h4 class="text-primary">Nombre Contacto</h4>
-                        </b-col>
-                        <b-col cols="8">
-                            <p style="font-size:20px;">{{currentUser.remitente.nombre_contacto}}</p>
-                        </b-col>
-                    </b-row>
-                    <b-row>
-                        <b-col>
-                            <h4 class="text-primary">Telefono Contacto</h4>
-                        </b-col>
-                        <b-col cols="8">
-                            <p style="font-size:20px;">{{currentUser.remitente.telefono_contacto}}</p>
-                        </b-col>
-                    </b-row>
-                </b-col>
-            </b-row>
-        </b-card>
-        <b-card class="border my-2" header="Primary" header-bg-variant="primary">
-            <div slot="header" class="w-100">
-                <strong class="float-left ">Detalle de los envios</strong>
-            </div>
-            <b-row class="mb-2">
-                <b-table :fields="fields" ref="table" :per-page="5" :current-page="currentPage" :items="this.currentUser.detalle">
-                    <template slot="consecutivo" slot-scope="data">
-                        {{data.item.id}}
-                    </template>
-                    <template slot="productoslocal" slot-scope="data">
-                        {{data.value.nombre}}
-                    </template>
-                    <template
-                            slot="destinatario"
-                            slot-scope="data"
+                    </b-card>
+                    <b-card
+                        class="border my-2"
+                        header="Primary"
+                        header-bg-variant="primary"
+                    >
+                        <div
+                            slot="header"
+                            class="w-100"
                         >
-                            {{data.item.detalleslocal.destinatario.nombre}}
-                            </template>
-                    <template
-                                slot="doc_referencia"
-                                slot-scope="data" >
-                                {{data.item.detalleslocal.referencia}}
-                                </template>
-                    <template slot="servicioslocal" slot-scope="data">
-                        {{data.value.nombre}}
-                    </template>
-                    <!-- ------------------------------------------------------- -->
-                    <template slot="editar" slot-scope="data" v-if="detalleTrayecto.lista.length">
-                        <i v-bind:class="[`btn ${(existeTrayectoActual(data.index)) ? ('btn-success') : ('btn-danger')} fa fa-table rounded`]" v-on:click.stop="actualizar(devolverIndiceActual(data.index), data.item.id)"></i>
-                    </template>
-                    <!-- ------------------------------------------------------- -->
-                </b-table>
-                <b-pagination size="md" :total-rows="this.currentUser.detalle.length" v-model="currentPage" :per-page="totalRows">
-                </b-pagination>
-            </b-row>
-        </b-card>
-        <b-container>
-            <b-row class="my-3">
-                <b-col>
-                    <h4 class="text-primary">Medio de transporte: </h4>
-                    <!--
+                            <strong class="float-left ">Información del cliente</strong>
+                            </div>
+                            <b-row class="mb-2">
+                                <b-col>
+                                    <b-row>
+                                        <b-col>
+                                            <h4 class="text-primary">Cliente:</h4>
+                                        </b-col>
+                                        <b-col cols="8">
+                                            <p
+                                                class="text-capitalize"
+                                                style="font-size:20px;"
+                                            >{{currentUser.id_cliente.nombre}}</p>
+                                        </b-col>
+                                    </b-row>
+                                    <b-row>
+                                        <b-col>
+                                            <h4 class="text-primary">Dirección Cliente:</h4>
+                                        </b-col>
+                                        <b-col cols="8">
+                                            <p
+                                                class="text-capitalize"
+                                                style="font-size:20px;"
+                                            >{{currentUser.id_cliente.direccion}}</p>
+                                        </b-col>
+                                    </b-row>
+                                    <b-row>
+                                        <b-col>
+                                            <h4 class="text-primary">Centro de Costo:</h4>
+                                        </b-col>
+                                        <b-col cols="8">
+                                            <p
+                                                class="text-capitalize"
+                                                style="font-size:20px;"
+                                            >{{currentUser.id_centro_costo.nombre}}</p>
+                                        </b-col>
+                                    </b-row>
+                                    <b-row>
+                                        <b-col>
+                                            <h4 class="text-primary">Dirección Centro de Costo:</h4>
+                                        </b-col>
+                                        <b-col cols="8">
+                                            <p
+                                                class="text-capitalize"
+                                                style="font-size:20px;"
+                                            >{{currentUser.id_centro_costo.direccion}}</p>
+                                        </b-col>
+                                    </b-row>
+                                </b-col>
+                            </b-row>
+                            </b-card>
+                            <b-card
+                                class="border my-2"
+                                header="Primary"
+                                header-bg-variant="primary"
+                            >
+                                <div
+                                    slot="header"
+                                    class="w-100"
+                                >
+                                    <strong class="float-left">Información de recolección</strong>
+                                    </div>
+                                    <b-row class="mb-2">
+                                        <b-col>
+                                            <b-row>
+                                                <b-col>
+                                                    <h4 class="text-primary">Dirección</h4>
+                                                </b-col>
+                                                <b-col cols="8">
+                                                    <p style="font-size:20px;">{{currentUser.remitente.direccion_recogida}}</p>
+                                                </b-col>
+                                            </b-row>
+                                            <b-row>
+                                                <b-col>
+                                                    <h4 class="text-primary">Nombre Contacto</h4>
+                                                </b-col>
+                                                <b-col cols="8">
+                                                    <p style="font-size:20px;">{{currentUser.remitente.nombre_contacto}}</p>
+                                                </b-col>
+                                            </b-row>
+                                            <b-row>
+                                                <b-col>
+                                                    <h4 class="text-primary">Telefono Contacto</h4>
+                                                </b-col>
+                                                <b-col cols="8">
+                                                    <p style="font-size:20px;">{{currentUser.remitente.telefono_contacto}}</p>
+                                                </b-col>
+                                            </b-row>
+                                        </b-col>
+                                    </b-row>
+                                    </b-card>
+                                    <b-card
+                                        class="border my-2"
+                                        header="Primary"
+                                        header-bg-variant="primary"
+                                    >
+                                        <div
+                                            slot="header"
+                                            class="w-100"
+                                        >
+                                            <strong class="float-left ">Detalle de los envios</strong>
+                                            </div>
+                                            <b-row class="mb-2">
+                                                <b-table
+                                                    :fields="fields"
+                                                    ref="table"
+                                                    :per-page="5"
+                                                    :current-page="currentPage"
+                                                    :items="this.currentUser.detalle"
+                                                >
+                                                    <template
+                                                        slot="consecutivo"
+                                                        slot-scope="data"
+                                                    >
+                                                        {{data.item.id}}
+                                                        </template>
+                                                        <template
+                                                            slot="productoslocal"
+                                                            slot-scope="data"
+                                                        >
+                                                            {{data.value.nombre}}
+                                                            </template>
+                                                            <template
+                                                                    slot="destinatario"
+                                                                    slot-scope="data"
+                                                                >
+                                                                    {{data.item.detalleslocal.destinatario.nombre}}
+                                                                    </template>
+                                                            <template
+                                                                        slot="doc_referencia"
+                                                                        slot-scope="data" >
+                                                                        {{data.item.detalleslocal.referencia}}
+                                                                        </template>
+                                                            doc_referencia
+                                                            <template
+                                                                slot="servicioslocal"
+                                                                slot-scope="data"
+                                                            >
+                                                                {{data.value.nombre}}
+                                                                </template>
+                                                                <!-- ------------------------------------------------------- -->
+                                                                <template
+                                                                    slot="editar"
+                                                                    slot-scope="data"
+                                                                    v-if="detalleTrayecto.lista.length"
+                                                                >
+                                                                    <i
+                                                                        v-bind:class="[`btn ${(existeTrayectoActual(data.index)) ? ('btn-success') : ('btn-danger')} fa fa-table rounded`]"
+                                                                        v-on:click.stop="actualizar(devolverIndiceActual(data.index), data.item.id)"
+                                                                    ></i>
+                                                                        </template>
+                                                                        <!-- ------------------------------------------------------- -->
+                                                                        </b-table>
+                                                                        <b-pagination
+                                                                            size="md"
+                                                                            :total-rows="this.currentUser.detalle.length"
+                                                                            v-model="currentPage"
+                                                                            :per-page="totalRows"
+                                                                        >
+                                                                            </b-pagination>
+                                            </b-row>
+                                            </b-card>
+                                            <b-container>
+                                                <b-row class="my-3">
+                                                    <b-col>
+                                                        <h4 class="text-primary">Medio de transporte: </h4>
+                                                        <!--
           <b-form-select v-model="selected_curier" class="mb-3"  :options="curiers" text-field="nombre"
           value-field="_id" :state="statuscourier"
           @change.native="selectcuriers" :disabled="selec_disable">
           </b-form-select>
           -->
-                    <v-select v-model="model_medios" label="tipo" placeholder="Medio de Transporte" :options="medios" @input="vehic()" :disabled="medios_disable"></v-select>
-                </b-col>
-                <b-col>
-                    <h4 class="text-primary">Courier: </h4>
-                    <!--
+                                                        <v-select
+                                                            v-model="model_medios"
+                                                            label="tipo"
+                                                            placeholder="Medio de Transporte"
+                                                            :options="medios"
+                                                            @input="vehic()"
+                                                            :disabled="medios_disable"
+                                                        ></v-select>
+                                                    </b-col>
+                                                    <b-col>
+                                                        <h4 class="text-primary">Courier: </h4>
+                                                        <!--
           <b-form-select v-model="selected_curier" class="mb-3"  :options="curiers" text-field="nombre"
           value-field="_id" :state="statuscourier"
           @change.native="selectcuriers" :disabled="selec_disable">
@@ -168,175 +275,283 @@
           @input="updatecourier()"
             @search="onSearch"
           -->
-                    <v-select v-model="selected_curier" label="nombre" placeholder="Courier" :options="curiers" :disabled="selec_disable" @input="updatecourier()" ></v-select>
+                                                        <v-select
+                                                            v-model="selected_curier"
+                                                            label="nombre"
+                                                            placeholder="Courier"
+                                                            :options="curiers"
+                                                            :disabled="selec_disable"
+                                                            @onChange="pruebacambio"
+                                                            @input="updatecourier()"
+                                                        ></v-select>
 
-                </b-col>
-            </b-row>
-            <b-row>
-                <b-col>
-                    <b-btn class="float-right rounded text-white" size="lg" variant="warning" @click="asignar(selected_curier)" :disabled=desabilitarguardar()>
-                        <i class="fa fa-check-circle"></i>&#32;Aceptar
-                    </b-btn>
-                </b-col>
-            </b-row>
-        </b-container>
+                                                    </b-col>
+                                                </b-row>
+                                                <b-row>
+                                                    <b-col>
+                                                        <b-btn
+                                                            class="float-right rounded text-white"
+                                                            size="lg"
+                                                            variant="warning"
+                                                            @click="asignar(selected_curier)"
+                                                            :disabled=desabilitarguardar()
+                                                        >
+                                                            <i class="fa fa-check-circle"></i>&#32;Aceptar
+                                                            </b-btn>
+                                                    </b-col>
+                                                </b-row>
+                                            </b-container>
 
-        <!-- Modal para Trayectos-->
-        <b-modal id="modalactualizar" ref="ModalAct" title="Editar Registro" no-close-on-esc no-close-on-backdrop size="lg">
-            <div slot="modal-header" class="w-100">
-                <b-row>
-                    <b-col md="6">
-                        <h4 class="m-0 text-secondary text-left">
-              <strong>Editar Registro</strong> - Numero de Movilizado {{info.detalle[indemodal].id}}</h4>
-                    </b-col>
-                    <b-col md="6">
-                        <h4 class="m-0 text-secondary text-right">
-              <strong># Orden de servicio</strong> - {{ info.id }}
-            </h4>
-                    </b-col>
-                </b-row>
-            </div>
-            <b-container fluid>
-                <b-row>
-                    <b-col md="6">
-                        <b-card no-body class="border" header="Primary" header-bg-variant="primary">
-                            <div slot="header" class="w-100">
-                                <h4 class="float-left">Remitente</h4>
-                            </div>
-                            <b-card-body class="p-2">
-                                <b-row>
-                                    <b-col md="4">
-                                        <h5 class="my-1">Nombre:</h5>
-                                    </b-col>
-                                    <b-col md="8">
-                                        <h5 class="font-weight-normal my-1">{{info.id_cliente.nombre}}</h5>
-                                    </b-col>
-                                </b-row>
-                                <b-row>
-                                    <b-col md="4">
-                                        <h5 class="my-1">Dirección:</h5>
-                                    </b-col>
-                                    <b-col md="8">
-                                        <h5 class="font-weight-normal my-1">{{info.id_centro_costo.direccion}}</h5>
-                                    </b-col>
-                                </b-row>
-                            </b-card-body>
-                        </b-card>
-                    </b-col>
-                    <b-col md="6">
-                        <b-card no-body class="border" header="Primary" header-bg-variant="primary">
-                            <div slot="header" class="w-100">
-                                <h3 class="float-left">Destinatario</h3>
-                            </div>
-                            <b-card-body class="p-2">
-                                <b-row>
-                                    <b-col md="4">
-                                        <h5 class="my-1">Nombre:</h5>
-                                    </b-col>
-                                    <b-col md="8">
-                                        <h5 class="font-weight-normal my-1">
-                      {{info.detalle[indemodal].detalleslocal.destinatario.nombre}}
-                    </h5>
-                                    </b-col>
-                                </b-row>
-                                <b-row>
-                                    <b-col md="4">
-                                        <h5 class="my-1">Dirección:</h5>
-                                    </b-col>
-                                    <b-col md="8">
-                                        <h5 class="font-weight-normal my-1">
-                      {{info.detalle[indemodal].detalleslocal.destinatario.direccion}}
-                    </h5>
-                                    </b-col>
-                                </b-row>
-                            </b-card-body>
-                        </b-card>
-                    </b-col>
-                </b-row>
-                <div class="mt-3">
-                    <b-row class="mb-2">
-                        <b-col md="5">
-                            <h5 class="mt-1">Producto:</h5>
-                        </b-col>
-                        <b-col md="7">
-                            <h5 class="text-secondary font-weight-normal">{{producto}}</h5>
-                        </b-col>
-                    </b-row>
-                    <!-- // ----------------------------------------------------------------------------- -->
-                    <b-row class="mb-2">
-                        <b-col md="5">
-                            <h5 class="mt-1">Servicio:</h5>
-                        </b-col>
-                        <b-col md="7">
-                            <h5 class="text-secondary font-weight-normal">{{servicio}}</h5>
-                        </b-col>
-                    </b-row>
-                    <!-- ----------------------------------- -->
-                    <template v-if="getDetalle">
-                        <b-row  class="mb-2" >
-                            <b-col md="5">
-                                <h5 class="mt-1">Contenido:</h5>
-                            </b-col>
-                            <b-col md="7">
-                                <input class="form-control form-control-sm" placeholder="Contenido" :disabled="true" :value="getDetalle.contenido || 'No hay contenido'">
-                            </b-col>
-                        </b-row>
-                        <b-row class="mb-2">
-                            <b-col md="5">
-                                <h5 class="mt-1">Observaciones:</h5>
-                            </b-col>
-                            <b-col md="7">
-                                <textarea class="form-control form-control-sm" placeholder="Contenido" :disabled="true" :value="getDetalle.observaciones || 'No hay observaciones'">
-                                </textarea>
-                            </b-col>
-                        </b-row>
-                    </template>
-                    
-                    <!-- ----------------------------------- -->
-                    <b-row v-for="(data,indice) in inputs.campos" :key="indice" class="my-1 card-text">
-                        <template v-if="data.type=='number'">
-                            <b-col md="5">
-                                <h5 class="mt-1">{{data.nombre}}:</h5>
-                            </b-col>
-                            <b-col md="7">
-                                <input class="form-control form-control-sm" :type="data.type" :id="data.id" :style="data.style" :max="data.max" @keyup="Presiono(indice,data)" :placeholder="data.placeholder" :disabled="data.requerido_edi==false" :value="values(data.id)" required>
-                            </b-col>
-                        </template>
-                        <template v-if="data.type=='text'">
-                            <b-col md="5">
-                                <h5 class="mt-1">{{data.nombre}}:</h5>
-                            </b-col>
-                            <b-col md="7">
-                                <input class="form-control form-control-sm" :type="data.type" :id="data.id" :style="data.style" :max="data.max" @keyup="Presiono(indice,data)" :placeholder="data.placeholder" :disabled="data.requerido_edi==false" :value="values(data.id)" required>
-                            </b-col>
-                        </template>
-                        <template v-if="data.type=='select'" class="my-1 card-text">
-                            <b-col md="5">
-                                <h5 class="mt-1">{{data.nombre}}:</h5>
-                            </b-col>
-                            <b-col md="7">
-                                <!-- ------------------------------------------------------- -->
-                                <b-form-select class="col-form-label col-form-label-sm" :id="data.id" :options="trayectos" text-field="nombre" value-field="_id" @change="cambioTrayecto" @input="seleccionar(data)" :value="(detalleTrayecto.trayectoActual) ? (detalleTrayecto.trayectoActual._id) : (null)" :disabled="selec_disable">
-                                </b-form-select>
-                                <!-- ------------------------------------------------------- -->
-                            </b-col>
-                        </template>
-                    </b-row>
-                    <b-row v-if="itemsvariables.length">
-                        <b-table striped hover :items="itemsvariables"></b-table>
-                    </b-row>
-                </div>
-            </b-container>
-            <div slot="modal-footer" class="w-100">
-                <b-btn class="mt-3 rounded text-white" variant="danger" @click="hideModal">
-                    <i class="fa fa-times-circle" aria-hidden="true"></i>&#32;Cancelar
-                </b-btn>
-                <b-btn class="mt-3 float-right rounded text-white" variant="warning" v-on:click="ingresarTrayectos()" :disabled=desabilitarguardar()>
-                    <i class="fa fa-floppy-o" aria-hidden="true"></i>&#32;Guardar
-                </b-btn>
-            </div>
-        </b-modal>
-    </b-container>
+                                            <!-- Modal para Trayectos-->
+                                            <b-modal
+                                                id="modalactualizar"
+                                                ref="ModalAct"
+                                                title="Editar Registro"
+                                                no-close-on-esc
+                                                no-close-on-backdrop
+                                                size="lg"
+                                            >
+                                                <div
+                                                    slot="modal-header"
+                                                    class="w-100"
+                                                >
+                                                    <b-row>
+                                                        <b-col md="6">
+                                                            <h4 class="m-0 text-secondary text-left">
+                                                                <strong>Editar Registro</strong> - Numero de Movilizado {{info.detalle[indemodal].id}}</h4>
+                                                        </b-col>
+                                                        <b-col md="6">
+                                                            <h4 class="m-0 text-secondary text-right">
+                                                                <strong># Orden de servicio</strong> - {{ info.id }}
+                                                            </h4>
+                                                        </b-col>
+                                                    </b-row>
+                                                    </div>
+                                                    <b-container fluid>
+                                                        <b-row>
+                                                            <b-col md="6">
+                                                                <b-card
+                                                                    no-body
+                                                                    class="border"
+                                                                    header="Primary"
+                                                                    header-bg-variant="primary"
+                                                                >
+                                                                    <div
+                                                                        slot="header"
+                                                                        class="w-100"
+                                                                    >
+                                                                        <h4 class="float-left">Remitente</h4>
+                                                                        </div>
+                                                                        <b-card-body class="p-2">
+                                                                            <b-row>
+                                                                                <b-col md="4">
+                                                                                    <h5 class="my-1">Nombre:</h5>
+                                                                                </b-col>
+                                                                                <b-col md="8">
+                                                                                    <h5 class="font-weight-normal my-1">{{info.id_cliente.nombre}}</h5>
+                                                                                </b-col>
+                                                                            </b-row>
+                                                                            <b-row>
+                                                                                <b-col md="4">
+                                                                                    <h5 class="my-1">Dirección:</h5>
+                                                                                </b-col>
+                                                                                <b-col md="8">
+                                                                                    <h5 class="font-weight-normal my-1">{{info.id_centro_costo.direccion}}</h5>
+                                                                                </b-col>
+                                                                            </b-row>
+                                                                        </b-card-body>
+                                                                        </b-card>
+                                                            </b-col>
+                                                            <b-col md="6">
+                                                                <b-card
+                                                                    no-body
+                                                                    class="border"
+                                                                    header="Primary"
+                                                                    header-bg-variant="primary"
+                                                                >
+                                                                    <div
+                                                                        slot="header"
+                                                                        class="w-100"
+                                                                    >
+                                                                        <h3 class="float-left">Destinatario</h3>
+                                                                        </div>
+                                                                        <b-card-body class="p-2">
+                                                                            <b-row>
+                                                                                <b-col md="4">
+                                                                                    <h5 class="my-1">Nombre:</h5>
+                                                                                </b-col>
+                                                                                <b-col md="8">
+                                                                                    <h5 class="font-weight-normal my-1">
+                                                                                        {{info.detalle[indemodal].detalleslocal.destinatario.nombre}}
+                                                                                    </h5>
+                                                                                </b-col>
+                                                                            </b-row>
+                                                                            <b-row>
+                                                                                <b-col md="4">
+                                                                                    <h5 class="my-1">Dirección:</h5>
+                                                                                </b-col>
+                                                                                <b-col md="8">
+                                                                                    <h5 class="font-weight-normal my-1">
+                                                                                        {{info.detalle[indemodal].detalleslocal.destinatario.direccion}}
+                                                                                    </h5>
+                                                                                </b-col>
+                                                                            </b-row>
+                                                                        </b-card-body>
+                                                                        </b-card>
+                                                            </b-col>
+                                                        </b-row>
+                                                        <div class="mt-3">
+                                                            <b-row class="mb-2">
+                                                                <b-col md="5">
+                                                                    <h5 class="mt-1">Producto:</h5>
+                                                                </b-col>
+                                                                <b-col md="7">
+                                                                    <h5 class="text-secondary font-weight-normal">{{producto}}</h5>
+                                                                </b-col>
+                                                            </b-row>
+                                                            <!-- // ----------------------------------------------------------------------------- -->
+                                                            <b-row class="mb-2">
+                                                                <b-col md="5">
+                                                                    <h5 class="mt-1">Servicio:</h5>
+                                                                </b-col>
+                                                                <b-col md="7">
+                                                                    <h5 class="text-secondary font-weight-normal">{{servicio}}</h5>
+                                                                </b-col>
+                                                            </b-row>
+                                                            <!-- ----------------------------------- -->
+                                                            <b-row  class="mb-2">
+                                                                <b-col md="5">
+                                                                    <h5 class="mt-1">Contenido:</h5>
+                                                                </b-col>
+                                                                <b-col md="7">
+                                                                    <input
+                                                                        class="form-control form-control-sm"
+                                                                        placeholder="Contenido"
+                                                                        :disabled="true"
+                                                                        :value="getDetalle.contenido"
+                                                                    >
+                                                                </b-col>
+                                                            </b-row>
+                                                            <b-row  class="mb-2">
+                                                                <b-col md="5">
+                                                                    <h5 class="mt-1">Observaciones:</h5>
+                                                                </b-col>
+                                                                <b-col md="7">
+                                                                    <textarea
+                                                                        class="form-control form-control-sm"
+                                                                        placeholder="Contenido"
+                                                                        :disabled="true"
+                                                                        :value="getDetalle.observaciones"
+                                                                    >
+                                                                        </textarea>
+                                                                </b-col>
+                                                            </b-row>
+                                                            <!-- ----------------------------------- -->
+                                                            <b-row
+                                                                v-for="(data,indice) in inputs.campos"
+                                                                :key="indice"
+                                                                class="my-1 card-text"
+                                                            >
+                                                                <template v-if="data.type=='number'">
+                                                                    <b-col md="5">
+                                                                        <h5 class="mt-1">{{data.nombre}}:</h5>
+                                                                    </b-col>
+                                                                    <b-col md="7">
+                                                                        <input
+                                                                            class="form-control form-control-sm"
+                                                                            :type="data.type"
+                                                                            :id="data.id"
+                                                                            :style="data.style"
+                                                                            :max="data.max"
+                                                                            @keyup="Presiono(indice,data)"
+                                                                            :placeholder="data.placeholder"
+                                                                            :disabled="data.requerido_edi==false"
+                                                                            :value="values(data.id)"
+                                                                            required
+                                                                        >
+                                                                    </b-col>
+                                                                </template>
+                                                                <template v-if="data.type=='text'">
+                                                                    <b-col md="5">
+                                                                        <h5 class="mt-1">{{data.nombre}}:</h5>
+                                                                    </b-col>
+                                                                    <b-col md="7">
+                                                                        <input
+                                                                            class="form-control form-control-sm"
+                                                                            :type="data.type"
+                                                                            :id="data.id"
+                                                                            :style="data.style"
+                                                                            :max="data.max"
+                                                                            @keyup="Presiono(indice,data)"
+                                                                            :placeholder="data.placeholder"
+                                                                            :disabled="data.requerido_edi==false"
+                                                                            :value="values(data.id)"
+                                                                            required
+                                                                        >
+                                                                    </b-col>
+                                                                </template>
+                                                                <template
+                                                                    v-if="data.type=='select'"
+                                                                    class="my-1 card-text"
+                                                                >
+                                                                    <b-col md="5">
+                                                                        <h5 class="mt-1">{{data.nombre}}:</h5>
+                                                                    </b-col>
+                                                                    <b-col md="7">
+                                                                        <!-- ------------------------------------------------------- -->
+                                                                        <b-form-select
+                                                                            class="col-form-label col-form-label-sm"
+                                                                            :id="data.id"
+                                                                            :options="trayectos"
+                                                                            text-field="nombre"
+                                                                            value-field="_id"
+                                                                            @change="cambioTrayecto"
+                                                                            @input="seleccionar(data)"
+                                                                            :value="(detalleTrayecto.trayectoActual) ? (detalleTrayecto.trayectoActual._id) : (null)"
+                                                                            :disabled="selec_disable"
+                                                                        >
+                                                                            </b-form-select>
+                                                                            <!-- ------------------------------------------------------- -->
+                                                                    </b-col>
+                                                                    </template>
+                                                                    </b-row>
+                                                                    <b-row v-if="itemsvariables.length">
+                                                                        <b-table
+                                                                            striped
+                                                                            hover
+                                                                            :items="itemsvariables"
+                                                                        ></b-table>
+                                                                    </b-row>
+                                                        </div>
+                                                    </b-container>
+                                                    <div
+                                                        slot="modal-footer"
+                                                        class="w-100"
+                                                    >
+                                                        <b-btn
+                                                            class="mt-3 rounded text-white"
+                                                            variant="danger"
+                                                            @click="hideModal"
+                                                        >
+                                                            <i
+                                                                class="fa fa-times-circle"
+                                                                aria-hidden="true"
+                                                            ></i>&#32;Cancelar
+                                                                </b-btn>
+                                                                <b-btn
+                                                                    class="mt-3 float-right rounded text-white"
+                                                                    variant="warning"
+                                                                    v-on:click="ingresarTrayectos()"
+                                                                    :disabled=desabilitarguardar()
+                                                                >
+                                                                    <i
+                                                                        class="fa fa-floppy-o"
+                                                                        aria-hidden="true"
+                                                                    ></i>&#32;Guardar
+                                                                        </b-btn>
+                                                                        </div>
+                                                                        </b-modal>
+</b-container>
 </template>
 
 <script>
@@ -416,11 +631,13 @@ export default {
             selection: null,
             trayectos: null,
             // -------------------------------------------------------
+            // -------------------------------------------------------
             detalleTrayecto: {
-              indiceActual: null,
-              trayectoActual: null,
-              lista: []
+                indiceActual: null,
+                trayectoActual: null,
+                lista: []
             },
+            // -------------------------------------------------------
             // -------------------------------------------------------
             indices: "",
             inputs: "",
@@ -446,54 +663,26 @@ export default {
         updatecourier() {
             var login = localStorage.getItem("storedData");
             var infologin = JSON.parse(login);
-            if(this.selected_curier==null||this.selected_curier==''||
-                this.selected_curier===null|this.selected_curier===''){
-                    if(this.idCourier){
-                    }
-                    else{
-                    }
-            }
-            else{
-                if(this.idCourier){
-                    this.axios.get(urlservicios + "UsuariosCurier/" + infologin.id_OperadorLogistico._id + "/" + this.idMedio)
-                            .then(response => {
-                                this.curiers = response.data;
-                                this.curiers.forEach(element => {
-                                    if(element._id==this.idCourier){
-                                        this.selected_curier=element.nombre
-                                    }
-                                });
-                                var load = false;
-                                setTimeout(() => {
-                                    bus.$emit("load", {
-                                        load
-                                    });
-                                });
-                                //this.selec_disable=false
-                            })
-                }
-                else{
-                }
-            }
-            
-            
-        },
-        /*
-        updatecourier() {
-            var login = localStorage.getItem("storedData");
-            var infologin = JSON.parse(login);
+            console.log(this.selected_curier);
             if (this.selected_curier == null || this.selected_curier == '' ||
                 this.selected_curier === null | this.selected_curier === '') {
+                console.log("va nulo")
                 if (this.idCourier) {
+                    console.log(this.idCourier);
+                    console.log(this.curiers);
                 } else {}
             } else {
+                console.log("tiene courier");
                 if (this.idCourier) {
+                    console.log(this.idCourier);
+                    console.log(this.curiers);
                     this.axios.get(urlservicios + "UsuariosCurier/" + infologin.id_OperadorLogistico._id + "/" + this.idMedio)
                         .then(response => {
                             this.curiers = response.data;
                             this.curiers.forEach(element => {
                                 if (element._id == this.idCourier) {
-                                    //this.selected_curier = element.nombre
+                                    console.log("tengo uno");
+                                    this.selected_curier = element.nombre
                                 }
                             });
                             var load = false;
@@ -509,8 +698,6 @@ export default {
 
 
         },
-        */
-       /*
         vehic() {
             var login = localStorage.getItem("storedData");
             var infologin = JSON.parse(login);
@@ -676,187 +863,6 @@ export default {
             }
             //this.updatecourier()
         },
-        */
-       vehic() {
-            var login = localStorage.getItem("storedData");
-            var infologin = JSON.parse(login);
-            if (typeof(this.model_medios) == "string") {
-                if (infologin.id_OperadorLogistico.confirmacionSocket == false) {
-                    var load = true;
-                    setTimeout(() => {
-                        bus.$emit("load", {
-                            load
-                        });
-                    });
-                    this.axios.get(urlservicios + "medios/")
-                        .then(response => {
-                            var load = false;
-                            setTimeout(() => {
-                                bus.$emit("load", {
-                                    load
-                                });
-                            });
-                            this.medios = response.data;
-                            this.medios.forEach(element => {
-                                if (element._id == this.model_medios) {
-                                    this.model_medios = element.nombre;
-                                }
-                            });
-                            var load = false;
-                            setTimeout(() => {
-                                bus.$emit("load", {
-                                    load
-                                });
-                            });
-                        })
-                        .catch(function (error) {
-                            var load = false;
-                            setTimeout(() => {
-                                bus.$emit("load", {
-                                    load
-                                });
-                            });
-                            swal(
-                                "Se presento un problema",
-                                "Intente nuevamente, por favor",
-                                "warning"
-                            );
-                    });
-                } 
-               if (typeof(this.model_medios) == "object") {
-                    var load = true;
-                    setTimeout(() => {
-                        bus.$emit("load", {
-                            load
-                        });
-                    });
-                    this.axios.get(urlservicios + "medios/")
-                        .then(response => {
-                            var load = false;
-                            setTimeout(() => {
-                                bus.$emit("load", {
-                                    load
-                                });
-                            });
-                            this.medios = response.data;
-                            this.medios.forEach(element => {
-                                if (element._id == this.model_medios) {
-                                    this.model_medios = element.nombre;
-                                }
-                            });
-                            var load = false;
-                            setTimeout(() => {
-                                bus.$emit("load", {
-                                    load
-                                });
-                            });
-                        })
-                        .catch(function (error) {
-                            var load = false;
-                            setTimeout(() => {
-                                bus.$emit("load", {
-                                    load
-                                });
-                            });
-                            swal(
-                                "Se presento un problema",
-                                "Intente nuevamente, por favor",
-                                "warning"
-                            );
-                    });
-                }
-            } else {
-                if (this.model_medios != null) {
-                    var nombre;
-                    if (infologin.id_OperadorLogistico.confirmacionSocket == false) {
-                        var load = true;
-                        setTimeout(() => {
-                            bus.$emit("load", {
-                                load
-                            });
-                        });
-                        this.axios.get(urlservicios + "UsuariosCurier/" + infologin.id_OperadorLogistico._id + "/" + this.model_medios._id)
-                            .then(response => {
-                                this.curiers = response.data;
-                                
-                                var load = false;
-                                setTimeout(() => {
-                                    bus.$emit("load", {
-                                        load
-                                    });
-                                });
-                                //this.selec_disable=false
-                            })
-                            .catch(function (error) {
-                                var load = false;
-                                setTimeout(() => {
-                                    bus.$emit("load", {
-                                        load
-                                    });
-                                });
-                                swal(
-                                    "Se presento un problema",
-                                    "Intente nuevamente, por favor",
-                                    "warning"
-                                );
-                            });
-                    } else {
-                        if(this.currentUser.id_courier){
-                            this.axios.get(urlservicios + "UsuariosCurier/" + infologin.id_OperadorLogistico._id + "/" + this.model_medios._id)
-                            .then(response => {
-                                this.curiers = response.data;
-                                
-                                var load = false;
-                                setTimeout(() => {
-                                    bus.$emit("load", {
-                                        load
-                                    });
-                                });
-                                //this.selec_disable=false
-                            })
-                            .catch(function (error) {
-                                var load = false;
-                                setTimeout(() => {
-                                    bus.$emit("load", {
-                                        load
-                                    });
-                                });
-                            });
-                        }
-                        else{
-                            this.socket.emit('MedioCourier', {
-                            id_operadorlogistico: infologin.id_OperadorLogistico._id,
-                            id_cliente: infologin._id,
-                            medio_transporte: this.model_medios._id,
-                            descripcion: 'orden'
-                            });
-                            //this.curiers=
-                            this.socket.on('CouriersActivos', (connectionList) => {
-                                this.curiers = connectionList
-                            });
-                        }
-                    }
-                        
-                } else {
-                    //this.selec_disable=true
-                }
-            }
-            //this.updatecourier()
-        },
-        desabilitarguardar() {
-            if (
-                this.info.estado == "orden de servicio cancelada" ||
-                this.info.estado == "Orden De Servicio Recogida" ||
-                this.info.estado == "Orden de servicio cerrada"
-            ) {
-                //selec_disable
-                this.selec_disable = true;
-                this.medios_disable = true
-                return true;
-            } else {
-                return false;
-            }
-        },
         desabilitarguardar() {
             if (
                 this.info.estado == "orden de servicio cancelada" ||
@@ -1006,13 +1012,14 @@ export default {
             this.consecutivo = "";
             this.selection = "";
             // ----------------------------------------
-            const { indiceActual, trayectoActual, lista } = (this.detalleTrayecto);
+            const {
+                indiceActual,
+                trayectoActual,
+                lista
+            } = (this.detalleTrayecto);
             if (lista[indiceActual] !== void 0 && lista[indiceActual])
-                if (lista[indiceActual].trayecto !== trayectoActual) {
+                if (lista[indiceActual].trayecto !== trayectoActual)
                     lista[indiceActual].trayecto = (trayectoActual);
-                    this.selection = (trayectoActual && trayectoActual._id) ? 
-                        (trayectoActual._id) : (null);
-                }
             // ----------------------------------------
             this.$refs.ModalAct.hide();
         },
@@ -1052,6 +1059,7 @@ export default {
                         nombre: (this.selection) ? (nombresel) : (null),
                         campos: this.campos
                     };
+                    console.log(objeto);
                     this.$refs.table.refresh();
                     /*
                     var load = true;
@@ -1084,20 +1092,29 @@ export default {
                     var josea = {}
                     var propiedadesDinamicas
                     llavescampos.forEach(element => {
+                        // console.log("elemenr llaves");
+                        // console.log(element);
                         if (enviodestinatario.vmodel == element) {
                             josea[element] = this.selection
+                            // console.log(josea);
                             var objdestinatario = {
                                 propiedadesDinamicas: josea
                             }
+                            // console.log("-------");
+                            // console.log(objdestinatario.propiedadesDinamicas.id_trayecto);
                             this.axios.get(urlservicios + "obtenerDestinatario/" + this.currentUser.detalle[this.indemodal].detalleslocal.destinatario.numero_identificacion)
                                 .then(response => {
                                     destina = response.data.destinatarios
+                                    // console.log(destina);
                                     this.axios.post(urlservicios + "ActualizarDestinatario" + "/" + destina._id, objdestinatario)
                                         .then(responsedestinatario => {
+                                            // console.log(responsedestinatario);
                                         })
                                 });
+                            // console.log(objdestinatario);
                         }
                     });
+                    // console.log(destina);
                     this.axios.post(urlservicios + "ActualizarTrayecto/" + this.currentUser._id + "/" + this.consecutivo, objeto)
                         .then(response => {
                             this.$refs.table.refresh();
@@ -1462,7 +1479,7 @@ export default {
                 }
             }
         },
-        actualizar(indice, consecutivo, callback, hidden) {
+            actualizar(indice, consecutivo, callback, hidden) {
       // ------------------------------------------
       const { lista } = (this.detalleTrayecto);
       this.detalleTrayecto.trayectoActual = (lista[indice]) ? (lista[indice].trayecto) : (null);
@@ -1534,10 +1551,9 @@ export default {
                       });
                       // ------------------------------------------
                       const { lista } = (this.detalleTrayecto);
-                      if (lista[indice] !== void 0) {
+                      if (lista[indice] && lista[indice].trayecto) {
                         this.detalleTrayecto.indiceActual = (indice);
-                        this.actualizarTrayecto((lista[indice] && lista[indice].trayecto) ? 
-                            (lista[indice].trayecto._id) : (null));
+                        this.actualizarTrayecto(lista[indice].trayecto._id);
                       } else {
                         this.detalleTrayecto.indiceActual = (0);
                       }
@@ -1623,10 +1639,9 @@ export default {
                       });
                       // ------------------------------------------
                       const { lista } = (this.detalleTrayecto);
-                      if (lista[indice] !== void 0) {
+                      if (lista[indice] && lista[indice].trayecto) {
                         this.detalleTrayecto.indiceActual = (indice);
-                        this.actualizarTrayecto((lista[indice] && lista[indice].trayecto) ? 
-                            (lista[indice].trayecto._id) : (null));
+                        this.actualizarTrayecto(lista[indice].trayecto._id);
                       } else {
                         this.detalleTrayecto.indiceActual = (0);
                       }
@@ -1960,40 +1975,38 @@ export default {
                 });
                 */
         },
-        // -------------------------------------------------------
-        devolverIndiceActual(indice) {
-          return (((this.currentPage - 1) * this.totalRows) + indice);
-        },
-        getTrayecto(idTrayecto) {
-          return (this.trayectos) ? (this.trayectos.find((t) => (t._id === idTrayecto))) : (null);
-        },
-        cambioTrayecto(id) {
-          const trayecto = (this.getTrayecto(id));
-          this.selection = (trayecto && trayecto._id) ? (trayecto._id) : (null);
-        },
-        existeTrayectoActual(indice) {
-          const obtenerIndice = (this.devolverIndiceActual(indice));
-          const { lista } = (this.detalleTrayecto);
-          return (lista[obtenerIndice] && lista[obtenerIndice].trayecto);
-        },
-        actualizarTrayecto(idTrayecto) {
-          if (this.trayectos) {
-            const { indiceActual, lista } = (this.detalleTrayecto);
-            const trayecto = (this.getTrayecto(idTrayecto));
-            lista[indiceActual].trayecto = (trayecto && trayecto._id) ? (trayecto) : (null);
-            // this.$forceUpdate();
-          }
-        }
-        // -------------------------------------------------------
+// -------------------------------------------------------
+    devolverIndiceActual(indice) {
+      return (((this.currentPage - 1) * this.totalRows) + indice);
     },
+    getTrayecto(idTrayecto) {
+      return (this.trayectos) ? (this.trayectos.find((t) => (t._id === idTrayecto))) : (null);
+    },
+    cambioTrayecto(id) {
+      const trayecto = (this.getTrayecto(id));
+      this.selection = (trayecto && trayecto._id) ? (trayecto._id) : (null);
+    },
+    existeTrayectoActual(indice) {
+      const obtenerIndice = (this.devolverIndiceActual(indice));
+      const { lista } = (this.detalleTrayecto);
+      return (lista[obtenerIndice] && lista[obtenerIndice].trayecto);
+    },
+    actualizarTrayecto(idTrayecto) {
+      if (this.trayectos) {
+        const { indiceActual, lista } = (this.detalleTrayecto);
+        const trayecto = (this.getTrayecto(idTrayecto));
+        lista[indiceActual].trayecto = (trayecto && trayecto._id) ? (trayecto) : (null);
+        // this.$forceUpdate();
+      }
+    }
     // -------------------------------------------------------
-    computed: {
-        getDetalle() {
-            const { indiceActual, lista } = (this.detalleTrayecto);
-            return (lista[indiceActual]);
-        }
     },
-    // --------------------------------------------------------
+    computed: {
+    getDetalle() {
+      const { indiceActual, lista } = (this.detalleTrayecto);
+      return (lista[indiceActual]);
+    }
+  },
     watch: {
         currentUser(n, o) {},
         selection(n, o) {}
@@ -2019,18 +2032,22 @@ export default {
         let count = (0);
         (function trayectos() {
           // if (count === this.currentUser.detalle.length - 1)
+          //     console.log(true, this.detalleTrayecto);
           if (count >= this.currentUser.detalle.length)
               return;
           const detalle = (this.currentUser.detalle[count]);
           this.actualizar(count, detalle.id, () => {
-            const { observaciones, contenido, infor } = (detalle.detalleslocal);
-            const trayecto = (this.trayectos) ? 
-                (this.trayectos.find((t) => (t._id === infor.id_trayecto)) || null) : (null);
-            this.detalleTrayecto.lista[count] = {
+            if (this.trayectos) {
+              const { observaciones, contenido, infor } = (detalle.detalleslocal);
+              const trayecto = (this.trayectos.find((t) => (t._id === infor.id_trayecto)) || null);
+              this.detalleTrayecto.lista[count] = {
                 trayecto,
                 contenido,
                 observaciones
-            };
+              };
+            } else {
+              this.detalleTrayecto.lista[count] = (null);
+            }
             count++;
             trayectos.call(this);
           }, true);
@@ -2144,6 +2161,11 @@ export default {
     }
 };
 </script>
+
+
+
+
+
 
 <style>
 .cardPersonalizada card-header {
