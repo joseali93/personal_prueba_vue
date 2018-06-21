@@ -150,23 +150,23 @@
 
 
             <b-table :items="info.trazabilidad" :fields="campostra" thead-class=text-center tbody-class=text-center>
-                        <template slot="fecha" slot-scope="data" >
+                        <template slot="fecha" slot-scope="data" v-if="data.item.id_ProcesoLogistico.EsVisible==true">
                             {{data.item.fecha |formatdate}}
                         </template>
-                        <template slot="nombre" slot-scope="data"  class="text-center">
+                        <template slot="nombre" slot-scope="data"  class="text-center" v-if="data.item.id_ProcesoLogistico.EsVisible==true">
                             <p class="text-center">{{data.item.nombre}}</p>
                         </template>
-                        <template slot="imagen" slot-scope="data">
+                        <template slot="imagen" slot-scope="data" v-if="data.item.id_ProcesoLogistico.EsVisible==true">
                                 <i class="btn btn-success fa fa-picture-o" @click="imagenmodal(data.item)" v-show="data.item.imagenes.length>0">
                                 </i>
                         </template>
-                         <template slot="recibido" slot-scope="data">
+                         <template slot="recibido" slot-scope="data" v-if="data.item.id_ProcesoLogistico.EsVisible==true">
                             <i class="btn btn-success fa fa-address-card-o" @click="contactoModal(data.item)" v-show="data.item.datosRecibidos">
 
                             </i>
 
                         </template>
-                        <template slot="conceptos" slot-scope="data">
+                        <template slot="conceptos" slot-scope="data" v-if="data.item.id_ProcesoLogistico.EsVisible==true">
                             <i class="btn btn-success fa fa-info text-center" @click="conceptoModal(data.item)" v-show="data.item.conceptos">
 
                             </i>
