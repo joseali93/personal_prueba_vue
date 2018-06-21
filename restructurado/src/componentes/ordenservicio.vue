@@ -25,19 +25,23 @@
           </b-col>
         </b-row>
         <b-card-group deck class="mt-3">
-          <b-card class="border" header="Primary" header-bg-variant="primary">
-             <h3 slot="header" class="mb-0 encabezado">Detalle de servicios</h3></h3>
+          <b-card class="border" no-body header="Primary" header-bg-variant="primary">
+            <div slot="header" class="mb-0 encabezado">
               <b-row>
-                <b-col md="6" offset-md="6">
-                    <b-btn class="rounded float-right text-white" variant="warning"
-                    v-b-tooltip.hover title="Adicionar"
-                    @click="abirmodal()"><i class="fa fa-plus"></i>
-                    Adicionar
-                    </b-btn>
+                <b-col md="6">
+                  <h3 class="my-2">Detalle de servicios</h3>
+                </b-col>
+                <b-col md="6">
+                  <b-btn class="rounded float-right text-white" variant="warning"
+                    v-b-tooltip.hover title="Adicionar" @click="abirmodal()">
+                      <i class="fa fa-plus"></i>&#32;Adicionar
+                  </b-btn>
                 </b-col>
               </b-row>
+            </div>
+            <b-card-body v-if="DetalleServicio && DetalleServicio.length">
               <b-row>
-                  <b-table v-if="DetalleServicio && DetalleServicio.length" class="mt-2" :fields="fields" :per-page="5" :current-page="currentPage" :items="DetalleServicio">
+                  <b-table class="mt-2" :fields="fields" :per-page="5" :current-page="currentPage" :items="DetalleServicio">
 
                       <template slot="eliminar" slot-scope="data" >
                           <i class="btn btn-danger fa fa-trash" v-on:click="eliminar(data.index)" ></i>
@@ -57,10 +61,10 @@
                             -->
                       </template>
                   </b-table>
-                  <b-pagination v-if="DetalleServicio && DetalleServicio.length" size="md" :total-rows="DetalleServicio.length" v-model="currentPage" :per-page="5">
+                  <b-pagination size="md" :total-rows="DetalleServicio.length" v-model="currentPage" :per-page="5">
                   </b-pagination>
               </b-row>
-
+            </b-card-body>
           </b-card>
           <b-card class="border" header="Primary" header-bg-variant="primary">
             <h3 slot="header" class="mb-0 encabezado">Observaciones generales de recolección</h3>

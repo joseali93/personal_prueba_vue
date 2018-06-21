@@ -22,7 +22,7 @@
 
     </div>
 
- 
+
 
       <b-container fluid>
 
@@ -72,61 +72,33 @@
           <template v-for="(data,indice) in inputs.campos">
 
             <template v-if="data.type=='text'">
-
- 
-
                     <label class=" text-primary">{{ data.placeholder }}:</label>
-
                     <b-form-input
-
                     :id="data.id"
-
                     :type="data.type"
-
                     :placeholder="data.placeholder"
-
                     @input="digitar(data)"
-
                     :state="data.estado"></b-form-input>
-
             </template>
-
             <template v-if="data.type=='number'">
-
                     <label class=" text-primary">{{ data.placeholder }}:</label>
-
                     <b-form-input
-
                     :id="data.id"
-
                     :type="data.type"
-
                     :placeholder="data.placeholder"
-
                     @input="digitar(data)"
-
                     :state="data.estado">
-
                     </b-form-input>
-
             </template>
-
             <template v-if="data.type=='select'">
-
- 
-
                 <h3 class=" text-primary">{{data.placeholder}}</h3>
-
- 
-
-                <b-form-select :id="data.id"  :value="valores(indice,data)"  text-field="nombre" value-field="_id"
-
-                :options="opciones[indice]" @change="seleccionado(data)" :state="data.estado">
-
+                <b-form-select :id="data.id"
+                :value="valores(indice,data)"
+                text-field="nombre" value-field="_id"
+                :options="opciones[indice]"
+                @change="seleccionado(data)" :state="data.estado">
                 </b-form-select>
-
             </template>
-
           </template>
 
         </div>
@@ -230,13 +202,13 @@
 
                         v-b-tooltip.hover title="Número de Movilizado!"></b-form-input>
 
- 
+
 
                     </b-col>
 
                 </b-row>
 
- 
+
 
                 <b-row class="my-1 text-primary">
 
@@ -322,7 +294,7 @@
 
         </b-modal>
 
- 
+
 
     </b-container>
 
@@ -565,10 +537,13 @@ export default {
                         this.objeto = []
                     } else {
                         for (var x = 0; x < this.opciones.length; x++) {
+                          console.log("542",this.opciones)
                             var llaves = Object.keys(this.objeto)
+                            console.log("llaves",llaves)
                             for (var y = 0; y < this.opciones[x].length; y++) {
                                 if (this.opciones[x][y]._id == eval('this.objeto.' + llaves[x])) {
                                     inforinputs[x] = this.opciones[x][y]
+                                    console.log("inforInputs",inforinputs)
                                 }
                             }
                         }
@@ -749,6 +724,7 @@ export default {
                     this.objeto = []
                 } else {
                     for (var x = 0; x < this.opciones.length; x++) {
+                      console.log("729",this.opciones)
                         var llaves = Object.keys(this.objeto)
                         for (var y = 0; y < this.opciones[x].length; y++) {
                             if (this.opciones[x][y]._id == eval('this.objeto.' + llaves[x])) {
@@ -1008,7 +984,7 @@ export default {
                                          varios.push(listMovilizados)
                     }
                 }
-                
+
                 if(this.proceSeleccionado.atencion_courier==true){
 
                     if(this.curier!="null"&&this.curier!=''&&this.curier!=null)
@@ -1035,8 +1011,8 @@ export default {
 
                 }
                 var validacion
-                
-               
+
+
               if(infologin.id_OperadorLogistico.confirmacionSocket==true&&this.proceSeleccionado.atencion_courier==true){
                 if(this.curier!="null"&&this.curier!=''&&this.curier!=null)
                 {
@@ -1386,7 +1362,7 @@ export default {
             );
         },
         seleccionado(value) {
-
+            console.log("opc",this.opciones)
             var x = document.getElementById(value.id).value;
             eval("this.objeto." + value.vmodel + "=" + "x");
         },
@@ -1699,6 +1675,7 @@ export default {
             }
         },
         procesoseleccionado(value) {
+            this.opciones=[];
             var guardadoManifiesto = localStorage.getItem("Manifiesto");
             var infoguardadoManifiesto = JSON.parse(guardadoManifiesto);
 
@@ -1762,6 +1739,7 @@ export default {
                     load
                 });
             });
+
             console.log(urlservicios+ "CamposProcesoLogisticosOperadores/" + infologin.id_OperadorLogistico._id + "/" + this.selected);
             this.axios.get(urlservicios+ "CamposProcesoLogisticosOperadores/" + infologin.id_OperadorLogistico._id + "/" + this.selected)
                 .then(response => {
@@ -1783,9 +1761,12 @@ export default {
                                                 _id: "null",
                                                 nombre: "Por Favor Seleccione un Campo"
                                             };
+
                                             var respuesta = resp1.data;
                                             respuesta.unshift(vacio);
+                                            console.log("Antes de push",this.opciones)
                                             this.opciones.push(respuesta);
+                                            console.log("Push",this.opciones)
                                         })
                                         .catch(e => {
                                             /*
@@ -2002,6 +1983,7 @@ export default {
                     this.objeto = []
                 } else {
                     for (var x = 0; x < this.opciones.length; x++) {
+                      console.log("1986",this.opciones)
                         var llaves = Object.keys(this.objeto)
                         for (var y = 0; y < this.opciones[x].length; y++) {
                             if (this.opciones[x][y]._id == eval('this.objeto.' + llaves[x])) {
@@ -2037,9 +2019,9 @@ export default {
                     }
                 }
 
-                
 
-                    
+
+
                     var envio = {
                         listadoMovilizados: varios,
                         infoManifiesto: this.objeto,
@@ -2072,7 +2054,7 @@ export default {
                                 }, )
                                 console.log(this.processSelected.modal);
                                 this.$router.push(this.processSelected.modal, () => {
-                                    
+
                                 })
                             }
                             if (response.data.validacion == false) {
@@ -2147,8 +2129,8 @@ export default {
                                 "warning"
                             );
                         });
-                
-                
+
+
             } else {
                 swal(
                     'Advertencia',
