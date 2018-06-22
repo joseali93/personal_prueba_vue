@@ -664,37 +664,51 @@ export default {
             var login = localStorage.getItem("storedData");
             var infologin = JSON.parse(login);
             console.log(this.selected_curier);
+            
             if (this.selected_curier == null || this.selected_curier == '' ||
                 this.selected_curier === null | this.selected_curier === '') {
-                console.log("va nulo")
                 if (this.idCourier) {
                     console.log(this.idCourier);
                     console.log(this.curiers);
                 } else {}
             } else {
-                console.log("tiene courier");
-                if (this.idCourier) {
-                    console.log(this.idCourier);
-                    console.log(this.curiers);
-                    this.axios.get(urlservicios + "UsuariosCurier/" + infologin.id_OperadorLogistico._id + "/" + this.idMedio)
-                        .then(response => {
-                            this.curiers = response.data;
-                            this.curiers.forEach(element => {
-                                if (element._id == this.idCourier) {
-                                    console.log("tengo uno");
-                                    this.selected_curier = element.nombre
-                                }
-                            });
-                            var load = false;
-                            setTimeout(() => {
-                                bus.$emit("load", {
-                                    load
+                if (infologin.id_OperadorLogistico.confirmacionSocket == false) {
+                
+                    if(this.curiers.length==0){
+                        this.axios.get(urlservicios + "UsuariosCurier/" + infologin.id_OperadorLogistico._id + "/" + this.idMedio)
+                            .then(response => {
+                                this.curiers = response.data;
+                                this.curiers.forEach(element => {
+                                    //if (element._id == this.idCourier) {
+                                    if (element._id == this.idCourier   ) {
+                                        console.log("tengo uno");
+                                        this.selected_curier = element.nombre
+                                    }
                                 });
-                            });
-                            //this.selec_disable=false
-                        })
-                } else {}
+                                var load = false;
+                                setTimeout(() => {
+                                    bus.$emit("load", {
+                                        load
+                                    });
+                                });
+                                //this.selec_disable=false
+                            })
+                    }else{
+                        this.curiers.forEach(element => {
+                            //if (element._id == this.idCourier) {
+                            if (this.selected_curier._id == this.idCourier   ) {
+                                console.log("tengo uno");
+                                this.selected_curier=element
+                                //this.selected_curier = element.nombre
+                            }
+                        });
+                    }
+                        
+                       
+                }
+                
             }
+            
 
 
         },
@@ -1307,6 +1321,10 @@ export default {
         },
         */
         asignarcurier(seleccionado) {
+            console.log('------------------------------------');
+            console.log(seleccionado);
+            console.log(this.selected_curier)
+            console.log('------------------------------------');
             var login = localStorage.getItem("storedData");
             var infologin = JSON.parse(login);
             if (
@@ -1367,6 +1385,9 @@ export default {
                         id_curier: seleccionado._id,
                         id_medio: this.model_medios._id
                     };
+                    console.log('------------------------------------');
+                    console.log(obj);
+                    console.log('------------------------------------');
                     this.statuscourier = null;
                     var load = true;
                     setTimeout(() => {

@@ -1304,6 +1304,9 @@ export default {
             eval("this.objeto." + value.vmodel + "=" + "x");
         },
         adicionar(value) {
+            console.log('------------------------------------');
+            console.log("entro a adicionar");
+            console.log('------------------------------------');
             var agregar = true;
             var infoconcepto;
             var algo;
@@ -1338,6 +1341,7 @@ export default {
                     });
                 });
                 if (this.processSelected.Entrada == true) {
+                    console.log("entro al tru")
                     this.inputs.campos.forEach(element => {
                         console.log(element);
                         if (element.EnvioServicio == true) {
@@ -1605,8 +1609,7 @@ export default {
                             );
                         });
                 }
-                console.log(this.objeto);
-                //console.log(this.inputs);
+                
 
 
             }
