@@ -617,7 +617,7 @@ export default {
                             load
                         })
                         }, )
-            console.log(urlservicios+"ConsultaExcel/"+test.id_OperadorLogistico._id+"/"+centro+"/"+cliente+"/"+orden+"/"+detalle+"/"+refere+"/"+inicio+"/"+fin+"/");
+            console.log(urlservicios+"ConsultaExcel/"+test.id_OperadorLogistico._id+"/"+centro+"/"+cliente+"/"+orden+"/"+detalle+"/"+refere+"/"+inicio+"/"+fin+"/"+this.envios.tipo);
             this.axios.get(urlservicios+"ConsultaExcel/"+test.id_OperadorLogistico._id+"/"+centro+"/"+cliente+"/"+orden+"/"+detalle+"/"+refere+"/"+inicio+"/"+fin+"/")
             .then(response => {
                 console.log(response);

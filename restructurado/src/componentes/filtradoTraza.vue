@@ -316,22 +316,22 @@ export default {
       var inicio, fin;
       var fecha = new Date();
       this.time1 = (getDatesRange(this.time1));
-      // var _this = this;
-      // var d = new Date();
-      // var year = d.getFullYear();
-      // var month = d.getMonth();
-      // var day = d.getDate();
-      // var ant = new Date();
-      // var monthante = ant.getMonth() - 1;
-      // var dayante = ant.getDate();
-      // d.setFullYear(year, month, day);
-      // ant.setFullYear(year, monthante, dayante);
-
       var mana = new Date(fecha.getTime() + 24 * 60 * 60 * 1000);
       var fechainicial = moment(this.time1[0]);
       var finalfinal = moment(this.time1[1]);
-
+      
       var cantidaddias = finalfinal.diff(fechainicial, "days");
+      var login = localStorage.getItem("storedData");
+      var infologin =JSON.parse(login);
+      var validacion
+      if(infologin.tipo=='administrador'){
+          validacion=1
+          //se manda 1 por que es administrador
+      }
+      else{
+        validacion=0
+        //se manda 0 por que es administrador
+      }
       if (
         this.selectedCL == "" ||
         /*this.selectedCC == "" ||*/
@@ -401,7 +401,8 @@ export default {
                 //centro: this.selectedCC._id,
                   cliente: this.selectedCL._id,
                   inicio: inicio,
-                  fin: fin
+                  fin: fin,
+                  tipo: validacion
               }
 
             }
@@ -410,7 +411,8 @@ export default {
                   centro: this.selectedCC._id,
                   cliente: this.selectedCL._id,
                   inicio: inicio,
-                  fin: fin
+                  fin: fin,
+                  tipo: validacion                 
               }
               centocosto=this.selectedCC._id
             }
@@ -418,8 +420,8 @@ export default {
             this.axios.get(urlservicios+"/ObtenerOrdenesFiltradoDetalle/" +centocosto +"/" +this.selectedCL._id +"/null/null/null/" +
                   inicio +
                   "/" +
-                  fin +
-                  ""
+                  fin +'/'+
+                  validacion
               )
               .then(response => {
                 console.log(response.data);
@@ -433,7 +435,8 @@ export default {
                   //centro: this.selectedCC._id,
                   cliente: this.selectedCL._id,
                   inicio: inicio,
-                  fin: fin
+                  fin: fin,
+                  tipo: validacion
                 };
                 this.envio = envio;
                 //this.load = false;
@@ -484,7 +487,8 @@ export default {
                envio = {
                     //centro: this.selectedCC._id,
                     cliente: this.selectedCL._id,
-                    orden: this.orden
+                    orden: this.orden,
+                    tipo: validacion
                   };
 
             }
@@ -492,7 +496,8 @@ export default {
                envio = {
                     centro: this.selectedCC._id,
                     cliente: this.selectedCL._id,
-                    orden: this.orden
+                    orden: this.orden,
+                  tipo: validacion
                   };
               centocosto=this.selectedCC._id
             }
@@ -505,7 +510,7 @@ export default {
                     this.selectedCL._id +
                     "/" +
                     this.orden +
-                    "/null/null/null/null"
+                    "/null/null/null/null/"+validacion
                 )
                 .then(response => {
                   console.log(response);
@@ -563,7 +568,9 @@ export default {
                envio = {
                     //centro: this.selectedCC._id,
                     cliente: this.selectedCL._id,
-                    referencia: this.referencia
+                    referencia: this.referencia,
+                              tipo: validacion
+
                   };
 
             }
@@ -571,13 +578,15 @@ export default {
                 envio = {
                     centro: this.selectedCC._id,
                     cliente: this.selectedCL._id,
-                    referencia: this.referencia
+                    referencia: this.referencia,
+                                      tipo: validacion
+
                   };
               centocosto=this.selectedCC._id
             }
               this.axios
                 .get(urlservicios+"/ObtenerOrdenesFiltradoDetalle/" +centocosto +"/" +this.selectedCL._id +"/null/null/" +this.referencia +
-                    "/null/null"
+                    "/null/null/"+validacion
                 )
                 .then(response => {
                   this.consulta = response.data;
@@ -633,7 +642,9 @@ export default {
                  envio = {
                       //centro: this.selectedCC._id,
                       cliente: this.selectedCL._id,
-                      nmovilizado: this.nmovilizado
+                      nmovilizado: this.nmovilizado,
+                                        tipo: validacion
+
                     };
 
             }
@@ -641,7 +652,9 @@ export default {
                   envio = {
                       centro: this.selectedCC._id,
                       cliente: this.selectedCL._id,
-                      nmovilizado: this.nmovilizado
+                      nmovilizado: this.nmovilizado,
+                                        tipo: validacion
+
                     };
               centocosto=this.selectedCC._id
 
@@ -649,10 +662,9 @@ export default {
             console.log("MOVILIZADOO");
                       //ObtenerOrdenesFiltradoDetalle/:id_centro/:id_cliente/:consecutivo/:detalle/:referencia/:fecha_inicio/:fecha_final"
 
-            console.log(urlservicios+"ObtenerOrdenesFiltradoDetalle/" +centocosto +"/" +this.selectedCL._id +"/null/" +this.nmovilizado +"/null/null/null");
 
               this.axios
-                .get(urlservicios+"ObtenerOrdenesFiltradoDetalle/" +centocosto +"/" +this.selectedCL._id +"/null/" +(this.nmovilizado) +"/null/null/null")
+                .get(urlservicios+"ObtenerOrdenesFiltradoDetalle/" +centocosto +"/" +this.selectedCL._id +"/null/" +(this.nmovilizado) +"/null/null/null/"+validacion)
                 .then(response => {
                   console.log(response);
                   this.consulta = response.data;

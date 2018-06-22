@@ -2513,7 +2513,8 @@ export default {
           id_OperadorLogistico: infologin.id_OperadorLogistico._id,
           id_usuario: infologin._id,
           id_centro_costo: selecc.selected_center,
-          fecha_creacion: new Date().toISOString(),
+          fecha_creacion: null,
+
             //fecha_creacion:moment().tz('America/Bogota').format('MMMM DD YYYY, hh:mm:ss'),
             //fecha_real:
             //fecha_creacion: today.toISOString(),
