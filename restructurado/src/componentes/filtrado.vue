@@ -140,7 +140,7 @@ import {bus} from "../main"
 import {urlservicios} from '../main'
 import Preload from '../componentes/preload.vue'
 import moment from 'moment'
-import { getDatesRange } from './utils/datesRange.js';
+import { GetDatesRange } from './utils/datesRange.js';
 
 export default {
 
@@ -200,7 +200,8 @@ export default {
             clientes: [],
             selectedCC: null,
             centros: [],
-            filter: ''
+            filter: '',
+            getDatesRange: new GetDatesRange()
         };
     },
     methods:{
@@ -268,6 +269,9 @@ export default {
             bus.$emit('actualizar',indice)
         },
         consultar: function(){
+            const getDates = (this.getDatesRange.getRange());
+            const startOfToday = (getDates[0]);
+            const endOfToday = (getDates[1]);
 
             this.sel_conslta=true
 
@@ -316,9 +320,13 @@ export default {
                 }
                 else{
                     if(this.time1==''||this.time1===''||this.time1===undefined){
-                        this.time1=[]
-                        this.time1[0]=mana
-                        this.time1[1]=ant
+                        // this.time1=[]
+                        // this.time1[0]=mana
+                        // this.time1[1]=ant
+                        this.time1 = [
+                            startOfToday,
+                            endOfToday
+                        ];
                     }
                     if(this.time1[0]===''||this.time1[0]===undefined){
                     inicio=ant
@@ -587,7 +595,7 @@ export default {
 
         },
       dateSelected(dateList = null) {
-        this.time1 = (getDatesRange(dateList));
+        this.time1 = (this.getDatesRange.getRange(dateList));
       }
     },
     updated: function () {
@@ -596,7 +604,7 @@ export default {
       }.bind(this))
     },
     mounted: function () {
-      const getDates = (getDatesRange());
+      const getDates = (this.getDatesRange.getRange());
       const startOfToday = (getDates[0]);
       const endOfToday = (getDates[1]);
 

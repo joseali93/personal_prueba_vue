@@ -1,14 +1,16 @@
 <template>
+<b-container
+    fluid
+    class="contenedorTotal"
+>
 
-    <b-container fluid class="contenedorTotal">
+    <div class="breadcrumb-holder">
 
-          <div class="breadcrumb-holder">
+        <div class="container-fluid">
 
-      <div class="container-fluid">
+            <b-breadcrumb :items="itemsbr" />
 
-        <b-breadcrumb :items="itemsbr" />
-
-        <!-- <ul class="breadcrumb">
+            <!-- <ul class="breadcrumb">
 
           <li v-for="(item, i) in items" :key="i" class="breadcrumb-item">
 
@@ -18,110 +20,139 @@
 
         </ul> -->
 
-      </div>
+        </div>
 
     </div>
 
 
 
-      <b-container fluid>
+    <b-container fluid>
 
-      <b-card class="mt-2 border" header="Primary" header-bg-variant="primary">
-        <h3 slot="header" class="mb-0 encabezado">Entradas y salidas de proceso logístico</h3>
+        <b-card
+            class="mt-2 border"
+            header="Primary"
+            header-bg-variant="primary"
+        >
+            <h3
+                slot="header"
+                class="mb-0 encabezado"
+            >Entradas y salidas de proceso logístico</h3>
 
-        <b-row>
+                <b-row>
 
-          <b-col md="6">
+                    <b-col md="6">
 
-            <h3 class="text-primary">Proceso Logistico</h3>
+                        <h3 class="text-primary">Proceso Logistico</h3>
 
-          </b-col>
+                    </b-col>
 
-          <b-col md="6">
+                    <b-col md="6">
 
-          </b-col>
+                    </b-col>
 
-        </b-row>
+                </b-row>
 
-        <b-row>
+                <b-row>
 
-          <b-col md="6">
+                    <b-col md="6">
 
-            <b-form-select v-model="selected"  text-field="nombre" value-field="_id"
+                        <b-form-select
+                            v-model="selected"
+                            text-field="nombre"
+                            value-field="_id"
+                            :options="procesosLog"
+                            @input="procesoseleccionado"
+                        >
 
-            :options="procesosLog" @input="procesoseleccionado">
+                            </b-form-select>
 
-            </b-form-select>
+                    </b-col>
 
-          </b-col>
+                    <b-col md="6">
 
-          <b-col md="6">
+                        <b-btn
+                            class="rounded btn-warning text-white"
+                            variant="success"
+                            @click="MostrarModal()"
+                        >
 
-            <b-btn class="rounded btn-warning text-white" variant="success" @click="MostrarModal()">
+                            <i
+                                class="fa fa fa-plus"
+                                aria-hidden="true"
+                            ></i>&#32;Agregar movilizado
 
-              <i class="fa fa fa-plus" aria-hidden="true"></i>&#32;Agregar movilizado
+                                </b-btn>
 
-            </b-btn>
+                    </b-col>
 
-          </b-col>
+                </b-row>
 
-        </b-row>
+                <div class="mt-2">
 
-        <div class="mt-2">
+                    <template v-for="(data,indice) in inputs.campos">
 
-          <template v-for="(data,indice) in inputs.campos">
+                        <template v-if="data.type=='text'">
+                            <label class=" text-primary">{{ data.placeholder }}:</label>
+                            <b-form-input
+                                :id="data.id"
+                                :type="data.type"
+                                :placeholder="data.placeholder"
+                                @input="digitar(data)"
+                                :state="data.estado"
+                            ></b-form-input>
+                        </template>
+                        <template v-if="data.type=='number'">
+                            <label class=" text-primary">{{ data.placeholder }}:</label>
+                            <b-form-input
+                                :id="data.id"
+                                :type="data.type"
+                                :placeholder="data.placeholder"
+                                @input="digitar(data)"
+                                :state="data.estado"
+                            >
+                                </b-form-input>
+                        </template>
+                        <template v-if="data.type=='select'">
+                            <h3 class=" text-primary">{{data.placeholder}}</h3>
+                            <b-form-select
+                                :id="data.id"
+                                :value="valores(indice,data)"
+                                text-field="nombre"
+                                value-field="_id"
+                                :options="opciones[indice]"
+                                @change="seleccionado(data)"
+                                :state="data.estado"
+                            >
+                                </b-form-select>
+                        </template>
+                    </template>
 
-            <template v-if="data.type=='text'">
-                    <label class=" text-primary">{{ data.placeholder }}:</label>
-                    <b-form-input
-                    :id="data.id"
-                    :type="data.type"
-                    :placeholder="data.placeholder"
-                    @input="digitar(data)"
-                    :state="data.estado"></b-form-input>
-            </template>
-            <template v-if="data.type=='number'">
-                    <label class=" text-primary">{{ data.placeholder }}:</label>
-                    <b-form-input
-                    :id="data.id"
-                    :type="data.type"
-                    :placeholder="data.placeholder"
-                    @input="digitar(data)"
-                    :state="data.estado">
-                    </b-form-input>
-            </template>
-            <template v-if="data.type=='select'">
-                <h3 class=" text-primary">{{data.placeholder}}</h3>
-                <b-form-select :id="data.id"
-                :value="valores(indice,data)"
-                text-field="nombre" value-field="_id"
-                :options="opciones[indice]"
-                @change="seleccionado(data)" :state="data.estado">
-                </b-form-select>
-            </template>
-          </template>
+                </div>
 
-        </div>
+                <b-row v-show="proceSeleccionado.atencion_courier==true">
 
-        <b-row v-show="proceSeleccionado.atencion_courier==true">
+                    <b-col>
 
-          <b-col>
+                        <h3 class="text-primary">Courier</h3>
 
-            <h3 class="text-primary">Courier</h3>
+                        <b-form-select
+                            v-model="curier"
+                            text-field="nombre"
+                            value-field="_id"
+                            :options="curiers2"
+                            class="mb-3"
+                            :state="Scurier"
+                        >
 
-            <b-form-select v-model="curier" text-field="nombre" value-field="_id" :options="curiers2" class="mb-3"
+                            </b-form-select>
 
-            :state="Scurier">
+                    </b-col>
 
-            </b-form-select>
+                </b-row>
 
-          </b-col>
+                <b-row class="my-1 text-primary">
 
-        </b-row>
-
-        <b-row class="my-1 text-primary">
-
-            <b-col class="my-3">
+                    <b-col class="my-3">
 
                         Total de Movilizados :
 
@@ -133,7 +164,7 @@
 
                     </b-col>
 
-                    <b-col  class="my-3">
+                    <b-col class="my-3">
 
                         Total de Unidades :
 
@@ -145,97 +176,156 @@
 
                     </b-col>
 
-        </b-row>
+                </b-row>
 
-         <b-row v-show="itemsmovilizados.length>0">
+                <b-row v-show="itemsmovilizados.length>0">
 
-            <b-btn variant="success" @click="generarManifiesto" :disabled="manifiesto">
+                    <b-btn
+                        variant="success"
+                        @click="generarManifiesto"
+                        :disabled="manifiesto"
+                    >
 
-                Generar
+                        Generar
 
-            </b-btn>
-
-        </b-row>
-
-      </b-card>
-
-      </b-container>
-
-
-
-
-        <router-view></router-view>
-
-       <!-- Modal Component -->
-
-        <b-modal id="modal1" ref="myModalRef" size="lg" :no-close-on-esc="true">
-          <div slot="modal-header">
-            <h2 class="text-secondary m-0">Movilizados</h2>
-          </div>
-          <b-container fluid>
-                <b-row class="my-1">
-                  <b-col>
-                      <b-form-select v-model="concepto" :options="listadoconcepto"
-                        text-field="nombre" value-field="_id" class="my-1">
-                      </b-form-select>
-                  </b-col>
-              </b-row>
-              <b-row class="my-1">
-                  <b-col >
-                      <b-form-input v-model="text1"
-                      class="float-left"
-                      type="number"
-                      id="nmovilizado"
-                      placeholder="Número Movilizado" @keyup.enter.native="adicionar(text1)"
-                      v-b-tooltip.hover title="Número de Movilizado!"></b-form-input>
-                  </b-col>
-              </b-row>
-              <b-row class="mt-3 text-primary text-center font-weight-normal">
-                <b-col md="6">
-                  <h3 class="mb-0">Total de Movilizados:</h3>
-                  <h4 class="mb-0 mt-1">{{ itemsmovilizados.length }}</h4>
-                </b-col>
-                <b-col md="6">
-                  <h3 class="mb-0">Total de Unidades:</h3>
-                  <h4 class="mb-0 mt-1">{{ mostrar() }}</h4>
-                </b-col>
-              </b-row>
-              <b-card v-if="itemsmovilizados.length" header="Primary" header-bg-variant="primary" class="my-2 border">
-                <h3 slot="header" class="mb-0">Listado de movilizados</h3>
-                <b-table striped hover :fields="fields" :items="itemsmovilizados"
-                :per-page="5" :current-page="currentPage">
-                    <template slot="elimnar" slot-scope="data">
-                        <b-btn variant="danger" @click="borrar(data)">
-                            <i class="fa fa-trash-o" aria-hidden="true"></i>
                         </b-btn>
-                    </template>
-                    <template slot="nmovilizado" slot-scope="data">
-                    {{data.item.id}}
-                    </template>
-                    <template slot="unidades" slot-scope="data">
-                    {{data.item.unidades}}
-                    </template>
-                    <template slot="concepto" slot-scope="data">
-                    {{data.item.concepto.nombre}}
-                    </template>
-                </b-table>
-                <b-pagination size="md" :total-rows="itemsmovilizados.length"
-                v-model="currentPage" :per-page="5">
-                </b-pagination>
-              </b-card>
-          </b-container>
-          <div slot="modal-footer">
-            <b-button class="rounded" size="md" variant="info" @click="$refs.myModalRef.hide()">
-              <i class="fa fa-times-circle"></i>&#32;Cerrar
-            </b-button>
-          </div>
+
+                </b-row>
+
+                </b-card>
+
+    </b-container>
+
+
+
+
+    <router-view></router-view>
+
+    <!-- Modal Component -->
+
+    <b-modal
+        id="modal1"
+        ref="myModalRef"
+        size="lg"
+        :no-close-on-esc="true"
+    >
+        <div slot="modal-header">
+            <h2 class="text-secondary m-0">Movilizados</h2>
+        </div>
+        <b-container fluid>
+            <b-row class="my-1">
+                <b-col>
+                    <b-form-select
+                        v-model="concepto"
+                        :options="listadoconcepto"
+                        text-field="nombre"
+                        value-field="_id"
+                        class="my-1"
+                    >
+                        </b-form-select>
+                </b-col>
+            </b-row>
+            <b-row class="my-1">
+                <b-col>
+                    <b-form-input
+                        v-model="text1"
+                        class="float-left"
+                        type="number"
+                        id="nmovilizado"
+                        placeholder="Número Movilizado"
+                        @keyup.enter.native="adicionar(text1)"
+                        v-b-tooltip.hover
+                        title="Número de Movilizado!"
+                    ></b-form-input>
+                </b-col>
+            </b-row>
+            <b-row class="mt-3 text-primary text-center font-weight-normal">
+                <b-col md="6">
+                    <h3 class="mb-0">Total de Movilizados:</h3>
+                    <h4 class="mb-0 mt-1">{{ itemsmovilizados.length }}</h4>
+                </b-col>
+                <b-col md="6">
+                    <h3 class="mb-0">Total de Unidades:</h3>
+                    <h4 class="mb-0 mt-1">{{ mostrar() }}</h4>
+                </b-col>
+            </b-row>
+            <b-card
+                v-if="itemsmovilizados.length"
+                header="Primary"
+                header-bg-variant="primary"
+                class="my-2 border"
+            >
+                <h3
+                    slot="header"
+                    class="mb-0"
+                >Listado de movilizados</h3>
+                    <b-table
+                        striped
+                        hover
+                        :fields="fields"
+                        :items="itemsmovilizados"
+                        :per-page="5"
+                        :current-page="currentPage"
+                    >
+                        <template
+                            slot="elimnar"
+                            slot-scope="data"
+                        >
+                            <b-btn
+                                variant="danger"
+                                @click="borrar(data)"
+                            >
+                                <i
+                                    class="fa fa-trash-o"
+                                    aria-hidden="true"
+                                ></i>
+                                    </b-btn>
+                                    </template>
+                                    <template
+                                        slot="nmovilizado"
+                                        slot-scope="data"
+                                    >
+                                        {{data.item.id}}
+                                        </template>
+                                        <template
+                                            slot="unidades"
+                                            slot-scope="data"
+                                        >
+                                            {{data.item.unidades}}
+                                            </template>
+                                            <template
+                                                slot="concepto"
+                                                slot-scope="data"
+                                            >
+                                                {{data.item.concepto.nombre}}
+                                                </template>
+                                                </b-table>
+                                                <b-pagination
+                                                    size="md"
+                                                    :total-rows="itemsmovilizados.length"
+                                                    v-model="currentPage"
+                                                    :per-page="5"
+                                                >
+                                                    </b-pagination>
+                                                    </b-card>
+        </b-container>
+        <div slot="modal-footer">
+            <b-button
+                class="rounded"
+                size="md"
+                variant="info"
+                @click="$refs.myModalRef.hide()"
+            >
+                <i class="fa fa-times-circle"></i>&#32;Cerrar
+                </b-button>
+        </div>
         </b-modal>
 
 
 
-    </b-container>
-
+        </b-container>
 </template>
+
 
 <script>
 import {
@@ -253,6 +343,7 @@ import {
 export default {
     data() {
         return {
+            validacionsockets:'',
             procesoSelected: '',
             observacionesManifiesto: '',
             socket: null,
@@ -419,24 +510,47 @@ export default {
             var login = localStorage.getItem("storedData");
             var infologin = JSON.parse(login);
             if (infologin.id_OperadorLogistico.confirmacionSocket == true) {
-                console.log("voy por socket");
                 if (this.proceSeleccionado.atencion_courier == true) {
-                    console.log("es proceso de salida");
-                    console.log("emiti");
-                     this.socket.emit('new-message', {
-                        idOperador:infologin.id_OperadorLogistico._id,//per logistico
-                        idOrigen:infologin._id,//id usuario
-                        idDestino:this.curier,//id courier seleccionado
-                        mensaje :{
-                            contacto:'',//nombre remitente
-                            direccion:'',//direccion remitente
-                            observaciones:"result.value",
-                            num_movilizados:this.itemsmovilizados.length,//cantidad movilizados orden
-                            tipo_proceso:2
-                          }
-                     })
+                    var load = true;
+                    setTimeout(() => {
+                        bus.$emit("load", {
+                            load
+                        });
+                    });
+                    this.socket.emit('new-message', {
+                        idOperador: infologin.id_OperadorLogistico._id, //per logistico
+                        idOrigen: infologin._id, //id usuario
+                        idDestino: this.curier, //id courier seleccionado
+                        mensaje: {
+                            contacto: '', //nombre remitente
+                            direccion: '', //direccion remitente
+                            observaciones: "result.value",
+                            num_movilizados: this.itemsmovilizados.length, //cantidad movilizados orden
+                            tipo_proceso: 2
+                        }
+                    })
+                    this.validacionsockets=setTimeout(function(){
+                        swal(
+                        'No se obtuvo respuesta del courier!',
+                        '',
+                        'warning'
+                        )
+                        var load = false;
+                        var mensaje = 'Esperando respuesta del courier'
+                        setTimeout(() => {
+                        bus.$emit("load", {
+                            load,mensaje
+                        });
+                        });
+                        }, 35000)
                 } else {
-                    console.log("entrada");
+                    console.log("manifiesto de entrada");
+                    var load = true;
+                    setTimeout(() => {
+                        bus.$emit("load", {
+                            load
+                        });
+                    });
                     this.Scurier = null
                     var objvario = [{},
                         {}
@@ -474,13 +588,10 @@ export default {
                         this.objeto = []
                     } else {
                         for (var x = 0; x < this.opciones.length; x++) {
-                          console.log("542",this.opciones)
                             var llaves = Object.keys(this.objeto)
-                            console.log("llaves",llaves)
                             for (var y = 0; y < this.opciones[x].length; y++) {
                                 if (this.opciones[x][y]._id == eval('this.objeto.' + llaves[x])) {
                                     inforinputs[x] = this.opciones[x][y]
-                                    console.log("inforInputs",inforinputs)
                                 }
                             }
                         }
@@ -511,12 +622,13 @@ export default {
                             varios.push(listMovilizados)
                         }
                     }
-                }
+                
+                
                 var envio = {
-                        listadoMovilizados: varios,
-                        infoManifiesto: this.objeto,
-                        id_procesoLogistico: this.processSelected._id
-                    }
+                    listadoMovilizados: varios,
+                    infoManifiesto: this.objeto,
+                    id_procesoLogistico: this.processSelected._id
+                }
                 var validacion
                 var load = true;
                 setTimeout(() => {
@@ -525,16 +637,11 @@ export default {
                     });
                 });
                 this.axios
-                    .post(urlservicios+ "GenerarManifiestoWeb", envio)
+                    .post(urlservicios + "GenerarManifiestoWeb", envio)
                     .then(response => {
-                        console.log(response);
                         if (response.data.validacion == true) {
                             this.manifiesto = true
-                            console.log("se creo correctamente");
                             localStorage.removeItem('Manifiesto');
-                            console.log("mostramos modal");
-                            console.log(itemsmodal);
-                            console.log(inforvaria);
                             var nmanifiesto = response.data.manifiesto
                             setTimeout(() => {
                                 bus.$emit('modalinfo', {
@@ -543,18 +650,15 @@ export default {
                                     nmanifiesto
                                 })
                             }, )
-
+                            this.selected=null
                             this.$router.push(this.processSelected.modal)
                         }
                         if (response.data.validacion == false) {
                             this.manifiesto = false
-                            console.log("no se creoo");
-                            console.log(response.data.listaMovilizadoConManifiesto);
                             var Movilizados = response.data.listaMovilizadoConManifiesto
                             this.errores = response.data.listaMovilizadoConManifiesto
                             var n_movilizados = ''
                             for (var o = 0; o < Movilizados.length; o++) {
-                                console.log(Movilizados[o].id)
                                 if (o == Movilizados.length - 1) {
                                     n_movilizados = n_movilizados + Movilizados[o].id
                                 } else {
@@ -564,8 +668,6 @@ export default {
 
                             }
                             this.errores = Movilizados
-                            console.log(n_movilizados);
-                            console.log(this.errores);
                             //this.$refs.myModalRef2.show()
                             var titulo1_inicio = '<div class="prueba"><ul>'
                             var conten_1 = ''
@@ -580,7 +682,6 @@ export default {
 
                             }
                             total = titulo1_inicio + conten_1 + titulo1_fin
-                            console.log(total);
                             swal({
                                 title: 'El manifiesto no se puede generar por que los movilizados ya se encuentran procesados',
                                 type: 'info',
@@ -621,8 +722,12 @@ export default {
                             "warning"
                         );
                     });
+                }
+                /*
+
+                */
+                
             } else {
-                console.log("no voy socket");
                 this.Scurier = null
                 var objvario = [{},
                     {}
@@ -634,7 +739,6 @@ export default {
                         if (this.curier == this.curiers2[j]._id) {
                             objvario[0] = [null]
                             objvario[1] = this.curiers2[j]
-                            //console.log(this.curiers2);
                         }
                     }
                 } else {
@@ -661,7 +765,6 @@ export default {
                     this.objeto = []
                 } else {
                     for (var x = 0; x < this.opciones.length; x++) {
-                      console.log("729",this.opciones)
                         var llaves = Object.keys(this.objeto)
                         for (var y = 0; y < this.opciones[x].length; y++) {
                             if (this.opciones[x][y]._id == eval('this.objeto.' + llaves[x])) {
@@ -729,21 +832,12 @@ export default {
                         load
                     });
                 });
-                console.log("envios");
-                console.log(envio);
-                console.log(itemsmodal);
-                console.log(inforvaria);
                 this.axios
-                    .post(urlservicios+ "GenerarManifiestoWeb", envio)
+                    .post(urlservicios + "GenerarManifiestoWeb", envio)
                     .then(response => {
-                        console.log(response);
                         if (response.data.validacion == true) {
                             this.manifiesto = true
-                            console.log("se creo correctamente");
                             localStorage.removeItem('Manifiesto');
-                            console.log("mostramos modal");
-                            console.log(itemsmodal);
-                            console.log(inforvaria);
                             var nmanifiesto = response.data.manifiesto
                             setTimeout(() => {
                                 bus.$emit('modalinfo', {
@@ -757,13 +851,10 @@ export default {
                         }
                         if (response.data.validacion == false) {
                             this.manifiesto = false
-                            console.log("no se creoo");
-                            console.log(response.data.listaMovilizadoConManifiesto);
                             var Movilizados = response.data.listaMovilizadoConManifiesto
                             this.errores = response.data.listaMovilizadoConManifiesto
                             var n_movilizados = ''
                             for (var o = 0; o < Movilizados.length; o++) {
-                                console.log(Movilizados[o].id)
                                 if (o == Movilizados.length - 1) {
                                     n_movilizados = n_movilizados + Movilizados[o].id
                                 } else {
@@ -773,8 +864,6 @@ export default {
 
                             }
                             this.errores = Movilizados
-                            console.log(n_movilizados);
-                            console.log(this.errores);
                             //this.$refs.myModalRef2.show()
                             var titulo1_inicio = '<div class="prueba"><ul>'
                             var conten_1 = ''
@@ -789,7 +878,6 @@ export default {
 
                             }
                             total = titulo1_inicio + conten_1 + titulo1_fin
-                            console.log(total);
                             swal({
                                 title: 'El manifiesto no se puede generar por que los movilizados ya se encuentran procesados',
                                 type: 'info',
@@ -1079,8 +1167,6 @@ export default {
                                 load
                                 });
                             });
-                console.log("envio");
-                console.log(envio);
                 this.axios
                 .post(urlservicios+"GenerarManifiestoWeb", envio)
                 .then(response => {
@@ -1182,8 +1268,6 @@ export default {
                                 load
                                 });
                             });
-                console.log("envio");
-                console.log(envio);
                 this.axios
                 .post(urlservicios+"GenerarManifiestoWeb", envio)
                 .then(response => {
@@ -1299,18 +1383,13 @@ export default {
             );
         },
         seleccionado(value) {
-            console.log("opc",this.opciones)
             var x = document.getElementById(value.id).value;
             eval("this.objeto." + value.vmodel + "=" + "x");
         },
         adicionar(value) {
-            console.log('------------------------------------');
-            console.log("entro a adicionar");
-            console.log('------------------------------------');
             var agregar = true;
             var infoconcepto;
             var algo;
-            console.log(this.processSelected);
             if (this.concepto == null) {
                 infoconcepto = {};
             } else {
@@ -1341,14 +1420,10 @@ export default {
                     });
                 });
                 if (this.processSelected.Entrada == true) {
-                    console.log("entro al tru")
                     this.inputs.campos.forEach(element => {
-                        console.log(element);
                         if (element.EnvioServicio == true) {
-                            console.log("---------------");
-                            console.log(this.objeto.id_curier)
                             this.axios.get(
-                                    urlservicios+
+                                    urlservicios +
                                     "MovilizadoProcesosLogistico/" +
                                     value +
                                     "/" +
@@ -1480,7 +1555,7 @@ export default {
                     });
                 } else {
                     this.axios.get(
-                            urlservicios+
+                            urlservicios +
                             "MovilizadoProcesosLogistico/" +
                             value +
                             "/" +
@@ -1609,13 +1684,13 @@ export default {
                             );
                         });
                 }
-                
+
 
 
             }
         },
         procesoseleccionado(value) {
-            this.opciones=[];
+            this.opciones = [];
             var guardadoManifiesto = localStorage.getItem("Manifiesto");
             var infoguardadoManifiesto = JSON.parse(guardadoManifiesto);
 
@@ -1626,7 +1701,6 @@ export default {
                     nombre: "Seleccione un concepto"
                 };
                 this.selected = value;
-                console.log(this.selected);
                 this.itemsmovilizados = [];
                 this.listadoconcepto = [];
                 if (this.selected == null) {} else {
@@ -1680,8 +1754,7 @@ export default {
                 });
             });
 
-            console.log(urlservicios+ "CamposProcesoLogisticosOperadores/" + infologin.id_OperadorLogistico._id + "/" + this.selected);
-            this.axios.get(urlservicios+ "CamposProcesoLogisticosOperadores/" + infologin.id_OperadorLogistico._id + "/" + this.selected)
+            this.axios.get(urlservicios + "CamposProcesoLogisticosOperadores/" + infologin.id_OperadorLogistico._id + "/" + this.selected)
                 .then(response => {
 
                     this.inputs = response.data;
@@ -1704,9 +1777,7 @@ export default {
 
                                             var respuesta = resp1.data;
                                             respuesta.unshift(vacio);
-                                            console.log("Antes de push",this.opciones)
                                             this.opciones.push(respuesta);
-                                            console.log("Push",this.opciones)
                                         })
                                         .catch(e => {
                                             /*
@@ -1773,7 +1844,6 @@ export default {
                             medio_transporte: "",
                             descripcion: 'manifiesto'
                         }
-                        console.log(jose);
                         if (infologin.id_OperadorLogistico.confirmacionSocket == true) {
                             this.socket.emit('MedioCourier', {
                                 id_operadorlogistico: infologin.id_OperadorLogistico._id,
@@ -1801,7 +1871,7 @@ export default {
                             });
                             this.axios
                                 .get(
-                                    urlservicios+
+                                    urlservicios +
                                     "UsuariosCurierOperador/" +
                                     infologin.id_OperadorLogistico._id
                                 )
@@ -1880,8 +1950,6 @@ export default {
 
         },
         generarManifiestoFinal(value) {
-            console.log(value);
-            console.log("entro a finallll");
             var load = false;
             setTimeout(() => {
                 bus.$emit("load", {
@@ -1889,12 +1957,12 @@ export default {
                 });
                 // this.socket.instance.disconnect(true);
             });
+            
             if (value.mensaje.respuesta == "true") {
                 this.Scurier = null
                 var objvario = [{},
                     {}
                 ]
-                console.log(this.objeto);
                 if (this.objeto == undefined) {
                     this.objeto = []
                     for (var j = 0; j < this.curiers2.length; j++) {
@@ -1923,7 +1991,6 @@ export default {
                     this.objeto = []
                 } else {
                     for (var x = 0; x < this.opciones.length; x++) {
-                      console.log("1986",this.opciones)
                         var llaves = Object.keys(this.objeto)
                         for (var y = 0; y < this.opciones[x].length; y++) {
                             if (this.opciones[x][y]._id == eval('this.objeto.' + llaves[x])) {
@@ -1962,119 +2029,130 @@ export default {
 
 
 
-                    var envio = {
-                        listadoMovilizados: varios,
-                        infoManifiesto: this.objeto,
-                        id_procesoLogistico: this.processSelected._id,
-                        //procesoSistena:5,
-                        id_courier: this.curier
-                    }
-                    var load = true;
-                    setTimeout(() => {
-                        bus.$emit("load", {
-                            load
-                        });
+                var envio = {
+                    listadoMovilizados: varios,
+                    infoManifiesto: this.objeto,
+                    id_procesoLogistico: this.processSelected._id,
+                    //procesoSistena:5,
+                    id_courier: this.curier
+                }
+                var load = true;
+                setTimeout(() => {
+                    bus.$emit("load", {
+                        load
                     });
-                    console.log("hago peticion");
-                    console.log(envio);
-                    this.axios
-                        .post(urlservicios+ "GenerarManifiestoWeb", envio)
-                        .then(response => {
-                            console.log(response);
-                            if (response.data.validacion == true) {
-                                this.manifiesto = true
-                                localStorage.removeItem('Manifiesto');
-                                var nmanifiesto = response.data.manifiesto
-                                setTimeout(() => {
-                                    bus.$emit('modalinfo', {
-                                        itemsmodal,
-                                        inforvaria,
-                                        nmanifiesto
-                                    })
-                                }, )
-                                console.log(this.processSelected.modal);
-                                this.$router.push(this.processSelected.modal, () => {
-
+                });
+                this.axios
+                    .post(urlservicios + "GenerarManifiestoWeb", envio)
+                    .then(response => {
+                        if (response.data.validacion == true) {
+                            this.manifiesto = true
+                            localStorage.removeItem('Manifiesto');
+                            var nmanifiesto = response.data.manifiesto
+                            setTimeout(() => {
+                                bus.$emit('modalinfo', {
+                                    itemsmodal,
+                                    inforvaria,
+                                    nmanifiesto
                                 })
-                            }
-                            if (response.data.validacion == false) {
-                                console.log('------------------------------------');
-                                console.log(response.data);
-                                console.log('------------------------------------');
-                                this.manifiesto = false
-                                var Movilizados = response.data.listaMovilizadoConManifiesto
-                                this.errores = response.data.listaMovilizadoConManifiesto
-                                var n_movilizados = ''
-                                for (var o = 0; o < Movilizados.length; o++) {
-                                    if (o == Movilizados.length - 1) {
-                                        n_movilizados = n_movilizados + Movilizados[o].id
-                                    } else {
-                                        n_movilizados = n_movilizados + Movilizados[o].id + ', '
+                            }, )
+                            this.selected=null
+                            swal({
+                                title: 'Servicio Aceptado',
+                                text: "El servicio se encuentra asignado al courier seleccionado",
+                                type: 'warning',
+                                showCancelButton: false,
+                                showConfirmButton:false,
+                                confirmButtonColor: '#3085d6',
+                                cancelButtonColor: '#d33',
+                                  timer: 1500,
 
-                                    }
+                                confirmButtonText: ''
 
-                                }
-                                this.errores = Movilizados
-                                //this.$refs.myModalRef2.show()
-                                var titulo1_inicio = '<div class="prueba"><ul>'
-                                var conten_1 = ''
-                                var conten_2 = ''
-                                var titulo1_fin = '</ul></div><br><h3><strong>Desea Retirarlos del Manifiesto?</strong></h3>'
-                                var prueba
-                                var total
-                                for (var y = 0; y < this.errores.length; y++) {
-                                    conten_1 = conten_1 + '<li>' + this.errores[y].id + ' - ' + this.errores[y].NombreProceso + '</li>'
-                                    conten_2 = conten_2 + '<li>' + this.errores[y].NombreProceso + '</li>'
-
-
-                                }
-                                total = titulo1_inicio + conten_1 + titulo1_fin
-                                swal({
-                                    title: 'El manifiesto no se puede generar por que los movilizados ya se encuentran procesados',
-                                    type: 'info',
-                                    html: total,
-                                    showCloseButton: true,
-                                    showCancelButton: true,
-                                    focusConfirm: false,
-                                    confirmButtonText: 'Si',
-                                    confirmButtonAriaLabel: '',
-                                    cancelButtonText: 'No',
-                                    cancelButtonAriaLabel: '',
                                 }).then((result) => {
-                                    if (result.value) {
-                                        this.metodo(this.errores); // this should execute now
+                                if (result.value) {
+                                    setTimeout(function(){ }, 1000);
+                                   
+                                }
+                                })
+                            this.$router.push(this.processSelected.modal)
+                        }
+                        if (response.data.validacion == false) {
+                            this.manifiesto = false
+                            var Movilizados = response.data.listaMovilizadoConManifiesto
+                            this.errores = response.data.listaMovilizadoConManifiesto
+                            var n_movilizados = ''
+                            for (var o = 0; o < Movilizados.length; o++) {
+                                if (o == Movilizados.length - 1) {
+                                    n_movilizados = n_movilizados + Movilizados[o].id
+                                } else {
+                                    n_movilizados = n_movilizados + Movilizados[o].id + ', '
 
-                                    }
-
-                                });
+                                }
 
                             }
-                            var load = false;
-                            setTimeout(() => {
-                                bus.$emit("load", {
-                                    load
-                                });
+                            this.errores = Movilizados
+                            //this.$refs.myModalRef2.show()
+                            var titulo1_inicio = '<div class="prueba"><ul>'
+                            var conten_1 = ''
+                            var conten_2 = ''
+                            var titulo1_fin = '</ul></div><br><h3><strong>Desea Retirarlos del Manifiesto?</strong></h3>'
+                            var prueba
+                            var total
+                            for (var y = 0; y < this.errores.length; y++) {
+                                conten_1 = conten_1 + '<li>' + this.errores[y].id + ' - ' + this.errores[y].NombreProceso + '</li>'
+                                conten_2 = conten_2 + '<li>' + this.errores[y].NombreProceso + '</li>'
+
+
+                            }
+                            total = titulo1_inicio + conten_1 + titulo1_fin
+                            swal({
+                                title: 'El manifiesto no se puede generar por que los movilizados ya se encuentran procesados',
+                                type: 'info',
+                                html: total,
+                                showCloseButton: true,
+                                showCancelButton: true,
+                                focusConfirm: false,
+                                confirmButtonText: 'Si',
+                                confirmButtonAriaLabel: '',
+                                cancelButtonText: 'No',
+                                cancelButtonAriaLabel: '',
+                            }).then((result) => {
+                                if (result.value) {
+                                    this.metodo(this.errores); // this should execute now
+
+                                }
+
                             });
-                        })
-                        .catch(function (error) {
-                            var load = false;
-                            setTimeout(() => {
-                                bus.$emit("load", {
-                                    load
-                                });
+
+                        }
+                        var load = false;
+                        setTimeout(() => {
+                            bus.$emit("load", {
+                                load
                             });
-                            swal(
-                                "Se presento un problema",
-                                "Intente nuevamente, por favor",
-                                "warning"
-                            );
                         });
+                    })
+                    .catch(function (error) {
+                        var load = false;
+                        setTimeout(() => {
+                            bus.$emit("load", {
+                                load
+                            });
+                        });
+                        swal(
+                            "Se presento un problema",
+                            "Intente nuevamente, por favor",
+                            "warning"
+                        );
+                    });
 
 
             } else {
+                console.log("respuesta false");
                 swal(
                     'Advertencia',
-                    'El curier no respondio',
+                    value.mensaje.message,
                     'warning'
                 )
             }
@@ -2101,7 +2179,7 @@ export default {
                 });
             });
             this.axios
-                .get(urlservicios+ "Procesos/" + infologin.id_OperadorLogistico._id)
+                .get(urlservicios + "Procesos/" + infologin.id_OperadorLogistico._id)
                 .then(response => {
                     var load = false;
                     setTimeout(() => {
@@ -2111,7 +2189,6 @@ export default {
                     });
                     this.procesosLog = response.data;
                     this.procesosLog.unshift(vacio);
-                    console.log(this.procesosLog);
                 })
                 .catch(function (error) {
                     bandera = false;
@@ -2152,7 +2229,7 @@ export default {
                 });
             });
             this.axios
-                .get(urlservicios+ "Procesos/" + infologin.id_OperadorLogistico._id)
+                .get(urlservicios + "Procesos/" + infologin.id_OperadorLogistico._id)
                 .then(response => {
                     var load = false;
                     setTimeout(() => {
@@ -2226,9 +2303,27 @@ export default {
 
         }));
         this.socket.on('connect', () => {})
+        this.socket.on('ListaConexiones', (data) => {
+        if(this.model_medios!=undefined&&this.model_medios!='undefined'&&
+            this.model_medios!=null){
+            this.socket.emit('MedioCourier', {
+                id_operadorlogistico: infologin.id_OperadorLogistico._id,
+                id_cliente: infologin._id,
+                medio_transporte: "5adf56ce6034679c466fc9dd",
+                descripcion: 'manifiesto'
+            });
+        }
+
+      })
         this.socket.on('messages', (data) => {
-            console.log("tengo resuesta");
             //$.cbSpinner("hide");
+            clearTimeout(this.validacionsockets)
+            var load = false;
+                    setTimeout(() => {
+                        bus.$emit("load", {
+                            load
+                        });
+                    });
             this.generarManifiestoFinal(data)
             //this.message = (data.mensaje);
             var load = false;
@@ -2243,6 +2338,7 @@ export default {
     }
 };
 </script>
+
 
 
 

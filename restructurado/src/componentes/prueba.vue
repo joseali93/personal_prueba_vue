@@ -1,66 +1,45 @@
-<template >
-
-
-  <b-container fluid>
-       <b-input-group>
-   
-
-    <b-form-input type="text" placeholder="digite direccion" ></b-form-input>
-
-    <b-input-group-append>
-      <b-btn variant="outline-secondary" v-b-modal.modal1
-      > <i class="fa fa-map-o"></i></b-btn>
-    </b-input-group-append>
-  </b-input-group>
-  <!-- Modal Component -->
-  <b-modal id="modal1" title="Bootstrap-Vue">
-    <p class="my-4">Hello from modal!</p>
-  </b-modal>
-  </b-container>
+<template>
+    <div v-if="true" class="d-flex justify-content-center align-items-center flex-column center">
+        <img src="https://www.ole.com.ar/static/OLEOleV2/images/loading.gif">
+        <h1 class="text-dark text-center my-3">Cargando...</h1>
+    </div>
 </template>
 
 <script>
-import {urlservicios} from '../main'
-import {bus} from '../main'
-
 export default {
-
-  data () {
-    return {
-    
+    props: {
+        message: {
+            type: String,
+            required: false
+        }
+    },
+    mounted() {
+        console.log(this.message);
     }
-    
-  },
-  methods:{
-
-    },
-    updated: function(){
-     
-    },
-    beforeCreate: function(){
-          ///var vacio = { _id: null, nombre: "Por Favor Seleccione un Cliente" };
-
-    },
-  computed: {
-  },
-  updated:{
-     initialize() {
-  var input = document.getElementById('searchTextField');
-  new google.maps.places.Autocomplete(input);
-}
-
-  },
 }
 </script>
-<style>
-        @import url("../css/PrintManifest.css") print;
-        @import url("../assets/libs/style.default.css");
-        .center-button {
-        display: block;
-        margin: auto;
-    }
-   
-    
-    
- </style>
 
+<style> 
+.center {
+  position: fixed;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  background-color: gray;
+  z-index: 9000;
+  opacity : 0.5;
+  /*---------------*/
+  /* position: fixed;
+  width: 100%;
+  height: 100%;
+  display: block;
+    top: 0;
+    bottom: 0;      */
+}
+.imagen{
+  display: block;
+    position: relative;
+    margin: auto;
+}
+</style>

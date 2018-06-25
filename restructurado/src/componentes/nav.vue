@@ -1,7 +1,7 @@
 <template>
 <!-- CONTENEDOR DE NAVBAR Y ASIDE-BAR-->
    <div>
-     <preload v-show="load" ></preload>
+     <preload v-if="load" :mensaje="mensaje" ></preload>
      <nav id="nav-prueba" class="side-navbar bg-dark mCustomScrollbar _mCS_1 mCS_no_scrollbar">
             <div id="mCSB_1" class="mCustomScrollBox mCS-light mCSB_vertical mCSB_inside" style="max-height: none;" tabindex="0">
             <div id="mCSB_1_container" class="mCSB_container mCS_y_hidden mCS_no_scrollbar_y" style="position: relative; top: 0px; left: 0px;" dir="ltr">
@@ -200,7 +200,8 @@ export default {
       load: "",
       imagen: "",
       rutas: "",
-      estado: true
+      estado: true,
+      mensaje:""
     };
   },
 
@@ -209,6 +210,8 @@ export default {
       "load",
       function(userObject) {
         this.load = userObject.load;
+        this.mensaje=userObject.mensaje
+       
       }.bind(this)
     );
     bus.$on(

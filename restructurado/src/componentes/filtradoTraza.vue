@@ -136,7 +136,7 @@ import { urlservicios } from "../main";
 import Preload from "../componentes/preload.vue";
 import DatePicker from "vue2-datepicker";
 import moment from "moment";
-import { getDatesRange } from './utils/datesRange.js';
+import { GetDatesRange } from './utils/datesRange.js';
 
 export default {
   components: {
@@ -196,7 +196,8 @@ export default {
         { text: "Filtrar por orden, referencia, # movilizado", value: "first" },
         { text: "Filtrar por rango de fechas", value: "second" }
       ],
-      consulta: []
+      consulta: [],
+      getDatesRange: new GetDatesRange()
     };
   },
   updated: function() {
@@ -315,7 +316,7 @@ export default {
     consultar() {
       var inicio, fin;
       var fecha = new Date();
-      this.time1 = (getDatesRange(this.time1));
+      this.time1 = (this.getDatesRange.getRange(this.time1));
       var mana = new Date(fecha.getTime() + 24 * 60 * 60 * 1000);
       var fechainicial = moment(this.time1[0]);
       var finalfinal = moment(this.time1[1]);
@@ -814,7 +815,7 @@ export default {
     const instance = (new Date());
     const firstDay = (new Date(instance.getFullYear(), instance.getMonth(), 1));
     const lastDay = (new Date(instance.getFullYear(), instance.getMonth() + 1, 0));
-    const getDates = (getDatesRange([
+    const getDates = (this.getDatesRange.getRange([
       firstDay,
       lastDay
     ]));
