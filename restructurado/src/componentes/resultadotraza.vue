@@ -287,7 +287,7 @@
                                     <b-btn v-b-toggle="data.email">
                                     <i class="fa fa-envelope-o" aria-hidden="true"></i>
                                     </b-btn>
-                                    <b-btn  active-class :href="data.url" target="_blank" >
+                                    <b-btn  active-class :href="variableServidor+data.url" target="_blank" >
                                         <i class="fa fa-download" aria-hidden="true"></i>
                                     </b-btn>
                                 </b-col>

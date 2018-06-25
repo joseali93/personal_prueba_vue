@@ -198,7 +198,7 @@
                                          <span class="when-closed"></span>
                                     <i class="fa fa-envelope-o" aria-hidden="true"></i>
                                     </b-btn>
-                                    <b-btn  active-class :href="data.url" target="_blank" >
+                                    <b-btn  active-class :href="variableServidor+data.url" target="_blank" >
                                         <i class="fa fa-download" aria-hidden="true"></i>
                                     </b-btn>
                                 </b-col>
@@ -340,7 +340,7 @@ export default {
                 return null
             }
             else{
-                return this.modalima.trazabilidad[0].imagenes[0].url
+                return this.variableServidor+this.modalima.trazabilidad[0].imagenes[0].url
             }
         },
         algo(){
@@ -618,7 +618,7 @@ export default {
                         })
                         }, )
             console.log(urlservicios+"ConsultaExcel/"+test.id_OperadorLogistico._id+"/"+centro+"/"+cliente+"/"+orden+"/"+detalle+"/"+refere+"/"+inicio+"/"+fin+"/"+this.envios.tipo);
-            this.axios.get(urlservicios+"ConsultaExcel/"+test.id_OperadorLogistico._id+"/"+centro+"/"+cliente+"/"+orden+"/"+detalle+"/"+refere+"/"+inicio+"/"+fin+"/")
+            this.axios.get(urlservicios+"ConsultaExcel/"+test.id_OperadorLogistico._id+"/"+centro+"/"+cliente+"/"+orden+"/"+detalle+"/"+refere+"/"+inicio+"/"+fin+"/"+this.envios.tipo)
             .then(response => {
                 console.log(response);
                 var load=false

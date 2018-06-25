@@ -524,7 +524,7 @@ export default {
                         mensaje: {
                             contacto: '', //nombre remitente
                             direccion: '', //direccion remitente
-                            observaciones: "result.value",
+                            observaciones: " Ruta",
                             num_movilizados: this.itemsmovilizados.length, //cantidad movilizados orden
                             tipo_proceso: 2
                         }

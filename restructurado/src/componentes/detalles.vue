@@ -251,11 +251,11 @@
                                                     <b-col>
                                                         <h4 class="text-primary">Medio de transporte: </h4>
                                                         <!--
-          <b-form-select v-model="selected_curier" class="mb-3"  :options="curiers" text-field="nombre"
-          value-field="_id" :state="statuscourier"
-          @change.native="selectcuriers" :disabled="selec_disable">
-          </b-form-select>
-          -->
+                                                <b-form-select v-model="selected_curier" class="mb-3"  :options="curiers" text-field="nombre"
+                                                value-field="_id" :state="statuscourier"
+                                                @change.native="selectcuriers" :disabled="selec_disable">
+                                                </b-form-select>
+                                                -->
                                                         <v-select
                                                             v-model="model_medios"
                                                             label="tipo"
@@ -556,6 +556,7 @@
 
 
 
+
 <script>
 import {
     bus
@@ -564,18 +565,18 @@ import {
     urlservicios
 } from "../main";
 import moment from "moment";
-import io from 'socket.io-client'
+import io from "socket.io-client";
 import {
     CreateSocket
-} from './utils/socket'
+} from "./utils/socket";
 export default {
     data() {
         return {
-            idCourier: '',
-            idMedio: '',
+            idCourier: "",
+            idMedio: "",
             totalRows: 5,
             courier_disable: false,
-            validacionsockets: '',
+            validacionsockets: "",
             socket: null,
             medios_disable: false,
             leido: "",
@@ -653,25 +654,36 @@ export default {
         }
     },
     methods: {
-
         updatecourier() {
             var login = localStorage.getItem("storedData");
             var infologin = JSON.parse(login);
 
-            if (this.selected_curier == null || this.selected_curier == '' ||
-                this.selected_curier === null | this.selected_curier === '') {
-                if (this.idCourier) {} else {}
+            if (
+                this.selected_curier == null ||
+                this.selected_curier == "" ||
+                (this.selected_curier === null) | (this.selected_curier === "")
+            ) {
+                if (this.idCourier) {
+                    console.log(this.idCourier);
+                    console.log(this.curiers);
+                } else {}
             } else {
                 if (infologin.id_OperadorLogistico.confirmacionSocket == false) {
-
                     if (this.curiers.length == 0) {
-                        this.axios.get(urlservicios + "UsuariosCurier/" + infologin.id_OperadorLogistico._id + "/" + this.idMedio)
+                        this.axios
+                            .get(
+                                urlservicios +
+                                "UsuariosCurier/" +
+                                infologin.id_OperadorLogistico._id +
+                                "/" +
+                                this.idMedio
+                            )
                             .then(response => {
                                 this.curiers = response.data;
                                 this.curiers.forEach(element => {
                                     //if (element._id == this.idCourier) {
                                     if (element._id == this.idCourier) {
-                                        this.selected_curier = element.nombre
+                                        this.selected_curier = element.nombre;
                                     }
                                 });
                                 var load = false;
@@ -681,28 +693,38 @@ export default {
                                     });
                                 });
                                 //this.selec_disable=false
-                            })
+                            });
                     } else {
                         this.curiers.forEach(element => {
                             //if (element._id == this.idCourier) {
                             if (this.selected_curier._id == this.idCourier) {
-                                this.selected_curier = element
+                                this.selected_curier = element;
                                 //this.selected_curier = element.nombre
                             }
                         });
                     }
-
-
                 } else {
-                    var couriersSer
+                    var couriersSer;
                     if (this.curiers.length == 0) {
-                        this.axios.get(urlservicios + "UsuariosCurier/" + infologin.id_OperadorLogistico._id + "/" + this.idMedio)
+                        this.axios
+                            .get(
+                                urlservicios +
+                                "UsuariosCurier/" +
+                                infologin.id_OperadorLogistico._id +
+                                "/" +
+                                this.idMedio
+                            )
                             .then(response => {
+                                console.log("ENTROO");
                                 couriersSer = response.data;
                                 couriersSer.forEach(element => {
+                                    console.log("entro al each");
+                                    console.log(element._id);
+                                    console.log( this.idCourier);
                                     //if (element._id == this.idCourier) {
                                     if (element._id == this.idCourier) {
-                                        this.selected_curier = element.nombre
+                                        this.selected_curier = element.nombre;
+                                        console.log(element.nombre);
                                     }
                                 });
                                 var load = false;
@@ -712,34 +734,30 @@ export default {
                                     });
                                 });
                                 //this.selec_disable=false
-                            })
+                            });
                     } else {
-                        this.socket.emit('MedioCourier', {
+                        this.socket.emit("MedioCourier", {
                             id_operadorlogistico: infologin.id_OperadorLogistico._id,
                             id_cliente: infologin._id,
                             medio_transporte: this.idMedio,
-                            descripcion: 'orden'
+                            descripcion: "orden"
                         });
                         //this.curiers=
-                        this.socket.on('CouriersActivos', (connectionList) => {
-                            this.curiers = connectionList
+                        this.socket.on("CouriersActivos", connectionList => {
+                            this.curiers = connectionList;
                         });
                     }
                 }
-
             }
-
-
-
         },
         vehic() {
             var login = localStorage.getItem("storedData");
             var infologin = JSON.parse(login);
             if (this.model_medios == null && this.idCourier) {
                 //this.curiers = []
-                this.selected_curier = ''
+                this.selected_curier = "";
             } else {
-                if (typeof (this.model_medios) == "string") {
+                if (typeof this.model_medios == "string") {
                     if (infologin.id_OperadorLogistico.confirmacionSocket == false) {
                         var load = true;
                         setTimeout(() => {
@@ -747,7 +765,8 @@ export default {
                                 load
                             });
                         });
-                        this.axios.get(urlservicios + "medios/")
+                        this.axios
+                            .get(urlservicios + "medios/")
                             .then(response => {
                                 var load = false;
                                 setTimeout(() => {
@@ -788,7 +807,8 @@ export default {
                                 load
                             });
                         });
-                        this.axios.get(urlservicios + "medios/")
+                        this.axios
+                            .get(urlservicios + "medios/")
                             .then(response => {
                                 var load = false;
                                 setTimeout(() => {
@@ -823,14 +843,15 @@ export default {
                                 );
                             });
                     }
-                    if (typeof (this.model_medios) == "object") {
+                    if (typeof this.model_medios == "object") {
                         var load = true;
                         setTimeout(() => {
                             bus.$emit("load", {
                                 load
                             });
                         });
-                        this.axios.get(urlservicios + "medios/")
+                        this.axios
+                            .get(urlservicios + "medios/")
                             .then(response => {
                                 var load = false;
                                 setTimeout(() => {
@@ -875,7 +896,14 @@ export default {
                                     load
                                 });
                             });
-                            this.axios.get(urlservicios + "UsuariosCurier/" + infologin.id_OperadorLogistico._id + "/" + this.model_medios._id)
+                            this.axios
+                                .get(
+                                    urlservicios +
+                                    "UsuariosCurier/" +
+                                    infologin.id_OperadorLogistico._id +
+                                    "/" +
+                                    this.model_medios._id
+                                )
                                 .then(response => {
                                     this.curiers = response.data;
 
@@ -901,28 +929,30 @@ export default {
                                     );
                                 });
                         } else {
-
-
                             if (this.curiers.length == 0) {
-                                var courierlocal
-                                this.axios.get(urlservicios + "UsuariosCurier/" + infologin.id_OperadorLogistico._id + "/" + this.model_medios._id)
+                                var courierlocal;
+                                this.axios
+                                    .get(
+                                        urlservicios +
+                                        "UsuariosCurier/" +
+                                        infologin.id_OperadorLogistico._id +
+                                        "/" +
+                                        this.model_medios._id
+                                    )
                                     .then(response => {
-
                                         if (this.idCourier) {
                                             this.curiers = response.data;
-                                            this.curiers.forEach(element => {
-
-                                            });
+                                            this.curiers.forEach(element => {});
                                         } else {
-                                            this.socket.emit('MedioCourier', {
+                                            this.socket.emit("MedioCourier", {
                                                 id_operadorlogistico: infologin.id_OperadorLogistico._id,
                                                 id_cliente: infologin._id,
                                                 medio_transporte: this.model_medios._id,
-                                                descripcion: 'orden'
+                                                descripcion: "orden"
                                             });
                                             //this.curiers=
-                                            this.socket.on('CouriersActivos', (connectionList) => {
-                                                this.curiers = connectionList
+                                            this.socket.on("CouriersActivos", connectionList => {
+                                                this.curiers = connectionList;
                                             });
                                         }
                                         var load = false;
@@ -942,19 +972,18 @@ export default {
                                         });
                                     });
                             } else {
-                                this.socket.emit('MedioCourier', {
+                                this.socket.emit("MedioCourier", {
                                     id_operadorlogistico: infologin.id_OperadorLogistico._id,
                                     id_cliente: infologin._id,
                                     medio_transporte: this.model_medios._id,
-                                    descripcion: 'orden'
+                                    descripcion: "orden"
                                 });
                                 //this.curiers=
-                                this.socket.on('CouriersActivos', (connectionList) => {
-                                    this.curiers = connectionList
+                                this.socket.on("CouriersActivos", connectionList => {
+                                    this.curiers = connectionList;
                                 });
                             }
                         }
-
                     } else {
                         //this.selec_disable=true
                     }
@@ -964,132 +993,81 @@ export default {
             //this.updatecourier()
         },
         /*
-        updatecourier(){
-           var login = localStorage.getItem("storedData");
-          var infologin = JSON.parse(login);
-          if(infologin.id_OperadorLogistico.confirmacionSocket==true){
-              this.socket.on('CouriersActivos', (connectionList) => {
+            updatecourier(){
+               var login = localStorage.getItem("storedData");
+              var infologin = JSON.parse(login);
+              if(infologin.id_OperadorLogistico.confirmacionSocket==true){
+                  this.socket.on('CouriersActivos', (connectionList) => {
 
-                  this.curiers=connectionList
-                });
-          }
+                      this.curiers=connectionList
+                    });
+              }
 
-        },
-        */
+            },
+            */
 
         /*
-        vehic() {
-          var login = localStorage.getItem("storedData");
-          var infologin = JSON.parse(login);
+            vehic() {
+              var login = localStorage.getItem("storedData");
+              var infologin = JSON.parse(login);
 
-          if (typeof this.model_medios == "string") {
-            var load = true;
-            setTimeout(() => {
-              bus.$emit("load", {
-                load
-              });
-            });
-            this.axios
-              .get(urlservicios+ "medios/")
-              .then(response => {
-                var load = false;
-                setTimeout(() => {
-                  bus.$emit("load", {
-                    load
-                  });
-                });
-
-                this.medios = response.data;
-                this.medios.forEach(element => {
-                  if (element._id == this.model_medios) {
-                    this.model_medios = element;
-
-                  }
-
-                });
-
-                var load = false;
-                setTimeout(() => {
-                  bus.$emit("load", {
-                    load
-                  });
-                });
-
-                /*
-                this.axios.get(
-                    urlservicios+"UsuariosCurier/" +
-                      infologin.id_OperadorLogistico._id +
-                      "/" +this.model_medios._id)
-                  .then(response2 => {
-                    this.curiers = response2.data;
-                    //this.selec_disable=false
-                    var nombre;
-                    this.curiers.forEach(element2 => {
-                      nombre = element2.nombre;
-                      element2.nombre = nombre + " " + element2.apellido;
-                      if (element2._id == this.selected_curier) {
-                        this.selected_curier = element2;
-                      }
-                      var load = false;
-                      setTimeout(() => {
-                        bus.$emit("load", {
-                          load
-                        });
-                      });
-                    });
-                  });
-                  
-              })
-              .catch(function(error) {
-                var load = false;
-                setTimeout(() => {
-                  bus.$emit("load", {
-                    load
-                  });
-                });
-                swal(
-                  "Se presento un problema",
-                  "Intente nuevamente, por favor",
-                  "warning"
-                );
-              });
-
-          } else {
-            if (this.model_medios != null) {
-              var nombre;
-              if(infologin.id_OperadorLogistico.confirmacionSocket==false){
+              if (typeof this.model_medios == "string") {
                 var load = true;
                 setTimeout(() => {
                   bus.$emit("load", {
                     load
                   });
                 });
-
-
                 this.axios
-                  .get(
-                    urlservicios+
-                      "UsuariosCurier/" +
-                      infologin.id_OperadorLogistico._id +
-                      "/" +
-                      this.model_medios._id
-                  )
+                  .get(urlservicios+ "medios/")
                   .then(response => {
-                    this.curiers = response.data;
-                    this.curiers.forEach(element2 => {
-                      nombre = element2.nombre;
-                      element2.nombre = nombre + " " + element2.apellido;
-                      if (element2._id == this.selected_curier) {
-                        this.selected_curier = element2;
-                      }
-                    });
                     var load = false;
                     setTimeout(() => {
                       bus.$emit("load", {
                         load
                       });
                     });
-                    //this.selec_disable=false
+
+                    this.medios = response.data;
+                    this.medios.forEach(element => {
+                      if (element._id == this.model_medios) {
+                        this.model_medios = element;
+
+                      }
+
+                    });
+
+                    var load = false;
+                    setTimeout(() => {
+                      bus.$emit("load", {
+                        load
+                      });
+                    });
+
+                    /*
+                    this.axios.get(
+                        urlservicios+"UsuariosCurier/" +
+                          infologin.id_OperadorLogistico._id +
+                          "/" +this.model_medios._id)
+                      .then(response2 => {
+                        this.curiers = response2.data;
+                        //this.selec_disable=false
+                        var nombre;
+                        this.curiers.forEach(element2 => {
+                          nombre = element2.nombre;
+                          element2.nombre = nombre + " " + element2.apellido;
+                          if (element2._id == this.selected_curier) {
+                            this.selected_curier = element2;
+                          }
+                          var load = false;
+                          setTimeout(() => {
+                            bus.$emit("load", {
+                              load
+                            });
+                          });
+                        });
+                      });
+                      
                   })
                   .catch(function(error) {
                     var load = false;
@@ -1104,38 +1082,90 @@ export default {
                       "warning"
                     );
                   });
-              }
-              else{
-              this.socket.emit('MedioCourier', {
-                id_operadorlogistico:infologin.id_OperadorLogistico._id,
-                id_cliente:infologin._id,
-                medio_transporte: this.model_medios._id,
-                descripcion: 'orden'
-              });
-                //this.curiers=
-              this.socket.on('CouriersActivos', (connectionList) => {
-                this.curiers=connectionList
-              });
-              }
 
-              /*
+              } else {
+                if (this.model_medios != null) {
+                  var nombre;
+                  if(infologin.id_OperadorLogistico.confirmacionSocket==false){
+                    var load = true;
+                    setTimeout(() => {
+                      bus.$emit("load", {
+                        load
+                      });
+                    });
 
-            
-            } else {
-              //this.selec_disable=true
-            }
-          }
+
+                    this.axios
+                      .get(
+                        urlservicios+
+                          "UsuariosCurier/" +
+                          infologin.id_OperadorLogistico._id +
+                          "/" +
+                          this.model_medios._id
+                      )
+                      .then(response => {
+                        this.curiers = response.data;
+                        this.curiers.forEach(element2 => {
+                          nombre = element2.nombre;
+                          element2.nombre = nombre + " " + element2.apellido;
+                          if (element2._id == this.selected_curier) {
+                            this.selected_curier = element2;
+                          }
+                        });
+                        var load = false;
+                        setTimeout(() => {
+                          bus.$emit("load", {
+                            load
+                          });
+                        });
+                        //this.selec_disable=false
+                      })
+                      .catch(function(error) {
+                        var load = false;
+                        setTimeout(() => {
+                          bus.$emit("load", {
+                            load
+                          });
+                        });
+                        swal(
+                          "Se presento un problema",
+                          "Intente nuevamente, por favor",
+                          "warning"
+                        );
+                      });
+                  }
+                  else{
+                  this.socket.emit('MedioCourier', {
+                    id_operadorlogistico:infologin.id_OperadorLogistico._id,
+                    id_cliente:infologin._id,
+                    medio_transporte: this.model_medios._id,
+                    descripcion: 'orden'
+                  });
+                    //this.curiers=
+                  this.socket.on('CouriersActivos', (connectionList) => {
+                    this.curiers=connectionList
+                  });
+                  }
+
+                  /*
+
+                
+                } else {
+                  //this.selec_disable=true
+                }
+              }
     
-        */
+            */
         desabilitarguardar() {
+           
             if (
                 this.info.estado == "orden de servicio cancelada" ||
-                this.info.estado == "Orden De Servicio Recogida" ||
+                this.info.estado == "Orden de servicio recogida" ||
                 this.info.estado == "Orden de servicio cerrada"
             ) {
                 //selec_disable
                 this.selec_disable = true;
-                this.medios_disable = true
+                this.medios_disable = true;
                 return true;
             } else {
                 return false;
@@ -1267,7 +1297,13 @@ export default {
             }
         },
         values(dato) {
-            eval("this.campos." + dato + "=" + "this.currentUser.detalle[this.indices].detalleslocal.infor." + dato);
+            eval(
+                "this.campos." +
+                dato +
+                "=" +
+                "this.currentUser.detalle[this.indices].detalleslocal.infor." +
+                dato
+            );
             return eval(
                 "this.currentUser.detalle[this.indices].detalleslocal.infor." + dato
             );
@@ -1285,12 +1321,12 @@ export default {
                 indiceActual,
                 trayectoActual,
                 lista
-            } = (this.detalleTrayecto);
+            } = this.detalleTrayecto;
             if (lista[indiceActual] !== void 0 && lista[indiceActual])
                 if (lista[indiceActual].trayecto !== trayectoActual) {
-                    lista[indiceActual].trayecto = (trayectoActual);
-                    this.selection = (trayectoActual && trayectoActual._id) ?
-                        (trayectoActual._id) : (null);
+                    lista[indiceActual].trayecto = trayectoActual;
+                    this.selection =
+                        trayectoActual && trayectoActual._id ? trayectoActual._id : null;
                 }
             // ----------------------------------------
             this.$refs.ModalAct.hide();
@@ -1330,20 +1366,20 @@ export default {
 
                     var objeto = {
                         id_trayecto: this.selection,
-                        nombre: (this.selection) ? (nombresel) : (null),
+                        nombre: this.selection ? nombresel : null,
                         campos: this.campos
                     };
 
                     this.$refs.table.refresh();
                     /*
-                    var load = true;
-                    setTimeout(() => {
-                      bus.$emit("load", {
-                        load
-                      });
-                    });
-                    */
-                    var enviodestinatario
+                              var load = true;
+                              setTimeout(() => {
+                                bus.$emit("load", {
+                                  load
+                                });
+                              });
+                              */
+                    var enviodestinatario;
                     var load = true;
                     setTimeout(() => {
                         bus.$emit("load", {
@@ -1352,7 +1388,7 @@ export default {
                     });
                     this.inputs.campos.forEach(element => {
                         if (element.HeredaDestinatario == true) {
-                            enviodestinatario = element
+                            enviodestinatario = element;
                         }
                     });
                     var load = false;
@@ -1361,36 +1397,50 @@ export default {
                             load
                         });
                     });
-                    var destina
-                    var llavescampos = Object.keys(this.inputs.objeto)
-                    var josea = {}
-                    var propiedadesDinamicas
+                    var destina;
+                    var llavescampos = Object.keys(this.inputs.objeto);
+                    var josea = {};
+                    var propiedadesDinamicas;
 
                     llavescampos.forEach(element => {
                         if (enviodestinatario.vmodel == element) {
-
-                            josea[element] = this.selection
+                            josea[element] = this.selection;
                             var objdestinatario = {
                                 propiedadesDinamicas: josea
-                            }
+                            };
 
-                            this.axios.get(urlservicios + "obtenerDestinatario/" + this.currentUser.detalle[this.indemodal].detalleslocal.destinatario.numero_identificacion)
+                            this.axios
+                                .get(
+                                    urlservicios +
+                                    "obtenerDestinatario/" +
+                                    this.currentUser.detalle[this.indemodal].detalleslocal
+                                    .destinatario.numero_identificacion
+                                )
                                 .then(response => {
-                                    destina = response.data.destinatarios
+                                    destina = response.data.destinatarios;
 
-
-
-
-                                    this.axios.post(urlservicios + "ActualizarDestinatario" + "/" + destina._id, objdestinatario)
-                                        .then(responsedestinatario => {})
-
+                                    this.axios
+                                        .post(
+                                            urlservicios +
+                                            "ActualizarDestinatario" +
+                                            "/" +
+                                            destina._id,
+                                            objdestinatario
+                                        )
+                                        .then(responsedestinatario => {});
                                 });
-
                         }
                     });
 
-
-                    this.axios.post(urlservicios + "ActualizarTrayecto/" + this.currentUser._id + "/" + this.consecutivo, objeto)
+                    this.axios
+                        .post(
+                            urlservicios +
+                            "ActualizarTrayecto/" +
+                            this.currentUser._id +
+                            "/" +
+                            this.consecutivo,
+                            objeto
+                        )
                         .then(response => {
                             this.$refs.table.refresh();
                             var objeto2 = {
@@ -1406,7 +1456,6 @@ export default {
                                     if (obj.indice == this.indices) {
                                         this.id_trayectos.splice(obj, 1);
                                         this.id_trayectos.push(objeto2);
-
                                     } else {
                                         this.id_trayectos.push(objeto2);
                                     }
@@ -1449,16 +1498,16 @@ export default {
 
         asignarcurier(seleccionado) {
             var login = localStorage.getItem("storedData");
-            var infologin = JSON.parse(login)
+            var infologin = JSON.parse(login);
             if (this.currentUser.estado == "En ruta a recoger en origen") {
                 console.log("anda en ruta");
                 swal(
-                'La Orden se encuentra en Ruta al Origen',
-                'Comuniquese con el courier para poder reasignarla',
-                'warning'
-                )
+                    "La Orden se encuentra en Ruta al Origen",
+                    "Comuniquese con el courier para poder reasignarla",
+                    "warning"
+                );
                 var load = false;
-                var mensaje = 'Esperando respuesta del courier'
+                var mensaje = "Esperando respuesta del courier";
                 setTimeout(() => {
                     bus.$emit("load", {
                         load,
@@ -1476,25 +1525,22 @@ export default {
                     this.statuscourier = false;
                 } else {
                     if (infologin.id_OperadorLogistico.confirmacionSocket == true) {
-
                         //if(this.currentUser.estado=='Orden De Servicio Asignada'&&(this.currentUser.id_courier==seleccionado._id||this.selected_curier._id==seleccionado._id)){
-                        if (this.currentUser.estado == 'Orden De Servicio Asignada' && this.idCourier == this.selected_curier._id) {
-
-                            swal(
-                                'ya la tiene asignada este courier',
-                                '',
-                                'warning'
-                            )
+                        if (
+                            this.currentUser.estado == "Orden De Servicio Asignada" &&
+                            this.idCourier == this.selected_curier._id
+                        ) {
+                            swal("ya la tiene asignada este courier", "", "warning");
                         } else {
                             var load = true;
-                            var mensaje = 'Esperando respuesta del courier'
+                            var mensaje = "Esperando respuesta del courier";
                             setTimeout(() => {
                                 bus.$emit("load", {
                                     load,
                                     mensaje
                                 });
                             });
-                            this.socket.emit('new-message', {
+                            this.socket.emit("new-message", {
                                 idOperador: infologin.id_OperadorLogistico._id, //per logistico
                                 idOrigen: infologin._id, //id usuario
                                 idDestino: seleccionado._id, //id courier seleccionado
@@ -1505,23 +1551,19 @@ export default {
                                     num_movilizados: this.currentUser.detalle.length, //cantidad movilizados orden
                                     tipo_proceso: 1
                                 }
-                            })
+                            });
                             //VALIDACION DEL TIMER
                             this.validacionsockets = setTimeout(function () {
-                                swal(
-                                    'No se obtuvo respuesta del courier!',
-                                    '',
-                                    'warning'
-                                )
+                                swal("No se obtuvo respuesta del courier!", "", "warning");
                                 var load = false;
-                                var mensaje = 'Esperando respuesta del courier'
+                                var mensaje = "Esperando respuesta del courier";
                                 setTimeout(() => {
                                     bus.$emit("load", {
                                         load,
                                         mensaje
                                     });
                                 });
-                            }, 35000)
+                            }, 35000);
                             // }, 35000);
                             //----------------------------
                             var load = true;
@@ -1530,10 +1572,7 @@ export default {
                                     load
                                 });
                             });
-
-
                         }
-
                     } else {
                         var obj = {
                             id_orden: this.currentUser._id,
@@ -1577,26 +1616,21 @@ export default {
                             });
                     }
                     /*
-                    var objson ={
-                      id_operador:infologin.id_OperadorLogistico._id,//per logistico
-                      id_origen:infologin._id,//id usuario
-                      id_destino:seleccionado._id,//id courier seleccionado
-                      mensaje :{
-                        contacto:this.currentUser.remitente.nombre_contacto,//nombre remitente
-                        direccion:this.currentUser.remitente.direccion_recogida+"pruebaaaaaaaaa",//direccion remitente
-                        observaciones:"observaciones de pruebas observaciones de pruebas observaciones de pruebas observaciones de pruebas observaciones de pruebas observaciones de pruebas observaciones de pruebas observaciones de pruebas observaciones de pruebas observaciones de pruebas observaciones de pruebas observaciones de pruebas observaciones de pruebas observaciones de pruebas observaciones de pruebas observaciones de pruebas ",
-                        num_movilizados:this.currentUser.detalle.length,//cantidad movilizados orden
-                        tipo_proceso:1
-                      }
-                    }
-                    */
-
-
-
+                              var objson ={
+                                id_operador:infologin.id_OperadorLogistico._id,//per logistico
+                                id_origen:infologin._id,//id usuario
+                                id_destino:seleccionado._id,//id courier seleccionado
+                                mensaje :{
+                                  contacto:this.currentUser.remitente.nombre_contacto,//nombre remitente
+                                  direccion:this.currentUser.remitente.direccion_recogida+"pruebaaaaaaaaa",//direccion remitente
+                                  observaciones:"observaciones de pruebas observaciones de pruebas observaciones de pruebas observaciones de pruebas observaciones de pruebas observaciones de pruebas observaciones de pruebas observaciones de pruebas observaciones de pruebas observaciones de pruebas observaciones de pruebas observaciones de pruebas observaciones de pruebas observaciones de pruebas observaciones de pruebas observaciones de pruebas ",
+                                  num_movilizados:this.currentUser.detalle.length,//cantidad movilizados orden
+                                  tipo_proceso:1
+                                }
+                              }
+                              */
                 }
             }
-
-
         },
         asignar(seleccionado) {
             if (this.id_cliente_local != null) {
@@ -1619,13 +1653,11 @@ export default {
 
                 if (this.id_trayectos.length == 0) {
                     for (var x = 0; x < this.currentUser.detalle.length; x++) {
-
                         var llavesinfor = Object.keys(
                             this.currentUser.detalle[x].detalleslocal.infor
                         );
                         for (var y = 0; y < llavesinfor.length; y++) {
                             if (llavesinfor[y] != "trayectoobj") {} else {
-
                                 banderasinT = true;
                                 contador = contador + 1;
                                 correcto.push(x);
@@ -1639,14 +1671,13 @@ export default {
                             this.currentUser.detalle[x].detalleslocal.infor
                         );
                         for (var y = 0; y < llavesinfor.length; y++) {
-
                             if (llavesinfor[y] != "trayectoobj") {} else {
                                 /*
-                                if(typeof(eval('this.currentUser.detalle[x].detalleslocal.infor.'+llavesinfor[y]))!='object')
-                                {
+                                                if(typeof(eval('this.currentUser.detalle[x].detalleslocal.infor.'+llavesinfor[y]))!='object')
+                                                {
 
-                                }
-                                */
+                                                }
+                                                */
                                 banderasinT = true;
                                 contador = contador + 1;
                                 correcto.push(x);
@@ -1656,12 +1687,9 @@ export default {
                     }
                 }
                 for (var o = 0; o < pendi.length; o++) {
-
-
                     pendi[o] = pendi[o]++;
                     for (var p = 0; p < correcto.length; p++) {
                         if (pendi[o] == correcto[p]) {
-
                             pendi.splice(o, 1);
                         }
                     }
@@ -1685,23 +1713,27 @@ export default {
             // ------------------------------------------
             const {
                 lista
-            } = (this.detalleTrayecto);
-            this.detalleTrayecto.trayectoActual = (lista[indice]) ? (lista[indice].trayecto) : (null);
+            } = this.detalleTrayecto;
+            this.detalleTrayecto.trayectoActual = lista[indice] ?
+                lista[indice].trayecto :
+                null;
             if (lista[indice] && lista[indice].trayecto)
-                this.selection = (lista[indice].trayecto._id) ? (lista[indice].trayecto._id) : (null);
+                this.selection = lista[indice].trayecto._id ?
+                lista[indice].trayecto._id :
+                null;
             // ------------------------------------------
-            var produc
-            var serv
+            var produc;
+            var serv;
             this.currentUser.detalle.forEach((element, i) => {
                 if (element.id == consecutivo) {
-                    this.indemodal = i
+                    this.indemodal = i;
 
                     this.servicio = element.servicioslocal.nombre;
                     this.producto = element.productoslocal.nombre;
                     this.itemsvariables = element.detalleslocal.infor.objetoUnidades;
                     produc = element.productoslocal._id;
-                    serv = element.servicioslocal._id
-                    this.detallesactualizar = element.detalleslocal
+                    serv = element.servicioslocal._id;
+                    this.detallesactualizar = element.detalleslocal;
                 }
             });
             //this.indemodal = indice;
@@ -1714,25 +1746,27 @@ export default {
             if (
                 this.info.estado == "orden de servicio cancelada" ||
                 this.info.estado == "Orden De Servicio Recogida" ||
-                this.info.estado == "Orden de servicio cerrada") {
+                this.info.estado == "Orden de servicio cerrada"
+            ) {
                 this.indices = this.indemodal;
                 /*
-                this.detallesactualizar = this.currentUser.detalle[indice].detalleslocal;
-                this.servicio = this.currentUser.detalle[indice].servicioslocal.nombre;
-                this.producto = this.currentUser.detalle[indice].productoslocal.nombre;
-                this.itemsvariables = this.currentUser.detalle[indice].detalleslocal.infor.objetoUnidades;
-                var produc = this.currentUser.detalle[indice].productoslocal._id;
-                var serv = this.currentUser.detalle[indice].servicioslocal._id;
-                */
+                        this.detallesactualizar = this.currentUser.detalle[indice].detalleslocal;
+                        this.servicio = this.currentUser.detalle[indice].servicioslocal.nombre;
+                        this.producto = this.currentUser.detalle[indice].productoslocal.nombre;
+                        this.itemsvariables = this.currentUser.detalle[indice].detalleslocal.infor.objetoUnidades;
+                        var produc = this.currentUser.detalle[indice].productoslocal._id;
+                        var serv = this.currentUser.detalle[indice].servicioslocal._id;
+                        */
                 var load = true;
-                this.selec_disable = false
+                this.selec_disable = false;
                 setTimeout(() => {
                     bus.$emit("load", {
                         load
                     });
                 });
                 if (produc && serv) {
-                    this.axios.get(urlservicios + "estructuraf/" + produc + "/" + serv)
+                    this.axios
+                        .get(urlservicios + "estructuraf/" + produc + "/" + serv)
                         .then(response => {
                             var load = false;
                             setTimeout(() => {
@@ -1749,7 +1783,11 @@ export default {
                                     var infologin = JSON.parse(login);
                                     //document.getElementById(this.inputs.campos[i].id).value = null;
 
-                                    this.axios.get(this.inputs.campos[i].urlobjeto + infologin.id_OperadorLogistico._id)
+                                    this.axios
+                                        .get(
+                                            this.inputs.campos[i].urlobjeto +
+                                            infologin.id_OperadorLogistico._id
+                                        )
                                         .then(response22 => {
                                             this.trayectos = response22.data;
                                             this.trayectos.unshift(vacio);
@@ -1762,16 +1800,18 @@ export default {
                                             // ------------------------------------------
                                             const {
                                                 lista
-                                            } = (this.detalleTrayecto);
+                                            } = this.detalleTrayecto;
                                             if (lista[indice] !== void 0) {
-                                                this.detalleTrayecto.indiceActual = (indice);
-                                                this.actualizarTrayecto((lista[indice] && lista[indice].trayecto) ?
-                                                    (lista[indice].trayecto._id) : (null));
+                                                this.detalleTrayecto.indiceActual = indice;
+                                                this.actualizarTrayecto(
+                                                    lista[indice] && lista[indice].trayecto ?
+                                                    lista[indice].trayecto._id :
+                                                    null
+                                                );
                                             } else {
-                                                this.detalleTrayecto.indiceActual = (0);
+                                                this.detalleTrayecto.indiceActual = 0;
                                             }
-                                            if (typeof callback === 'function')
-                                                callback();
+                                            if (typeof callback === "function") callback();
                                             // ------------------------------------------
                                         })
                                         .catch(function (error) {
@@ -1787,31 +1827,28 @@ export default {
                                                 "warning"
                                             );
                                         });
-
                                 } else {}
-                                if (!hidden)
-                                    this.$refs.ModalAct.show();
+                                if (!hidden) this.$refs.ModalAct.show();
                             }
-                        })
+                        });
                 } else {
-                    if (typeof callback === 'function')
-                        callback();
+                    if (typeof callback === "function") callback();
                 }
             } else {
                 this.indices = this.indemodal;
 
                 /*
-                this.detallesactualizar = this.currentUser.detalle[
-                  indice
-                ].detalleslocal;
-                this.itemsvariables = this.currentUser.detalle[
-                  indice
-                ].detalleslocal.infor.objetoUnidades;
-                this.servicio = this.currentUser.detalle[indice].servicioslocal.nombre;
-                this.producto = this.currentUser.detalle[indice].productoslocal.nombre;
-                var produc = this.currentUser.detalle[indice].productoslocal._id;
-                var serv = this.currentUser.detalle[indice].servicioslocal._id;
-                */
+                        this.detallesactualizar = this.currentUser.detalle[
+                          indice
+                        ].detalleslocal;
+                        this.itemsvariables = this.currentUser.detalle[
+                          indice
+                        ].detalleslocal.infor.objetoUnidades;
+                        this.servicio = this.currentUser.detalle[indice].servicioslocal.nombre;
+                        this.producto = this.currentUser.detalle[indice].productoslocal.nombre;
+                        var produc = this.currentUser.detalle[indice].productoslocal._id;
+                        var serv = this.currentUser.detalle[indice].servicioslocal._id;
+                        */
                 var load = true;
                 setTimeout(() => {
                     bus.$emit("load", {
@@ -1819,9 +1856,10 @@ export default {
                     });
                 });
                 if (produc && serv) {
-                    this.axios.get(urlservicios + "estructuraf/" + produc + "/" + serv)
+                    this.axios
+                        .get(urlservicios + "estructuraf/" + produc + "/" + serv)
                         .then(response => {
-                            this.selec_disable = false
+                            this.selec_disable = false;
                             var load = false;
                             setTimeout(() => {
                                 bus.$emit("load", {
@@ -1844,7 +1882,11 @@ export default {
                                             load
                                         });
                                     });
-                                    this.axios.get(this.inputs.campos[i].urlobjeto + infologin.id_OperadorLogistico._id)
+                                    this.axios
+                                        .get(
+                                            this.inputs.campos[i].urlobjeto +
+                                            infologin.id_OperadorLogistico._id
+                                        )
                                         .then(response => {
                                             this.trayectos = response.data;
                                             this.trayectos.unshift(vacio);
@@ -1857,16 +1899,18 @@ export default {
                                             // ------------------------------------------
                                             const {
                                                 lista
-                                            } = (this.detalleTrayecto);
+                                            } = this.detalleTrayecto;
                                             if (lista[indice] !== void 0) {
-                                                this.detalleTrayecto.indiceActual = (indice);
-                                                this.actualizarTrayecto((lista[indice] && lista[indice].trayecto) ?
-                                                    (lista[indice].trayecto._id) : (null));
+                                                this.detalleTrayecto.indiceActual = indice;
+                                                this.actualizarTrayecto(
+                                                    lista[indice] && lista[indice].trayecto ?
+                                                    lista[indice].trayecto._id :
+                                                    null
+                                                );
                                             } else {
-                                                this.detalleTrayecto.indiceActual = (0);
+                                                this.detalleTrayecto.indiceActual = 0;
                                             }
-                                            if (typeof callback === 'function')
-                                                callback();
+                                            if (typeof callback === "function") callback();
                                             // ------------------------------------------
                                         })
                                         .catch(function (error) {
@@ -1884,8 +1928,7 @@ export default {
                                         });
                                 } else {}
                             }
-                            if (!hidden)
-                                this.$refs.ModalAct.show();
+                            if (!hidden) this.$refs.ModalAct.show();
                         })
                         .catch(function (error) {
                             var load = false;
@@ -1901,16 +1944,14 @@ export default {
                             );
                         });
                 } else {
-                    if (typeof callback === 'function')
-                        callback();
+                    if (typeof callback === "function") callback();
                 }
             }
             //this.$refs.ModalAct.show()
-
         },
         asignarfinal(data) {
             if (data.mensaje.respuesta == "true") {
-                this.currentUser.estado = 'Orden De Servicio Asignada'
+                this.currentUser.estado = "Orden De Servicio Asignada";
                 var obj = {
                     id_orden: this.currentUser._id,
                     id_curier: data.idOrigen,
@@ -1950,85 +1991,82 @@ export default {
                             "warning"
                         );
                     });
-
             } else {
-                swal(
-                    data.mensaje.message,
-                    '',
-                    'warning'
-                )
+                swal(data.mensaje.message, "", "warning");
             }
             /*
-            var obj = {
-                id_orden: this.currentUser._id,
-                id_curier: seleccionado._id,
-                id_medio: this.model_medios._id
-              };
+                  var obj = {
+                      id_orden: this.currentUser._id,
+                      id_curier: seleccionado._id,
+                      id_medio: this.model_medios._id
+                    };
 
-              this.statuscourier = null;
-              var load = true;
-              setTimeout(() => {
-                bus.$emit("load", {
-                  load
-                });
-              });
-              this.axios
-                .post(urlservicios+ "AsignarOrdenCurrier/", obj)
-                .then(response => {
-                  var load = false;
-                  setTimeout(() => {
-                    bus.$emit("load", {
-                      load
+                    this.statuscourier = null;
+                    var load = true;
+                    setTimeout(() => {
+                      bus.$emit("load", {
+                        load
+                      });
                     });
-                  });
-                  this.Documento = response.data;
-                  if (this.Documento.validacion == false) {
-                  } else {
-                    swal("Excelente!", "" + this.Documento.message, "success");
-                  }
-                })
-                .catch(function(error) {
-                  var load = false;
-                  setTimeout(() => {
-                    bus.$emit("load", {
-                      load
-                    });
-                  });
-                  swal(
-                    "Se presento un problema",
-                    "Intente nuevamente, por favor",
-                    "warning"
-                  );
-                });
-                */
-
+                    this.axios
+                      .post(urlservicios+ "AsignarOrdenCurrier/", obj)
+                      .then(response => {
+                        var load = false;
+                        setTimeout(() => {
+                          bus.$emit("load", {
+                            load
+                          });
+                        });
+                        this.Documento = response.data;
+                        if (this.Documento.validacion == false) {
+                        } else {
+                          swal("Excelente!", "" + this.Documento.message, "success");
+                        }
+                      })
+                      .catch(function(error) {
+                        var load = false;
+                        setTimeout(() => {
+                          bus.$emit("load", {
+                            load
+                          });
+                        });
+                        swal(
+                          "Se presento un problema",
+                          "Intente nuevamente, por favor",
+                          "warning"
+                        );
+                      });
+                      */
         },
         // -------------------------------------------------------
         devolverIndiceActual(indice) {
-            return (((this.currentPage - 1) * this.totalRows) + indice);
+            return (this.currentPage - 1) * this.totalRows + indice;
         },
         getTrayecto(idTrayecto) {
-            return (this.trayectos) ? (this.trayectos.find((t) => (t._id === idTrayecto))) : (null);
+            return this.trayectos ?
+                this.trayectos.find(t => t._id === idTrayecto) :
+                null;
         },
         cambioTrayecto(id) {
-            const trayecto = (this.getTrayecto(id));
-            this.selection = (trayecto && trayecto._id) ? (trayecto._id) : (null);
+            const trayecto = this.getTrayecto(id);
+            this.selection = trayecto && trayecto._id ? trayecto._id : null;
         },
         existeTrayectoActual(indice) {
-            const obtenerIndice = (this.devolverIndiceActual(indice));
+            const obtenerIndice = this.devolverIndiceActual(indice);
             const {
                 lista
-            } = (this.detalleTrayecto);
-            return (lista[obtenerIndice] && lista[obtenerIndice].trayecto);
+            } = this.detalleTrayecto;
+            return lista[obtenerIndice] && lista[obtenerIndice].trayecto;
         },
         actualizarTrayecto(idTrayecto) {
             if (this.trayectos) {
                 const {
                     indiceActual,
                     lista
-                } = (this.detalleTrayecto);
-                const trayecto = (this.getTrayecto(idTrayecto));
-                lista[indiceActual].trayecto = (trayecto && trayecto._id) ? (trayecto) : (null);
+                } = this.detalleTrayecto;
+                const trayecto = this.getTrayecto(idTrayecto);
+                lista[indiceActual].trayecto =
+                    trayecto && trayecto._id ? trayecto : null;
                 this.$forceUpdate();
             }
         }
@@ -2040,8 +2078,8 @@ export default {
             const {
                 indiceActual,
                 lista
-            } = (this.detalleTrayecto);
-            return (lista[indiceActual]);
+            } = this.detalleTrayecto;
+            return lista[indiceActual];
         }
     },
     // -------------------------------------------------------
@@ -2065,35 +2103,40 @@ export default {
             this.id_cliente_local = infologin.id_cliente;
         }
         // -------------------------------------------------------
-        const idUser = (setInterval(() => {
+        const idUser = setInterval(() => {
             if (this.currentUser && this.currentUser.detalle) {
                 this.detalleTrayecto.lista = [];
-                let count = (0);
+                let count = 0;
                 (function trayectos() {
                     // if (count === this.currentUser.detalle.length - 1)
-                    if (count >= this.currentUser.detalle.length)
-                        return;
-                    const detalle = (this.currentUser.detalle[count]);
-                    this.actualizar(count, detalle.id, () => {
-                        const {
-                            observaciones,
-                            contenido,
-                            infor
-                        } = (detalle.detalleslocal);
-                        const trayecto = (this.trayectos) ?
-                            (this.trayectos.find((t) => (t._id === infor.id_trayecto)) || null) : (null);
-                        this.detalleTrayecto.lista[count] = {
-                            trayecto,
-                            contenido,
-                            observaciones
-                        };
-                        count++;
-                        trayectos.call(this);
-                    }, true);
-                }).call(this);
+                    if (count >= this.currentUser.detalle.length) return;
+                    const detalle = this.currentUser.detalle[count];
+                    this.actualizar(
+                        count,
+                        detalle.id,
+                        () => {
+                            const {
+                                observaciones,
+                                contenido,
+                                infor
+                            } = detalle.detalleslocal;
+                            const trayecto = this.trayectos ?
+                                this.trayectos.find(t => t._id === infor.id_trayecto) || null :
+                                null;
+                            this.detalleTrayecto.lista[count] = {
+                                trayecto,
+                                contenido,
+                                observaciones
+                            };
+                            count++;
+                            trayectos.call(this);
+                        },
+                        true
+                    );
+                }.call(this));
                 clearInterval(idUser);
             }
-        }, 10));
+        }, 10);
         // -------------------------------------------------------
     },
     created: function () {
@@ -2102,20 +2145,20 @@ export default {
             function (userObject) {
                 // data.index,data.item.id
                 this.currentUser = userObject.inde.item;
-                this.currentUser.index = (userObject.inde.index);
+                this.currentUser.index = userObject.inde.index;
                 if (this.currentUser.leido == true) {
                     this.leido = "Si";
                 }
                 if (this.currentUser.leido == false) {
                     this.leido = "No";
                 }
-                if (typeof (this.currentUser.id_courier) === "undefined") {
+                if (typeof this.currentUser.id_courier === "undefined") {
                     //this.selected_curier = this.currentUser.id_courier;
                     //this.selected_curier='jose'
                     this.selected_curier = null;
                 } else {
                     this.selected_curier = this.currentUser.id_courier;
-                    this.idCourier = this.currentUser.id_courier
+                    this.idCourier = this.currentUser.id_courier;
                     this.model_medios = this.currentUser.id_medio;
                     this.idMedio = this.currentUser.id_medio;
                     //his.updatecourier()
@@ -2126,57 +2169,58 @@ export default {
             }.bind(this)
         );
         /*
-    bus.$on(
-      "thisEvent",
-      function(userObject) {
-        // data.index,data.item.id
-        this.currentUser = userObject.inde.item;
-        this.currentUser.index = (userObject.inde.index);
-        if (this.currentUser.leido == true) {
-          this.leido = "Si";
-        }
-        if (this.currentUser.leido == false) {
-          this.leido = "No";
-        }
-        if (this.currentUser.id_courier == "000000000000000000000000") {
-          this.selected_curier = null;
-        } else {
-          this.selected_curier = this.currentUser.id_courier;
-          this.model_medios = this.currentUser.id_medio;
-        }
-        this.vali = userObject.inde;
-        this.info = this.currentUser;
-        this.inputstotales = userObject.inputstotales;
-      }.bind(this)
-    );
-    */
+            bus.$on(
+            "thisEvent",
+            function(userObject) {
+                // data.index,data.item.id
+                this.currentUser = userObject.inde.item;
+                this.currentUser.index = (userObject.inde.index);
+                if (this.currentUser.leido == true) {
+                this.leido = "Si";
+                }
+                if (this.currentUser.leido == false) {
+                this.leido = "No";
+                }
+                if (this.currentUser.id_courier == "000000000000000000000000") {
+                this.selected_curier = null;
+                } else {
+                this.selected_curier = this.currentUser.id_courier;
+                this.model_medios = this.currentUser.id_medio;
+                }
+                this.vali = userObject.inde;
+                this.info = this.currentUser;
+                this.inputstotales = userObject.inputstotales;
+            }.bind(this)
+            );
+            */
         var login = localStorage.getItem("storedData");
         var infologin = JSON.parse(login);
         if (infologin.id_OperadorLogistico.confirmacionSocket == true) {
-            this.socket = (new CreateSocket({
+            this.socket = new CreateSocket({
                 id_cliente: infologin._id,
                 id_operador: infologin.id_OperadorLogistico._id
-            }));
-            this.socket.on('connect', () => {})
+            });
+            this.socket.on("connect", () => {});
 
-            this.socket.on('ListaConexiones', (data) => {
-                if (this.model_medios != undefined && this.model_medios != 'undefined' &&
-                    this.model_medios != null) {
-                    this.socket.emit('MedioCourier', {
+            this.socket.on("ListaConexiones", data => {
+                if (
+                    this.model_medios != undefined &&
+                    this.model_medios != "undefined" &&
+                    this.model_medios != null
+                ) {
+                    this.socket.emit("MedioCourier", {
                         id_operadorlogistico: infologin.id_OperadorLogistico._id,
                         id_cliente: infologin._id,
                         medio_transporte: this.model_medios._id,
-                        descripcion: 'orden'
+                        descripcion: "orden"
                     });
                 }
-
-            })
-            this.socket.on('messages', (data) => {
-
-                clearTimeout(this.validacionsockets)
+            });
+            this.socket.on("messages", data => {
+                clearTimeout(this.validacionsockets);
                 //$.cbSpinner("hide");
 
-                this.asignarfinal(data)
+                this.asignarfinal(data);
 
                 //this.message = (data.mensaje);
                 var load = false;
@@ -2230,6 +2274,7 @@ export default {
     }
 };
 </script>
+
 
 
 
