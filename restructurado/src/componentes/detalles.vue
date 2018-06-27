@@ -263,7 +263,11 @@
                                                             :options="medios"
                                                             @input="vehic()"
                                                             :disabled="medios_disable"
-                                                        ></v-select>
+                                                        >
+                                                         <template slot="no-options">
+                                                            No se encontraron  medios de transporte
+                                                        </template>
+                                                        </v-select>
                                                     </b-col>
                                                     <b-col>
                                                         <h4 class="text-primary">Courier: </h4>
@@ -282,7 +286,11 @@
                                                             :options="curiers"
                                                             :disabled="selec_disable"
                                                             @input="updatecourier()"
-                                                        ></v-select>
+                                                        >
+                                                            <template slot="no-options">
+                                                            No se encontraron  courier's
+                                                        </template>
+                                                        </v-select>
 
                                                     </b-col>
                                                 </b-row>
@@ -672,7 +680,7 @@ export default {
                     if (this.curiers.length == 0) {
                         this.axios
                             .get(
-                                urlservicios +
+                                urlservicios+
                                 "UsuariosCurier/" +
                                 infologin.id_OperadorLogistico._id +
                                 "/" +
@@ -708,7 +716,7 @@ export default {
                     if (this.curiers.length == 0) {
                         this.axios
                             .get(
-                                urlservicios +
+                                urlservicios+
                                 "UsuariosCurier/" +
                                 infologin.id_OperadorLogistico._id +
                                 "/" +
@@ -751,12 +759,19 @@ export default {
             }
         },
         vehic() {
+            console.log("entro a vehi");
             var login = localStorage.getItem("storedData");
             var infologin = JSON.parse(login);
-            if (this.model_medios == null && this.idCourier) {
+            //&& this.idCourier
+            if (this.model_medios == null ) {
                 //this.curiers = []
+                console.log("entro model");
                 this.selected_curier = "";
+                this.curiers=[]
+
             } else {
+                this.selected_curier = "";
+                this.curiers=[]
                 if (typeof this.model_medios == "string") {
                     if (infologin.id_OperadorLogistico.confirmacionSocket == false) {
                         var load = true;
@@ -766,7 +781,7 @@ export default {
                             });
                         });
                         this.axios
-                            .get(urlservicios + "medios/")
+                            .get(urlservicios+ "medios/")
                             .then(response => {
                                 var load = false;
                                 setTimeout(() => {
@@ -808,7 +823,7 @@ export default {
                             });
                         });
                         this.axios
-                            .get(urlservicios + "medios/")
+                            .get(urlservicios+ "medios/")
                             .then(response => {
                                 var load = false;
                                 setTimeout(() => {
@@ -851,7 +866,7 @@ export default {
                             });
                         });
                         this.axios
-                            .get(urlservicios + "medios/")
+                            .get(urlservicios+ "medios/")
                             .then(response => {
                                 var load = false;
                                 setTimeout(() => {
@@ -898,7 +913,7 @@ export default {
                             });
                             this.axios
                                 .get(
-                                    urlservicios +
+                                    urlservicios+
                                     "UsuariosCurier/" +
                                     infologin.id_OperadorLogistico._id +
                                     "/" +
@@ -933,7 +948,7 @@ export default {
                                 var courierlocal;
                                 this.axios
                                     .get(
-                                        urlservicios +
+                                        urlservicios+
                                         "UsuariosCurier/" +
                                         infologin.id_OperadorLogistico._id +
                                         "/" +
@@ -1411,30 +1426,33 @@ export default {
 
                             this.axios
                                 .get(
-                                    urlservicios +
-                                    "obtenerDestinatario/" +
+                                    urlservicios+
+                                    "obtenerDestinatarioNombre/" +
                                     this.currentUser.detalle[this.indemodal].detalleslocal
-                                    .destinatario.numero_identificacion
+                                    .destinatario.nombre
                                 )
                                 .then(response => {
+                                    console.log(response.data.destinatarios);
                                     destina = response.data.destinatarios;
 
                                     this.axios
                                         .post(
-                                            urlservicios +
+                                            urlservicios+
                                             "ActualizarDestinatario" +
                                             "/" +
-                                            destina._id,
+                                            destina[0]._id,
                                             objdestinatario
                                         )
-                                        .then(responsedestinatario => {});
+                                        .then(responsedestinatario => {
+                                            console.log(responsedestinatario);
+                                        });
                                 });
                         }
                     });
 
                     this.axios
                         .post(
-                            urlservicios +
+                            urlservicios+
                             "ActualizarTrayecto/" +
                             this.currentUser._id +
                             "/" +
@@ -1588,7 +1606,7 @@ export default {
                             });
                         });
                         this.axios
-                            .post(urlservicios + "AsignarOrdenCurrier/", obj)
+                            .post(urlservicios+ "AsignarOrdenCurrier/", obj)
                             .then(response => {
                                 var load = false;
                                 setTimeout(() => {
@@ -1766,7 +1784,7 @@ export default {
                 });
                 if (produc && serv) {
                     this.axios
-                        .get(urlservicios + "estructuraf/" + produc + "/" + serv)
+                        .get(urlservicios+ "estructuraf/" + produc + "/" + serv)
                         .then(response => {
                             var load = false;
                             setTimeout(() => {
@@ -1857,7 +1875,7 @@ export default {
                 });
                 if (produc && serv) {
                     this.axios
-                        .get(urlservicios + "estructuraf/" + produc + "/" + serv)
+                        .get(urlservicios+ "estructuraf/" + produc + "/" + serv)
                         .then(response => {
                             this.selec_disable = false;
                             var load = false;
@@ -1950,6 +1968,8 @@ export default {
             //this.$refs.ModalAct.show()
         },
         asignarfinal(data) {
+            //console.log(data);
+
             if (data.mensaje.respuesta == "true") {
                 this.currentUser.estado = "Orden De Servicio Asignada";
                 var obj = {
@@ -1965,7 +1985,7 @@ export default {
                     });
                 });
                 this.axios
-                    .post(urlservicios + "AsignarOrdenCurrier/", obj)
+                    .post(urlservicios+ "AsignarOrdenCurrier/", obj)
                     .then(response => {
                         var load = false;
                         setTimeout(() => {
@@ -2248,7 +2268,7 @@ export default {
             });
         });
         this.axios
-            .get(urlservicios + "medios/")
+            .get(urlservicios+ "medios/")
             .then(response => {
                 var load = false;
                 setTimeout(() => {

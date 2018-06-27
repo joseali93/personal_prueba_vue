@@ -30,6 +30,7 @@
                   v-b-popover.hover="'Debe contener letras o numeros unicamente'" title="Estructura Valida"
                   ></b-form-input>
               </div>
+              
               <a  v-on:click="autenticar" class="btn btn-lg btn-success btn-block rounded"> <span class="boton">Ingresar</span> </a>
             </form>
           </div>

@@ -480,7 +480,8 @@
                                 title="Num. Identificacion"></b-form-input>
                             </b-col>
                         </b-form-row>
-                      -->
+                      -->   
+                        <!--
                                                     <b-form-row
                                                         v-show="selectservice&&mostrardestinatario"
                                                         class="my-1"
@@ -497,12 +498,10 @@
                                                                 v-b-popover.hover="'Se debe diligenciar sin puntos, en caso de NIT sin número de validación, ni guión'"
                                                                 title="Número de identificación"
                                                             />
-                                                            <!--<input type="text" class="form-control form-control-sm"  placeholder="Nombre" v-model="detalles.destinatario.nombre">
-                              @keyup.enter.tab.native="buscar('nuevo')"
-                            @keydown.tab.native="buscar('nuevo')"
-                            -->
+                                                            
                                                         </b-col>
                                                         </b-form-row>
+                                                        -->
                                                         <!-- {{nombre_remitente}} -->
                                                         <b-form-row v-show="selectservice&&mostrardestinatario ">
                                                             <b-col md="4">
@@ -1370,7 +1369,7 @@ export default {
         SeleccionadoED() {
             console.log(this.destinatarioED);
             if (this.destinatarioED == null || this.destinatarioED == 'null') {
-                this.detalleseditar.destinatario.numero_identificacion = ''
+                //this.detalleseditar.destinatario.numero_identificacion = ''
                 this.detalleseditar.destinatario.direccion = ''
                 this.detalleseditar.destinatario.telefono = ''
                 this.detalleseditar.destinatario.nombre = ''
@@ -1403,14 +1402,14 @@ export default {
         },
         searchED(search) {
             setTimeout(function () {
-                this.axios.get(urlservicios + `/obtenerDestinatarioNombre/${escape(search)}`)
+                this.axios.get(urlservicios+ `/obtenerDestinatarioNombre/${escape(search)}`)
                     .then(response => {
                         if (response.data.destinatarios.length == 0) {
                             this.optionsremitentes = []
 
                             //this.remitente={}
                             this.detalleseditar.destinatario.nombre = search
-                            this.destinatarioED.numero_identificacion = ''
+                            //this.destinatarioED.numero_identificacion = ''
                             this.destinatarioED.direccion = ''
                             this.destinatarioED.telefono = ''
                         } else {
@@ -1482,7 +1481,7 @@ export default {
         Seleccionado() {
             if (this.nombre_remitente == null || this.nombre_remitente == "null") {
 
-                this.detalles.destinatario.numero_identificacion = ''
+                //this.detalles.destinatario.numero_identificacion = ''
                 this.detalles.destinatario.nombre = ''
                 this.detalles.destinatario.direccion = ''
                 this.detalles.destinatario.telefono = ''
@@ -1516,7 +1515,7 @@ export default {
         },
         search(search) {
             setTimeout(function () {
-                this.axios.get(urlservicios + `/obtenerDestinatarioNombre/${escape(search)}`)
+                this.axios.get(urlservicios+ `/obtenerDestinatarioNombre/${escape(search)}`)
                     .then(response => {
                         if (response.data.destinatarios.length == 0) {
                             this.optionsremitentes = []
@@ -1557,7 +1556,7 @@ export default {
                 });
             });
             this.axios
-                .get(urlservicios + "productos/" + infologin.id_OperadorLogistico._id)
+                .get(urlservicios+ "productos/" + infologin.id_OperadorLogistico._id)
                 .then(response => {
                     this.productosurl = response.data;
                     //this.productosurl.unshift(vacio);
@@ -1774,106 +1773,7 @@ export default {
                 this.itemsdinamicos.unshift(tituloopciones);
             }
         },
-        /*
-        buscar(accion) {
-          if (accion == "nuevo") {
-            var load = true;
-            setTimeout(() => {
-              bus.$emit("load", {
-                load
-              });
-            });
-            var algo = this.prueba;
-            this.axios
-              .get(urlservicios+ "obtenerDestinatario" + "/" + this.identificacion)
-              .then(response => {
-                var destinatario = response.data.destinatarios;
-                this.creaciondestinatarios = response.data.validar;
-
-                if (response.data.validar == true) {
-                  this.detalles.destinatario.numero_identificacion =
-                    destinatario.numero_identificacion;
-                  //this.detalles.destinatario._id = destinatario._id;
-                  this.detalles.destinatario.nombre = destinatario.nombre;
-                  this.detalles.destinatario.direccion = destinatario.direccion;
-                  this.detalles.destinatario.telefono = destinatario.telefono;
-                } else {
-                  this.detalles.destinatario.numero_identificacion = this.identificacion;
-                  //this.detalles.destinatario._id = "";
-                  this.detalles.destinatario.nombre = "";
-                  this.detalles.destinatario.direccion = "";
-                  this.detalles.destinatario.telefono = "";
-                }
-                var load = false;
-                setTimeout(() => {
-                  bus.$emit("load", {
-                    load
-                  });
-                });
-                //this.mostrardestinatario = true;
-              })
-              .catch(function(error) {
-                var load = false;
-                setTimeout(() => {
-                  bus.$emit("load", {
-                    load
-                  });
-                });
-                swal("Advertencia", "Intente nuevamente, por favor", "warning");
-              });
-          }
-          if (accion == "editar") {
-            var load = true;
-            setTimeout(() => {
-              bus.$emit("load", {
-                load
-              });
-            });
-            this.axios
-              .get(
-                urlservicios+
-                  "obtenerDestinatario" +
-                  "/" +
-                  this.detalleseditar.destinatario.numero_identificacion
-              )
-              .then(response => {
-                var destinatario = response.data.destinatarios;
-                this.creaciondestinatarios = response.data.validar;
-                if (response.data.validar == true) {
-                  this.detalles.destinatario.numero_identificacion =
-                    destinatario.numero_identificacion;
-                  this.detalleseditar.destinatario._id = destinatario._id;
-                  this.detalleseditar.destinatario.nombre = destinatario.nombre;
-                  this.detalleseditar.destinatario.direccion =
-                    destinatario.direccion;
-                  this.detalleseditar.destinatario.telefono = destinatario.telefono;
-                } else {
-                  this.detalleseditar.destinatario.numero_identificacion = this.identificacion;
-                 // this.detalleseditar.destinatario._id = "";
-                  this.detalleseditar.destinatario.nombre = "";
-                  this.detalleseditar.destinatario.direccion = "";
-                  this.detalleseditar.destinatario.telefono = "";
-                }
-                var load = false;
-                setTimeout(() => {
-                  bus.$emit("load", {
-                    load
-                  });
-                });
-                //this.mostrardestinatario = true;
-              })
-              .catch(function(error) {
-                var load = false;
-                setTimeout(() => {
-                  bus.$emit("load", {
-                    load
-                  });
-                });
-                swal("Advertencia", "Intente nuevamente, por favor", "warning");
-              });
-          }
-        },
-        */
+        
         numeroseditar(valor) {
             var a = document.getElementById("telefonoedit").value;
             //var x=check.which;
@@ -2079,7 +1979,7 @@ export default {
 
                     });
                     var objetocrear = {
-                        numero_identificacion: this.detalleseditar.destinatario.numero_identificacion,
+                        //numero_identificacion: this.detalleseditar.destinatario.numero_identificacion,
                         direccion: this.detalleseditar.destinatario.direccion,
                         nombre: this.detalleseditar.destinatario.nombre,
                         telefono: this.detalleseditar.destinatario.telefono,
@@ -2091,7 +1991,7 @@ export default {
                     };
                     console.log("creo destinatario");
                     console.log(objetocrear);
-                    this.axios.post(urlservicios + "CrearDestinatario", objetocrear)
+                    this.axios.post(urlservicios+ "CrearDestinatario", objetocrear)
                         .then(response => {
                             console.log("se creo correcto");
                             console.log(response);
@@ -2113,7 +2013,7 @@ export default {
 
                     });
                     var objetoactualizar = {
-                        numero_identificacion: this.detalleseditar.destinatario.numero_identificacion,
+                        //numero_identificacion: this.detalleseditar.destinatario.numero_identificacion,
                         direccion: this.detalleseditar.destinatario.direccion,
                         //nombre: this.detalleseditar.destinatario.nombre,
                         telefono: this.detalleseditar.destinatario.telefono,
@@ -2123,7 +2023,7 @@ export default {
                         codigo_postal: this.posta,
                         id_cliente: inforemi.selected_client._id
                     };
-                    this.axios.post(urlservicios + "ActualizarDestinatario" + "/" + this.detalleseditar.destinatario._id, objetoactualizar)
+                    this.axios.post(urlservicios+ "ActualizarDestinatario" + "/" + this.detalleseditar.destinatario._id, objetoactualizar)
                         .then(response => {
                             var load = false;
                             setTimeout(() => {
@@ -2271,7 +2171,7 @@ export default {
 
             this.axios
                 .get(
-                    urlservicios +
+                    urlservicios+
                     "estructuraf/" +
                     this.selectproduct._id +
                     "/" +
@@ -2351,7 +2251,7 @@ export default {
             var inforemi = JSON.parse(inforemitente);
             if (this.optionsremitentes.length == 0) {
                 var objetocrear = {
-                    numero_identificacion: this.detalles.destinatario.numero_identificacion,
+                    //numero_identificacion: this.detalles.destinatario.numero_identificacion,
                     direccion: this.detalles.destinatario.direccion,
                     nombre: this.detalles.destinatario.nombre,
                     telefono: this.detalles.destinatario.telefono,
@@ -2363,7 +2263,7 @@ export default {
                 };
                 console.log("creo destinatario");
                 console.log(objetocrear);
-                this.axios.post(urlservicios + "CrearDestinatario", objetocrear)
+                this.axios.post(urlservicios+ "CrearDestinatario", objetocrear)
                     .then(response => {
                         console.log("se creo correcto");
                         console.log(response);
@@ -2378,7 +2278,6 @@ export default {
             } else {
                 //detallepr=Object.assign({},this.detalles.destinatario);
                 var objetoactualizar = {
-                    numero_identificacion: this.detalles.destinatario.numero_identificacion,
                     direccion: this.detalles.destinatario.direccion,
                     // nombre: this.detalles.destinatario.nombre,
                     telefono: this.detalles.destinatario.telefono,
@@ -2388,7 +2287,7 @@ export default {
                     codigo_postal: this.posta,
                     id_cliente: inforemi.selected_client._id
                 };
-                this.axios.post(urlservicios + "ActualizarDestinatario" + "/" + this.nombre_remitente._id, objetoactualizar)
+                this.axios.post(urlservicios+ "ActualizarDestinatario" + "/" + this.nombre_remitente._id, objetoactualizar)
                     .then(response => {
                         var load = false;
                         setTimeout(() => {
@@ -2566,7 +2465,7 @@ export default {
                             if (infor == destinatario) {
                                 if (eval('informacion.' + destinatario) == "000000000000000000000000") {
                                     eval('informacion.' + destinatario + '=' + 'desti.propiedadesDinamicas.' + destinatario)
-                                    this.axios.get(urlservicios + "estructuraf/" + produc + "/" + serv)
+                                    this.axios.get(urlservicios+ "estructuraf/" + produc + "/" + serv)
                                         .then(response => {
 
                                             estructura = response.data
@@ -2726,7 +2625,7 @@ export default {
         },
         seleccionarServicioED() {
             this.axios
-                .get(urlservicios + "servicios/" + this.selectproducto._id)
+                .get(urlservicios+ "servicios/" + this.selectproducto._id)
                 .then(response => {
                     this.serviciosurlED = response.data;
                     //this.load=false
@@ -2769,7 +2668,7 @@ export default {
                 //this.habilitar = false;
                 this.selectproducto = this.selectproduct;
                 this.axios
-                    .get(urlservicios + "servicios/" + this.selectproducto._id)
+                    .get(urlservicios+ "servicios/" + this.selectproducto._id)
                     .then(response => {
                         this.serviciosurl = response.data;
                         //this.load=false
@@ -2795,7 +2694,7 @@ export default {
         camposNversionED() {
             this.axios
                 .get(
-                    urlservicios +
+                    urlservicios+
                     "estructuraf/" +
                     this.selectproductED._id +
                     "/" +
@@ -2834,7 +2733,7 @@ export default {
                 });
                 this.axios
                     .get(
-                        urlservicios +
+                        urlservicios+
                         "estructuraf/" +
                         this.selectproducto._id +
                         "/" +
@@ -2923,6 +2822,8 @@ export default {
                 var fechareal = localStorage.getItem("fecha_orden");
                 var jsonfechareal = JSON.parse(fechareal);
 
+                var franja = localStorage.getItem("Franja");
+                var jsonfranja = JSON.parse(franja);
                 if (jsonfechareal.fecha == '') {
                     var objeto = {
                         id_OperadorLogistico: infologin.id_OperadorLogistico._id,
@@ -2964,7 +2865,7 @@ export default {
                             longitud: localremijson.longitud,
                             codigo_postal: localremijson.codigo_postal
                         },
-                        observaciones: this.observacionesGeneral,
+                        observaciones:jsonfranja.franja+" - "+ this.observacionesGeneral,
                         detalle: this.DetalleServicio
                     };
                 }
@@ -2981,7 +2882,7 @@ export default {
                 var validacion
                 var mensaje
                 this.axios
-                    .post(urlservicios + "GuardarOrden", objeto)
+                    .post(urlservicios+ "GuardarOrden", objeto)
                     .then(response => {
                         console.log(response);
 

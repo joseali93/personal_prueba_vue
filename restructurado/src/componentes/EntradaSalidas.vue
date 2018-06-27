@@ -637,7 +637,7 @@ export default {
                     });
                 });
                 this.axios
-                    .post(urlservicios + "GenerarManifiestoWeb", envio)
+                    .post(urlservicios+ "GenerarManifiestoWeb", envio)
                     .then(response => {
                         if (response.data.validacion == true) {
                             this.manifiesto = true
@@ -833,7 +833,7 @@ export default {
                     });
                 });
                 this.axios
-                    .post(urlservicios + "GenerarManifiestoWeb", envio)
+                    .post(urlservicios+ "GenerarManifiestoWeb", envio)
                     .then(response => {
                         if (response.data.validacion == true) {
                             this.manifiesto = true
@@ -1423,7 +1423,7 @@ export default {
                     this.inputs.campos.forEach(element => {
                         if (element.EnvioServicio == true) {
                             this.axios.get(
-                                    urlservicios +
+                                    urlservicios+
                                     "MovilizadoProcesosLogistico/" +
                                     value +
                                     "/" +
@@ -1555,7 +1555,7 @@ export default {
                     });
                 } else {
                     this.axios.get(
-                            urlservicios +
+                            urlservicios+
                             "MovilizadoProcesosLogistico/" +
                             value +
                             "/" +
@@ -1754,7 +1754,7 @@ export default {
                 });
             });
 
-            this.axios.get(urlservicios + "CamposProcesoLogisticosOperadores/" + infologin.id_OperadorLogistico._id + "/" + this.selected)
+            this.axios.get(urlservicios+ "CamposProcesoLogisticosOperadores/" + infologin.id_OperadorLogistico._id + "/" + this.selected)
                 .then(response => {
 
                     this.inputs = response.data;
@@ -1871,7 +1871,7 @@ export default {
                             });
                             this.axios
                                 .get(
-                                    urlservicios +
+                                    urlservicios+
                                     "UsuariosCurierOperador/" +
                                     infologin.id_OperadorLogistico._id
                                 )
@@ -2043,7 +2043,7 @@ export default {
                     });
                 });
                 this.axios
-                    .post(urlservicios + "GenerarManifiestoWeb", envio)
+                    .post(urlservicios+ "GenerarManifiestoWeb", envio)
                     .then(response => {
                         if (response.data.validacion == true) {
                             this.manifiesto = true
@@ -2179,7 +2179,7 @@ export default {
                 });
             });
             this.axios
-                .get(urlservicios + "Procesos/" + infologin.id_OperadorLogistico._id)
+                .get(urlservicios+ "Procesos/" + infologin.id_OperadorLogistico._id)
                 .then(response => {
                     var load = false;
                     setTimeout(() => {
@@ -2229,7 +2229,7 @@ export default {
                 });
             });
             this.axios
-                .get(urlservicios + "Procesos/" + infologin.id_OperadorLogistico._id)
+                .get(urlservicios+ "Procesos/" + infologin.id_OperadorLogistico._id)
                 .then(response => {
                     var load = false;
                     setTimeout(() => {

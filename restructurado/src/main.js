@@ -36,7 +36,7 @@ export var urlsocket = 'http://200.116.52.29:8080'
 //export var urlsocket = 'http://192.168.1.89:8080';
 
 export var urlservicios = 'http://200.116.52.29:3000/logistica/';
-//export var urlservicios = 'http://192.168.1.89:3000/logistica/';
+//export var urlservicios = 'http://192.168.1.58:3000/logistica/';
 //export var urlservicios = 'http://192.168.1.100:3000/logistica/';
 //export var urlservicios = 'http://18.220.107.151:3000/logistica/';
 //export var urlservicios = 'http://localhost:3000/logistica/';

@@ -27,6 +27,9 @@
             <template slot="centro_costo" slot-scope="data">
                 {{data.item.id_centro_costo.nombre_concatenado}}
             </template>
+             <template slot="con_cancelacion" slot-scope="data" v-if="data.item.estados[0].id_concepto">
+                {{data.item.estados[0].id_concepto.nombre}}
+            </template>
             <template slot="fecha_creacion" slot-scope="data">
                 {{data.item.fecha_creacion | formatdate}}
             </template>
@@ -76,6 +79,8 @@ export default {
                 { key: 'fecha_creacion',label:'Fecha creación orden', sortable: false },
                 'estado',
                { key: 'observaciones',label:'Observaciones', sortable: false },
+                { key: 'con_cancelacion',label:'Concepto Cancelación', sortable: false },
+
                 { key: 'centro_costo',label:'Centro de Costo', sortable: false },
                 'detalles',
 
@@ -93,7 +98,7 @@ export default {
               if (typeof value.item === 'object') {
                 const { _id, estado, id_OperadorLogistico } = (value.item);
                 if (/^(Orden De Servicio Creada|Orden De Servicio Asignada|Orden de servicio en parada en ruta)$/i.test(estado)) {
-                  const url = (`/logistica/ConceptoProcesoSistema/${id_OperadorLogistico}/2`);
+                  const url = (urlservicios+`/ConceptoProcesoSistema/${id_OperadorLogistico}/2`);
                   this.axios.get(url).then((response) => {
                     const { conceptos } = (response.data);
                     if (!conceptos || conceptos && !conceptos.length) {
@@ -166,7 +171,7 @@ export default {
                             });
                           } else if (next.value && currentConcept) {
                             const { id_concepto } = (currentConcept);
-                            const url = (`/logistica/CancelarOrden/${_id}/${id_concepto}`);
+                            const url = (urlservicios+`/CancelarOrden/${_id}/${id_concepto}`);
                             this.axios.get(url).then((response) => {
                               const { message } = (response.data);
                               swal({

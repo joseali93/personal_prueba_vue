@@ -57,16 +57,18 @@ DE LA ORDEN DE SERVICIO -->
                             @change="fechaSeleccionada"
                         ></b-form-input>
                     </b-col>
-                    <!--
-            <b-col v-show="prueba=='second'" >
+                    
+            <b-col cols="2" v-show="prueba=='second'" >
               <h3 class="text-primary"> Hora inicio </h3>
-              <b-form-input  type="number" v-model="horaInicio"></b-form-input>
+              <b-form-input  type="text" v-model="horaInicio"  v-b-popover.hover="'Formato 24 H'"
+              @keyup.native="HoraIni()" id="HoraInicioid"></b-form-input>
           </b-col>
-            <b-col v-show="prueba=='second'" >
+            <b-col cols="2" v-show="prueba=='second'" >
               <h3 class="text-primary"> Hora fin </h3>
-              <b-form-input  type="number" v-model="horaFin"></b-form-input>
+              <b-form-input  type="text" v-model="horaFin"  v-b-popover.hover="'Formato 24 H'"
+              @keyup.native="HoraFn()" id="horafinid"></b-form-input>
           </b-col>
-          -->
+          
                 </b-row>
                 <b-row>
                     <b-col>
@@ -281,6 +283,7 @@ DE LA ORDEN DE SERVICIO -->
                                         </b-form-group>
                             </b-col>
                         </b-row>
+                        <!--
                         <b-row>
                             <b-col>
                                 <h3 class="text-primary">Número de identificación</h3>
@@ -302,6 +305,7 @@ DE LA ORDEN DE SERVICIO -->
                                         </b-form-group>
                             </b-col>
                         </b-row>
+                        -->
                         <b-row>
                             <b-col>
                                 <h3 class="text-primary">Teléfono</h3>
@@ -434,16 +438,68 @@ export default {
     },
 
     methods: {
+        HoraFn(){
+            
+            var a = document.getElementById("horafinid").value;
+            //var x=check.which;
+            //var x = a.charCode;
+            var x = a.keyCode;
+            if (!(a >= 48 || a <= 57)) {
+                swal("Oops...", "Solo deben ser numeros !", "error");
+                this.validatecampoTel = {
+                    border: "1px solid  #ff8080"
+                };
+                return (document.getElementById("horafinid").value = "");
+            } else if (a.length > 2) {
+                // if no is more then the value
+                swal("Oops...", "Maximo 2 digitos!", "error");
+                this.validatecampoTel = {
+                    border: "1px solid  #ff8080"
+                };
+                return (document.getElementById("horafinid").value = "");
+            }
+            else if(a>24){
+                console.log("es mayor de 24");
+                 swal("Oops...", "No puede superar las 24 horas!", "error");
+                 return (document.getElementById("horafinid").value = "24");
+            }
+        },
+        HoraIni(value){
+
+            console.log("entro a hora inicio");
+            
+            var a = document.getElementById("HoraInicioid").value;
+            //var x=check.which;
+            //var x = a.charCode;
+            var x = a.keyCode;
+            if (!(a >= 48 || a <= 57)) {
+                swal("Oops...", "Solo deben ser numeros !", "error");
+                this.validatecampoTel = {
+                    border: "1px solid  #ff8080"
+                };
+                return (document.getElementById("HoraInicioid").value = "");
+            } else if (a.length > 2) {
+                // if no is more then the value
+                swal("Oops...", "Maximo 2 digitos!", "error");
+                this.validatecampoTel = {
+                    border: "1px solid  #ff8080"
+                };
+                return (document.getElementById("HoraInicioid").value = "");
+            }
+            else if(a>24){
+                console.log("es mayor de 24");
+                 swal("Oops...", "No puede superar las 24 horas!", "error");
+                 return (document.getElementById("HoraInicioid").value = "24");
+            }
+        },
         fechaSeleccionada(value) {
             if (value == null || value == '') {
-                console.log("no hago nada");
             } else {
                 var partes = value.split('-')
                 var fechaSeleccion = new Date(partes[0], partes[1] - 1, partes[2])
                 moment(fechaSeleccion.toDateString()).format("YYYY-MM-DD")
                 var fechahoy = new Date()
                 moment(fechahoy).format("YYYY-MM-DD")
-                console.log(moment(fechahoy).format("YYYY-MM-DD"));
                 if (moment(fechaSeleccion.toDateString()).format("YYYY-MM-DD") < moment(fechahoy).format("YYYY-MM-DD")) {
                     swal(
                         'Advertencia',
@@ -452,11 +508,8 @@ export default {
                     )
                     this.fecha = null
                 } else {
-                    console.log("la fecha seleccionada es mayor o igual");
                 }
             }
-            console.log("selecciono fechaa");
-            console.log(value);
 
         },
 
@@ -483,7 +536,6 @@ export default {
                     var places = searchBox.getPlace();
                     if (!places.geometry) {
                         this.validacionDireccion = false;
-                        console.log("no es posible geo referenciar");
                         swal({
                             position: "top-end",
                             type: "warning",
@@ -528,14 +580,14 @@ export default {
                         this.onSearch(this.remitente.nombre);
                         this.remit.nombre = "";
                         this.remit.direccion = "";
-                        this.remit.numero_identificacion = "";
+                        //this.remit.numero_identificacion = "";
                         this.remit.telefono = "";
                         this.remit.nombre = "";
                     }
                 } else {
                     this.remit.nombre = "";
                     this.remit.direccion = "";
-                    this.remit.numero_identificacion = "";
+                    //this.remit.numero_identificacion = "";
                     this.remit.telefono = "";
                 }
 
@@ -544,7 +596,7 @@ export default {
                 if (this.remitente == null || this.remitente == "null") {
                     this.remit.nombre = "";
                     this.remit.direccion = "";
-                    this.remit.numero_identificacion = "";
+                    //this.remit.numero_identificacion = "";
                     this.remit.telefono = "";
                 } else {
                     this.remit = Object.assign({}, this.remitente);
@@ -579,7 +631,7 @@ export default {
 
           })
           */
-                        this.axios.get(urlservicios + `/obtenerDestinatarioNombre/${escape(search)}`)
+                        this.axios.get(urlservicios+ `/obtenerDestinatarioNombre/${escape(search)}`)
                             .then(response => {
                                 if (response.data.destinatarios.length == 0) {
                                     this.optionsdestinatarios = []
@@ -599,7 +651,7 @@ export default {
                 //this.remitente=remijson.nombre
                 this.optionsdestinatarios = []
                 setTimeout(function () {
-                        this.axios.get(urlservicios + `/obtenerDestinatarioNombre/${escape(search)}`)
+                        this.axios.get(urlservicios+ `/obtenerDestinatarioNombre/${escape(search)}`)
                             .then(response => {
                                 if (response.data.destinatarios.length == 0) {
                                     this.optionsdestinatarios = []
@@ -614,7 +666,7 @@ export default {
                                             this.$refs.focusRemitente.focus();
                                         });
                                     } //this.remitente=this.remit.nombre
-                                    this.remit.numero_identificacion = ''
+                                    //this.remit.numero_identificacion = ''
                                     this.remit.direccion = ''
                                     this.remit.telefono = ''
                                     //this.remitente.nombre=this.remit.nombre
@@ -671,7 +723,7 @@ export default {
                         });
                         this.axios
                             .get(
-                                urlservicios + "CentrosPorCliente/" + this.selected_client._id
+                                urlservicios+ "CentrosPorCliente/" + this.selected_client._id
                             )
                             .then(response => {
                                 this.centros = response.data;
@@ -698,7 +750,7 @@ export default {
                         });
                         this.axios
                             .get(
-                                urlservicios + "CentrosPorCliente/" + this.selected_client._id
+                                urlservicios+ "CentrosPorCliente/" + this.selected_client._id
                             )
                             .then(response => {
                                 this.centros = response.data;
@@ -751,7 +803,7 @@ export default {
                         });
                         this.axios
                             .get(
-                                urlservicios + "CentrosPorCliente/" + this.selected_client._id
+                                urlservicios+ "CentrosPorCliente/" + this.selected_client._id
                             )
                             .then(response => {
                                 this.centros = response.data;
@@ -778,7 +830,7 @@ export default {
 
                         this.axios
                             .get(
-                                urlservicios + "CentrosPorCliente/" + this.selected_client._id
+                                urlservicios+ "CentrosPorCliente/" + this.selected_client._id
                             )
                             .then(response => {
                                 this.centros = response.data;
@@ -842,7 +894,7 @@ export default {
                 });
                 if (seleccion !== undefined) {
                     this.axios
-                        .get(urlservicios + "CentrosPorCliente/" + id_cliente)
+                        .get(urlservicios+ "CentrosPorCliente/" + id_cliente)
                         .then(response => {
                             this.centros = response.data;
                             this.centros.unshift(vacio);
@@ -884,7 +936,7 @@ export default {
                     });
                     if (seleccion !== undefined) {
                         this.axios
-                            .get(urlservicios + "CentrosPorCliente/" + seleccion.target.value)
+                            .get(urlservicios+ "CentrosPorCliente/" + seleccion.target.value)
                             .then(response => {
                                 this.centros = response.data;
                                 //this.centros.unshift(vacio);
@@ -924,7 +976,7 @@ export default {
                 this.remitente == "null" ||
                 this.remitente == "" ||
                 this.remit.direccion == "" ||
-                this.remit.numero_identificacion == "" ||
+                //this.remit.numero_identificacion == "" ||
                 this.remit.telefono == "" ||
                 this.remit.nombre==''||
                 (this.prueba == "second" && this.fecha == "") ||
@@ -940,11 +992,13 @@ export default {
                 }else{
                     this.telStatus=null
                 }
+                /*
                 if(this.remit.numero_identificacion == ""){
                     this.numStatus=false
                 }else{
                     this.numStatus=null
                 }
+                */
                 if(this.remit.direccion==''){
                     this.direccionStatus=false
                 }else{
@@ -987,10 +1041,19 @@ export default {
                             load
                         });
                     });
-                    if (this.fecha == "") {
+                    if (this.fecha == '') {
+                        console.log("VA VACIOO");
                         swal(
                             "Cuidado",
                             "Se deben completar la fecha de recolección de la orden",
+                            "warning"
+                        );
+                    }
+                    if (this.horaInicio==""||this.horaFin=="") {
+                        console.log("VA VACIOO");
+                        swal(
+                            "Cuidado",
+                            "Se deben completar el rango de recolección de la orden",
                             "warning"
                         );
                     }
@@ -1007,6 +1070,11 @@ export default {
                 var fecha = {
                     fecha: this.fecha
                 };
+                var franja ={
+                    franja: "Recoger entre las "+this.horaInicio+ " a las " +this.horaFin
+                }
+                localStorage.setItem("Franja", JSON.stringify(franja));
+
                 localStorage.setItem("fecha_orden", JSON.stringify(fecha));
                 var selected_client = this.selected_cliente;
                 var selected_center = this.selected_centro;
@@ -1043,7 +1111,7 @@ export default {
                     this.lati == ""
                 ) {
                     objetoremitente = {
-                        numero_identificacion: this.remit.numero_identificacion,
+                        //numero_identificacion: this.remit.numero_identificacion,
                         direccion: this.remit.direccion,
                         //nombre: this.remit.nombre,
                         telefono: this.remit.telefono,
@@ -1056,16 +1124,17 @@ export default {
                 } else {
                     objetoremitente = {
                         complemento: this.remit.complemento,
-                        numero_identificacion: this.remit.numero_identificacion,
+                        //numero_identificacion: this.remit.numero_identificacion,
                         direccion: this.remit.direccion,
                         //nombre: this.remit.nombre,
                         telefono: this.remit.telefono,
                         id_cliente: this.remit.id_cliente,
-                        latitud: this.lati,
-                        longitud: this.longi,
+                        //latitud: this.lati,
+                        //longitud: this.longi,
                         codigo_postal: this.posta
                     };
                 }
+                console.log(objetoremitente);
                 /*
        objetoremitente = {
           numero_identificacion: this.remitente.numero_identificacion,
@@ -1081,19 +1150,20 @@ export default {
                 localStorage.setItem("remitente", JSON.stringify(this.remit));
                 if (this.optionsdestinatarios.length == 0) {
                     var objetocrear = {
-                        numero_identificacion: this.remit.numero_identificacion,
+                        //numero_identificacion: this.remit.numero_identificacion,
                         direccion: this.remit.direccion,
                         nombre: this.remit.nombre,
                         telefono: this.remit.telefono,
                         id_cliente: this.remit.id_cliente,
-                        latitud: this.lati,
-                        longitud: this.longi,
+                        //latitud: this.lati,
+                        //longitud: this.longi,
                         codigo_postal: this.posta,
                         id_cliente: this.selected_cliente._id
                     };
                     this.axios
-                        .post(urlservicios + "CrearDestinatario", objetocrear)
+                        .post(urlservicios+ "CrearDestinatario", objetocrear)
                         .then(response => {
+                            console.log(response);
                             var load = false;
                             setTimeout(() => {
                                 bus.$emit("load", {
@@ -1114,7 +1184,7 @@ export default {
 
                     this.axios
                         .post(
-                            urlservicios + "ActualizarDestinatario/" + this.remit._id,
+                            urlservicios+ "ActualizarDestinatario/" + this.remit._id,
                             objetoremitente
                         )
                         .then(response => {
@@ -1142,6 +1212,7 @@ export default {
 
           })
         */
+       /*
                 this.$router.replace("/inicio/ordenservicio");
                 var load = false;
                 setTimeout(() => {
@@ -1149,6 +1220,7 @@ export default {
                         load
                     });
                 });
+                */
             }
         }
     },
@@ -1171,7 +1243,7 @@ export default {
 
             this.axios
                 .get(
-                    urlservicios +
+                    urlservicios+
                     "clientesOperador/" +
                     test.id_OperadorLogistico._id +
                     "/" +
@@ -1266,7 +1338,7 @@ export default {
             });
             this.axios
                 .get(
-                    urlservicios +
+                    urlservicios+
                     "clientesOperador/" +
                     test.id_OperadorLogistico._id +
                     "/" +

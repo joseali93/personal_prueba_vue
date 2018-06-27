@@ -320,13 +320,14 @@ export default {
                 }
                 else{
                     if(this.time1==''||this.time1===''||this.time1===undefined){
-                        // this.time1=[]
-                        // this.time1[0]=mana
-                        // this.time1[1]=ant
+                         this.time1=[]
+                         this.time1[0]=ant
+                         this.time1[1]=mana
+                        /*
                         this.time1 = [
                             startOfToday,
                             endOfToday
-                        ];
+                        ]*/
                     }
                     if(this.time1[0]===''||this.time1[0]===undefined){
                     inicio=ant
@@ -415,7 +416,7 @@ export default {
                             'Intente nuevamente, por favor',
                             'warning'
                             )
-        })
+                         })
 
                 }
 

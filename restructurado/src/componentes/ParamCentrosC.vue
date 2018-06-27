@@ -32,6 +32,10 @@
                   </b-row>
                     <b-table class="mt-3" striped hover :items="CentrosTabla" v-if="CentrosTabla.length" :current-page="currentPage" :per-page="perPage"
                         :fields="fields" :filter="Centro" >
+                        
+                         <template slot="codigo" slot-scope="data">
+                        <label class="text-capitalize">{{data.item.codigo_cc}}</label>
+                        </template>
                         <template slot="editar" slot-scope="data">
                         <i class="btn btn-success fa fa-pencil" @click="editar(data)"></i>
                         </template>
@@ -244,6 +248,7 @@ export default {
         fields:[
           { key: 'editar', label: 'Editar', sortable: false },
           { key: 'nombre', label: 'Nombre', sortable: false },
+           { key: 'codigo', label: 'Codigo Centro de Costo', sortable: false },
           { key: 'direccion', label: 'Dirección', sortable: false },
 
         ],
