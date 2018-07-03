@@ -444,6 +444,7 @@
                                                             @input="Seleccionado"
                                                             v-show="MostrarFiltro"
                                                             @search="onSearch"
+                                                              v-bind:style="validatecampo"
                                                         >
                                                             <template slot="no-options">
                                                                 <p>Nombre del destinatario..</p>
@@ -467,20 +468,7 @@
                                                                     </v-select>
                                                     </b-col>
                                                     </b-form-row>
-                                                    <!--
-                        <b-form-row v-show="selectservice&&mostrardestinatario&&monstrarNombre" class="my-1">
-                            <b-col>
-                                <label  class="col-sm col-form-label col-form-label-sm text-primary"> Nombre: </label>
-                            </b-col>
-                            <b-col  cols="9">
-                                <b-form-input type="text" class="form-control form-control-sm"  placeholder="Nombre"
-                                v-model="detalles.destinatario.nombre"
-
-                                :state="null"
-                                title="Num. Identificacion"></b-form-input>
-                            </b-col>
-                        </b-form-row>
-                      -->   
+                                                   
                         <!--
                                                     <b-form-row
                                                         v-show="selectservice&&mostrardestinatario"
@@ -1111,6 +1099,7 @@ export default {
             selectproducto: {},
             productosurlED: [],
             selectproductED: null,
+             validatecampo: "", 
             selectserviceED: null,
             serviciosurlED: [],
             selectservice: null,
@@ -2249,62 +2238,7 @@ export default {
             var pivote = false;
             var inforemitente = localStorage.getItem("orden");
             var inforemi = JSON.parse(inforemitente);
-            if (this.optionsremitentes.length == 0) {
-                var objetocrear = {
-                    //numero_identificacion: this.detalles.destinatario.numero_identificacion,
-                    direccion: this.detalles.destinatario.direccion,
-                    nombre: this.detalles.destinatario.nombre,
-                    telefono: this.detalles.destinatario.telefono,
-                    //id_cliente: this.remitente.id_cliente,
-                    latitud: this.lati,
-                    longitud: this.longi,
-                    codigo_postal: this.posta,
-                    id_cliente: inforemi.selected_client._id
-                };
-                console.log("creo destinatario");
-                console.log(objetocrear);
-                this.axios.post(urlservicios+ "CrearDestinatario", objetocrear)
-                    .then(response => {
-                        console.log("se creo correcto");
-                        console.log(response);
-                        var load = false;
-                        setTimeout(() => {
-                            bus.$emit("load", {
-                                load
-                            });
-
-                        });
-                    })
-            } else {
-                //detallepr=Object.assign({},this.detalles.destinatario);
-                var objetoactualizar = {
-                    direccion: this.detalles.destinatario.direccion,
-                    // nombre: this.detalles.destinatario.nombre,
-                    telefono: this.detalles.destinatario.telefono,
-                    //id_cliente: this.remitente.id_cliente,
-                    latitud: this.lati,
-                    longitud: this.longi,
-                    codigo_postal: this.posta,
-                    id_cliente: inforemi.selected_client._id
-                };
-                this.axios.post(urlservicios+ "ActualizarDestinatario" + "/" + this.nombre_remitente._id, objetoactualizar)
-                    .then(response => {
-                        var load = false;
-                        setTimeout(() => {
-                            bus.$emit("load", {
-                                load
-                            });
-                        });
-                    })
-                    .catch(function (error) {
-                        var load = false;
-                        setTimeout(() => {
-                            bus.$emit("load", {
-                                load
-                            });
-                        });
-                    });
-            }
+           
 
             if (this.objeto == undefined) {} else {
                 var load = true;
@@ -2427,6 +2361,9 @@ export default {
                 }
                 if (this.detalles.destinatario.nombre == "") {
                     this.estado.nombre = false;
+                    this.validatecampo = {
+                    border: "2px solid red"
+                    };
                 }
                 if (this.detalles.destinatario.direccion == "") {
                     this.estado.direccion = false;
@@ -2437,7 +2374,63 @@ export default {
 
                 swal("Oops...", "Falto completar algun campo", "error");
             } else {
+                  if (this.optionsremitentes.length == 0) {
+                    var objetocrear = {
+                        //numero_identificacion: this.detalles.destinatario.numero_identificacion,
+                        direccion: this.detalles.destinatario.direccion,
+                        nombre: this.detalles.destinatario.nombre,
+                        telefono: this.detalles.destinatario.telefono,
+                        //id_cliente: this.remitente.id_cliente,
+                        latitud: this.lati,
+                        longitud: this.longi,
+                        codigo_postal: this.posta,
+                        id_cliente: inforemi.selected_client._id
+                    };
+                    console.log("creo destinatario");
+                    console.log(objetocrear);
+                    this.axios.post(urlservicios+ "CrearDestinatario", objetocrear)
+                        .then(response => {
+                            console.log("se creo correcto");
+                            console.log(response);
+                            var load = false;
+                            setTimeout(() => {
+                                bus.$emit("load", {
+                                    load
+                                });
 
+                            });
+                        })
+                } else {
+                    //detallepr=Object.assign({},this.detalles.destinatario);
+                    var objetoactualizar = {
+                        direccion: this.detalles.destinatario.direccion,
+                        // nombre: this.detalles.destinatario.nombre,
+                        telefono: this.detalles.destinatario.telefono,
+                        //id_cliente: this.remitente.id_cliente,
+                        latitud: this.lati,
+                        longitud: this.longi,
+                        codigo_postal: this.posta,
+                        id_cliente: inforemi.selected_client._id
+                    };
+                    this.axios.post(urlservicios+ "ActualizarDestinatario" + "/" + this.nombre_remitente._id, objetoactualizar)
+                        .then(response => {
+                            var load = false;
+                            setTimeout(() => {
+                                bus.$emit("load", {
+                                    load
+                                });
+                            });
+                        })
+                        .catch(function (error) {
+                            var load = false;
+                            setTimeout(() => {
+                                bus.$emit("load", {
+                                    load
+                                });
+                            });
+                        });
+                }
+                this.validatecampo=''
                 this.objeto.objetoUnidades;
                 this.objeto.objetoUnidades = this.itemsdinamicos;
                 var servicioslocal = this.selectservicio;
@@ -2797,28 +2790,8 @@ export default {
                 var inforemi = JSON.parse(inforemitente);
                 var localremitente = localStorage.getItem("remitente");
                 var localremijson = JSON.parse(localremitente);
-                /*
-                var obserOrden = localStorage.getItem("observaciones_orden");
-                var observacionesOrden = JSON.parse(obserOrden);
-                /*
-                var objeto = {
-                  id_OperadorLogistico: infologin.id_OperadorLogistico._id,
-                  id_usuario: infologin._id,
-                  id_centro_costo: selecc.selected_center,
-                  estados: [
-                    {
-                      id_usuario: infologin._id
-                    }
-                  ],
-                  id_cliente: selecc.selected_client,
-                  remitente: {
-                    direccion_recogida: inforemi.infocentro.direccion,
-                    telefono_contacto: inforemi.infocliente.telefono,
-                    nombre_contacto: inforemi.infocliente.nombre
-                  },
-                  detalle: this.DetalleServicio
-                };
-                */
+
+
                 var fechareal = localStorage.getItem("fecha_orden");
                 var jsonfechareal = JSON.parse(fechareal);
 
@@ -2848,12 +2821,17 @@ export default {
                     };
 
                 } else {
+                    var now, hour,minute,second
+                    now = new Date();
+                    hour = "" + now.getHours(); if (hour.length == 1) { hour = "0" + hour; }
+                    minute = "" + now.getMinutes(); if (minute.length == 1) { minute = "0" + minute; }
+                    second = "" + now.getSeconds(); if (second.length == 1) { second = "0" + second; }
                     var objeto = {
                         id_OperadorLogistico: infologin.id_OperadorLogistico._id,
                         id_usuario: infologin._id,
                         id_centro_costo: selecc.selected_center,
                         //fecha_creacion:'2017-06-06',
-                        fecha_creacion: jsonfechareal.fecha ,//+ " 00:00:00.000Z UTC",
+                        fecha_creacion: jsonfechareal.fecha+' '+'00'+':'+'00'+':'+'00'+'-05:00',//+ " 00:00:00.000Z UTC",
                         //fecha_real:
                         //fecha_creacion: today.toISOString(),
                         id_cliente: selecc.selected_client,

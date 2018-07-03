@@ -36,12 +36,6 @@
              <div slot="header" class="w-100">
                     <strong class="float-left ">Información de Destinatario </strong>
                 </div>
-                <!--
-                 <header class="content-heading" slot="header">
-                    <h3>Información Destinatario</h3>
-
-                </header>
-                -->
                     <b-row>
                     <b-col>
                         <h3 class="text-primary" >Nombre:</h3>
@@ -56,6 +50,14 @@
                     </b-col>
                     <b-col>
                         <p>{{info.detalleslocal.destinatario.direccion}}</p>
+                    </b-col>
+                </b-row>
+                <b-row>
+                    <b-col>
+                        <h3 class="text-primary">Telefono:</h3>
+                    </b-col>
+                    <b-col>
+                        <p>{{info.detalleslocal.destinatario.telefono}}</p>
                     </b-col>
                 </b-row>
         </b-card>
@@ -83,7 +85,7 @@
             </b-row>
             <b-row>
                 <b-col>
-                    <h3 class="text-primary">Producto:</h3>
+                    <h3 class="text-primary">Producto :</h3>
                 </b-col>
                 <b-col>
                     <p>{{info.productoslocal.nombre}}</p>
@@ -91,10 +93,27 @@
             </b-row>
             <b-row>
                 <b-col>
-                    <h3 class="text-primary">Servicio:</h3>
+                    <h3 class="text-primary">Servicio :</h3>
                 </b-col>
                 <b-col>
                     <p>{{info.servicioslocal.nombre}}</p>
+                </b-col>
+            </b-row>
+            
+            <b-row>
+                <b-col>
+                    <h3 class="text-primary">Documento de Referencia :</h3>
+                </b-col>
+                <b-col>
+                    <p>{{info.detalleslocal.referencia}}</p>
+                </b-col>
+            </b-row>
+             <b-row>
+                <b-col>
+                    <h3 class="text-primary">Observaciones del Envio :</h3>
+                </b-col>
+                <b-col>
+                    <p>{{info.detalleslocal.observaciones}}</p>
                 </b-col>
             </b-row>
         <b-row>
@@ -105,8 +124,8 @@
 
         <b-row v-for="(data,indice) in inputs" class="my-1">
 
-                        <b-col cols="5">
-                            <label  class="col-sm col-form-label col-form-label-sm text-capitalize text-primary">{{data.nombre}}: </label>
+                        <b-col >
+                            <h3  class=" text-primary">{{data.nombre}}: </h3>
                         </b-col>
 
                         <template >
@@ -134,8 +153,13 @@
 
                 <b-row>
                     <b-col>
-                     <b-table striped hover :items="info.detalleslocal.infor.objetoUnidades" ></b-table>
-
+                     <b-table striped hover :items="info.detalleslocal.infor.objetoUnidades" 
+                         :current-page="currentPage"
+                             :per-page="5">
+                        
+                     </b-table>
+                     <b-pagination v-show="info.detalleslocal.infor.objetoUnidades.length>0" size="md" :total-rows="info.detalleslocal.infor.objetoUnidades.length" v-model="currentPage" :per-page="5">
+                    </b-pagination>
                     </b-col>
                 </b-row>
 
@@ -354,6 +378,7 @@ import {urlservicios} from '../main'
 export default {
     data () {
         return {
+            currentPage:1,
             curieractualFinal:'',
             curieractual:'',
             procesos:{},

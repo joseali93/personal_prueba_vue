@@ -123,13 +123,12 @@ export default {
                 password:this.password,
                 correo:this.correo
             }
-            console.log(objetoLogin);
+            //console.log(objetoLogin);
            console.log(urlservicios+"/UsuarioA/"+this.password+"/"+this.correo);
             this.axios.get(urlservicios+"UsuarioA/"+this.password+"/"+this.correo)
             .then((response) => {
+              console.log("eeeee");
               console.log(response);
-              console.log(response.status);
-
               this.usuario=response.data.objeto;
               //console.log(' this.usuario: ',  this.usuario);
               this.estado= response.data.estado;
@@ -142,6 +141,8 @@ export default {
                 this.$router.replace('/inicio')
 
               }else{
+                console.log("es erroneo");
+                /*
                 this.msg=response.data.message
                 swal(
                   'Oops...',
@@ -150,11 +151,22 @@ export default {
                 )
                 this.correo ='',
                 this.password= ''
+                */
                  }
+                 
 
             }).catch(function(error){
-                console.log(JSON.stringify(error));
-                console.log(error.response);
+                //console.log(JSON.stringify(error));
+                
+                if(error.response.status){
+                  swal(
+                  '',
+                  'La información ingresada es incorrecta',
+                  'warning'
+                  )
+                }
+                console.log(error);
+                
                 /*
                 if(error.response.status==401)
                 {
@@ -170,7 +182,7 @@ export default {
                     console.log("no esta autorizado");
                 }
                 */
-
+                /*
               if(error.response){
                 // The request was made and the server responded with a status code
                 // that falls out of the range of 2xx
@@ -195,6 +207,7 @@ export default {
                     'error'
                   )
               }
+              */
               //console.log("error de config"+JSON.stringify(error.config));
 
             })

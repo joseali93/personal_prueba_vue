@@ -61,7 +61,7 @@
 
             -->
 
-            <v-select v-model="selectedCC" label="nombre_concatenado" placeholder="Cliente"
+            <v-select v-model="selectedCC" label="nombre_concatenado" placeholder="Centro de Costo"
 
               :options="centros"
 

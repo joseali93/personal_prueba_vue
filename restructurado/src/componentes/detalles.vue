@@ -48,6 +48,7 @@
                             >Leída por courier</p>
                         </b-col>
                     </b-row>
+
                     <b-row class="text-center">
                         <b-col md="3">
                             <h2
@@ -74,6 +75,24 @@
                             >{{leido}}</h2>
                         </b-col>
                     </b-row>
+                    <b-row class="" v-if="currentUser.observaciones!=''">
+                        <b-col >
+                            <p
+                                class="text-primary"
+                                style="font-size:25px;"
+                            >Observaciones de la Orden</p>
+                        </b-col>
+                        
+                    </b-row>
+                    <b-row>
+                        <b-col >
+                            <p
+                                class="text-secondary"
+                                style="font-size:18px;"
+                            >{{currentUser.observaciones}}</p>
+                        </b-col>
+                    </b-row>
+                        
                     </b-card>
                     <b-card
                         class="border my-2"
@@ -248,15 +267,33 @@
                                             </b-card>
                                             <b-container>
                                                 <b-row class="my-3">
+                                                    <b-col cols="0" style="    padding-top: 22px;" v-if="this.currentUser.estado=='Orden De Servicio Asignada'">
+                                                        
+                                                          <b-button variant="warning" class="float-right rounded text-white" 
+                                                                @click="Reasignar">
+                                                            <i class="fa fa-pencil-square-o"
+                                                                aria-hidden="true"
+
+                                                            ></i>
+                                                          </b-button>
+                                                    </b-col>
                                                     <b-col>
                                                         <h4 class="text-primary">Medio de transporte: </h4>
-                                                        <!--
-                                                <b-form-select v-model="selected_curier" class="mb-3"  :options="curiers" text-field="nombre"
-                                                value-field="_id" :state="statuscourier"
-                                                @change.native="selectcuriers" :disabled="selec_disable">
-                                                </b-form-select>
-                                                -->
+                                                     
                                                         <v-select
+                                                            v-model="model_medios"
+                                                            label="tipo"
+                                                            placeholder="Medio de Transporte"
+                                                            :options="medios"
+                                                            @input="vehic()"
+                                                            :disabled="bloqueo()"
+                                                        >
+                                                         <template slot="no-options">
+                                                            No se encontraron  medios de transporte
+                                                        </template>
+                                                        </v-select>
+                                                        <!--
+                                                            <v-select
                                                             v-model="model_medios"
                                                             label="tipo"
                                                             placeholder="Medio de Transporte"
@@ -268,30 +305,36 @@
                                                             No se encontraron  medios de transporte
                                                         </template>
                                                         </v-select>
+                                                            -->
                                                     </b-col>
                                                     <b-col>
                                                         <h4 class="text-primary">Courier: </h4>
-                                                        <!--
-          <b-form-select v-model="selected_curier" class="mb-3"  :options="curiers" text-field="nombre"
-          value-field="_id" :state="statuscourier"
-          @change.native="selectcuriers" :disabled="selec_disable">
-          </b-form-select>
-          @input="updatecourier()"
-            @search="onSearch"
-          -->
                                                         <v-select
                                                             v-model="selected_curier"
                                                             label="nombre"
                                                             placeholder="Courier"
                                                             :options="curiers"
-                                                            :disabled="selec_disable"
+                                                            :disabled="bloqueo()"
                                                             @input="updatecourier()"
                                                         >
                                                             <template slot="no-options">
                                                             No se encontraron  courier's
                                                         </template>
                                                         </v-select>
-
+                                                        <!--
+                                                            <v-select
+                                                            v-model="selected_curier"
+                                                            label="nombre"
+                                                            placeholder="Courier"
+                                                            :options="curiers"
+                                                            :disabled="selec_disable&&bloqueo"
+                                                            @input="updatecourier()"
+                                                        >
+                                                            <template slot="no-options">
+                                                            No se encontraron  courier's
+                                                        </template>
+                                                        </v-select>
+                                                        -->
                                                     </b-col>
                                                 </b-row>
                                                 <b-row>
@@ -317,7 +360,7 @@
                                                 no-close-on-esc
                                                 no-close-on-backdrop
                                                 size="lg"
-                                            >
+                                                >
                                                 <div
                                                     slot="modal-header"
                                                     class="w-100"
@@ -580,6 +623,7 @@ import {
 export default {
     data() {
         return {
+            COURIERSELECCIONADO:'',
             idCourier: "",
             idMedio: "",
             totalRows: 5,
@@ -662,6 +706,30 @@ export default {
         }
     },
     methods: {
+        Reasignar(){
+            
+            //this.medios=[]
+            this.model_medios=''
+            //  this.curiers=[]
+            this.selected_curier=''
+            //this.selec_disable=false
+            //this.bloqueo(false)
+        },
+        bloqueo(){
+            if(this.currentUser.estado=='Orden De Servicio Creada'){
+                return false
+            }
+            else{
+                if(this.selected_curier==''){
+                return false     
+                }
+                else{
+                    return true
+                }
+            }
+            
+            
+        },
         updatecourier() {
             var login = localStorage.getItem("storedData");
             var infologin = JSON.parse(login);
@@ -672,8 +740,40 @@ export default {
                 (this.selected_curier === null) | (this.selected_curier === "")
             ) {
                 if (this.idCourier) {
-                    console.log(this.idCourier);
-                    console.log(this.curiers);
+                    if (this.curiers.length == 0) {
+                        this.axios
+                            .get(
+                                urlservicios+
+                                "UsuariosCurier/" +
+                                infologin.id_OperadorLogistico._id +
+                                "/" +
+                                this.model_medios
+                            )
+                            .then(response => {
+                                this.curiers = response.data;
+                                this.curiers.forEach(element => {
+                                    //if (element._id == this.idCourier) {
+                                    if (element._id == this.idCourier) {
+                                        this.selected_curier = element.nombre;
+                                    }
+                                });
+                                var load = false;
+                                setTimeout(() => {
+                                    bus.$emit("load", {
+                                        load
+                                    });
+                                });
+                                //this.selec_disable=false
+                            });
+                    } else {
+                        this.curiers.forEach(element => {
+                            //if (element._id == this.idCourier) {
+                            if (this.selected_curier._id == this.idCourier) {
+                                this.selected_curier = element;
+                                //this.selected_curier = element.nombre
+                            }
+                        });
+                    }
                 } else {}
             } else {
                 if (infologin.id_OperadorLogistico.confirmacionSocket == false) {
@@ -723,16 +823,11 @@ export default {
                                 this.idMedio
                             )
                             .then(response => {
-                                console.log("ENTROO");
                                 couriersSer = response.data;
                                 couriersSer.forEach(element => {
-                                    console.log("entro al each");
-                                    console.log(element._id);
-                                    console.log( this.idCourier);
                                     //if (element._id == this.idCourier) {
                                     if (element._id == this.idCourier) {
                                         this.selected_curier = element.nombre;
-                                        console.log(element.nombre);
                                     }
                                 });
                                 var load = false;
@@ -759,13 +854,11 @@ export default {
             }
         },
         vehic() {
-            console.log("entro a vehi");
             var login = localStorage.getItem("storedData");
             var infologin = JSON.parse(login);
             //&& this.idCourier
             if (this.model_medios == null ) {
                 //this.curiers = []
-                console.log("entro model");
                 this.selected_curier = "";
                 this.curiers=[]
 
@@ -902,6 +995,7 @@ export default {
                             });
                     }
                 } else {
+                    
                     if (this.model_medios != null) {
                         var nombre;
                         if (infologin.id_OperadorLogistico.confirmacionSocket == false) {
@@ -945,7 +1039,20 @@ export default {
                                 });
                         } else {
                             if (this.curiers.length == 0) {
-                                var courierlocal;
+                                if(this.selected_curier==''||this.selected_curier===''||
+                                this.selected_curier==null){
+                                    this.socket.emit("MedioCourier", {
+                                        id_operadorlogistico: infologin.id_OperadorLogistico._id,
+                                        id_cliente: infologin._id,
+                                        medio_transporte: this.model_medios._id,
+                                        descripcion: "orden"
+                                    });
+                                    //this.curiers=
+                                    this.socket.on("CouriersActivos", connectionList => {
+                                        this.curiers = connectionList;
+                                    });
+                                }else{
+                                    var courierlocal;
                                 this.axios
                                     .get(
                                         urlservicios+
@@ -986,6 +1093,8 @@ export default {
                                             });
                                         });
                                     });
+                                }
+                                
                             } else {
                                 this.socket.emit("MedioCourier", {
                                     id_operadorlogistico: infologin.id_OperadorLogistico._id,
@@ -1007,170 +1116,7 @@ export default {
 
             //this.updatecourier()
         },
-        /*
-            updatecourier(){
-               var login = localStorage.getItem("storedData");
-              var infologin = JSON.parse(login);
-              if(infologin.id_OperadorLogistico.confirmacionSocket==true){
-                  this.socket.on('CouriersActivos', (connectionList) => {
 
-                      this.curiers=connectionList
-                    });
-              }
-
-            },
-            */
-
-        /*
-            vehic() {
-              var login = localStorage.getItem("storedData");
-              var infologin = JSON.parse(login);
-
-              if (typeof this.model_medios == "string") {
-                var load = true;
-                setTimeout(() => {
-                  bus.$emit("load", {
-                    load
-                  });
-                });
-                this.axios
-                  .get(urlservicios+ "medios/")
-                  .then(response => {
-                    var load = false;
-                    setTimeout(() => {
-                      bus.$emit("load", {
-                        load
-                      });
-                    });
-
-                    this.medios = response.data;
-                    this.medios.forEach(element => {
-                      if (element._id == this.model_medios) {
-                        this.model_medios = element;
-
-                      }
-
-                    });
-
-                    var load = false;
-                    setTimeout(() => {
-                      bus.$emit("load", {
-                        load
-                      });
-                    });
-
-                    /*
-                    this.axios.get(
-                        urlservicios+"UsuariosCurier/" +
-                          infologin.id_OperadorLogistico._id +
-                          "/" +this.model_medios._id)
-                      .then(response2 => {
-                        this.curiers = response2.data;
-                        //this.selec_disable=false
-                        var nombre;
-                        this.curiers.forEach(element2 => {
-                          nombre = element2.nombre;
-                          element2.nombre = nombre + " " + element2.apellido;
-                          if (element2._id == this.selected_curier) {
-                            this.selected_curier = element2;
-                          }
-                          var load = false;
-                          setTimeout(() => {
-                            bus.$emit("load", {
-                              load
-                            });
-                          });
-                        });
-                      });
-                      
-                  })
-                  .catch(function(error) {
-                    var load = false;
-                    setTimeout(() => {
-                      bus.$emit("load", {
-                        load
-                      });
-                    });
-                    swal(
-                      "Se presento un problema",
-                      "Intente nuevamente, por favor",
-                      "warning"
-                    );
-                  });
-
-              } else {
-                if (this.model_medios != null) {
-                  var nombre;
-                  if(infologin.id_OperadorLogistico.confirmacionSocket==false){
-                    var load = true;
-                    setTimeout(() => {
-                      bus.$emit("load", {
-                        load
-                      });
-                    });
-
-
-                    this.axios
-                      .get(
-                        urlservicios+
-                          "UsuariosCurier/" +
-                          infologin.id_OperadorLogistico._id +
-                          "/" +
-                          this.model_medios._id
-                      )
-                      .then(response => {
-                        this.curiers = response.data;
-                        this.curiers.forEach(element2 => {
-                          nombre = element2.nombre;
-                          element2.nombre = nombre + " " + element2.apellido;
-                          if (element2._id == this.selected_curier) {
-                            this.selected_curier = element2;
-                          }
-                        });
-                        var load = false;
-                        setTimeout(() => {
-                          bus.$emit("load", {
-                            load
-                          });
-                        });
-                        //this.selec_disable=false
-                      })
-                      .catch(function(error) {
-                        var load = false;
-                        setTimeout(() => {
-                          bus.$emit("load", {
-                            load
-                          });
-                        });
-                        swal(
-                          "Se presento un problema",
-                          "Intente nuevamente, por favor",
-                          "warning"
-                        );
-                      });
-                  }
-                  else{
-                  this.socket.emit('MedioCourier', {
-                    id_operadorlogistico:infologin.id_OperadorLogistico._id,
-                    id_cliente:infologin._id,
-                    medio_transporte: this.model_medios._id,
-                    descripcion: 'orden'
-                  });
-                    //this.curiers=
-                  this.socket.on('CouriersActivos', (connectionList) => {
-                    this.curiers=connectionList
-                  });
-                  }
-
-                  /*
-
-                
-                } else {
-                  //this.selec_disable=true
-                }
-              }
-    
-            */
         desabilitarguardar() {
            
             if (
@@ -1432,7 +1378,6 @@ export default {
                                     .destinatario.nombre
                                 )
                                 .then(response => {
-                                    console.log(response.data.destinatarios);
                                     destina = response.data.destinatarios;
 
                                     this.axios
@@ -1444,7 +1389,6 @@ export default {
                                             objdestinatario
                                         )
                                         .then(responsedestinatario => {
-                                            console.log(responsedestinatario);
                                         });
                                 });
                         }
@@ -1517,8 +1461,8 @@ export default {
         asignarcurier(seleccionado) {
             var login = localStorage.getItem("storedData");
             var infologin = JSON.parse(login);
+
             if (this.currentUser.estado == "En ruta a recoger en origen") {
-                console.log("anda en ruta");
                 swal(
                     "La Orden se encuentra en Ruta al Origen",
                     "Comuniquese con el courier para poder reasignarla",
@@ -1543,12 +1487,17 @@ export default {
                     this.statuscourier = false;
                 } else {
                     if (infologin.id_OperadorLogistico.confirmacionSocket == true) {
-                        //if(this.currentUser.estado=='Orden De Servicio Asignada'&&(this.currentUser.id_courier==seleccionado._id||this.selected_curier._id==seleccionado._id)){
-                        if (
-                            this.currentUser.estado == "Orden De Servicio Asignada" &&
-                            this.idCourier == this.selected_curier._id
-                        ) {
-                            swal("ya la tiene asignada este courier", "", "warning");
+                        console.log("-------------------");
+                        console.log(this.currentUser.id_courier);
+                        console.log(this.selected_curier._id);
+
+                        if(this.currentUser.estado=='Orden De Servicio Asignada'&&(this.currentUser.id_courier==seleccionado._id))
+                        //if (this.currentUser.estado == "Orden De Servicio Asignada" &&this.idCourier == this.selected_curier._id)
+                         {
+                              if((this.currentUser.id_courier==seleccionado._id)){
+                                   swal("ya la tiene asignada este courier", "", "warning");
+                              }
+                           
                         } else {
                             var load = true;
                             var mensaje = "Esperando respuesta del courier";
@@ -1651,6 +1600,7 @@ export default {
             }
         },
         asignar(seleccionado) {
+
             if (this.id_cliente_local != null) {
                 var ocultar = true;
                 var eliminar = this.vali;
@@ -1715,8 +1665,9 @@ export default {
                 for (var o = 0; o < pendi.length; o++) {
                     pendi[o]++;
                 }
-
+                
                 if (contador == this.currentUser.detalle.length) {
+                    console.log("entro");
                     this.asignarcurier(seleccionado);
                 } else {
                     swal(
@@ -1968,15 +1919,17 @@ export default {
             //this.$refs.ModalAct.show()
         },
         asignarfinal(data) {
-            //console.log(data);
 
             if (data.mensaje.respuesta == "true") {
                 this.currentUser.estado = "Orden De Servicio Asignada";
+                this.currentUser.id_courier=data.idOrigen
                 var obj = {
                     id_orden: this.currentUser._id,
                     id_curier: data.idOrigen,
                     id_medio: this.model_medios._id
                 };
+                console.log(".----------------.");
+                console.log(obj);
                 this.statuscourier = null;
                 var load = true;
                 setTimeout(() => {
@@ -2181,6 +2134,7 @@ export default {
                     this.idCourier = this.currentUser.id_courier;
                     this.model_medios = this.currentUser.id_medio;
                     this.idMedio = this.currentUser.id_medio;
+                    this.COURIERSELECCIONADO=this.currentUser.id_courier
                     //his.updatecourier()
                 }
                 this.vali = userObject.inde;

@@ -461,6 +461,7 @@ export default {
             else if(a>24){
                 console.log("es mayor de 24");
                  swal("Oops...", "No puede superar las 24 horas!", "error");
+                 this.horaFin=24
                  return (document.getElementById("horafinid").value = "24");
             }
         },
@@ -1071,7 +1072,9 @@ export default {
                     fecha: this.fecha
                 };
                 var franja ={
-                    franja: "Recoger entre las "+this.horaInicio+ " a las " +this.horaFin
+                    franja: "Recoger entre las "+this.horaInicio+ " a las " +this.horaFin,
+                    horaIni: this.horaInicio,
+                    horaFin: this.horaFin
                 }
                 localStorage.setItem("Franja", JSON.stringify(franja));
 
@@ -1093,11 +1096,11 @@ export default {
                         */
 
                 /*
-      var observacionesOrden={
-        observacion:this.observaciones
-      }
-      localStorage.setItem("observaciones_orden", JSON.stringify(observacionesOrden));
-      */
+            var observacionesOrden={
+                observacion:this.observaciones
+            }
+            localStorage.setItem("observaciones_orden", JSON.stringify(observacionesOrden));
+            */
                 bus.$emit("remitente", seleccionados);
                 localStorage.setItem("orden", JSON.stringify(seleccionados));
                 localStorage.setItem("infoorden", JSON.stringify(selecciones));
@@ -1136,17 +1139,17 @@ export default {
                 }
                 console.log(objetoremitente);
                 /*
-       objetoremitente = {
-          numero_identificacion: this.remitente.numero_identificacion,
-          direccion: this.remitente.direccion,
-          nombre: this.remitente.nombre,
-          telefono: this.remitente.telefono,
-          id_cliente: this.remitente.id_cliente,
-          latitud: this.lati,
-          longitud:this.longi,
-          codigo_postal:this.posta
-        };
-        */
+            objetoremitente = {
+                numero_identificacion: this.remitente.numero_identificacion,
+                direccion: this.remitente.direccion,
+                nombre: this.remitente.nombre,
+                telefono: this.remitente.telefono,
+                id_cliente: this.remitente.id_cliente,
+                latitud: this.lati,
+                longitud:this.longi,
+                codigo_postal:this.posta
+                };
+                */
                 localStorage.setItem("remitente", JSON.stringify(this.remit));
                 if (this.optionsdestinatarios.length == 0) {
                     var objetocrear = {
@@ -1199,20 +1202,20 @@ export default {
                         .catch(function (error) {});
                 }
                 /*
-      this.axios.post(urlservicios+"ActualizarDestinatario" +"/" +this.remitente._id,objetoremitente)
-          .then(response => {
-            var load = false;
-            setTimeout(() => {
-              bus.$emit("load", {
-                load
-              });
-            });
-          })
-          .catch(function(error) {
+                this.axios.post(urlservicios+"ActualizarDestinatario" +"/" +this.remitente._id,objetoremitente)
+                    .then(response => {
+                        var load = false;
+                        setTimeout(() => {
+                        bus.$emit("load", {
+                            load
+                        });
+                        });
+                    })
+                    .catch(function(error) {
 
-          })
-        */
-       /*
+                    })
+                    */
+                /*
                 this.$router.replace("/inicio/ordenservicio");
                 var load = false;
                 setTimeout(() => {
@@ -1241,8 +1244,7 @@ export default {
                 });
             });
 
-            this.axios
-                .get(
+            this.axios.get(
                     urlservicios+
                     "clientesOperador/" +
                     test.id_OperadorLogistico._id +
@@ -1268,6 +1270,20 @@ export default {
                     if (remi) {
                         this.remitente = remijson;
                         //this.onSearch(remijson.nombre, loading)
+                    }
+                    var fechas = localStorage.getItem("fecha_orden");
+                    var fechasjson = JSON.parse(fechas);
+                    if(fechas){
+                        this.prueba="second"
+                        console.log(fechasjson);
+                        this.fecha=fechasjson.fecha
+                    }
+                    var franja = localStorage.getItem("Franja");
+                    var franjajson = JSON.parse(franja);
+                    if(fechas){
+                        this.prueba="second"
+                        this.horaInicio=franjajson.horaIni
+                        this.horaFin=franjajson.horaFin
                     }
                     //this.clientes.unshift(vacio);
                     var load = false;

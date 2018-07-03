@@ -11,6 +11,10 @@
                     <template slot="id" slot-scope="data">
                         {{data.item.consec}}
                     </template>
+                    nombre_proceso
+                    <template slot="nombre_proceso" slot-scope="data">
+                        {{data.item.trazabilidad[0].nombre}}
+                    </template>
                     <template slot="nmovilizado" slot-scope="data">
                         {{data.item.id}}
                     </template>
