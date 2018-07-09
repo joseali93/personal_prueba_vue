@@ -21,6 +21,7 @@ import DetailManifiest from '../componentes/detalleManifiesto.vue'
 import ConfigCliente from '../componentes/ParamClientes.vue'
 import ConfigCentroCosto from '../componentes/ParamCentrosC.vue'
 import ConfigCentroLogistico from '../componentes/ParamCentroL.vue'
+import ConfigUsuarios from '../componentes/ParamUsuarios.vue'
 
 
 
@@ -51,6 +52,11 @@ export const rutas = [{
             {
                 path: 'configcentroc',
                 component: ConfigCentroCosto,
+
+            },
+            {
+                path: 'configusuarios',
+                component: ConfigUsuarios,
 
             },
             {

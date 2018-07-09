@@ -10,10 +10,6 @@
                <div slot="header" class="w-100">
                     <strong class="float-left ">Información de Remitente </strong>
                 </div>
-                <!--
-                 <div slot="header" class="w-100">
-                <strong class="float-left ">Información Remitente</strong>
-            </div>-->
                 <b-row>
                     <b-col>
                         <h3  class="text-primary ">Cliente :</h3>
@@ -31,7 +27,26 @@
 
                     </b-col>
                 </b-row>
+                 <b-row>
+                    <b-col>
+                        <h3  class="text-primary ">Contacto :</h3>
+                    </b-col>
+                    <b-col>
+                        <p>{{otro.remitente.nombre_contacto}}</p>
+
+                    </b-col>
+                </b-row>
+                <b-row>
+                    <b-col>
+                        <h3  class="text-primary ">Dirección :</h3>
+                    </b-col>
+                    <b-col>
+                        <p>{{otro.remitente.direccion_recogida}}</p>
+
+                    </b-col>
+                </b-row>
         </b-card>
+
         <b-card class="border my-2" header="Primary" header-bg-variant="primary">
              <div slot="header" class="w-100">
                     <strong class="float-left ">Información de Destinatario </strong>
@@ -130,10 +145,8 @@
 
                         <template >
                             <b-col cols="6">
-                                <b-form-input  :value="data.valores"
-                                    type="text"
-                                    :readonly="true">
-                            </b-form-input>
+                                <p> {{data.valores}} 
+                            </p>
                             </b-col>
                         </template>
         </b-row>

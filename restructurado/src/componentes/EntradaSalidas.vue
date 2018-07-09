@@ -10,15 +10,6 @@
 
             <b-breadcrumb :items="itemsbr" />
 
-            <!-- <ul class="breadcrumb">
-
-          <li v-for="(item, i) in items" :key="i" class="breadcrumb-item">
-
-            <a :href="item.to">{{item.text}}</a>
-
-          </li>
-
-        </ul> -->
 
         </div>
 

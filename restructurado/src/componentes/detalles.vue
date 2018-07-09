@@ -245,7 +245,7 @@
                                                                         </template>
                                                                         <!-- ------------------------------------------------------- -->
                                                                         <template
-                                                                            slot="editar"
+                                                                            slot="detalles"
                                                                             slot-scope="data"
                                                                             v-if="detalleTrayecto.lista.length"
                                                                         >
@@ -562,7 +562,10 @@
                                                                             :disabled="selec_disable"
                                                                         >
                                                                             </b-form-select>
-                                                                            <!-- ------------------------------------------------------- -->
+                                                                            <!-- -----------
+                                                                            
+                                                                             
+                                                                            -------------------------------------------- -->
                                                                     </b-col>
                                                                     </template>
                                                                     </b-row>
@@ -593,8 +596,13 @@
                                                                     class="mt-3 float-right rounded text-white"
                                                                     variant="warning"
                                                                     v-on:click="ingresarTrayectos()"
-                                                                    :disabled=desabilitarguardar()
+                                                                    :disabled="btnSelect()"
+                                                               
                                                                 >
+                                                                <!--
+                                                                     
+                                                                    :disabled=desabilitarguardar()
+                                                                    -->
                                                                     <i
                                                                         class="fa fa-floppy-o"
                                                                         aria-hidden="true"
@@ -676,7 +684,7 @@ export default {
                     key: "doc_referencia",
                     label: "Documento Referencia"
                 },
-                "editar"
+                "detalles"
             ],
             currentPage: 1,
             currentUser: "",
@@ -706,6 +714,28 @@ export default {
         }
     },
     methods: {
+        btnSelect(){
+
+        if(this.currentUser.estado=='Orden De Servicio Creada'){
+            if(this.id_cliente_local){
+                return true
+            }else{
+                return false
+            }
+        }
+        if(this.info.estado == "Orden De Servicio Asignada"){
+            console.log("esta asignada");
+            if(this.id_cliente_local){
+                return true
+            }else{
+                console.log("no es cliente");
+                return false
+            }
+        }
+        else{
+            return true
+        }
+        },
         Reasignar(){
             
             //this.medios=[]
@@ -716,11 +746,17 @@ export default {
             //this.bloqueo(false)
         },
         bloqueo(){
-            if(this.currentUser.estado=='Orden De Servicio Creada'){
-                return false
+            if(this.currentUser.estado=='Orden De Servicio Creada' ||this.id_cliente_local){
+                if(this.id_cliente_local){
+                    return true
+                }
+                else{
+                    return false
+
+                }
             }
             else{
-                if(this.selected_curier==''){
+                if(this.selected_curier==''||this.id_cliente_local){
                 return false     
                 }
                 else{
@@ -847,6 +883,7 @@ export default {
                         });
                         //this.curiers=
                         this.socket.on("CouriersActivos", connectionList => {
+                          
                             this.curiers = connectionList;
                         });
                     }
@@ -1049,6 +1086,8 @@ export default {
                                     });
                                     //this.curiers=
                                     this.socket.on("CouriersActivos", connectionList => {
+                                                                    
+
                                         this.curiers = connectionList;
                                     });
                                 }else{
@@ -1074,6 +1113,8 @@ export default {
                                             });
                                             //this.curiers=
                                             this.socket.on("CouriersActivos", connectionList => {
+                                                                           
+
                                                 this.curiers = connectionList;
                                             });
                                         }
@@ -1104,6 +1145,8 @@ export default {
                                 });
                                 //this.curiers=
                                 this.socket.on("CouriersActivos", connectionList => {
+                                                           
+
                                     this.curiers = connectionList;
                                 });
                             }
@@ -1122,14 +1165,30 @@ export default {
             if (
                 this.info.estado == "orden de servicio cancelada" ||
                 this.info.estado == "Orden de servicio recogida" ||
-                this.info.estado == "Orden de servicio cerrada"
+                this.info.estado == "Orden de servicio cerrada"||
+                 this.id_cliente_local
             ) {
                 //selec_disable
                 this.selec_disable = true;
                 this.medios_disable = true;
                 return true;
             } else {
-                return false;
+
+                if(this.info.estado == "Orden De Servicio Asignada"&&this.selected_curier._id==this.idCourier&&typeof(this.selected_curier)!='object'){
+
+                    return true
+                }
+                else{
+                    if(typeof(this.selected_curier)=='object'){
+                        return false;
+                    }
+                    else{
+                        console.log();
+                        return true
+                    }
+                //return false;
+
+                }
             }
         },
         desabilitar(value) {
@@ -1215,7 +1274,10 @@ export default {
                     ocultar,
                     eliminar
                 });
+                
             });
+            console.log("emito");
+            bus.$emit('consultar')
             this.$router.replace("/inicio/consultar/resultado");
         },
         selectcuriers(value) {
@@ -1477,6 +1539,7 @@ export default {
                     });
                 });
             } else {
+                console.log("entro a asignar courier");
                 if (
                     seleccionado == "" ||
                     seleccionado == "null" ||
@@ -1487,15 +1550,13 @@ export default {
                     this.statuscourier = false;
                 } else {
                     if (infologin.id_OperadorLogistico.confirmacionSocket == true) {
-                        console.log("-------------------");
-                        console.log(this.currentUser.id_courier);
-                        console.log(this.selected_curier._id);
+
 
                         if(this.currentUser.estado=='Orden De Servicio Asignada'&&(this.currentUser.id_courier==seleccionado._id))
                         //if (this.currentUser.estado == "Orden De Servicio Asignada" &&this.idCourier == this.selected_curier._id)
                          {
                               if((this.currentUser.id_courier==seleccionado._id)){
-                                   swal("ya la tiene asignada este courier", "", "warning");
+                                   swal("La orden de servicio ya ha sido asignada a este courrier", "", "warning");
                               }
                            
                         } else {
@@ -1507,6 +1568,7 @@ export default {
                                     mensaje
                                 });
                             });
+                            console.log("emito");
                             this.socket.emit("new-message", {
                                 idOperador: infologin.id_OperadorLogistico._id, //per logistico
                                 idOrigen: infologin._id, //id usuario
@@ -1923,6 +1985,7 @@ export default {
             if (data.mensaje.respuesta == "true") {
                 this.currentUser.estado = "Orden De Servicio Asignada";
                 this.currentUser.id_courier=data.idOrigen
+                this.currentUser.id_medio=this.model_medios._id
                 var obj = {
                     id_orden: this.currentUser._id,
                     id_curier: data.idOrigen,
@@ -2073,6 +2136,7 @@ export default {
 
         if (infologin.id_cliente) {
             this.selec_disable = false;
+            console.log("tengo cliente");
             this.id_cliente_local = infologin.id_cliente;
         }
         // -------------------------------------------------------
@@ -2177,6 +2241,7 @@ export default {
             this.socket.on("connect", () => {});
 
             this.socket.on("ListaConexiones", data => {
+                
                 if (
                     this.model_medios != undefined &&
                     this.model_medios != "undefined" &&

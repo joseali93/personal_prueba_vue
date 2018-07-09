@@ -24,7 +24,7 @@
                 v-show="data.item.estado!='orden de servicio cancelada'"></b-button>
 
             </template>
-            <template slot="centro_costo" slot-scope="data">
+            <template slot="centro_costo" slot-scope="data" >
                 {{data.item.id_centro_costo.nombre_concatenado}}
             </template>
              <template slot="con_cancelacion" slot-scope="data" v-if="data.item.estados[0].id_concepto">

@@ -206,8 +206,6 @@ export default {
     },
     methods:{
         seleccionCliente(){
-            console.log("entro a sleccion cliente");
-            console.log(this.selectedCL);
             if(this.selectedCL!=null){
                 var load=true
                 setTimeout(() => {
@@ -281,9 +279,6 @@ export default {
             var inicio
             var fin
             var esadoconsulta
-            //console.log(this.selectedCL);
-            //console.log(this.selected_state);
-            //console.log(this.time1);
              var fecha=new Date();
             var _this=this
             var d =new Date()
@@ -301,16 +296,10 @@ export default {
             var finalfinal= moment(this.time1[1])
 
             var cantidaddias=finalfinal.diff(fechainicial, 'days')
-            /*
-            console.log(mana);
-            console.log(ant);
-            console.log(cantidaddias);
-            console.log(this.time1);
-            */
+
 
             if(cantidaddias>32||this.time1=='')
             {
-                //console.log("tiempo mayor de 30 dias");
                 if(cantidaddias>32){
                     swal(
                     'Advertencia',
@@ -364,7 +353,6 @@ export default {
                         else{
                         centrocosto=this.selectedCC._id
                         }
-                        console.log(this.time1);
 
                     var login = localStorage.getItem("storedData");
                     var infologin =JSON.parse(login);
@@ -374,7 +362,6 @@ export default {
                                 load
                             })
                             }, )
-                    console.log("URL",urlservicios);
                     this.axios.get(urlservicios+"ObtenerOrdenesFiltrado/"+infologin.id_OperadorLogistico._id+"/"+this.filter+"/"+esadoconsulta+
                     "/"+cliente+"/"+centrocosto+"/"+inicio+"/"+fin)
                     .then((response) => {
@@ -394,7 +381,6 @@ export default {
 
                         }
                         else{
-                            console.log(this.consulta);
                             var load=false
                         setTimeout(() => {
                         bus.$emit('load', {
@@ -423,7 +409,6 @@ export default {
 
             }
             else{
-                console.log("hago peticion");
                 if(this.time1[0]===''||this.time1[0]===undefined){
                 inicio=ant
                 }
@@ -459,7 +444,6 @@ export default {
                     else{
                     centrocosto=this.selectedCC._id
                     }
-                    console.log(this.time1);
 
                 var login = localStorage.getItem("storedData");
                 var infologin =JSON.parse(login);
@@ -489,7 +473,6 @@ export default {
 
                     }
                     else{
-                        console.log(this.consulta);
                         var load=false
                     setTimeout(() => {
                         bus.$emit('load', {
@@ -603,6 +586,10 @@ export default {
       bus.$on('ocultar', function (userObject) {
         this.ocultar = userObject.ocultar
       }.bind(this))
+      bus.$on('consultar', function () {
+        this.consultar()
+      }.bind(this))
+      
     },
     mounted: function () {
       const getDates = (this.getDatesRange.getRange());
@@ -651,10 +638,8 @@ export default {
         var vacio2= { nombre: 'Por Favor Seleccione un Cliente' };
         var login = localStorage.getItem("storedData");
         var infologin =JSON.parse(login);
-        //console.log(infologin.id_cliente);
         var id_cliente
         if(infologin.id_cliente==undefined||infologin.id_cliente==null){
-            console.log("no hay cliente");
             id_cliente='null'
             var load=true
             setTimeout(() => {
@@ -687,7 +672,6 @@ export default {
                     )
         })
         }else{
-            console.log("hay cliente");
             id_cliente=infologin.id_cliente
             var load=true
             setTimeout(() => {
@@ -698,8 +682,6 @@ export default {
             this.axios.get(urlservicios+"clientesOperador/"+infologin.id_OperadorLogistico._id
             +'/'+id_cliente)
             .then((response) => {
-                console.log("_----------------");
-                console.log(response.data);
                 this.clientes=response.data
                 this.selectedCL=Object.assign({},this.clientes[0])
                 //this.clientes.unshift(vacio)
@@ -737,7 +719,6 @@ export default {
              //var vacio3=  { nombre: 'Por Favor Seleccione un Estado' ,disabled:true};
              //this.selected_state='Por Favor Seleccione un Estado'
              //this.estados.unshift(vacio3)
-            //console.log(this.estados);
         })
         .catch(function(error) {
              var load = false;

@@ -24,12 +24,23 @@
                     <b-btn
                         class="rounded text-white"
                         variant="info"
-                        to="/inicio/orden"
+                        @click="volver"
                         v-b-tooltip.hover
                         title="Anterior"
                     >
                         <i class="fa fa-arrow-left"></i>&#32;Anterior
                         </b-btn>
+                        <!--
+                        <b-btn
+                        class="rounded text-white"
+                        variant="info"
+                        to="/inicio/orden"
+                        v-b-tooltip.hover
+                        title="Anterior"
+                            >
+                        <i class="fa fa-arrow-left"></i>&#32;Anterior
+                        </b-btn>
+                            -->
                         <b-btn
                             class="rounded text-white"
                             variant="warning"
@@ -444,7 +455,7 @@
                                                             @input="Seleccionado"
                                                             v-show="MostrarFiltro"
                                                             @search="onSearch"
-                                                              v-bind:style="validatecampo"
+                                                              v-bind:style="validatecamponombre"
                                                         >
                                                             <template slot="no-options">
                                                                 <p>Nombre del destinatario..</p>
@@ -1008,6 +1019,7 @@ export default {
     },
     data() {
         return {
+            validatecamponombre:'',
             GeoReferenciacion: false,
             validacionDireccion: true,
             observacionesGeneral: '',
@@ -1147,6 +1159,14 @@ export default {
     },
     watch: {},
     methods: {
+        volver(){
+            console.log("entro a volver");
+            console.log(this.DetalleServicio);
+            localStorage.setItem("DetalleServicio", JSON.stringify(this.DetalleServicio));
+            localStorage.setItem("ObservacionesGenerales", JSON.stringify(this.observacionesGeneral));
+            this.$router.replace("/inicio/orden");
+
+        },
         cambiotab(tabIndex) {
             console.log("cambio tab");
 
@@ -2338,6 +2358,7 @@ export default {
                 if (pivote == false) {
                     this.validatecampo = "";
                 }
+
                 var load = false;
                 setTimeout(() => {
                     bus.$emit("load", {
@@ -2345,6 +2366,7 @@ export default {
                     });
                 });
             }
+             this.validatecamponombre=''
             if (
                 this.selectproduct == "" ||
                 this.selectservice == "" ||
@@ -2361,7 +2383,7 @@ export default {
                 }
                 if (this.detalles.destinatario.nombre == "") {
                     this.estado.nombre = false;
-                    this.validatecampo = {
+                    this.validatecamponombre = {
                     border: "2px solid red"
                     };
                 }
@@ -2374,6 +2396,7 @@ export default {
 
                 swal("Oops...", "Falto completar algun campo", "error");
             } else {
+                this.validatecamponombre=''
                   if (this.optionsremitentes.length == 0) {
                     var objetocrear = {
                         //numero_identificacion: this.detalles.destinatario.numero_identificacion,
@@ -2797,7 +2820,7 @@ export default {
 
                 var franja = localStorage.getItem("Franja");
                 var jsonfranja = JSON.parse(franja);
-                if (jsonfechareal.fecha == '') {
+                if (!fechareal) {
                     var objeto = {
                         id_OperadorLogistico: infologin.id_OperadorLogistico._id,
                         id_usuario: infologin._id,
@@ -2883,6 +2906,11 @@ export default {
                             localStorage.removeItem("observaciones_orden");
                             localStorage.removeItem("remitente");
                             localStorage.removeItem("fecha_orden"); 
+                            localStorage.removeItem("DetalleServicio")
+                            
+                            localStorage.removeItem("ObservacionesGenerales")
+
+                            
                         }
                         else{
                             var load = false;
@@ -2924,6 +2952,19 @@ export default {
         } else {
             this.GeoReferenciacion = false
             this.validacionDireccion = true
+        }
+        var DetalleSer=localStorage.getItem("DetalleServicio");
+        var DetalleSerjson=JSON.parse(DetalleSer)
+        console.log(DetalleSerjson);
+        if(DetalleSer){
+            console.log("existe");
+        this.DetalleServicio=DetalleSerjson
+            
+        }
+        var Obser = localStorage.getItem("ObservacionesGenerales");
+        var Obserjson= JSON.parse(Obser)
+        if(Obser){
+            this.observacionesGeneral=Obserjson
         }
     },
     beforeCreate: function () {

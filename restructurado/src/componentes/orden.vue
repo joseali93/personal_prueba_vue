@@ -459,7 +459,6 @@ export default {
                 return (document.getElementById("horafinid").value = "");
             }
             else if(a>24){
-                console.log("es mayor de 24");
                  swal("Oops...", "No puede superar las 24 horas!", "error");
                  this.horaFin=24
                  return (document.getElementById("horafinid").value = "24");
@@ -467,7 +466,6 @@ export default {
         },
         HoraIni(value){
 
-            console.log("entro a hora inicio");
             
             var a = document.getElementById("HoraInicioid").value;
             //var x=check.which;
@@ -488,7 +486,6 @@ export default {
                 return (document.getElementById("HoraInicioid").value = "");
             }
             else if(a>24){
-                console.log("es mayor de 24");
                  swal("Oops...", "No puede superar las 24 horas!", "error");
                  return (document.getElementById("HoraInicioid").value = "24");
             }
@@ -1043,7 +1040,6 @@ export default {
                         });
                     });
                     if (this.fecha == '') {
-                        console.log("VA VACIOO");
                         swal(
                             "Cuidado",
                             "Se deben completar la fecha de recolección de la orden",
@@ -1051,7 +1047,6 @@ export default {
                         );
                     }
                     if (this.horaInicio==""||this.horaFin=="") {
-                        console.log("VA VACIOO");
                         swal(
                             "Cuidado",
                             "Se deben completar el rango de recolección de la orden",
@@ -1068,17 +1063,20 @@ export default {
                     swal("Cuidado", "Se deben completar todos los campos !", "warning");
                 }
             } else {
-                var fecha = {
+                if(this.selected!='first'){
+                    var fecha = {
                     fecha: this.fecha
-                };
-                var franja ={
-                    franja: "Recoger entre las "+this.horaInicio+ " a las " +this.horaFin,
-                    horaIni: this.horaInicio,
-                    horaFin: this.horaFin
-                }
-                localStorage.setItem("Franja", JSON.stringify(franja));
+                    };
+                    var franja ={
+                        franja: "Recoger entre las "+this.horaInicio+ " a las " +this.horaFin,
+                        horaIni: this.horaInicio,
+                        horaFin: this.horaFin
+                    }
+                    localStorage.setItem("Franja", JSON.stringify(franja));
 
-                localStorage.setItem("fecha_orden", JSON.stringify(fecha));
+                    localStorage.setItem("fecha_orden", JSON.stringify(fecha));
+                }
+                
                 var selected_client = this.selected_cliente;
                 var selected_center = this.selected_centro;
                 var seleccionados = {
@@ -1137,7 +1135,6 @@ export default {
                         codigo_postal: this.posta
                     };
                 }
-                console.log(objetoremitente);
                 /*
             objetoremitente = {
                 numero_identificacion: this.remitente.numero_identificacion,
@@ -1166,7 +1163,6 @@ export default {
                     this.axios
                         .post(urlservicios+ "CrearDestinatario", objetocrear)
                         .then(response => {
-                            console.log(response);
                             var load = false;
                             setTimeout(() => {
                                 bus.$emit("load", {
@@ -1275,7 +1271,6 @@ export default {
                     var fechasjson = JSON.parse(fechas);
                     if(fechas){
                         this.prueba="second"
-                        console.log(fechasjson);
                         this.fecha=fechasjson.fecha
                     }
                     var franja = localStorage.getItem("Franja");
@@ -1371,6 +1366,26 @@ export default {
                     this.selected_client = this.clientes[0];
                     this.selected_cliente = Object.assign({}, this.clientes[0]);
                     this.disable_selected_client = true;
+                    var remi = localStorage.getItem("remitente");
+                    var remijson = JSON.parse(remi);
+                    if (remi) {
+                        this.remitente = remijson;
+                        //this.onSearch(remijson.nombre, loading)
+                    }
+                    var fechas = localStorage.getItem("fecha_orden");
+                    var fechasjson = JSON.parse(fechas);
+                    if(fechas){
+                        this.prueba="second"
+                        this.fecha=fechasjson.fecha
+                    }
+                    var franja = localStorage.getItem("Franja");
+                    var franjajson = JSON.parse(franja);
+                    if(fechas){
+                        this.prueba="second"
+                        this.horaInicio=franjajson.horaIni
+                        this.horaFin=franjajson.horaFin
+                    }
+                    
                     /*
                     this.clientes = response.data;
                     this.selected_cliente.nombre = this.clientes[0].nombre;
