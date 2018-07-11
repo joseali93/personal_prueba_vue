@@ -344,12 +344,8 @@ DE LA ORDEN DE SERVICIO -->
 */
 import Orden from "../componentes/orden.vue";
 import Preload from "../componentes/preload.vue";
-import {
-    bus
-} from "../main";
-import {
-    urlservicios
-} from "../main";
+import   {bus} from "../main";
+import    {urlservicios}  from "../main";
 import axios from "axios";
 import moment from 'moment'
 export default {
@@ -390,14 +386,6 @@ export default {
             longi: "",
             posta: "",
             remitente: "",
-            /*
-            remitente:{
-              nombre:'',
-              direccion:'',
-              telefono:'',
-              numero_identificacion:'',
-            },
-            */
             optionsdestinatarios: [],
             selected: "first",
             radios: [{
@@ -439,10 +427,8 @@ export default {
 
     methods: {
         HoraFn(){
-            
+            // FUNCION QUE VALIDA, SOLO SEAN INGRESADOS NUMEROS EN UN INPUT TYPE TEXT
             var a = document.getElementById("horafinid").value;
-            //var x=check.which;
-            //var x = a.charCode;
             var x = a.keyCode;
             if (!(a >= 48 || a <= 57)) {
                 swal("Oops...", "Solo deben ser numeros !", "error");

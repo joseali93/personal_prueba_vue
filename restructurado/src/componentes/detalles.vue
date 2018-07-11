@@ -814,6 +814,7 @@ export default {
             } else {
                 if (infologin.id_OperadorLogistico.confirmacionSocket == false) {
                     if (this.curiers.length == 0) {
+                        console.log(urlservicios+"UsuariosCurier/" +infologin.id_OperadorLogistico._id +"/" +this.idMedio);
                         this.axios
                             .get(
                                 urlservicios+

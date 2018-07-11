@@ -22,6 +22,7 @@ import ConfigCliente from '../componentes/ParamClientes.vue'
 import ConfigCentroCosto from '../componentes/ParamCentrosC.vue'
 import ConfigCentroLogistico from '../componentes/ParamCentroL.vue'
 import ConfigUsuarios from '../componentes/ParamUsuarios.vue'
+import configVehiculos from '../componentes/ParamVehiculos.vue'
 
 
 
@@ -57,6 +58,11 @@ export const rutas = [{
             {
                 path: 'configusuarios',
                 component: ConfigUsuarios,
+
+            },
+            {
+                path: 'configvehiculos',
+                component: configVehiculos,
 
             },
             {

@@ -1,6 +1,7 @@
 <template>
 
     <b-container fluid class="contenedorTotal">
+        vehiculos
     <div class="breadcrumb-holder">
       <div class="container-fluid">
         <b-breadcrumb :items="items" />
@@ -74,8 +75,7 @@
                                    <i class="btn btn-success fa fa-key" @click="cambioPassword(data)"></i>
                                 </template>
                                  <template slot="inactivar" slot-scope="data">
-                                    <i class="btn btn-success fa fa-lock" v-show="data.item.estado==0"  @click="Inactivar(data)"></i>
-                                    <i class="btn btn-danger fa fa-unlock" v-show="data.item.estado==1"  @click="Inactivar(data)"></i>
+                                    <i class="btn btn-success fa fa-lock" v-if="data.item.estado==0"  @click="Inactivar(data)"></i>
                                 </template>     
                                 <template slot="estado" slot-scope="data">
                                     <p v-if="data.item.estado==0"> Activo</p>
@@ -626,17 +626,15 @@ export default {
     },
     methods:{
         ActualizarPassword(){
-            var load = true;
-            setTimeout(() => {
-                bus.$emit("load", {
-                    load
-                });
-            });  
+            console.log(this.UsuarioCambioPasswd);
+            console.log(this.password);
             var update={
                 password:this.password
             }
+            console.log(urlservicios+"updateUser/"+this.UsuarioCambioPasswd._id);
             this.axios.post(urlservicios+"updateUser/"+this.UsuarioCambioPasswd._id, update)
                     .then(response =>{
+                        console.log(response);
                         if(response.data.estado){
                             swal(
                             "",
@@ -644,12 +642,6 @@ export default {
                             "success"
                             );
                             this.hideModal()
-                            var load = false;
-                            setTimeout(() => {
-                                bus.$emit("load", {
-                                    load
-                                });
-                            });  
                         }
                         else{
                             swal(
@@ -657,37 +649,24 @@ export default {
                             response.data.message,
                             "success"
                             );
-                            var load = false;
-                            setTimeout(() => {
-                                bus.$emit("load", {
-                                    load
-                                });
-                            });  
                         }
                     })
-                    .catch(function (error) {
-                        var load = false;
-                        setTimeout(() => {
-                            bus.$emit("load", {
-                                load
-                            });
-                        });
-                        swal(
-                            "Se presento un problema",
-                            "Intente nuevamente, por favor",
-                            "warning"
-                        );
-                });
         },
         cambioPassword(data){
+            console.log(data);
             this.UsuarioCambioPasswd=data.item
             this.$refs.modalpassword.show()
   
         },
         ClienteED(){
+            console.log("entro a cliente ed");
+            console.log(this.usuEditar);
         },
         ActualizarUsuario(){
+            console.log("entro a actualizar");
+            console.log(this.usuEditar);
             if(this.usuEditar.tipo=="administrador"){
+                console.log("actualizo admin");
                 if(this.estadoNumeroIden==false||this.estadoT==false||this.estadonombre==false||this.estadoapellido==false){
                     swal(
                     "Por favor complete correctamente los campos e intente nuevamente",
@@ -702,8 +681,10 @@ export default {
                         numero_identificacion:this.usuEditar.numero_identificacion,
                         correo:this.usuEditar.correo,
                     }
+                    console.log(EditUser);
                     this.axios.post(urlservicios+"/updateUser/"+this.usuEditar._id, EditUser)
                     .then(response =>{
+                        console.log(response);
                         if(response.data.estado){
                             swal(
                             "",
@@ -711,12 +692,6 @@ export default {
                             "success"
                             );
                             this.hideModal()
-                            var load = false;
-                            setTimeout(() => {
-                                bus.$emit("load", {
-                                    load
-                                });
-                            });
                         }else{
                             swal(
                             "",
@@ -731,19 +706,6 @@ export default {
                             });
                         });
                     })
-                    .catch(function (error) {
-                        var load = false;
-                        setTimeout(() => {
-                            bus.$emit("load", {
-                                load
-                            });
-                        });
-                        swal(
-                            "Se presento un problema",
-                            "Intente nuevamente, por favor",
-                            "warning"
-                        );
-                    });
                 }
             }
             if(this.usuEditar.tipo=="cliente"){
@@ -762,8 +724,10 @@ export default {
                         correo:this.usuEditar.correo,
                         id_cliente:this.usuEditar._id
                     }
+                    console.log(EditUser);
                     this.axios.post(urlservicios+"/updateUser/"+this.usuEditar._id, EditUser)
                     .then(response =>{
+                        console.log(response);
                         this.hideModal()
                         var load = false;
                         setTimeout(() => {
@@ -772,22 +736,11 @@ export default {
                             });
                         });
                     })
-                     .catch(function (error) {
-                        var load = false;
-                        setTimeout(() => {
-                            bus.$emit("load", {
-                                load
-                            });
-                        });
-                        swal(
-                            "Se presento un problema",
-                            "Intente nuevamente, por favor",
-                            "warning"
-                        );
-                    });
                 }
             }
             if(this.usuEditar.tipo=="courier"){
+                console.log("actualizo");
+                console.log(this.usuEditar);
                 if(this.estadoNumeroIden==false||this.estadoT==false||this.estadonombre==false||this.estadoapellido==false){
                     swal(
                     "Por favor complete correctamente los campos e intente nuevamente",
@@ -802,8 +755,10 @@ export default {
                         numero_identificacion:this.usuEditar.numero_identificacion,
                         correo:this.usuEditar.correo,
                     }
+                    console.log(EditUser);
                     this.axios.post(urlservicios+"/updateUser/"+this.usuEditar._id, EditUser)
                     .then(response =>{
+                        console.log(response);
                         this.hideModal()
                         var load = false;
                         setTimeout(() => {
@@ -812,19 +767,6 @@ export default {
                             });
                         });
                     })
-                     .catch(function (error) {
-                        var load = false;
-                        setTimeout(() => {
-                            bus.$emit("load", {
-                                load
-                            });
-                        });
-                        swal(
-                            "Se presento un problema",
-                            "Intente nuevamente, por favor",
-                            "warning"
-                        );
-                    });
                 }
             }
         },
@@ -832,60 +774,13 @@ export default {
              var test2 = localStorage.getItem("storedData");
             var test =JSON.parse(test2);
             var cliente =value.item
-            var estado
             //"/InactivarUsuario/:id_usuario",
-            var load = true;
-            setTimeout(() => {
-                bus.$emit("load", {
-                    load
-                });
-            });        
-            if(cliente.estado==1){
-                estado=0
-            }
-            else{
-                estado=1
-            }
-
-            this.axios.get(urlservicios+"InactivarUsuario/"+cliente._id+"/"+estado)
+            this.axios.get(urlservicios+"InactivarUsuario/"+cliente._id)
                 .then((response) => {
-                    console.log(response);
-                    if(response.data.estado){
-                        swal(
-                            "",
-                            response.data.message,
-                            "success"
-                        );
-                        this.refrescarUsuarios()
-                        this.$refs.table.refresh();
-                    }
-                    else{
-                        swal(
-                            "",
-                            response.data.message,
-                            "success"
-                        );
-                    }
-                    var load = false;
-                    setTimeout(() => {
-                        bus.$emit("load", {
-                            load
-                        });
-                    });  
+                    this.refrescarUsuarios()
+                    this.$refs.table.refresh();
+
                 })
-                .catch(function (error) {
-                    var load = false;
-                    setTimeout(() => {
-                        bus.$emit("load", {
-                            load
-                        });
-                    });
-                    swal(
-                        "Se presento un problema",
-                        "Intente nuevamente, por favor",
-                        "warning"
-                    );
-                });
                 
         },
         guardar(){
@@ -948,19 +843,6 @@ export default {
                                 });
                             });
                         })
-                         .catch(function (error) {
-                        var load = false;
-                        setTimeout(() => {
-                            bus.$emit("load", {
-                                load
-                            });
-                        });
-                        swal(
-                            "Se presento un problema",
-                            "Intente nuevamente, por favor",
-                            "warning"
-                        );
-                    });
 
                     }
                 }
@@ -999,6 +881,7 @@ export default {
                             password: this.password,
                             id_cliente:this.VM_clientes._id
                         }
+                        console.log(newUser);
                         this.axios.post(urlservicios+"/GuardarUsuario/", newUser)
                         .then(response =>{
                            swal(
@@ -1015,19 +898,6 @@ export default {
                                 });
                             });
                         })
-                         .catch(function (error) {
-                        var load = false;
-                        setTimeout(() => {
-                            bus.$emit("load", {
-                                load
-                            });
-                        });
-                        swal(
-                            "Se presento un problema",
-                            "Intente nuevamente, por favor",
-                            "warning"
-                        );
-                    });
 
                     }
                 }
@@ -1066,6 +936,7 @@ export default {
                             password: this.password,
                         }
                             //this.hideModal()
+                        console.log(newUser);
                         this.axios.post(urlservicios+"GuardarUsuario/", newUser)
                         .then(response =>{
                            swal(
@@ -1082,19 +953,6 @@ export default {
                                 });
                             });
                         })
-                         .catch(function (error) {
-                        var load = false;
-                        setTimeout(() => {
-                            bus.$emit("load", {
-                                load
-                            });
-                        });
-                        swal(
-                            "Se presento un problema",
-                            "Intente nuevamente, por favor",
-                            "warning"
-                        );
-                    });
                         
                     }
                 }
@@ -1525,12 +1383,14 @@ export default {
                             });
                         })
                     */
+                    //console.log(urlservicios+ "getVehicleUser/"+this.usuEditar._id);
                     this.axios.get(urlservicios+ "getVehicleUser/"+this.usuEditar._id)
                             .then(response => {
                                 this.usuEditar.vehiculo=response.data.id_vehiculo
                                 if(typeof(this.usuEditar.id_transporte)=='string'){
                                     this.axios.get(urlservicios+"getVehicles/" +test.id_OperadorLogistico._id +"/"+this.usuEditar.id_transporte)
                                         .then(response =>{
+                                            console.log(response);
                                             this.optionsVehiculos=response.data
                                             this.optionsVehiculos.forEach(element => {
                                                 element.nombre=element.placa+" - "+element.marca
@@ -1603,6 +1463,7 @@ export default {
             }
         },
         EditarUsuario(data){
+            console.log(data.item);
             this.usuEditar=Object.assign({}, data.item);
             this.$refs.Editar.show()
         },
@@ -1632,6 +1493,7 @@ export default {
             var test =JSON.parse(test2);
             this.axios.get(urlservicios+"UsuariosPorOperador/"+test.id_OperadorLogistico._id)
                 .then((response) => {
+                    console.log(response);
                     this.UsuariosTabla=response.data
                     this.$refs.table.refresh();
 
@@ -1680,9 +1542,12 @@ export default {
                     "warning"
                 );
             });
-        this.axios.get(urlservicios+"UsuariosPorOperador/"+test.id_OperadorLogistico._id)
+            console.log(urlservicios+"getVehicles/"+test.id_OperadorLogistico._id);
+        this.axios.get(urlservicios+"getVehicles/"+test.id_OperadorLogistico._id)
                 .then((response) => {
-                    this.UsuariosTabla=response.data
+                    console.log("-.--------------------------");
+                    console.log(response);
+                    
                 })
                 .catch(function (error) {
                     var load = false;

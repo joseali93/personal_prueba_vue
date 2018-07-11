@@ -88,8 +88,10 @@
                                         <i class="fa fa-cogs" aria-hidden="true"></i><span class="sr-only">Search</span>
                                     </template>
                                     <b-dropdown-header>Configuración WayLogistic</b-dropdown-header>
-
+                                    
                                     <b-dropdown-item-button @click="configUsuarios">Usuarios</b-dropdown-item-button>
+                                    <b-dropdown-item-button @click="configVehiculos">Vehiculos</b-dropdown-item-button>
+                                    
                                     <b-dropdown-item-button @click="confiCliente">Clientes</b-dropdown-item-button>
                                     <b-dropdown-item-button @click="confiCentroC">Centros de Costo</b-dropdown-item-button>
                                     <b-dropdown-item-button @click="confiCentroL">Centros Logísticos </b-dropdown-item-button>
@@ -202,7 +204,12 @@ export default {
             });
             this.$router.replace("/inicio/trazabilidad/listado");
         },
-
+        configVehiculos(){
+            /*
+			SE REALIZA EL RUTEO AL COMPONENTE CONFIGURACION DE USUARIOS
+			*/     
+			this.$router.replace("/inicio/configVehiculos");
+        },
         configUsuarios() {
 			/*
 			SE REALIZA EL RUTEO AL COMPONENTE CONFIGURACION DE USUARIOS

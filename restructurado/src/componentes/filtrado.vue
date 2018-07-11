@@ -363,7 +363,7 @@ export default {
                             })
                             }, )
                     this.axios.get(urlservicios+"ObtenerOrdenesFiltrado/"+infologin.id_OperadorLogistico._id+"/"+this.filter+"/"+esadoconsulta+
-                    "/"+cliente+"/"+centrocosto+"/"+inicio+"/"+fin)
+                    "/"+cliente+"/"+centrocosto+"/"+inicio+"/"+fin+"null")
                     .then((response) => {
                         this.consulta=response.data
                         if(this.consulta==''){
@@ -455,7 +455,7 @@ export default {
                         }, )
 
                 this.axios.get(urlservicios+"ObtenerOrdenesFiltrado/"+infologin.id_OperadorLogistico._id+"/"+this.filter+"/"+esadoconsulta+
-                "/"+cliente+"/"+centrocosto+"/"+inicio+"/"+fin)
+                "/"+cliente+"/"+centrocosto+"/"+inicio+"/"+fin+"/null")
                 .then((response) => {
                     this.consulta=response.data
                     if(this.consulta==''){
