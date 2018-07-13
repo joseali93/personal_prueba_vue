@@ -287,6 +287,7 @@
                                     <b-form-input id="numIdent3"
                                     :state="estadoNumeroIden" v-model="usu.numero_identificacion" @keyup.native="numeros(this,'numIdent3')" ></b-form-input>
                                     </b-form-group>
+                                    <!--
                                     <b-form-group horizontal
                                                 label="Medio de Transporte:"
                                                 label-class="text-sm-right"
@@ -301,6 +302,7 @@
                                         <v-select id="Vehiculo" v-model="VM_vehiculos" placeholder="Seleccione el tipo de usuario a crear" 
                                              label="nombre" :options="optionsVehiculos"  :disabled="disabled_vehiculo"  ></v-select>
                                     </b-form-group>
+                                    -->
                                 </b-form-group>
                             </b-card>
                         </b-col>
@@ -592,7 +594,7 @@ export default {
           to: "/inicio"
         },
         {
-          text: "Configuración Clientes",
+          text: "Configuración usuarios",
           to: "/inicio/configcliente",
           active: true
         }
@@ -911,12 +913,62 @@ export default {
                     );
                 }
                 else{
-                    if(this.estadoNumeroIden==false||this.estadoT==false||this.estadonombre==false||this.estadoapellido==false){
-                        swal(
-                        "Por favor complete correctamente los campos e intente nuevamente",
-                        "",
-                        "warning"
-                        );
+                    console.log(this.password.length);
+                    if(this.estadoNumeroIden==false||this.estadoT==false||this.estadonombre==false||this.estadoapellido==false||
+                    this.VM_medios||this.VM_vehiculos||this.password.length<9){
+                        if(this.VM_medios==''){
+                            swal(
+                            "Por favor seleccione el medio de transporte",
+                            "",
+                            "warning"
+                            );
+                            var load = false;
+                            setTimeout(() => {
+                                bus.$emit("load", {
+                                    load
+                                });
+                            });
+                        }
+                        if(this.VM_vehiculos==''){
+                            swal(
+                            "Por favor seleccione el vehiculo",
+                            "",
+                            "warning"
+                            );
+                            var load = false;
+                            setTimeout(() => {
+                                bus.$emit("load", {
+                                    load
+                                });
+                            });
+                        }
+                        if(this.password.length<9){
+                            swal(
+                            "",
+                            "La contraseña debe tener minimo 9 caracteres   ",
+                            "warning"
+                            );  
+                            var load = false;
+                            setTimeout(() => {
+                                bus.$emit("load", {
+                                    load
+                                });
+                            });
+                        }
+                        else{
+                            swal(
+                            "Por favor complete correctamente los campos e intente nuevamente",
+                            "",
+                            "warning"
+                            );
+                            var load = false;
+                            setTimeout(() => {
+                                bus.$emit("load", {
+                                    load
+                                });
+                            });
+                        }
+                        
                     }
                     else{
                         var newUser={
@@ -928,14 +980,14 @@ export default {
                             id_rol:this.tipoUsu._id,
                             correo:this.usu.correo,
                             password: this.password,
-                            id_vehiculo:this.VM_vehiculos._id,
-                            id_transporte:this.VM_medios._id
+                            //id_vehiculo:this.VM_vehiculos._id,
+                            //id_transporte:this.VM_medios._id
                         }
                        
                         this.axios.post(urlservicios+"/GuardarUsuario/", newUser)
                         .then(response =>{
                            swal(
-                            'Good job!',
+                            '',
                             'Creado correctamente',
                             'success'
                             )
@@ -980,12 +1032,47 @@ export default {
                     );
                 }
                 else{
-                    if(this.estadoNumeroIden==false||this.estadoT==false||this.estadonombre==false||this.estadoapellido==false){
-                        swal(
-                        "Por favor complete correctamente los campos e intente nuevamente",
-                        "",
-                        "warning"
-                        );
+                    if(this.estadoNumeroIden==false||this.estadoT==false||this.estadonombre==false||this.estadoapellido==false||this.VM_clientes==''||
+                     this.password.length<9){
+                          if(this.password.length<9){
+                            swal(
+                            "",
+                            "La contraseña debe tener minimo 9 caracteres   ",
+                            "warning"
+                            );  
+                            var load = false;
+                            setTimeout(() => {
+                                bus.$emit("load", {
+                                    load
+                                });
+                            });
+                        }
+                        if(this.VM_clientes==''){
+                            swal(
+                            "Por favor complete el campo cliente",
+                            "",
+                            "warning"
+                            );
+                            var load = false;
+                            setTimeout(() => {
+                                bus.$emit("load", {
+                                    load
+                                });
+                            });
+                        }else{
+                            swal(
+                            "Por favor complete correctamente los campos e intente nuevamente",
+                            "",
+                            "warning"
+                            );
+                            var load = false;
+                                setTimeout(() => {
+                                    bus.$emit("load", {
+                                        load
+                                    });
+                                });
+                        }
+                        
                     }
                     else{
                         var newUser={
@@ -1047,12 +1134,35 @@ export default {
                     );
                 }
                 else{
-                    if(this.estadoNumeroIden==false||this.estadoT==false||this.estadonombre==false||this.estadoapellido==false){
-                        swal(
-                        "Por favor complete correctamente los campos e intente nuevamente",
-                        "",
-                        "warning"
-                        );
+                    if(this.estadoNumeroIden==false||this.estadoT==false||this.estadonombre==false||this.estadoapellido==false||
+                    this.password.length<9){
+                         if(this.password.length<9){
+                            swal(
+                            "",
+                            "La contraseña debe tener minimo 9 caracteres   ",
+                            "warning"
+                            );  
+                            var load = false;
+                            setTimeout(() => {
+                                bus.$emit("load", {
+                                    load
+                                });
+                            });
+                        }
+                        else{
+                            swal(
+                            "Por favor complete correctamente los campos e intente nuevamente",
+                            "",
+                            "warning"
+                            );
+                            var load = false;
+                            setTimeout(() => {
+                                bus.$emit("load", {
+                                    load
+                                });
+                            });
+                        }
+                        
                     }
                     else{
                         var newUser={
@@ -1082,19 +1192,19 @@ export default {
                                 });
                             });
                         })
-                         .catch(function (error) {
-                        var load = false;
-                        setTimeout(() => {
-                            bus.$emit("load", {
-                                load
+                        .catch(function (error) {
+                            var load = false;
+                            setTimeout(() => {
+                                bus.$emit("load", {
+                                    load
+                                });
                             });
+                            swal(
+                                "Se presento un problema",
+                                "Intente nuevamente, por favor",
+                                "warning"
+                            );
                         });
-                        swal(
-                            "Se presento un problema",
-                            "Intente nuevamente, por favor",
-                            "warning"
-                        );
-                    });
                         
                     }
                 }

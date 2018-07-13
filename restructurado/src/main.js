@@ -29,14 +29,14 @@ const enrutador = new VueRouter({
         routes: rutas,
         mode: 'history'
     })
-//
+
 //export var urlsocket = 'http://18.220.107.151:8080'
 export var urlsocket = 'http://200.116.52.29:8080'
 //export var urlsocket = 'http://192.168.1.100:8080';
 //export var urlsocket = 'http://192.168.1.79:8080';
 
-//export var urlservicios = 'http://200.116.52.29:3000/logistica/';
-export var urlservicios = 'http://192.168.1.79:3000/logistica/';
+export var urlservicios = 'http://200.116.52.29:3000/logistica/';
+//export var urlservicios = 'http://192.168.1.79:3000/logistica/';
 //export var urlservicios = 'http://192.168.1.100:3000/logistica/';
 //export var urlservicios = 'http://18.220.107.151:3000/logistica/';
 //export var urlservicios = 'http://localhost:3000/logistica/';

@@ -533,25 +533,33 @@
                                                                     class="form-control form-control-sm"
                                                                     :state="estado.direccion"
                                                                 />
-                                                                <!--
-                                  @input="localizar()"
-                                @keypress="localizar()"
-                                          v-model="detalles.destinatario.direccion"
-
-                                class="form-control form-control-sm"
-                                :state="estado.direccion"
-                                @input="localizar()"
-                                @keypress="localizar()"
-                              @keyup="algo()"
-                              -->
+                                                              
 
                                                             </b-col>
 
                                                         </b-form-row>
+                                                         <b-form-row
+                                                            v-show="selectservice&&mostrardestinatario"
+                                                            class="my-1">
+                                                            <b-col md="4">
+                                                                <h5 class="text-primary mt-2">Contacto:</h5>
+                                                            </b-col>
+                                                            <b-col md="8">
+                                                                <input
+                                                                    type="text"
+                                                                    :style="validatecampoTel"
+                                                                    class="form-control form-control-sm"
+                                                                    id="nombreContacto"
+                                                                    
+                                                                    placeholder="Nombre de Contacto"
+                                                                    
+                                                                    v-model="detalles.destinatario.nombreContacto"
+                                                                >
+                                                            </b-col>
+                                                        </b-form-row>
                                                         <b-form-row
                                                             v-show="selectservice&&mostrardestinatario"
-                                                            class="my-1"
-                                                        >
+                                                            class="my-1">
                                                             <b-col md="4">
                                                                 <h5 class="text-primary mt-2">Teléfono:</h5>
                                                             </b-col>
@@ -568,7 +576,7 @@
                                                                     v-model="detalles.destinatario.telefono"
                                                                 >
                                                             </b-col>
-                                                            </b-form-row>
+                                                        </b-form-row>
                                             </b-tab>
                                             </b-tabs>
                                             <b-card-footer>
@@ -907,70 +915,78 @@
                                                                                             </v-select>
                                                                             </b-col>
                                                                         </b-form-row>
+                                                                        
+                                                                    <b-form-row class="my-1">
+                                                                        <b-col>
+                                                                            <h5 class="text-primary mt-2">Direccion:</h5>
+                                                                        </b-col>
+                                                                        <b-col>
+                                                                            <b-form-input
+                                                                                type="text"
+                                                                                class="form-control form-control-sm"
+                                                                                placeholder="Indentidicación"
+                                                                                v-model="detalleseditar.destinatario.direccion"
+                                                                                
+                                                                                :state="null"
+                                                                                v-b-popover.hover="'Se debe diligenciar sin puntos, en caso de NIT sin numero de validación, ni guion'"
+                                                                                title="Num. Identificacion"
+                                                                            ></b-form-input>
+                                                                                
+                                                                        </b-col>
+                                                                    </b-form-row>
+                                                                    <b-form-row class="my-1">
+                                                            <b-col md="4">
+                                                                <h5 class="text-primary mt-2">Dirección:</h5>
+                                                            </b-col>
+                                                            <b-col md="8">
+                                                                <b-form-input
+                                                                    v-if="GeoReferenciacion==true"
+                                                                    ref="focusDireccion"
+                                                                    id="direccionGoogle3"
+                                                                    type="text"
+                                                                    placeholder="Dirección"
+                                                                    required
+                                                                    maxlength="100"
+                                                                    @change="initAutocomplete"
+                                                                    @input="initAutocomplete"
+                                                                    v-model="detalleseditar.destinatario.direccion"
+                                                                    class="form-control form-control-sm"
+                                                                    :state="estado.direccion"
+                                                                />
+                                                                <b-form-input
+                                                                    v-if="GeoReferenciacion==false"
+                                                                    ref="focusDireccion"
+                                                                    id="direccion"
+                                                                    type="text"
+                                                                    placeholder="Dirección"
+                                                                    required
+                                                                    maxlength="100"
+                                                                    v-model="detalleseditar.destinatario.direccion"
+                                                                    class="form-control form-control-sm"
+                                                                    :state="estado.direccion"
+                                                                />
+                                                              
+
+                                                            </b-col>
+
+                                                        </b-form-row>
+
                                                                         <b-form-row class="my-1">
                                                                             <b-col>
-                                                                                <h5 class="text-primary mt-2">Identificación:</h5>
+                                                                                <h5 class="text-primary mt-2">Contacto:</h5>
                                                                             </b-col>
                                                                             <b-col>
                                                                                 <b-form-input
-                                                                                    type="number"
+                                                                                    type="text"
                                                                                     class="form-control form-control-sm"
                                                                                     placeholder="Indentidicación"
-                                                                                    v-model="detalleseditar.destinatario.numero_identificacion"
-                                                                                    @change="initAutocompleteED"
-                                                                                    @input="initAutocompleteED"
+                                                                                    v-model="detalleseditar.destinatario.nombreContacto"
+                                                                                   
                                                                                     :state="null"
                                                                                     v-b-popover.hover="'Se debe diligenciar sin puntos, en caso de NIT sin numero de validación, ni guion'"
                                                                                     title="Num. Identificacion"
                                                                                 ></b-form-input>
-                                                                                    <!--<input type="text"
-                                @keyup.enter.tab.native="buscar('editar')"
-                              @keydown.tab.native="buscar('editar')"
-                              class="form-control form-control-sm"
-                              placeholder="Nombre" v-model="detalles.destinatario.nombre">
-                              -->
-                                                                            </b-col>
-                                                                        </b-form-row>
-                                                                        <!--
-                      <b-form-row class="my-1">
-                          <b-col>
-                              <label  class="col-sm col-form-label col-form-label-sm">Nombre: </label>
-                          </b-col>
-                          <b-col>
-                          <b-form-input type="text" class="form-control form-control-sm"  placeholder="Nombre" v-model="detalleseditar.destinatario.nombre"
-                              :state="estado.nombre"></b-form-input>
-
-
-                          </b-col>
-                          -->
-                                                                        <b-form-row class="my-1">
-                                                                            <b-col>
-                                                                                <h5 class="text-primary mt-2">Dirección:</h5>
-                                                                            </b-col>
-                                                                            <b-col>
-                                                                                <b-form-input
-                                                                                    v-if="GeoReferenciacion==true"
-                                                                                    id="direccionGoogle3"
-                                                                                    ref="focusDireccionED"
-                                                                                    type="text"
-                                                                                    class="form-control form-control-sm"
-                                                                                    placeholder="Direccion"
-                                                                                    v-model="detalleseditar.destinatario.direccion"
-                                                                                    :state="estado.direccion"
-                                                                                ></b-form-input>
-                                                                                    <b-form-input
-                                                                                        v-if="GeoReferenciacion==false"
-                                                                                        id="direccionGoogle"
-                                                                                        ref="focusDireccionED"
-                                                                                        type="text"
-                                                                                        class="form-control form-control-sm"
-                                                                                        placeholder="Direccion sin google"
-                                                                                        v-model="detalleseditar.destinatario.direccion"
-                                                                                        :state="estado.direccion"
-                                                                                    ></b-form-input>
-                                                                                        <!--
-                            <input type="text" class="form-control form-control-sm" id="editardire" placeholder="Direccion" v-model="detalleseditar.destinatario.direccion">
-                            -->
+                                                                                   
                                                                             </b-col>
                                                                         </b-form-row>
                                                                         <b-form-row class="my-1">
@@ -1992,6 +2008,7 @@ export default {
                         direccion: this.detalleseditar.destinatario.direccion,
                         nombre: this.detalleseditar.destinatario.nombre,
                         telefono: this.detalleseditar.destinatario.telefono,
+                        nombreContacto: this.detalleseditar.destinatario.nombreContacto,
                         //id_cliente: this.remitente.id_cliente,
                         latitud: this.lati,
                         longitud: this.longi,
@@ -2025,6 +2042,7 @@ export default {
                         //numero_identificacion: this.detalleseditar.destinatario.numero_identificacion,
                         direccion: this.detalleseditar.destinatario.direccion,
                         //nombre: this.detalleseditar.destinatario.nombre,
+                        nombreContacto: this.detalleseditar.destinatario.nombreContacto,
                         telefono: this.detalleseditar.destinatario.telefono,
                         //id_cliente: this.remitente.id_cliente,
                         latitud: this.lati,
@@ -2402,6 +2420,7 @@ export default {
                         //numero_identificacion: this.detalles.destinatario.numero_identificacion,
                         direccion: this.detalles.destinatario.direccion,
                         nombre: this.detalles.destinatario.nombre,
+                        nombreContacto: this.detalles.destinatario.nombreContacto,
                         telefono: this.detalles.destinatario.telefono,
                         //id_cliente: this.remitente.id_cliente,
                         latitud: this.lati,
@@ -2429,6 +2448,7 @@ export default {
                         direccion: this.detalles.destinatario.direccion,
                         // nombre: this.detalles.destinatario.nombre,
                         telefono: this.detalles.destinatario.telefono,
+                        nombreContacto: this.detalles.destinatario.nombreContacto,
                         //id_cliente: this.remitente.id_cliente,
                         latitud: this.lati,
                         longitud: this.longi,
@@ -2835,9 +2855,10 @@ export default {
                             direccion_recogida: localremijson.direccion,
                             telefono_contacto: localremijson.telefono,
                             nombre_contacto: localremijson.nombre,
-                            latitud: localremijson.latitud,
-                            longitud: localremijson.longitud,
-                            codigo_postal: localremijson.codigo_postal
+                            //latitud: localremijson.latitud,
+                            //longitud: localremijson.longitud,
+                            //codigo_postal: localremijson.codigo_postal
+                            nombreContacto:localremijson.nombreContacto
                         },
                         observaciones: this.observacionesGeneral,
                         detalle: this.DetalleServicio

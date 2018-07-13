@@ -177,9 +177,7 @@ DE LA ORDEN DE SERVICIO -->
                                     >
                                         </b-form-input>
                                         <!--
-                               @change="localizar()"
-                              @keypress="localizar()"
-                                 @keyup.enter.native="localizar()"
+                              
                               -->
 
                                         </b-form-group>
@@ -273,7 +271,7 @@ DE LA ORDEN DE SERVICIO -->
                                         id="nombre"
                                         size=""
                                         type="text"
-                                        v-model="remit.nombre"
+                                        v-model="remit.nombreContacto"
                                         required
                                         :state="nomStatus"
                                         placeholder="Nombre"
@@ -542,10 +540,8 @@ export default {
                         }
                     }
 
-                    // Object.keys(places).forEach((k) => {
                 }.bind(this)
             );
-            //input.value=input.value.split(',')[0];
             input.value = input.value.split(",")[0];
         },
         cambio() {
@@ -564,14 +560,12 @@ export default {
                         this.onSearch(this.remitente.nombre);
                         this.remit.nombre = "";
                         this.remit.direccion = "";
-                        //this.remit.numero_identificacion = "";
                         this.remit.telefono = "";
                         this.remit.nombre = "";
                     }
                 } else {
                     this.remit.nombre = "";
                     this.remit.direccion = "";
-                    //this.remit.numero_identificacion = "";
                     this.remit.telefono = "";
                 }
 
@@ -580,25 +574,25 @@ export default {
                 if (this.remitente == null || this.remitente == "null") {
                     this.remit.nombre = "";
                     this.remit.direccion = "";
-                    //this.remit.numero_identificacion = "";
                     this.remit.telefono = "";
                 } else {
                     this.remit = Object.assign({}, this.remitente);
                     this.$nextTick(() => {
-                        //this.$refs.focusRemitente.focus();
                     });
-                    //this.remitente=Object.assign({}, this.remitente);
                 }
             }
 
-            //this.remitente=remijson
         },
         onSearch(search) {
             //loading(true);
-            if (search.length >= 3) {
+            if(search){
+                if (search.length >= 3) {
                 this.search(search, this);
-
+                }
+            
             }
+            
+            
         },
         search(search) {
             var remi = localStorage.getItem("remitente");
@@ -614,7 +608,7 @@ export default {
                     loading(false);
 
           })
-          */
+          */            
                         this.axios.get(urlservicios+ `/obtenerDestinatarioNombre/${escape(search)}`)
                             .then(response => {
                                 if (response.data.destinatarios.length == 0) {
@@ -1121,24 +1115,14 @@ export default {
                         codigo_postal: this.posta
                     };
                 }
-                /*
-            objetoremitente = {
-                numero_identificacion: this.remitente.numero_identificacion,
-                direccion: this.remitente.direccion,
-                nombre: this.remitente.nombre,
-                telefono: this.remitente.telefono,
-                id_cliente: this.remitente.id_cliente,
-                latitud: this.lati,
-                longitud:this.longi,
-                codigo_postal:this.posta
-                };
-                */
+ 
                 localStorage.setItem("remitente", JSON.stringify(this.remit));
                 if (this.optionsdestinatarios.length == 0) {
                     var objetocrear = {
                         //numero_identificacion: this.remit.numero_identificacion,
                         direccion: this.remit.direccion,
                         nombre: this.remit.nombre,
+                        nombreContacto:this.remit.nombreContacto,
                         telefono: this.remit.telefono,
                         id_cliente: this.remit.id_cliente,
                         //latitud: this.lati,
@@ -1251,7 +1235,6 @@ export default {
                     var remijson = JSON.parse(remi);
                     if (remi) {
                         this.remitente = remijson;
-                        //this.onSearch(remijson.nombre, loading)
                     }
                     var fechas = localStorage.getItem("fecha_orden");
                     var fechasjson = JSON.parse(fechas);

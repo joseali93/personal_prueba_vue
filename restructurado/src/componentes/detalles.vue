@@ -107,7 +107,7 @@
                             </div>
                             <b-row class="mb-2">
                                 <b-col>
-                                    <b-row>
+                                    <b-row v-if="currentUser.id_cliente.nombre">
                                         <b-col>
                                             <h4 class="text-primary">Cliente:</h4>
                                         </b-col>
@@ -292,20 +292,7 @@
                                                             No se encontraron  medios de transporte
                                                         </template>
                                                         </v-select>
-                                                        <!--
-                                                            <v-select
-                                                            v-model="model_medios"
-                                                            label="tipo"
-                                                            placeholder="Medio de Transporte"
-                                                            :options="medios"
-                                                            @input="vehic()"
-                                                            :disabled="medios_disable"
-                                                        >
-                                                         <template slot="no-options">
-                                                            No se encontraron  medios de transporte
-                                                        </template>
-                                                        </v-select>
-                                                            -->
+                                                       
                                                     </b-col>
                                                     <b-col>
                                                         <h4 class="text-primary">Courier: </h4>
@@ -321,20 +308,7 @@
                                                             No se encontraron  courier's
                                                         </template>
                                                         </v-select>
-                                                        <!--
-                                                            <v-select
-                                                            v-model="selected_curier"
-                                                            label="nombre"
-                                                            placeholder="Courier"
-                                                            :options="curiers"
-                                                            :disabled="selec_disable&&bloqueo"
-                                                            @input="updatecourier()"
-                                                        >
-                                                            <template slot="no-options">
-                                                            No se encontraron  courier's
-                                                        </template>
-                                                        </v-select>
-                                                        -->
+                                                       
                                                     </b-col>
                                                 </b-row>
                                                 <b-row>
@@ -724,11 +698,9 @@ export default {
             }
         }
         if(this.info.estado == "Orden De Servicio Asignada"){
-            console.log("esta asignada");
             if(this.id_cliente_local){
                 return true
             }else{
-                console.log("no es cliente");
                 return false
             }
         }
@@ -769,14 +741,20 @@ export default {
         updatecourier() {
             var login = localStorage.getItem("storedData");
             var infologin = JSON.parse(login);
-
             if (
                 this.selected_curier == null ||
                 this.selected_curier == "" ||
                 (this.selected_curier === null) | (this.selected_curier === "")
-            ) {
+            ) 
+            {
                 if (this.idCourier) {
                     if (this.curiers.length == 0) {
+                        var load = true;
+                        setTimeout(() => {
+                            bus.$emit("load", {
+                                load
+                            });
+                        });
                         this.axios
                             .get(
                                 urlservicios+
@@ -800,6 +778,19 @@ export default {
                                     });
                                 });
                                 //this.selec_disable=false
+                            })
+                            .catch(function (error) {
+                            var load = false;
+                            setTimeout(() => {
+                                bus.$emit("load", {
+                                    load
+                                });
+                            });
+                            swal(
+                                "Se presento un problema",
+                                "Intente nuevamente, por favor",
+                                "warning"
+                            );
                             });
                     } else {
                         this.curiers.forEach(element => {
@@ -810,19 +801,47 @@ export default {
                             }
                         });
                     }
-                } else {}
+                } else {
+                    var load = true;
+                        setTimeout(() => {
+                            bus.$emit("load", {
+                                load
+                            });
+                        });
+                    this.axios.get(urlservicios+"UsuariosCurier/" +infologin.id_OperadorLogistico._id +"/" +this.model_medios._id)
+                        .then(response => {
+                            this.curiers = response.data;
+                            var load = false;
+                            setTimeout(() => {
+                                bus.$emit("load", {
+                                    load
+                                });
+                            });
+                        })
+                        .catch(function (error) {
+                            var load = false;
+                            setTimeout(() => {
+                                bus.$emit("load", {
+                                    load
+                                });
+                            });
+                            swal(
+                                "Se presento un problema",
+                                "Intente nuevamente, por favor",
+                                "warning"
+                            );
+                        });
+                }
             } else {
                 if (infologin.id_OperadorLogistico.confirmacionSocket == false) {
                     if (this.curiers.length == 0) {
-                        console.log(urlservicios+"UsuariosCurier/" +infologin.id_OperadorLogistico._id +"/" +this.idMedio);
-                        this.axios
-                            .get(
-                                urlservicios+
-                                "UsuariosCurier/" +
-                                infologin.id_OperadorLogistico._id +
-                                "/" +
-                                this.idMedio
-                            )
+                        var load = true;
+                        setTimeout(() => {
+                            bus.$emit("load", {
+                                load
+                            });
+                        });                   
+                        this.axios.get(urlservicios+"UsuariosCurier/" +infologin.id_OperadorLogistico._id +"/" +this.idMedio)
                             .then(response => {
                                 this.curiers = response.data;
                                 this.curiers.forEach(element => {
@@ -838,6 +857,19 @@ export default {
                                     });
                                 });
                                 //this.selec_disable=false
+                            })
+                            .catch(function (error) {
+                                var load = false;
+                                setTimeout(() => {
+                                    bus.$emit("load", {
+                                        load
+                                    });
+                                });
+                                swal(
+                                    "Se presento un problema",
+                                    "Intente nuevamente, por favor",
+                                    "warning"
+                                );
                             });
                     } else {
                         this.curiers.forEach(element => {
@@ -851,6 +883,12 @@ export default {
                 } else {
                     var couriersSer;
                     if (this.curiers.length == 0) {
+                        var load = true;
+                        setTimeout(() => {
+                            bus.$emit("load", {
+                                load
+                            });
+                        });  
                         this.axios
                             .get(
                                 urlservicios+
@@ -874,6 +912,19 @@ export default {
                                     });
                                 });
                                 //this.selec_disable=false
+                            })
+                            .catch(function (error) {
+                                var load = false;
+                                setTimeout(() => {
+                                    bus.$emit("load", {
+                                        load
+                                    });
+                                });
+                                swal(
+                                    "Se presento un problema",
+                                    "Intente nuevamente, por favor",
+                                    "warning"
+                                );
                             });
                     } else {
                         this.socket.emit("MedioCourier", {
@@ -894,9 +945,7 @@ export default {
         vehic() {
             var login = localStorage.getItem("storedData");
             var infologin = JSON.parse(login);
-            //&& this.idCourier
             if (this.model_medios == null ) {
-                //this.curiers = []
                 this.selected_curier = "";
                 this.curiers=[]
 
@@ -1032,8 +1081,8 @@ export default {
                                 );
                             });
                     }
-                } else {
-                    
+                } 
+                else {
                     if (this.model_medios != null) {
                         var nombre;
                         if (infologin.id_OperadorLogistico.confirmacionSocket == false) {
@@ -1043,14 +1092,7 @@ export default {
                                     load
                                 });
                             });
-                            this.axios
-                                .get(
-                                    urlservicios+
-                                    "UsuariosCurier/" +
-                                    infologin.id_OperadorLogistico._id +
-                                    "/" +
-                                    this.model_medios._id
-                                )
+                            this.axios.get(urlservicios+"UsuariosCurier/" +infologin.id_OperadorLogistico._id +"/" +this.model_medios._id)
                                 .then(response => {
                                     this.curiers = response.data;
 
@@ -1093,6 +1135,12 @@ export default {
                                     });
                                 }else{
                                     var courierlocal;
+                                    var load = true;
+                                    setTimeout(() => {
+                                        bus.$emit("load", {
+                                            load
+                                        });
+                                    });  
                                 this.axios
                                     .get(
                                         urlservicios+
@@ -1134,6 +1182,11 @@ export default {
                                                 load
                                             });
                                         });
+                                        swal(
+                                            "Se presento un problema",
+                                            "Intente nuevamente, por favor",
+                                            "warning"
+                                        );
                                     });
                                 }
                                 
@@ -1153,12 +1206,9 @@ export default {
                             }
                         }
                     } else {
-                        //this.selec_disable=true
                     }
                 }
             }
-
-            //this.updatecourier()
         },
 
         desabilitarguardar() {
@@ -1184,7 +1234,6 @@ export default {
                         return false;
                     }
                     else{
-                        console.log();
                         return true
                     }
                 //return false;
@@ -1277,7 +1326,6 @@ export default {
                 });
                 
             });
-            console.log("emito");
             bus.$emit('consultar')
             this.$router.replace("/inicio/consultar/resultado");
         },
@@ -1432,7 +1480,12 @@ export default {
                             var objdestinatario = {
                                 propiedadesDinamicas: josea
                             };
-
+                            var load = true;
+                        setTimeout(() => {
+                            bus.$emit("load", {
+                                load
+                            });
+                        });  
                             this.axios
                                 .get(
                                     urlservicios+
@@ -1442,7 +1495,12 @@ export default {
                                 )
                                 .then(response => {
                                     destina = response.data.destinatarios;
-
+                                    var load = true;
+                                    setTimeout(() => {
+                                        bus.$emit("load", {
+                                            load
+                                        });
+                                    });  
                                     this.axios
                                         .post(
                                             urlservicios+
@@ -1452,11 +1510,35 @@ export default {
                                             objdestinatario
                                         )
                                         .then(responsedestinatario => {
+                                            var load = false;
+                                            setTimeout(() => {
+                                                bus.$emit("load", {
+                                                    load
+                                                });
+                                            });  
                                         });
-                                });
+                                })
+                                .catch(function (error) {
+                                        var load = false;
+                                        setTimeout(() => {
+                                            bus.$emit("load", {
+                                                load
+                                            });
+                                        });
+                                        swal(
+                                            "Se presento un problema",
+                                            "Intente nuevamente, por favor",
+                                            "warning"
+                                        );
+                                    });
                         }
                     });
-
+                    var load = true;
+                    setTimeout(() => {
+                        bus.$emit("load", {
+                            load
+                        });
+                    });  
                     this.axios
                         .post(
                             urlservicios+
@@ -1540,7 +1622,6 @@ export default {
                     });
                 });
             } else {
-                console.log("entro a asignar courier");
                 if (
                     seleccionado == "" ||
                     seleccionado == "null" ||
@@ -1569,7 +1650,6 @@ export default {
                                     mensaje
                                 });
                             });
-                            console.log("emito");
                             this.socket.emit("new-message", {
                                 idOperador: infologin.id_OperadorLogistico._id, //per logistico
                                 idOrigen: infologin._id, //id usuario
@@ -1730,7 +1810,6 @@ export default {
                 }
                 
                 if (contador == this.currentUser.detalle.length) {
-                    console.log("entro");
                     this.asignarcurier(seleccionado);
                 } else {
                     swal(
@@ -1797,6 +1876,12 @@ export default {
                     });
                 });
                 if (produc && serv) {
+                    var load = true;
+                    setTimeout(() => {
+                        bus.$emit("load", {
+                            load
+                        });
+                    });  
                     this.axios
                         .get(urlservicios+ "estructuraf/" + produc + "/" + serv)
                         .then(response => {
@@ -1814,7 +1899,12 @@ export default {
                                     var login = localStorage.getItem("storedData");
                                     var infologin = JSON.parse(login);
                                     //document.getElementById(this.inputs.campos[i].id).value = null;
-
+                                    var load = true;
+                                    setTimeout(() => {
+                                        bus.$emit("load", {
+                                            load
+                                        });
+                                    });  
                                     this.axios
                                         .get(
                                             this.inputs.campos[i].urlobjeto +
@@ -1862,6 +1952,19 @@ export default {
                                 } else {}
                                 if (!hidden) this.$refs.ModalAct.show();
                             }
+                        })
+                        .catch(function (error) {
+                            var load = false;
+                            setTimeout(() => {
+                                bus.$emit("load", {
+                                    load
+                                });
+                            });
+                            swal(
+                                "Se presento un problema",
+                                "Intente nuevamente, por favor",
+                                "warning"
+                            );
                         });
                 } else {
                     if (typeof callback === "function") callback();
@@ -1888,6 +1991,12 @@ export default {
                     });
                 });
                 if (produc && serv) {
+                    var load = true;
+                    setTimeout(() => {
+                        bus.$emit("load", {
+                            load
+                        });
+                    });  
                     this.axios
                         .get(urlservicios+ "estructuraf/" + produc + "/" + serv)
                         .then(response => {
@@ -1992,8 +2101,6 @@ export default {
                     id_curier: data.idOrigen,
                     id_medio: this.model_medios._id
                 };
-                console.log(".----------------.");
-                console.log(obj);
                 this.statuscourier = null;
                 var load = true;
                 setTimeout(() => {
@@ -2031,49 +2138,7 @@ export default {
             } else {
                 swal(data.mensaje.message, "", "warning");
             }
-            /*
-                  var obj = {
-                      id_orden: this.currentUser._id,
-                      id_curier: seleccionado._id,
-                      id_medio: this.model_medios._id
-                    };
 
-                    this.statuscourier = null;
-                    var load = true;
-                    setTimeout(() => {
-                      bus.$emit("load", {
-                        load
-                      });
-                    });
-                    this.axios
-                      .post(urlservicios+ "AsignarOrdenCurrier/", obj)
-                      .then(response => {
-                        var load = false;
-                        setTimeout(() => {
-                          bus.$emit("load", {
-                            load
-                          });
-                        });
-                        this.Documento = response.data;
-                        if (this.Documento.validacion == false) {
-                        } else {
-                          swal("Excelente!", "" + this.Documento.message, "success");
-                        }
-                      })
-                      .catch(function(error) {
-                        var load = false;
-                        setTimeout(() => {
-                          bus.$emit("load", {
-                            load
-                          });
-                        });
-                        swal(
-                          "Se presento un problema",
-                          "Intente nuevamente, por favor",
-                          "warning"
-                        );
-                      });
-                      */
         },
         // -------------------------------------------------------
         devolverIndiceActual(indice) {
@@ -2137,7 +2202,6 @@ export default {
 
         if (infologin.id_cliente) {
             this.selec_disable = false;
-            console.log("tengo cliente");
             this.id_cliente_local = infologin.id_cliente;
         }
         // -------------------------------------------------------
@@ -2268,7 +2332,6 @@ export default {
                     bus.$emit("load", {
                         load
                     });
-                    // this.socket.instance.disconnect(true);
                 });
             });
         }

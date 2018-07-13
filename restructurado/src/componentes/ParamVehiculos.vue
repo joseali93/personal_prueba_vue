@@ -1,7 +1,7 @@
 <template>
 
     <b-container fluid class="contenedorTotal">
-        vehiculos
+    
     <div class="breadcrumb-holder">
       <div class="container-fluid">
         <b-breadcrumb :items="items" />
@@ -15,15 +15,15 @@
 
         <b-container fluid>
             <b-card class="border mt-2" no-body header="Primary" header-bg-variant="primary">
-              <h3 slot="header" class="mb-0 encabezado">Usuarios</h3>
+              <h3 slot="header" class="mb-0 encabezado">Vehiculos</h3>
                 <b-card-body>
                     <b-row>
                         <b-col md="2" offset-md="10">
                           <div class="float-right mb-3">
-                            <b-btn variant="outline-success" @click="UsuarioNuevo()">
+                            <b-btn variant="outline-success" @click="VehiculoNuevo()">
                               <i class="fa fa-plus"></i>
                             </b-btn>
-                            <b-btn variant="outline-success" @click="refrescarUsuarios()">
+                            <b-btn variant="outline-success" @click="refrescarVehiculos()">
                               <i class="fa fa-refresh"></i>
                             </b-btn>
                           </div>
@@ -34,13 +34,12 @@
                                     horizontal
                                     :label-cols="4"
                                     breakpoint="md"
-                                    description="Filtrara del listado de usuarios existentes"
-                                    label="Buscar Usuario "
+                                    description="Filtrara del listado los vehiculos existentes"
+                                    label="Buscar Vehiculo "
                                     label-for="inputHorizontal">
                         <b-form-input   id="inputHorizontal"
-                                        v-model="usuario"
-                                        placeholder="Nombre del Usuario"
-
+                                        v-model="vehiculos"
+                                        placeholder="Vehiculo"
                                         ></b-form-input>
                     </b-form-group>
 
@@ -51,267 +50,39 @@
             <b-card class="border mt-2" no-body header="Primary" header-bg-variant="primary">
                 <h3 slot="header" class="mb-0 encabezado">Usuarios</h3>
                     <b-card-body>
-                        <b-table responsive fixed :items="UsuariosTabla" :fields="fields"
+                        <b-table   :items="VehiculosTablas" :fields="fields"
                             :current-page="currentPage" :per-page="10" ref="table" 
-                             :filter="usuario"
                             class="my-2">
                                 <template slot="editar" slot-scope="data">
-                                    <i class="btn btn-success fa fa-pencil" @click="EditarUsuario(data)"></i>
+                                    <i class="btn btn-success fa fa-pencil" @click="EditarVehiculo(data)"></i>
                                 </template>
-                                <template slot="nombre" slot-scope="data">
-                                    {{data.item.nombre}} {{data.item.apellido}}
+                                <template slot="placa" slot-scope="data">
+                                    {{data.item.placa}} 
                                 </template>
                                 
-                                <template slot="tipo" slot-scope="data">
-                                    {{data.item.tipo}}
+                                <template slot="marca" slot-scope="data">
+                                    {{data.item.marca}}
                                 </template>
-                                <template slot="numero_identificacion" slot-scope="data">
-                                    {{data.item.numero_identificacion}}
+                                <template slot="cilindraje" slot-scope="data">
+                                    {{data.item.cilindraje}}
                                 </template>
-                                <template slot="correo" slot-scope="data">
-                                    {{data.item.correo}}
+                                <template slot="color" slot-scope="data">
+                                    {{data.item.color}}
                                 </template>
-                                 <template slot="password" slot-scope="data">
-                                   <i class="btn btn-success fa fa-key" @click="cambioPassword(data)"></i>
+                                 <template slot="tripulacion" slot-scope="data">
+                                   <i class="btn btn-success fa fa-users" @click="Tripulacion(data)"></i>
                                 </template>
-                                 <template slot="inactivar" slot-scope="data">
-                                    <i class="btn btn-success fa fa-lock" v-if="data.item.estado==0"  @click="Inactivar(data)"></i>
-                                </template>     
-                                <template slot="estado" slot-scope="data">
-                                    <p v-if="data.item.estado==0"> Activo</p>
-                                    <p v-else>Inactivo</p>
-                                </template>         
-                                estado                   
+                                      
+                                                   
                         </b-table>
-                        <b-pagination size="md" :total-rows="UsuariosTabla.length" v-model="currentPage" :per-page="10">
+                        <b-pagination size="md" :total-rows="VehiculosTablas.length" v-model="currentPage" :per-page="10">
                         </b-pagination>
                     </b-card-body>
             </b-card>
         </b-container>
-
-        <!-- Modal Create Component -->
-        <b-modal id="modal1" ref="Crear" size="lg" no-close-on-backdrop
-         no-close-on-esc >
-            <div slot="modal-header"
-                class="w-100">
-                <b-btn class="rounded text-white"
-                    variant="danger"
-                    @click="hideModal">
-                    <i class="fa fa-times-circle"
-                        aria-hidden="true"></i>&#32;Cancelar
-                </b-btn>
-                <b-btn
-                        class="rounded float-right text-white"
-                        variant="warning"
-                        v-on:click="guardar()">
-                        <i class="fa fa-floppy-o"></i>&#32;Guardar
-                </b-btn>
-            </div>
-            <div slot="modal-footer"
-            class="w-100">
-            </div>
-                <b-container fluid>
-                    <b-row class="mb-1">
-                        <b-col>
-                            <v-select v-model="tipoUsu" placeholder="Seleccione el tipo de usuario a crear"  label="nombre" :options="optionsRoles" @input="tipoUsuario()"></v-select>
-                        </b-col>
-                    </b-row>
-                    
-                    <b-row class="w-100" v-show="admin">
-                        <b-col>
-                            <b-card  class="w-100">
-                                <b-form-group horizontal
-                                                breakpoint="lg"
-                                                label="Administrador"
-                                                label-size="lg"
-                                                label-class="font-weight-bold pt-0"
-                                                class="mb-0">
-                                    <b-form-group horizontal
-                                                label="Nombre :"
-                                                label-class="text-sm-right"
-                                                label-for="nombre1">
-                                    <b-form-input id="nombre1" v-model="usu.nombre" 
-                                       @input="ValidarTexto('nombre1','nuevo')"
-                                       maxlength="50"
-                                       :state="estadonombre"    ></b-form-input>
-                                    </b-form-group>
-                                    <b-form-group horizontal
-                                                label="Apellido :"
-                                                label-class="text-sm-right"
-                                                label-for="apellido1"
-                                                >
-                                    <b-form-input id="apellido1" v-model="usu.apellido"
-                                        @input="ValidarTexto('apellido1','nuevo')"
-                                       maxlength="50"
-                                       :state="estadoapellido"></b-form-input>
-                                    </b-form-group>
-                                    <b-form-group horizontal
-                                                label="Contraseña :"
-                                                label-class="text-sm-right"
-                                                label-for="password1">
-
-                                      <password :toggle	="true" id="password1"
-                                      :secureLength=9 v-model="password"/>
-                                    </b-form-group>
-                                     <b-form-group horizontal
-                                                label="Correo:"
-                                                label-class="text-sm-right"
-                                                label-for="email1">
-                                    <b-form-input id="email1" v-model="usu.correo"
-                                         @input="validacorreoT" :state="estadoT"
-                                        ></b-form-input>
-                                    </b-form-group>
-                                    <b-form-group horizontal
-                                                label="Numero de Identificación:"
-                                                label-class="text-sm-right"
-                                                label-for="numIdent1">
-                                    <b-form-input id="numIdent1"
-                                    :state="estadoNumeroIden" v-model="usu.numero_identificacion" @keyup.native="numeros(this,'numIdent2')" ></b-form-input>
-                                    </b-form-group>
-
-                                </b-form-group>
-                            </b-card>
-                        </b-col>
-                    </b-row>
-                    
-                    <b-row class="w-100" v-show="cliente">
-                        <b-col>
-                            <b-card class="w-100">
-                                <b-form-group horizontal
-                                                :label-cols="1"
-                                                label="Cliente"
-                                                label-size="lg"
-                                                label-class="font-weight-bold pt-0"
-                                                class="mb-0">
-                                    <b-form-group horizontal
-                                                label="Nombre :"
-                                                label-class="text-sm-right"
-                                                label-for="nombre2">
-                                    <b-form-input id="nombre2" v-model="usu.nombre" 
-                                       @input="ValidarTexto('nombre2','nuevo')"
-                                       maxlength="50"
-                                       :state="estadonombre"    ></b-form-input>
-                                    </b-form-group>
-                                    <b-form-group horizontal
-                                                label="Apellido :"
-                                                label-class="text-sm-right"
-                                                label-for="apellido2"
-                                                >
-                                    <b-form-input id="apellido2" v-model="usu.apellido"
-                                        @input="ValidarTexto('apellido2','nuevo')"
-                                       maxlength="50"
-                                       :state="estadoapellido"></b-form-input>
-                                    </b-form-group>
-                                    <b-form-group horizontal
-                                                label="Contraseña :"
-                                                label-class="text-sm-right"
-                                                label-for="password">
-
-                                      <password :toggle	="true" id="password" 
-                                      :secureLength=9 v-model="password"/>
-                                    </b-form-group>
-                                     <b-form-group horizontal
-                                                label="Correo:"
-                                                label-class="text-sm-right"
-                                                label-for="email2">
-                                    <b-form-input id="email2" v-model="usu.correo"
-                                         @input="validacorreoT" :state="estadoT"
-                                        ></b-form-input>
-                                    </b-form-group>
-                                    <b-form-group horizontal
-                                                label="Numero de Identificación:"
-                                                label-class="text-sm-right"
-                                                label-for="numIdent2">
-                                    <b-form-input id="numIdent2"
-                                    :state="estadoNumeroIden" v-model="usu.numero_identificacion" @keyup.native="numeros(this,'numIdent2')" ></b-form-input>
-                                    </b-form-group>
-                                    <b-form-group horizontal
-                                                label="Cliente :"
-                                                label-class="text-sm-right"
-                                                label-for="MedioT">
-                                        <v-select id="MedioT" v-model="VM_clientes" placeholder="Seleccione el tipo de usuario a crear"  label="nombre" :options="optionsClientes"></v-select>
-                                    </b-form-group>
-                                   
-                                </b-form-group>
-                            </b-card>
-                        </b-col>                  
-                    </b-row>
-                    <b-row class="w-100" v-show="courier">
-                        <b-col>
-                            <b-card  class="w-100">
-                                <b-form-group horizontal
-                                                breakpoint="lg"
-                                                label="Courier"
-                                                label-size="lg"
-                                                label-class="font-weight-bold pt-0"
-                                                class="mb-0">
-                                    <b-form-group horizontal
-                                                label="Nombre :"
-                                                label-class="text-sm-right"
-                                                label-for="nombre3">
-                                    <b-form-input id="nombre3" v-model="usu.nombre" 
-                                       @input="ValidarTexto('nombre3','nuevo')"
-                                       maxlength="50"
-                                       :state="estadonombre"    ></b-form-input>
-                                    </b-form-group>
-                                    <b-form-group horizontal
-                                                label="Apellido :"
-                                                label-class="text-sm-right"
-                                                label-for="apellido3"
-                                                >
-                                    <b-form-input id="apellido3" v-model="usu.apellido"
-                                        @input="ValidarTexto('apellido3','nuevo')"
-                                       maxlength="50"
-                                       :state="estadoapellido"></b-form-input>
-                                    </b-form-group>
-                                    <b-form-group horizontal
-                                                label="Contraseña :"
-                                                label-class="text-sm-right"
-                                                label-for="password2">
-
-                                      <password id="password2" :toggle="true" 
-                                      :secureLength=9 v-model="password"/>
-                                    </b-form-group>
-                                     <b-form-group horizontal
-                                                label="Correo:"
-                                                label-class="text-sm-right"
-                                                label-for="email3">
-                                    <b-form-input id="email3" v-model="usu.correo"
-                                         @input="validacorreoT" :state="estadoT"
-                                        ></b-form-input>
-                                    </b-form-group>
-                                    <b-form-group horizontal
-                                                label="Numero de Identificación:"
-                                                label-class="text-sm-right"
-                                                label-for="numIdent3">
-                                    <b-form-input id="numIdent3"
-                                    :state="estadoNumeroIden" v-model="usu.numero_identificacion" @keyup.native="numeros(this,'numIdent3')" ></b-form-input>
-                                    </b-form-group>
-                                    <b-form-group horizontal
-                                                label="Medio de Transporte:"
-                                                label-class="text-sm-right"
-                                                label-for="MedioT">
-                                        <v-select id="MedioT" v-model="VM_medios" placeholder="Seleccione el tipo de usuario a crear"  
-                                        label="tipo" :options="optionsMedios"  @input="MedioSeleccionado()"></v-select>
-                                    </b-form-group>
-                                    <b-form-group horizontal
-                                                label="Vehiculo :"
-                                                label-class="text-sm-right"
-                                                label-for="Vehiculo">
-                                        <v-select id="Vehiculo" v-model="VM_vehiculos" placeholder="Seleccione el tipo de usuario a crear" 
-                                             label="nombre" :options="optionsVehiculos"  :disabled="disabled_vehiculo"  ></v-select>
-                                    </b-form-group>
-                                </b-form-group>
-                            </b-card>
-                        </b-col>
-                        
-                    </b-row>
-                </b-container>
-        </b-modal>
-         <!-- Modal Edit Component -->
-         
-        <b-modal id="modal2" ref="Editar" size="lg" no-close-on-backdrop
-         no-close-on-esc >
+        <!-- Modal nuevo Component -->
+        <b-modal id="modal3" ref="Nuevo" size="lg" no-close-on-backdrop
+         no-close-on-esc>
             <div slot="modal-header"  class="w-100">
                 
                 <b-btn class="rounded text-white"
@@ -323,212 +94,7 @@
                 <b-btn
                         class="rounded float-right text-white"
                         variant="warning"
-                        v-on:click="ActualizarUsuario()">
-                        <i class="fa fa-floppy-o"></i>&#32;Guardar
-                </b-btn>
-            </div>
-            <div slot="modal-footer"
-            class="w-100">
-            </div>
-                <b-container fluid>
-                    <b-row class="mb-1">
-                        <b-col>
-                            <v-select v-model="usuEditar.tipo" placeholder="Seleccione el tipo de usuario a editar"  label="nombre" :options="optionsRoles" @input="tipoUsuarioEditar()"
-                                :disabled="true"></v-select>
-                        </b-col>
-                    </b-row>
-                    <b-row class="w-100" v-show="admin">
-                        <b-col>
-                            <b-card  class="w-100">
-                                <b-form-group horizontal
-                                                breakpoint="lg"
-                                                label="Administrador"
-                                                label-size="lg"
-                                                label-class="font-weight-bold pt-0"
-                                                class="mb-0">
-                                    <b-form-group horizontal
-                                                label="Nombre:"
-                                                label-class="text-sm-right"
-                                                label-for="nombreED1">
-                                    <b-form-input id="nombreED1"
-                                        v-model="usuEditar.nombre" 
-                                        @input="ValidarTexto('nombreED1','Editar')"
-                                       maxlength="50"
-                                       :state="estadonombre"   ></b-form-input>
-                                    </b-form-group>
-                                    <b-form-group horizontal
-                                                label="Apellido:"
-                                                label-class="text-sm-right"
-                                                label-for="apellidoED1">
-                                    <b-form-input id="apellidoED1"
-                                    v-model="usuEditar.apellido"
-                                     @input="ValidarTexto('apellidoED1','Editar')"
-                                       maxlength="50"
-                                       :state="estadoapellido"></b-form-input>
-                                    </b-form-group>
-                                     <b-form-group horizontal
-                                                label="Correo :"
-                                                label-class="text-sm-right"
-                                                label-for="correoED1">
-                                    
-                                    <b-form-input id="correoED1" v-model="usuEditar.correo"
-                                         @input="validacorreoT" :state="estadoT"
-                                        ></b-form-input>
-                                    </b-form-group>
-                                    <b-form-group horizontal
-                                                label="Numero de Identificación:"
-                                                label-class="text-sm-right"
-                                                label-for="numidentidadED">
-                                    <b-form-input id="numidentidadED" v-model="usuEditar.numero_identificacion"
-                                    :state="estadoNumeroIden"  @keyup.native="numeros(this,'numidentidadED')" ></b-form-input>
-                                    </b-form-group>
-
-                                </b-form-group>
-                            </b-card>
-                        </b-col>
-                    </b-row>
-                    <b-row class="w-100" v-show="cliente">
-                        <b-col>
-                            <b-card class="w-100">
-                                <b-form-group horizontal
-                                                :label-cols="1"
-                                                label="Cliente"
-                                                label-size="lg"
-                                                label-class="font-weight-bold pt-0"
-                                                class="mb-0">
-                                   <b-form-group horizontal
-                                                label="Nombre :"
-                                                label-class="text-sm-right"
-                                                label-for="nombreED2">
-                                    <b-form-input id="nombreED2"
-                                        v-model="usuEditar.nombre"
-                                         @input="ValidarTexto('nombreED2','Editar')"
-                                       maxlength="50"
-                                       :state="estadonombre"></b-form-input>
-                                    </b-form-group>
-                                    <b-form-group horizontal
-                                                label="Apellido :"
-                                                label-class="text-sm-right"
-                                                label-for="apellidoED2">
-                                    <b-form-input id="apellidoED2" 
-                                     v-model="usuEditar.apellido"
-                                       @input="ValidarTexto('apellidoED2','Editar')"
-                                       maxlength="50"
-                                       :state="estadonombre"></b-form-input>
-                                    </b-form-group>
-                                    <b-form-group horizontal
-                                                label="Correo :"
-                                                label-class="text-sm-right"
-                                                label-for="correoED2">
-                                    <b-form-input id="correoED2"
-                                    v-model="usuEditar.correo"
-                                      @input="validacorreoT" :state="estadoT" ></b-form-input>
-                                    </b-form-group>
-                                    <b-form-group horizontal
-                                                label="Numero de Identificación:"
-                                                label-class="text-sm-right"
-                                                label-for="numidentED2">
-                                    <b-form-input id="numidentED2"
-                                     v-model="usuEditar.numero_identificacion" 
-                                     :state="estadoNumeroIden"  @keyup.native="numeros(this,'numidentED2')"></b-form-input>
-                                    </b-form-group>
-                                    <b-form-group horizontal
-                                                label="Cliente :"
-                                                label-class="text-sm-right"
-                                                label-for="MedioT">
-                                        <v-select id="MedioT" v-model="usuEditar.id_cliente" placeholder="Seleccione el tipo de usuario a crear"  label="nombre" :options="optionsClientes"
-                                           ></v-select>
-                                    </b-form-group>
-                                   
-                                </b-form-group>
-                            </b-card>
-                        </b-col>
-                        
-                    </b-row>
-                    <b-row class="w-100" v-show="courier">
-                        <b-col>
-                            <b-card  class="w-100">
-                                <b-form-group horizontal
-                                                breakpoint="lg"
-                                                label="Courier"
-                                                label-size="lg"
-                                                label-class="font-weight-bold pt-0"
-                                                class="mb-0">
-                                    <b-form-group horizontal
-                                                label="Nombre :"
-                                                label-class="text-sm-right"
-                                                label-for="nombreED3">
-                                    <b-form-input id="nombreED3"
-                                        v-model="usuEditar.nombre"
-                                         @input="ValidarTexto('nombreED3','Editar')"
-                                       maxlength="50"
-                                       :state="estadonombre" ></b-form-input>
-                                    </b-form-group>
-                                    <b-form-group horizontal
-                                                label="Apellido :"
-                                                label-class="text-sm-right"
-                                                label-for="apellidoED3">
-                                    <b-form-input id="apellidoED3" 
-                                     v-model="usuEditar.apellido"
-                                       @input="ValidarTexto('apellidoED3','Editar')"
-                                       maxlength="50"
-                                       :state="estadoapellido"></b-form-input>
-                                    </b-form-group>
-                                    <b-form-group horizontal
-                                                label="Correo :"
-                                                label-class="text-sm-right"
-                                                label-for="correoED3">
-                                    <b-form-input id="correoED3"
-                                    v-model="usuEditar.correo"
-                                         @input="validacorreoT" :state="estadoT"></b-form-input>
-                                    </b-form-group>
-                                    <b-form-group horizontal
-                                                label="Numero de Identificación:"
-                                                label-class="text-sm-right"
-                                                label-for="numidentED3">
-                                    <b-form-input id="numidentED3"
-                                     v-model="usuEditar.numero_identificacion"
-                                      :state="estadoNumeroIden"  @keyup.native="numeros(this,'numidentED3')" ></b-form-input>
-                                    </b-form-group>
-                                    <!--
-                                    <b-form-group horizontal
-                                                label="Medio de Transporte:"
-                                                label-class="text-sm-right"
-                                                label-for="MedioT">
-
-                                        <v-select id="MedioT" v-model="usuEditar.id_transporte" placeholder="Seleccione el tipo de usuario a crear"  
-                                        label="tipo" :options="optionsMedios"></v-select>
-                                    </b-form-group>
-                                    <b-form-group horizontal
-                                                label="Vehiculo :"
-                                                label-class="text-sm-right"
-                                                label-for="Vehiculo">
-                                        <v-select id="Vehiculo" v-model="usuEditar.vehiculo" placeholder="Seleccione el tipo de usuario a crear"  label="nombre" :options="optionsVehiculos"></v-select>
-                                    </b-form-group>
-                                    -->
-                                </b-form-group>
-                            </b-card>
-                        </b-col>
-                        
-                    </b-row>
-                </b-container>
-        </b-modal>
-         <!-- Modal Password Component -->
-         
-        <b-modal id="modal3" ref="modalpassword" size="lg" no-close-on-backdrop
-         no-close-on-esc >
-            <div slot="modal-header"  class="w-100">
-                
-                <b-btn class="rounded text-white"
-                    variant="danger"
-                    @click="hideModal">
-                    <i class="fa fa-times-circle"
-                        aria-hidden="true"></i>&#32;Cancelar
-                </b-btn>
-                <b-btn
-                        class="rounded float-right text-white"
-                        variant="warning"
-                        v-on:click="ActualizarPassword()">
+                        v-on:click="CrearVehiculo()">
                         <i class="fa fa-floppy-o"></i>&#32;Guardar
                 </b-btn>
             </div>
@@ -541,17 +107,52 @@
                             <b-card  class="w-100">
                                 <b-form-group horizontal
                                                 breakpoint="lg"
-                                                label="Courier"
+                                                label="Información Vehiculo"
                                                 label-size="lg"
                                                 label-class="font-weight-bold pt-0"
                                                 class="mb-0">
                                     <b-form-group horizontal
-                                                    label="Contraseña :"
+                                            label="Medio Transporte :"
+                                            label-class="text-sm-right"
+                                            label-for="medioT">
+                                       <v-select id="medioT" v-model="vm_medios" placeholder="Seleccione el tipo de usuario a crear" 
+                                             label="tipo" :options="optionsMedios"  ></v-select>
+                                    </b-form-group>
+                                    <b-form-group horizontal
+                                                    label="Placa :"
                                                     label-class="text-sm-right"
-                                                    label-for="changepass">
+                                                    label-for="placa">
+                                         <b-form-input v-model="vehi.placa"
+                                            :state="estadoplaca"
+                                            @input="ValidarTexto('placa','nuevo')"
+                                          id="placa"></b-form-input>
+                                    </b-form-group>
+                                    <b-form-group horizontal
+                                                    label="marca :"
+                                                    label-class="text-sm-right"
+                                                    label-for="marca">
 
-                                        <password id="changepass" :toggle="true" 
-                                        :secureLength=9 v-model="password"/>
+                                         <b-form-input v-model="vehi.marca" 
+                                         @input="ValidarTexto('marca','nuevo')"
+                                         :state="estadomarca" id="marca"></b-form-input>
+                                    </b-form-group>
+                                    <b-form-group horizontal
+                                                    label="cilindraje :"
+                                                    label-class="text-sm-right"
+                                                    label-for="cilindraje">
+
+                                         <b-form-input v-model="vehi.cilindraje"
+                                         @input="ValidarTexto('cilindraje','nuevo')"
+                                         :state="estadocilindraje" id="cilindraje"></b-form-input>
+                                    </b-form-group>
+                                    <b-form-group horizontal
+                                                    label="color :"
+                                                    label-class="text-sm-right"
+                                                    label-for="color">
+
+                                         <b-form-input v-model="vehi.color" 
+                                              @input="ValidarTexto('color','nuevo')"
+                                         :state="estadocolor" id="color"></b-form-input>
                                     </b-form-group>
                                 </b-form-group>
                             </b-card>
@@ -559,6 +160,164 @@
                     </b-row>
                 </b-container>
         </b-modal>
+        <!-- Modal Edit Component -->
+        <b-modal id="modal1" ref="Editar" size="lg" no-close-on-backdrop
+         no-close-on-esc>
+            <div slot="modal-header"  class="w-100">
+                
+                <b-btn class="rounded text-white"
+                    variant="danger"
+                    @click="hideModal">
+                    <i class="fa fa-times-circle"
+                        aria-hidden="true"></i>&#32;Cancelar
+                </b-btn>
+                <b-btn
+                        class="rounded float-right text-white"
+                        variant="warning"
+                        v-on:click="ActualizarVehiculo()">
+                        <i class="fa fa-floppy-o"></i>&#32;Guardar
+                </b-btn>
+            </div>
+            <div slot="modal-footer"
+            class="w-100">
+            </div>
+                <b-container fluid>
+                    <b-row class="w-100" >
+                        <b-col>
+                            <b-card  class="w-100">
+                                <b-form-group horizontal
+                                                breakpoint="lg"
+                                                label="Editar Información Vehiculo"
+                                                label-size="lg"
+                                                label-class="font-weight-bold pt-0"
+                                                class="mb-0">
+                                    <b-form-group horizontal
+                                                    label="Placa :"
+                                                    label-class="text-sm-right"
+                                                    label-for="placaED">
+
+                                         <b-form-input v-model="vehiEditar.placa" 
+                                             :state="estadoplaca"
+                                            @input="ValidarTexto('placaED','Editar')"
+                                         id="placaED"></b-form-input>
+                                    </b-form-group>
+                                    <b-form-group horizontal
+                                                    label="marca :"
+                                                    label-class="text-sm-right"
+                                                    label-for="marcaED">
+
+                                         <b-form-input v-model="vehiEditar.marca" id="marcaED"
+                                          :state="estadomarca"
+                                            @input="ValidarTexto('marcaED','Editar')"></b-form-input>
+                                    </b-form-group>
+                                    <b-form-group horizontal
+                                                    label="cilindraje :"
+                                                    label-class="text-sm-right"
+                                                    label-for="cilindrajeED">
+
+                                         <b-form-input v-model="vehiEditar.cilindraje" 
+                                            :state="estadocilindraje"
+                                            @input="ValidarTexto('cilindrajeED','Editar')"
+                                         id="cilindrajeED"></b-form-input>
+                                    </b-form-group>
+                                    <b-form-group horizontal
+                                                    label="color :"
+                                                    label-class="text-sm-right"
+                                                    label-for="colorED">
+
+                                         <b-form-input v-model="vehiEditar.color" 
+                                          :state="estadocolor"
+                                            @input="ValidarTexto('colorED','Editar')"
+                                             id="colorED"></b-form-input>
+                                    </b-form-group>
+                                </b-form-group>
+                            </b-card>
+                        </b-col>
+                    </b-row>
+                </b-container>
+        </b-modal>
+        
+        <!-- Modal Tripulacion Component -->
+        <b-modal id="modal2" ref="Tripulacion" size="lg" no-close-on-backdrop
+         no-close-on-esc>
+            <div slot="modal-header"  class="w-100">
+                
+                <b-btn class="rounded text-white"
+                    variant="danger"
+                    @click="hideModal">
+                    <i class="fa fa-times-circle"
+                        aria-hidden="true"></i>&#32;Cancelar
+                </b-btn>
+                <label class="float-right ">    Vehiculo :    {{titulo_tripu}}</label>
+                <!--
+                <b-btn
+                        class="rounded float-right text-white"
+                        variant="warning"
+                        v-on:click="EditarVehiculo()">
+                        <i class="fa fa-floppy-o"></i>&#32;Guardar
+                </b-btn>
+                -->
+            </div>
+            <div slot="modal-footer"
+            class="w-100">
+            </div>
+                <b-container fluid>
+                    <b-row class="w-100" >
+                        <b-col>
+                            <b-card  class="w-100">
+                                <b-form-group 
+                                                breakpoint="lg"
+                                                label="Adicionar Tripulantes"
+                                                label-size="lg"
+                                                label-class="font-weight-bold pt-0"
+                                                class="mb-0">
+                                    <b-form-group horizontal
+                                                    label="Tipo de tripulante :"
+                                                    label-class="text-sm-right"
+                                                    label-for="color">
+                                        <v-select v-model="tipoTripu" placeholder="Seleccione el tipo de tripulación"  label="nombre"
+                                         :options="optionsTipoTripulante" @input="TipoTripulante()"></v-select>
+                                    </b-form-group>
+                                    <b-form-group horizontal
+                                                    label="Nombre :"
+                                                    label-class="text-sm-right"
+                                                    label-for="color">
+                                         <v-select v-model="usuario_vehiculo" placeholder="Seleccione el usuario"  label="nombre"
+                                         :options="optionUsuarios"  :disabled="disable_user"></v-select>
+                                    </b-form-group>
+                                     <b-btn
+                                            class="rounded float-right text-white"
+                                            variant="warning"
+                                            v-on:click="adicionarUsuxVehiculo()">
+                                            <i class="fa fa-floppy-o"></i>&#32;Guardar
+                                    </b-btn>
+                                    
+                                </b-form-group>
+                                <b-form-group 
+                                                breakpoint="lg"
+                                                label="Editar Tripulación"
+                                                label-size="lg"
+                                                label-class="font-weight-bold pt-0"
+                                                class="mb-0">
+                                     <b-table striped hover :items="tripu" :fields="fields_tripulacion">
+                                        <template slot="tipo" slot-scope="data">
+                                            {{data.item.tipo}} 
+                                        </template>
+                                        
+                                        <template slot="nombre" slot-scope="data">
+                                            {{data.item.id_usuario.nombre}}   {{data.item.id_usuario.apellido}}
+                                        </template>
+                                        <template slot="eliminar" slot-scope="data">
+                                            <i class="btn btn-danger fa fa-trash-o" @click="EliminarTripulacion(data)"></i>  
+                                        </template>
+                                     </b-table>
+                                </b-form-group>
+                            </b-card>
+                        </b-col>
+                    </b-row>
+                </b-container>
+        </b-modal>
+
         
     </b-container>
 </template>
@@ -573,930 +332,70 @@ export default {
     data () {
 
     return {
-              password: null,
-
-        //Estados
-        estadoNumeroIden:null,
-        estadoT:null,
-        estadonombre:null,
-        estadoapellido:null,
-        //
-        usuEditar:{},
-        usu:{},
-        tipoUsu:'',
-        currentPage:1,
-        usuario:'',
         items: [
-        {
-          text: "Inicio",
-          to: "/inicio"
-        },
-        {
-          text: "Configuración Clientes",
-          to: "/inicio/configcliente",
-          active: true
-        }
-      ],
+            {
+            text: "Inicio",
+            to: "/inicio"
+            },
+            {
+            text: "Configuración Vehiculos",
+            to: "/inicio/configcliente",
+            active: true
+            }
+        ],
+        currentPage:1,
+        fields_tripulacion:[
+             {key: 'tipo', label: 'Tipo', sortable: true },
+            { key: 'nombre', label: 'Nombre Usuario', sortable: false },
+            { key: 'eliminar', label: 'Eliminar', sortable: false },
+            { key: 'editarT', label: 'Editar', sortable: false },
+
+            
+        ],
        fields: [
             { key: 'editar', label: 'Editar', sortable: false },
-            { key: 'nombre', label: 'Nombre Usuario', sortable: false },
-            { key: 'tipo', label: 'Tipo de Usuario', sortable: true },
-            { key: 'numero_identificacion', label: 'Documento Identificación', sortable: true },
-            { key: 'correo', label: 'Correo Contacto', sortable: false },
-            { key: 'password', label: 'Cambio Contraseña', sortable: false },
-            { key: 'estado', label: 'Estado', sortable: false },
-            { key: 'inactivar', label: 'Inactivar', sortable: false },
+            { key: 'placa', label: 'Marca', sortable: false },
+            { key: 'marca', label: 'Vehiculo', sortable: true },
+            { key: 'cilindraje', label: 'Cilindraje', sortable: true },
+            { key: 'color', label: 'Color', sortable: false },
+            { key: 'tripulacion', label: 'Actualizar Tripulación', sortable: false }
+            
 
         ],
-        optionsRoles:[],
-        optionsMedios:[],
-        optionsClientes:[],
-        optionsVehiculos:[],
-        VM_clientes:'',
-        VM_medios:'',
-        VM_vehiculos:'',
-      UsuariosTabla:[],
-        indice:null,
-        admin:'',
-        cliente:'',
-        courier:'',
-        disabled_vehiculo:true,
-        UsuarioCambioPasswd:''
+        //estados
+        estadoplaca:null,
+        estadomarca:null,
+        estadocilindraje:null, 
+        estadocolor:null,
+        //--------
+        optionsTipoTripulante:[
+            {nombre:'conductor',_id:0},
+            {nombre:'auxiliar',_id:1}
+        ],
+        tipoTripu:'',
+        VehiculosTablas:[],
+        vehiculos:'',
+        vehiEditar:{},
+        tripu:[],
+        vehi:{},
+        titulo_tripu:'',
+        usuario_vehiculo:'',
+        disable_user:true,
+        //++++++
+        optionUsuarios:[],
+        vm_medios:'',
+        optionsMedios:[]
+
     }
     },
     methods:{
-        ActualizarPassword(){
-            console.log(this.UsuarioCambioPasswd);
-            console.log(this.password);
-            var update={
-                password:this.password
-            }
-            console.log(urlservicios+"updateUser/"+this.UsuarioCambioPasswd._id);
-            this.axios.post(urlservicios+"updateUser/"+this.UsuarioCambioPasswd._id, update)
-                    .then(response =>{
-                        console.log(response);
-                        if(response.data.estado){
-                            swal(
-                            "",
-                            response.data.message,
-                            "success"
-                            );
-                            this.hideModal()
-                        }
-                        else{
-                            swal(
-                            "",
-                            response.data.message,
-                            "success"
-                            );
-                        }
-                    })
-        },
-        cambioPassword(data){
-            console.log(data);
-            this.UsuarioCambioPasswd=data.item
-            this.$refs.modalpassword.show()
-  
-        },
-        ClienteED(){
-            console.log("entro a cliente ed");
-            console.log(this.usuEditar);
-        },
-        ActualizarUsuario(){
-            console.log("entro a actualizar");
-            console.log(this.usuEditar);
-            if(this.usuEditar.tipo=="administrador"){
-                console.log("actualizo admin");
-                if(this.estadoNumeroIden==false||this.estadoT==false||this.estadonombre==false||this.estadoapellido==false){
-                    swal(
-                    "Por favor complete correctamente los campos e intente nuevamente",
-                    "",
-                    "warning"
-                    );
-                }
-                else{
-                    var EditUser={
-                        nombre: this.usuEditar.nombre,
-                        apellido:this.usuEditar.apellido,
-                        numero_identificacion:this.usuEditar.numero_identificacion,
-                        correo:this.usuEditar.correo,
-                    }
-                    console.log(EditUser);
-                    this.axios.post(urlservicios+"/updateUser/"+this.usuEditar._id, EditUser)
-                    .then(response =>{
-                        console.log(response);
-                        if(response.data.estado){
-                            swal(
-                            "",
-                            response.data.message,
-                            "success"
-                            );
-                            this.hideModal()
-                        }else{
-                            swal(
-                            "",
-                            response.data.message,
-                            "warning"
-                            );  
-                        }
-                        var load = false;
-                        setTimeout(() => {
-                            bus.$emit("load", {
-                                load
-                            });
-                        });
-                    })
-                }
-            }
-            if(this.usuEditar.tipo=="cliente"){
-                if(this.estadoNumeroIden==false||this.estadoT==false||this.estadonombre==false||this.estadoapellido==false){
-                    swal(
-                    "Por favor complete correctamente los campos e intente nuevamente",
-                    "",
-                    "warning"
-                    );
-                }
-                else{
-                    var EditUser={
-                        nombre: this.usuEditar.nombre,
-                        apellido:this.usuEditar.apellido,
-                        numero_identificacion:this.usuEditar.numero_identificacion,
-                        correo:this.usuEditar.correo,
-                        id_cliente:this.usuEditar._id
-                    }
-                    console.log(EditUser);
-                    this.axios.post(urlservicios+"/updateUser/"+this.usuEditar._id, EditUser)
-                    .then(response =>{
-                        console.log(response);
-                        this.hideModal()
-                        var load = false;
-                        setTimeout(() => {
-                            bus.$emit("load", {
-                                load
-                            });
-                        });
-                    })
-                }
-            }
-            if(this.usuEditar.tipo=="courier"){
-                console.log("actualizo");
-                console.log(this.usuEditar);
-                if(this.estadoNumeroIden==false||this.estadoT==false||this.estadonombre==false||this.estadoapellido==false){
-                    swal(
-                    "Por favor complete correctamente los campos e intente nuevamente",
-                    "",
-                    "warning"
-                    );
-                }
-                else{
-                    var EditUser={
-                        nombre: this.usuEditar.nombre,
-                        apellido:this.usuEditar.apellido,
-                        numero_identificacion:this.usuEditar.numero_identificacion,
-                        correo:this.usuEditar.correo,
-                    }
-                    console.log(EditUser);
-                    this.axios.post(urlservicios+"/updateUser/"+this.usuEditar._id, EditUser)
-                    .then(response =>{
-                        console.log(response);
-                        this.hideModal()
-                        var load = false;
-                        setTimeout(() => {
-                            bus.$emit("load", {
-                                load
-                            });
-                        });
-                    })
-                }
-            }
-        },
-        Inactivar(value){
-             var test2 = localStorage.getItem("storedData");
+        refrescarVehiculos(){
+            var test2 = localStorage.getItem("storedData");
             var test =JSON.parse(test2);
-            var cliente =value.item
-            //"/InactivarUsuario/:id_usuario",
-            this.axios.get(urlservicios+"InactivarUsuario/"+cliente._id)
+            this.axios.get(urlservicios+"ObtenerTodosLosVehiculos/"+test.id_OperadorLogistico._id)
                 .then((response) => {
-                    this.refrescarUsuarios()
-                    this.$refs.table.refresh();
-
-                })
-                
-        },
-        guardar(){
-            var load = true;
-            setTimeout(() => {
-                bus.$emit("load", {
-                    load
-                });
-            });
-            var test2 = localStorage.getItem("storedData");
-            var test =JSON.parse(test2);
-            if(this.tipoUsu.nombre=='courier'){
-                var llaves=Object.keys(this.usu)
-                if(llaves.length==0){
-                    this.estadoNumeroIden=false,
-                    this.estadoT=false,
-                    this.estadonombre=false,
-                    this.estadoapellido=false
-                    swal(
-                    "Por favor complete correctamente los campos e intente nuevamente",
-                    "",
-                    "warning"
-                    );
-                }
-                else{
-                    if(this.estadoNumeroIden==false||this.estadoT==false||this.estadonombre==false||this.estadoapellido==false){
-                        swal(
-                        "Por favor complete correctamente los campos e intente nuevamente",
-                        "",
-                        "warning"
-                        );
-                    }
-                    else{
-                        var newUser={
-                            id_OperadorLogistico:test.id_OperadorLogistico._id,
-                            nombre: this.usu.nombre,
-                            apellido:this.usu.apellido,
-                            numero_identificacion:this.usu.numero_identificacion,
-                            tipo:this.tipoUsu.nombre,
-                            id_rol:this.tipoUsu._id,
-                            correo:this.usu.correo,
-                            password: this.password,
-                            id_vehiculo:this.VM_vehiculos._id,
-                            id_transporte:this.VM_medios._id
-                        }
-                       
-                        this.axios.post(urlservicios+"/GuardarUsuario/", newUser)
-                        .then(response =>{
-                           swal(
-                            'Good job!',
-                            'Creado correctamente',
-                            'success'
-                            )
-                           this.hideModal()
-                           this.refrescarUsuarios()
-                            var load = false;
-                            setTimeout(() => {
-                                bus.$emit("load", {
-                                    load
-                                });
-                            });
-                        })
-
-                    }
-                }
-                
-            }
-            if(this.tipoUsu.nombre=='cliente'){
-                 var llaves=Object.keys(this.usu)
-                if(llaves.length==0){
-                    this.estadoNumeroIden=false,
-                    this.estadoT=false,
-                    this.estadonombre=false,
-                    this.estadoapellido=false
-                    swal(
-                    "Por favor complete correctamente los campos e intente nuevamente",
-                    "",
-                    "warning"
-                    );
-                }
-                else{
-                    if(this.estadoNumeroIden==false||this.estadoT==false||this.estadonombre==false||this.estadoapellido==false){
-                        swal(
-                        "Por favor complete correctamente los campos e intente nuevamente",
-                        "",
-                        "warning"
-                        );
-                    }
-                    else{
-                        var newUser={
-                            id_OperadorLogistico:test.id_OperadorLogistico._id,
-                            nombre: this.usu.nombre,
-                            apellido:this.usu.apellido,
-                            numero_identificacion:this.usu.numero_identificacion,
-                            tipo:this.tipoUsu.nombre,
-                            id_rol:this.tipoUsu._id,
-                            correo:this.usu.correo,
-                            password: this.password,
-                            id_cliente:this.VM_clientes._id
-                        }
-                        console.log(newUser);
-                        this.axios.post(urlservicios+"/GuardarUsuario/", newUser)
-                        .then(response =>{
-                           swal(
-                            'Good job!',
-                            'Creado correctamente',
-                            'success'
-                            )
-                           this.hideModal()
-                           this.refrescarUsuarios()
-                            var load = false;
-                            setTimeout(() => {
-                                bus.$emit("load", {
-                                    load
-                                });
-                            });
-                        })
-
-                    }
-                }
-
-            }
-            if(this.tipoUsu.nombre=='administrador'){
-                var llaves=Object.keys(this.usu)
-                if(llaves.length==0){
-                    this.estadoNumeroIden=false,
-                    this.estadoT=false,
-                    this.estadonombre=false,
-                    this.estadoapellido=false
-                    swal(
-                    "Por favor complete correctamente los campos e intente nuevamente",
-                    "",
-                    "warning"
-                    );
-                }
-                else{
-                    if(this.estadoNumeroIden==false||this.estadoT==false||this.estadonombre==false||this.estadoapellido==false){
-                        swal(
-                        "Por favor complete correctamente los campos e intente nuevamente",
-                        "",
-                        "warning"
-                        );
-                    }
-                    else{
-                        var newUser={
-                            id_OperadorLogistico:test.id_OperadorLogistico._id,
-                            nombre: this.usu.nombre,
-                            apellido:this.usu.apellido,
-                            numero_identificacion:this.usu.numero_identificacion,
-                            tipo:this.tipoUsu.nombre,
-                            id_rol:this.tipoUsu._id,
-                            correo:this.usu.correo,
-                            password: this.password,
-                        }
-                            //this.hideModal()
-                        console.log(newUser);
-                        this.axios.post(urlservicios+"GuardarUsuario/", newUser)
-                        .then(response =>{
-                           swal(
-                            'Good job!',
-                            'Creado correctamente',
-                            'success'
-                            )
-                           this.hideModal()
-                           this.refrescarUsuarios()
-                            var load = false;
-                            setTimeout(() => {
-                                bus.$emit("load", {
-                                    load
-                                });
-                            });
-                        })
-                        
-                    }
-                }
-            }
-        },
-        ValidarTexto(id,accion){
-           
-            var key,tecla,tecla_especial,letras,especiales
-            var e = document.getElementById(eval('id')).value;
-
-            if(accion=='nuevo')
-            {
-                if(id=='nombre3')
-                {
-                    if(e.match(/^[0-9a-zA-Z\s\#\-]+$/)){
-                        if(e.length>=50){
-                            this.estadonombre=null
-
-                        }
-                        else{
-                            this.estadonombre=null
-                        }
-                    }
-                    else{
-                        this.estadonombre=false
-                    }
-                }
-                
-                if(id=='apellido3')
-                {
-                    if(e.match(/^[0-9a-zA-Z\s\#\-]+$/)){
-                        if(e.length>=50){
-                            this.estadoapellido=null
-
-                        }
-                        else{
-                            this.estadoapellido=null
-                        }
-                    }
-                    else{
-                        this.estadoapellido=false
-                    }
-                }
-
-                if(id=='nombre2')
-                {
-                    if(e.match(/^[0-9a-zA-Z\s\#\-]+$/)){
-                        if(e.length>=50){
-                            this.estadonombre=null
-
-                        }
-                        else{
-                            this.estadonombre=null
-                        }
-                    }
-                    else{
-                        this.estadonombre=false
-                    }
-                }
-                
-                if(id=='apellido2')
-                {
-                    if(e.match(/^[0-9a-zA-Z\s\#\-]+$/)){
-                        if(e.length>=50){
-                            this.estadoapellido=null
-
-                        }
-                        else{
-                            this.estadoapellido=null
-                        }
-                    }
-                    else{
-                        this.estadoapellido=false
-                    }
-                }
-
-                 if(id=='nombre1')
-                {
-                    if(e.match(/^[0-9a-zA-Z\s\#\-]+$/)){
-                        if(e.length>=50){
-                            this.estadonombre=null
-
-                        }
-                        else{
-                            this.estadonombre=null
-                        }
-                    }
-                    else{
-                        this.estadonombre=false
-                    }
-                }
-                
-                if(id=='apellido1')
-                {
-                    if(e.match(/^[0-9a-zA-Z\s\#\-]+$/)){
-                        if(e.length>=50){
-                            this.estadoapellido=null
-
-                        }
-                        else{
-                            this.estadoapellido=null
-                        }
-                    }
-                    else{
-                        this.estadoapellido=false
-                    }
-                }
-
-            }
-            if(accion=='Editar')
-            {
-                if(id=='nombreED1'&&this.usuEditar.nombre){
-                    if(this.usuEditar.nombre.match(/^[0-9a-zA-Z\s\-]*$/)){
-                        if(this.usuEditar.nombre.length>100){
-                            this.estadonombre=false
-                        }
-                        else{
-                            this.estadonombre=null
-                        }
-                    }
-                    else{
-                        if(id=='nombreED1')
-                        {
-                            this.estadonombre=false
-                        }
-                    }
-                }
-                if(id=='apellidoED1'&&this.usuEditar.apellido){
-                    if(this.usuEditar.apellido.match(/^[0-9a-zA-Z\s\-]*$/)){
-                        if(this.usuEditar.apellido.length>100){
-                            this.estadoapellido=false
-                        }
-                        else{
-                            this.estadoapellido=null
-                        }
-                    }
-                    else{
-                        if(id=='apellidoED1')
-                        {
-                            this.estadoapellido=false
-                        }
-                    }
-                }
-                if(id=='nombreED2'&&this.usuEditar.nombre){
-                    if(this.usuEditar.nombre.match(/^[0-9a-zA-Z\s\-]*$/)){
-                        if(this.usuEditar.nombre.length>100){
-                            this.estadonombre=false
-                        }
-                        else{
-                            this.estadonombre=null
-                        }
-                    }
-                    else{
-                        if(id=='nombreED2')
-                        {
-                            this.estadonombre=false
-                        }
-                    }
-                }
-                if(id=='apellidoED2'&&this.usuEditar.apellido){
-                    if(this.usuEditar.apellido.match(/^[0-9a-zA-Z\s\-]*$/)){
-                        if(this.usuEditar.apellido.length>100){
-                            this.estadoapellido=false
-                        }
-                        else{
-                            this.estadoapellido=null
-                        }
-                    }
-                    else{
-                        if(id=='apellidoED2')
-                        {
-                            this.estadoapellido=false
-                        }
-                    }
-                }
-                if(id=='nombreED3'&&this.usuEditar.nombre){
-                    if(this.usuEditar.nombre.match(/^[0-9a-zA-Z\s\-]*$/)){
-                        if(this.usuEditar.nombre.length>100){
-                            this.estadonombre=false
-                        }
-                        else{
-                            this.estadonombre=null
-                        }
-                    }
-                    else{
-                        if(id=='nombreED3')
-                        {
-                            this.estadonombre=false
-                        }
-                    }
-                }
-                if(id=='nombreED3'&&this.usuEditar.apellido){
-                    if(this.usuEditar.apellido.match(/^[0-9a-zA-Z\s\-]*$/)){
-                        if(this.usuEditar.apellido.length>100){
-                            this.estadoapellido=false
-                        }
-                        else{
-                            this.estadoapellido=null
-                        }
-                    }
-                    else{
-                        if(id=='nombreED3')
-                        {
-                            this.estadoapellido=false
-                        }
-                    }
-                }
-                
-                
-
-            }
-
-
-        },
-        numeros(valor, id) {
-        
-            if(id=='numIdent1'){
-                
-                var a = document.getElementById("numIdent1").value;
-                //var x=check.which;
-                //var x = a.charCode;
-                var x = a.keyCode;
-                if (!(a >= 48 || a <= 57)) {
-                    swal("Oops...", "Solo deben ser numeros !", "error");
-
-                    this.estadoNumeroIden=false
-                    return (document.getElementById("telefono").value );
-                } else if (a.length >= 20) {
-                    // if no is more then the value
-                    swal("Oops...", "Maximo 10 digitos!", "error");
-                    this.estadoNumeroIden=false
-                    return (document.getElementById("numIdent1").value );
-                }else
-                {
-                    this.estadoNumeroIden=null
-                }
-            }
-            if(id=='numIdent3'){
-                
-                var a = document.getElementById("numIdent3").value;
-                //var x=check.which;
-                //var x = a.charCode;
-                var x = a.keyCode;
-                if (!(a >= 48 || a <= 57)) {
-                    swal("Oops...", "Solo deben ser numeros !", "error");
-
-                    this.estadoNumeroIden=false
-                    return (document.getElementById("numIdent3").value );
-                } else if (a.length >= 20) {
-                    // if no is more then the value
-                    swal("Oops...", "Maximo 10 digitos!", "error");
-                    this.estadoNumeroIden=false
-                    return (document.getElementById("numIdent3").value );
-                }else
-                {
-                    this.estadoNumeroIden=null
-                }
-            }
-            if(id=='numIdent2'){
-                
-                var a = document.getElementById("numIdent2").value;
-                //var x=check.which;
-                //var x = a.charCode;
-                var x = a.keyCode;
-                if (!(a >= 48 || a <= 57)) {
-                    swal("Oops...", "Solo deben ser numeros !", "error");
-
-                    this.estadoNumeroIden=false
-                    return (document.getElementById("numIdent2").value );
-                } else if (a.length >= 20) {
-                    // if no is more then the value
-                    swal("Oops...", "Maximo 10 digitos!", "error");
-                    this.estadoNumeroIden=false
-                    return (document.getElementById("numIdent2").value );
-                }else
-                {
-                    this.estadoNumeroIden=null
-                }
-            }
-            if(id=='numidentidadED'){
-                
-                var a = document.getElementById("numidentidadED").value;
-                //var x=check.which;
-                //var x = a.charCode;
-                var x = a.keyCode;
-                if (!(a >= 48 || a <= 57)) {
-                    swal("Oops...", "Solo deben ser numeros !", "error");
-
-                    this.estadoNumeroIden=false
-                    return (document.getElementById("numidentidadED").value );
-                } else if (a.length >= 20) {
-                    // if no is more then the value
-                    swal("Oops...", "Maximo 10 digitos!", "error");
-                    this.estadoNumeroIden=false
-                    return (document.getElementById("numidentidadED").value );
-                }else
-                {
-                    this.estadoNumeroIden=null
-                }
-            }
-            if(id=='numidentED2'){
-                
-                var a = document.getElementById("numidentED2").value;
-                //var x=check.which;
-                //var x = a.charCode;
-                var x = a.keyCode;
-                if (!(a >= 48 || a <= 57)) {
-                    swal("Oops...", "Solo deben ser numeros !", "error");
-
-                    this.estadoNumeroIden=false
-                    return (document.getElementById("numidentED2").value );
-                } else if (a.length >= 20) {
-                    // if no is more then the value
-                    swal("Oops...", "Maximo 10 digitos!", "error");
-                    this.estadoNumeroIden=false
-                    return (document.getElementById("numidentED2").value );
-                }else
-                {
-                    this.estadoNumeroIden=null
-                }
-            }
-            if(id=='numidentED3'){
-                
-                var a = document.getElementById("numidentED3").value;
-                //var x=check.which;
-                //var x = a.charCode;
-                var x = a.keyCode;
-                if (!(a >= 48 || a <= 57)) {
-                    swal("Oops...", "Solo deben ser numeros !", "error");
-
-                    this.estadoNumeroIden=false
-                    return (document.getElementById("numidentED3").value );
-                } else if (a.length >= 20) {
-                    // if no is more then the value
-                    swal("Oops...", "Maximo 10 digitos!", "error");
-                    this.estadoNumeroIden=false
-                    return (document.getElementById("numidentED3").value );
-                }else
-                {
-                    this.estadoNumeroIden=null
-                }
-            }
-        },
-        validacorreoT(value){
-
-            if(value){
-                if(value.length==0){
-               this.emailvalidoT=null
-               return(this.estadoT=null)
-                }
-                if (/^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/.test(value))
-                    {
-                        this.emailvalidoT=true
-                        return (this.estadoT=null)
-                    }
-                        this.emailvalidoT=false
-                        return (this.estadoT=false)
-            }
-            
-        },
-        MedioSeleccionado(){
-            var test2 = localStorage.getItem("storedData");
-            var test = JSON.parse(test2);
-            if(this.VM_medios){
-                this.disabled_vehiculo=false
-                 this.axios.get(urlservicios+"getVehicles/" +test.id_OperadorLogistico._id +"/"+this.VM_medios._id)
-                        .then(response =>{
-                            this.optionsVehiculos=response.data
-                            this.optionsVehiculos.forEach(element => {
-                                element.nombre=element.placa+" - "+element.marca
-                                
-                            });
-                        })
-            }
-            else{
-                this.disabled_vehiculo=true
-            }
-        },
-        tipoUsuarioEditar(){
-            var test2 = localStorage.getItem("storedData");
-            var test = JSON.parse(test2);
-            if(this.usuEditar.tipo){
-                if(this.usuEditar.tipo=='administrador'){
-                    this.courier=false
-                    this.admin=true
-                    this.cliente=false
-                }
-                if(this.usuEditar.tipo=='cliente'){
-                    this.courier=false
-                    this.admin=false
-                    this.cliente=true
-                    this.axios.get(urlservicios+"clientesOperador/" +test.id_OperadorLogistico._id +"/null")
-                        .then(response =>{
-                            this.optionsClientes=response.data
-                            this.optionsClientes.forEach(element => {
-                                if(this.usuEditar.id_cliente==element._id){
-                                    this.usuEditar.id_cliente=element.nombre
-                                    this.usuEditar.id_cliente={}
-                                    this.usuEditar.id_cliente=element
-                                }
-                            });
-                        })
-                     
-                }
-                if(this.usuEditar.tipo=='courier'){
-                    this.courier=true
-                    this.admin=false
-                    this.cliente=false
-                    this.axios.get(urlservicios+ "medios/")
-                            .then(response => {
-                                this.optionsMedios=response.data
-                                this.optionsMedios.forEach(element => {
-                                   
-                                    if(this.usuEditar.id_transporte==element._id){
-                                        this.usuEditar.id_transporte=element.tipo
-                                        this.usuEditar.id_transporte={}
-                                        this.usuEditar.id_transporte=element
-                                    }
-                                });
-                            })
-                    /*     
-                    this.axios.get(urlservicios+"getVehicles/" +test.id_OperadorLogistico._id +"/"+this.usuEditar.id_transporte)
-                        .then(response =>{
-                            this.optionsVehiculos=response.data
-                            this.optionsVehiculos.forEach(element => {
-                                element.nombre=element.placa+" - "+element.marca
-                                
-                            });
-                        })
-                    */
-                    //console.log(urlservicios+ "getVehicleUser/"+this.usuEditar._id);
-                    this.axios.get(urlservicios+ "getVehicleUser/"+this.usuEditar._id)
-                            .then(response => {
-                                this.usuEditar.vehiculo=response.data.id_vehiculo
-                                if(typeof(this.usuEditar.id_transporte)=='string'){
-                                    this.axios.get(urlservicios+"getVehicles/" +test.id_OperadorLogistico._id +"/"+this.usuEditar.id_transporte)
-                                        .then(response =>{
-                                            console.log(response);
-                                            this.optionsVehiculos=response.data
-                                            this.optionsVehiculos.forEach(element => {
-                                                element.nombre=element.placa+" - "+element.marca
-                                                if(this.usuEditar.vehiculo==element._id){
-                                                    this.usuEditar.vehiculo=element
-                                                }  
-                                                
-                                            });
-
-                                        })
-                                }
-                                else{
-                                this.axios.get(urlservicios+"getVehicles/" +test.id_OperadorLogistico._id +"/"+this.usuEditar.id_transporte._id)
-                                    .then(response =>{
-                                        this.optionsVehiculos=response.data
-                                        this.optionsVehiculos.forEach(element => {
-                                            element.nombre=element.placa+" - "+element.marca
-                                            if(this.usuEditar.vehiculo==element._id){
-                                                this.usuEditar.vehiculo=element
-                                            }  
-                                            
-                                        });
-
-                                    })
-                                }
-                               
-
-                            
-                            })
-                            
-                }
-            }else{
-                    this.courier=false
-                    this.admin=false
-                    this.cliente=false
-            }
-        },
-        tipoUsuario(value){
-            var test2 = localStorage.getItem("storedData");
-            var test = JSON.parse(test2);
-            if(this.tipoUsu){
-                if(this.tipoUsu.nombre=='administrador'){
-                    this.courier=false
-                    this.admin=true
-                    this.cliente=false
-                }
-                if(this.tipoUsu.nombre=='cliente'){
-                    this.courier=false
-                    this.admin=false
-                    this.cliente=true
-                    this.axios.get(urlservicios+"clientesOperador/" +test.id_OperadorLogistico._id +"/null")
-                        .then(response =>{
-                            this.optionsClientes=response.data
-                        })
-                     
-                }
-                if(this.tipoUsu.nombre=='courier'){
-                    this.courier=true
-                    this.admin=false
-                    this.cliente=false
-                    this.axios.get(urlservicios+ "medios/")
-                            .then(response => {
-                                this.optionsMedios=response.data
-                            })
-                }
-            }else{
-                    this.courier=false
-                    this.admin=false
-                    this.cliente=false
-            }
-        },
-        EditarUsuario(data){
-            console.log(data.item);
-            this.usuEditar=Object.assign({}, data.item);
-            this.$refs.Editar.show()
-        },
-        UsuarioNuevo(){
-            this.$refs.Crear.show()
-        },
-        hideModal(){
-            this.admin=false
-            this.cliente=false
-            this.courier=false
-            this.optionsMedios=[]
-            this.optionsClientes=[]
-            this.VM_clientes=''
-            this.VM_medios=''
-            this.tipoUsu=''
-            this.usu={}
-            this.usuEditar={}
-            this.$refs.Crear.hide()
-            this.$refs.Editar.hide()
-            this.password=null
-            //------
-            this.$refs.modalpassword.hide()
-            this.password=null
-        },
-        refrescarUsuarios(){
-            var test2 = localStorage.getItem("storedData");
-            var test =JSON.parse(test2);
-            this.axios.get(urlservicios+"UsuariosPorOperador/"+test.id_OperadorLogistico._id)
-                .then((response) => {
-                    console.log(response);
-                    this.UsuariosTabla=response.data
-                    this.$refs.table.refresh();
-
+                    this.VehiculosTablas=response.data
+                    
                 })
                 .catch(function (error) {
                     var load = false;
@@ -1510,8 +409,435 @@ export default {
                         "Intente nuevamente, por favor",
                         "warning"
                     );
+                });  
+        },
+        ValidarTexto(id,accion){
+        
+            var key,tecla,tecla_especial,letras,especiales
+            var e = document.getElementById(eval('id')).value;
+
+            if(accion=='nuevo')
+            {
+                if(id=='placa')
+                {
+                    if(e.match(/^[0-9a-zA-Z\s\#\-]+$/)){
+                        if(e.length>=10){
+                            this.estadoplaca=false
+
+                        }
+                        else{
+                            this.estadoplaca=null
+                        }
+                    }
+                    else{
+                        this.estadoplaca=false
+                    }
+                }
+                if(id=='marca')
+                {
+                    if(e.match(/^[0-9a-zA-Z\s\#\-]+$/)){
+                        if(e.length>=10){
+                            this.estadomarca=false
+
+                        }
+                        else{
+                            this.estadomarca=null
+                        }
+                    }
+                    else{
+                        this.estadomarca=false
+                    }
+                }
+                if(id=='cilindraje')
+                {
+                    if(e.match(/^[0-9a-zA-Z\s\#\-]+$/)){
+                        if(e.length>=10){
+                            this.estadocilindraje=false
+
+                        }
+                        else{
+                            this.estadocilindraje=null
+                        }
+                    }
+                    else{
+                        this.estadocilindraje=false
+                    }
+                }
+                if(id=='color')
+                {
+                    if(e.match(/^[0-9a-zA-Z\s\#\-]+$/)){
+                        if(e.length>=10){
+                            this.estadocolor=false
+
+                        }
+                        else{
+                            this.estadocolor=null
+                        }
+                    }
+                    else{
+                        this.estadocolor=false
+                    }
+                }
+                
+            }
+             if(accion=='Editar')
+            {
+                if(id=='placaED'&&this.vehiEditar.placa){
+                    if(this.vehiEditar.placa.match(/^[0-9a-zA-Z\s\-]*$/)){
+                        if(this.vehiEditar.placa.length>100){
+                            this.estadoplaca=false
+                        }
+                        else{
+                            this.estadoplaca=null
+                        }
+                    }
+                    else{
+                        if(id=='placaED')
+                        {
+                            this.estadoplaca=false
+                        }
+                    }
+                }
+                if(id=='marcaED'&&this.vehiEditar.marca){
+                    if(this.vehiEditar.marca.match(/^[0-9a-zA-Z\s\-]*$/)){
+                        if(this.vehiEditar.marca.length>100){
+                            this.estadomarca=false
+                        }
+                        else{
+                            this.estadomarca=null
+                        }
+                    }
+                    else{
+                        if(id=='marcaED')
+                        {
+                            this.estadomarca=false
+                        }
+                    }
+                }
+                if(id=='cilindrajeED'&&this.vehiEditar.cilindraje){
+                    if(this.vehiEditar.cilindraje.toString().match(/^[0-9a-zA-Z\s\-]*$/)){
+                        if(this.vehiEditar.marca.length>100){
+                            this.estadocilindraje=false
+                        }
+                        else{
+                            this.estadocilindraje=null
+                        }
+                    }
+                    else{
+                        if(id=='cilindrajeED')
+                        {
+                            this.estadocilindraje=false
+                        }
+                    }
+                }
+                if(id=='colorED'&&this.vehiEditar.color){
+                    if(this.vehiEditar.color.match(/^[0-9a-zA-Z\s\-]*$/)){
+                        if(this.vehiEditar.color.length>100){
+                            this.estadocolor=false
+                        }
+                        else{
+                            this.estadocolor=null
+                        }
+                    }
+                    else{
+                        if(id=='colorED')
+                        {
+                            this.estadocolor=false
+                        }
+                    }
+                }
+
+            }
+        },
+        CrearVehiculo(){
+            var llaves=Object.keys(this.vehi)
+            if(llaves.length==0){
+                this.estadoplaca=false,
+                this.estadocilindraje=false, 
+                this.estadomarca=false,
+                this.estadocolor=false,
+                swal(
+                    "Por favor complete correctamente los campos e intente nuevamente",
+                    "",
+                    "warning"
+                    );
+            }
+            else{
+                if(this.estadoplaca==false||this.estadocilindraje==false||this.estadomarca==false||this.estadocolor==false||this.vm_medios==''){
+                    if(this.vm_medios==''){
+                        swal(
+                            "",
+                            "Por favor seleccione el medio de transporte",
+                            "warning"
+                            );
+                    }
+                    else{
+                        swal(
+                            "",
+                            "Por favor complete correctamente los campos e intente nuevamente",
+                            "warning"
+                            );
+                    }
+                }
+                else{
+                    var test2 = localStorage.getItem("storedData");
+                    var test =JSON.parse(test2);
+                    var envio ={
+                        id_operador_logistico:test.id_OperadorLogistico._id,
+                        id_medio_transporte:this.vm_medios._id, 
+                        placa:this.vehi.placa,
+                        cilindraje:this.vehi.cilindraje,
+                        marca:this.vehi.marca,
+                        color:this.vehi.color
+
+                    }
+                    this.axios.post(urlservicios+"GuadarVehiculo/", envio)
+                        .then(response =>{
+                            if(response.data.estado=true){
+                                swal(
+                                "",
+                                response.data.message,
+                                "success"
+                                );
+                                this.hideModal()
+                                this.refrescarVehiculos()
+                            }
+                            else{
+                                swal(
+                                "",
+                                response.data.message,
+                                "warning"
+                                );
+                            }
+                        })
+                }
+
+            }
+        },
+        VehiculoNuevo(){
+            this.axios.get(urlservicios+ "medios/")
+                            .then(response => {
+                                this.optionsMedios=response.data
+                                this.$refs.Nuevo.show()
+
+                            })
+
+        },
+        EliminarTripulacion(data){
+            var userRemove=data.item
+            var envio={
+                        id_vehiculo:this.vehiculo_tripulacion._id,
+                        id_usuario:userRemove.id_usuario._id,
+                        tipo:userRemove.tipo
+                    }
+             this.axios.post(urlservicios+"agregarTrapulacion/0", envio)
+                    .then(response =>{
+                        if(response.data.estado=true){
+                            swal(
+                            "",
+                            response.data.message,
+                            "success"
+                            );
+                            this.tripu.forEach((element,indice) => {
+                                if(element.id_usuario._id==userRemove.id_usuario._id&&element.tipo==userRemove.tipo){
+                                    this.tripu.splice(indice,1)
+
+                                }
+                            });
+                            this.refrescarVehiculos()
+                        }
+                        else{
+                            swal(
+                            "",
+                            response.data.message,
+                            "warning"
+                            );
+                        }
+                    })
+            /*
+           
+            */
+        },
+        adicionarUsuxVehiculo(){
+            var bandera=false
+            if(this.usuario_vehiculo){
+                this.tripu.forEach(element => {
+                    if(element.tipo==this.tipoTripu.nombre&&element.id_usuario._id==this.usuario_vehiculo._id){
+                       bandera=true
+                    }
                 });
+                if(bandera==false){
+                    var addUser ={
+                        id_usuario:{
+                            "_id":this.usuario_vehiculo._id,
+                            "nombre":this.usuario_vehiculo.nombre,
+                            "apellido":this.usuario_vehiculo.apellido
+                        },
+                        tipo:this.tipoTripu.nombre
+                    }
+                    
+                    var envio={
+                        id_vehiculo:this.vehiculo_tripulacion._id,
+                        id_usuario:this.usuario_vehiculo._id,
+                        tipo:this.tipoTripu.nombre
+                    }
+                    this.axios.post(urlservicios+"agregarTrapulacion/1", envio)
+                    .then(response =>{
+                        if(response.data.estado=true){
+                            swal(
+                            "",
+                            response.data.message,
+                            "success"
+                            );
+                            this.tripu.push(addUser)
+                            this.refrescarVehiculos()
+                        }
+                        else{
+                            swal(
+                            "",
+                            response.data.message,
+                            "warning"
+                            );
+                        }
+                    })
+                }
+                else{
+                    swal(
+                            "Intente nuevamente, por favor",
+                            "Ya se encuentra en el listado",
+                            "warning"
+                        ); 
+                }
+            }
+            else{
+                swal(
+                        "Deben completarse los campos",
+                        "Seleccione de la informacion faltante",
+                        "warning"
+                    );
+            }
+        },
+        TipoTripulante(){
+            if(this.tipoTripu){
+                this.disable_user=false
+                var test2 = localStorage.getItem("storedData");
+                var test =JSON.parse(test2);
+                var load = true;
+                setTimeout(() => {
+                    bus.$emit("load", {
+                        load
+                    });
+                });
+                this.axios.get(urlservicios+"UsuariosCurierOperador/"+test.id_OperadorLogistico._id)
+                        .then((response) => {
+                            this.optionUsuarios=response.data
+                            this.optionUsuarios.forEach(element => {
+                                element.nombre=element.nombre+' '+element.apellido
+                            });
+                            var load = false;
+                            setTimeout(() => {
+                                bus.$emit("load", {
+                                    load
+                                });
+                            });
+                        })
+                        .catch(function (error) {
+                            var load = false;
+                            setTimeout(() => {
+                                bus.$emit("load", {
+                                    load
+                                });
+                            });
+                            swal(
+                                "Se presento un problema",
+                                "Intente nuevamente, por favor",
+                                "warning"
+                            );
+                        });
+            }
+            else{
+                this.disable_user=true
+            }
+        },
+        Tripulacion(data){
+            this.vehiculo_tripulacion=data.item
+            this.tripu=data.item.tripulacion
+            this.titulo_tripu=data.item.marca+' '+data.item.placa
+            this.$refs.Tripulacion.show()
+        },
+        ActualizarVehiculo(){
+            if(this.estadoplaca==false||this.estadocilindraje==false||this.estadomarca==false||this.estadocolor==false){ 
+                swal(
+                    "",
+                    "Por favor complete correctamente los campos e intente nuevamente",
+                    "warning"
+                    );
+            }
+            else{
+                var test2 = localStorage.getItem("storedData");
+                var test =JSON.parse(test2);
+                var envio ={
+                   
+                    placa:this.vehiEditar.placa,
+                    cilindraje:this.vehiEditar.cilindraje,
+                    marca:this.vehiEditar.marca,
+                    color:this.vehiEditar.color
+
+                }
+
+                
+                this.axios.post(urlservicios+"UpdateVehiculo/"+this.vehiEditar._id, envio)
+                    .then(response =>{
+                        if(response.data.estado=true){
+                            swal(
+                            "",
+                            response.data.message,
+                            "success"
+                            );
+                            this.hideModal()
+                            this.refrescarVehiculos()
+                        }
+                        else{
+                            swal(
+                            "",
+                            response.data.message,
+                            "warning"
+                            );
+                        }
+                    })
+                    .catch(function (error) {
+                        var load = false;
+                        setTimeout(() => {
+                            bus.$emit("load", {
+                                load
+                            });
+                        });
+                        swal(
+                            "Se presento un problema",
+                            "Intente nuevamente, por favor",
+                            "warning"
+                        );
+                    });
+                    
+            }
+
+        },
+        EditarVehiculo(data){
+            this.vehiEditar=Object.assign({}, data.item);
+            this.$refs.Editar.show()
+        },
+        hideModal(){
+            this.vehiEditar={}
+            this.$refs.Editar.hide()
+            this.$refs.Tripulacion.hide()
+            //CREACION
+            this.vm_medios=''
+            this.vehi={}
+            this.$refs.Nuevo.hide()
+
+
         }
+        
         
     },
     created: function(){
@@ -1523,30 +849,10 @@ export default {
         });
         var test2 = localStorage.getItem("storedData");
         var test =JSON.parse(test2);
-        var id_cliente
-        id_cliente='null'
-        this.axios.get(urlservicios+"ROLES/"+test.id_OperadorLogistico._id)
-            .then((response) => {
-                this.optionsRoles=response.data
-            })
-            .catch(function (error) {
-                var load = false;
-                setTimeout(() => {
-                    bus.$emit("load", {
-                        load
-                    });
-                });
-                swal(
-                    "Se presento un problema",
-                    "Intente nuevamente, por favor",
-                    "warning"
-                );
-            });
-            console.log(urlservicios+"getVehicles/"+test.id_OperadorLogistico._id);
-        this.axios.get(urlservicios+"getVehicles/"+test.id_OperadorLogistico._id)
+
+        this.axios.get(urlservicios+"ObtenerTodosLosVehiculos/"+test.id_OperadorLogistico._id)
                 .then((response) => {
-                    console.log("-.--------------------------");
-                    console.log(response);
+                    this.VehiculosTablas=response.data
                     
                 })
                 .catch(function (error) {
