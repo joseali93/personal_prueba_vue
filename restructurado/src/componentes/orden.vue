@@ -8,11 +8,7 @@ DE LA ORDEN DE SERVICIO -->
     <div class="breadcrumb-holder">
         <div class="container-fluid">
             <b-breadcrumb :items="items" />
-            <!-- <ul class="breadcrumb">
-          <li v-for="(item, i) in items" :key="i" class="breadcrumb-item">
-            <a :href="item.to">{{item.text}}</a>
-          </li>
-        </ul> -->
+
         </div>
     </div>
     <b-container fluid>
@@ -743,7 +739,9 @@ export default {
                                     });
                                 });
                             })
-                            .catch(error => {});
+                            .catch(error => {
+                                
+                            });
                     }
                 } else {
                     var load = true;
@@ -1218,6 +1216,7 @@ export default {
                     id_cliente
                 )
                 .then(response => {
+                    console.log(response.data);
                     this.clientes = response.data;
                     var orden = localStorage.getItem("orden");
                     var ordenjson = JSON.parse(orden);

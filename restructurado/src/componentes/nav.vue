@@ -133,6 +133,7 @@
 </template>
 
 <script>
+
 import $ from "jquery";
 
 import Preload from "../componentes/preload.vue";

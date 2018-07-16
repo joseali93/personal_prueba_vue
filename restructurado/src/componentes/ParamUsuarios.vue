@@ -704,9 +704,17 @@ export default {
                         numero_identificacion:this.usuEditar.numero_identificacion,
                         correo:this.usuEditar.correo,
                     }
+                    var load = true;
+                    setTimeout(() => {
+                        bus.$emit("load", {
+                            load
+                        });
+                    });
                     this.axios.post(urlservicios+"/updateUser/"+this.usuEditar._id, EditUser)
                     .then(response =>{
+
                         if(response.data.estado){
+                            this.refrescarUsuarios()
                             swal(
                             "",
                             response.data.message,
@@ -721,8 +729,9 @@ export default {
                             });
                         }else{
                             swal(
-                            "",
+                            
                             response.data.message,
+                            response.data.causa.message,
                             "warning"
                             );  
                         }
@@ -766,7 +775,35 @@ export default {
                     }
                     this.axios.post(urlservicios+"/updateUser/"+this.usuEditar._id, EditUser)
                     .then(response =>{
-                        this.hideModal()
+                        console.log(response);
+                        if(response.data.estado){
+                            this.refrescarUsuarios()
+                            swal(
+                            response.data.message,
+                            "",
+                            "success"
+                            );
+                            this.hideModal()
+                            var load = false;
+                            setTimeout(() => {
+                                bus.$emit("load", {
+                                    load
+                                });
+                            });
+                        }else{
+                            swal(
+                            response.data.message,
+                            response.data.causa.message,
+                            "warning"
+                            );  
+                        }
+                        var load = false;
+                        setTimeout(() => {
+                            bus.$emit("load", {
+                                load
+                            });
+                        });
+                        this.refrescarUsuarios()
                         var load = false;
                         setTimeout(() => {
                             bus.$emit("load", {
@@ -806,7 +843,35 @@ export default {
                     }
                     this.axios.post(urlservicios+"/updateUser/"+this.usuEditar._id, EditUser)
                     .then(response =>{
-                        this.hideModal()
+                        if(response.data.estado){
+                            this.refrescarUsuarios()
+                            swal(
+                            "",
+                            response.data.message,
+                            "success"
+                            );
+                            this.hideModal()
+                            var load = false;
+                            setTimeout(() => {
+                                bus.$emit("load", {
+                                    load
+                                });
+                            });
+                        }else{
+                            swal(
+                            response.data.message,
+                            response.data.causa.message,
+                            "warning"
+                            );  
+                        }
+                        var load = false;
+                        setTimeout(() => {
+                            bus.$emit("load", {
+                                load
+                            });
+                        });
+                        this.refrescarUsuarios()
+                        console.log(response);
                         var load = false;
                         setTimeout(() => {
                             bus.$emit("load", {
@@ -986,21 +1051,36 @@ export default {
                        
                         this.axios.post(urlservicios+"/GuardarUsuario/", newUser)
                         .then(response =>{
-                           swal(
-                            '',
-                            'Creado correctamente',
-                            'success'
-                            )
-                           this.hideModal()
-                           this.refrescarUsuarios()
+                            if(response.data.estado){
+                            swal(
+                            "",
+                            response.data.message,
+                            "success"
+                            );
+                            this.hideModal()
                             var load = false;
                             setTimeout(() => {
                                 bus.$emit("load", {
                                     load
                                 });
-                            });
+                            });  
+                        }
+                        else{
+                            swal(
+                            response.data.message,
+                            response.data.causa.message,
+                            "warning"
+                            );
+                            var load = false;
+                            setTimeout(() => {
+                                bus.$emit("load", {
+                                    load
+                                });
+                            });  
+                        }
                         })
                          .catch(function (error) {
+                             console.log(error);
                         var load = false;
                         setTimeout(() => {
                             bus.$emit("load", {
@@ -1088,21 +1168,36 @@ export default {
                         }
                         this.axios.post(urlservicios+"/GuardarUsuario/", newUser)
                         .then(response =>{
-                           swal(
-                            'Good job!',
-                            'Creado correctamente',
-                            'success'
-                            )
-                           this.hideModal()
-                           this.refrescarUsuarios()
+                           if(response.data.estado){
+                            swal(
+                            "",
+                            response.data.message,
+                            "success"
+                            );
+                            this.hideModal()
                             var load = false;
                             setTimeout(() => {
                                 bus.$emit("load", {
                                     load
                                 });
-                            });
+                            });  
+                        }
+                        else{
+                            swal(
+                            response.data.message,
+                            response.data.causa.message,
+                            "warning"
+                            );
+                            var load = false;
+                            setTimeout(() => {
+                                bus.$emit("load", {
+                                    load
+                                });
+                            });  
+                        }
                         })
                          .catch(function (error) {
+                             console.log(error);
                         var load = false;
                         setTimeout(() => {
                             bus.$emit("load", {
@@ -1165,6 +1260,7 @@ export default {
                         
                     }
                     else{
+                        console.log();
                         var newUser={
                             id_OperadorLogistico:test.id_OperadorLogistico._id,
                             nombre: this.usu.nombre,
@@ -1178,21 +1274,37 @@ export default {
                             //this.hideModal()
                         this.axios.post(urlservicios+"GuardarUsuario/", newUser)
                         .then(response =>{
-                           swal(
-                            'Good job!',
-                            'Creado correctamente',
-                            'success'
-                            )
-                           this.hideModal()
-                           this.refrescarUsuarios()
+                            if(response.data.estado){
+                            swal(
+                            "",
+                            response.data.message,
+                            "success"
+                            );
+                            this.hideModal()
                             var load = false;
                             setTimeout(() => {
                                 bus.$emit("load", {
                                     load
                                 });
-                            });
+                            });  
+                        }
+                        else{
+                            console.log(response);
+                            swal(
+                            response.data.message,
+                            response.data.causa.message,
+                            "warning"
+                            );
+                            var load = false;
+                            setTimeout(() => {
+                                bus.$emit("load", {
+                                    load
+                                });
+                            });  
+                        }
                         })
                         .catch(function (error) {
+                            console.log(error);
                             var load = false;
                             setTimeout(() => {
                                 bus.$emit("load", {

@@ -29,7 +29,8 @@ import configVehiculos from '../componentes/ParamVehiculos.vue'
 import EnterExitComponent from '../componentes/EntradaSalidas.vue'
 mode: 'history'
 
-export const rutas = [{
+export const rutas = [
+    {
         path: '/prueba',
         component: prueba,
     },

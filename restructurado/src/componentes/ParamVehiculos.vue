@@ -659,14 +659,17 @@ export default {
             */
         },
         adicionarUsuxVehiculo(){
+            console.log("entro");
             var bandera=false
             if(this.usuario_vehiculo){
                 this.tripu.forEach(element => {
+                    
                     if(element.tipo==this.tipoTripu.nombre&&element.id_usuario._id==this.usuario_vehiculo._id){
                        bandera=true
                     }
                 });
                 if(bandera==false){
+                    console.log(bandera);
                     var addUser ={
                         id_usuario:{
                             "_id":this.usuario_vehiculo._id,
@@ -681,8 +684,11 @@ export default {
                         id_usuario:this.usuario_vehiculo._id,
                         tipo:this.tipoTripu.nombre
                     }
+                    console.log(envio);
+                    console.log(urlservicios+"agregarTrapulacion/1");
                     this.axios.post(urlservicios+"agregarTrapulacion/1", envio)
                     .then(response =>{
+                        console.log(response);
                         if(response.data.estado=true){
                             swal(
                             "",
@@ -700,6 +706,20 @@ export default {
                             );
                         }
                     })
+                    .catch(function (error) {
+                        console.log(error);
+                            var load = false;
+                            setTimeout(() => {
+                                bus.$emit("load", {
+                                    load
+                                });
+                            });
+                            swal(
+                                "Se presento un problema",
+                                "Intente nuevamente, por favor",
+                                "warning"
+                            );
+                        });
                 }
                 else{
                     swal(
@@ -716,6 +736,7 @@ export default {
                         "warning"
                     );
             }
+            console.log(bandera);
         },
         TipoTripulante(){
             if(this.tipoTripu){
