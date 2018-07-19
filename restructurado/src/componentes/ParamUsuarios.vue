@@ -1887,6 +1887,8 @@ export default {
         id_cliente='null'
         this.axios.get(urlservicios+"ROLES/"+test.id_OperadorLogistico._id)
             .then((response) => {
+                console.log("roles");
+                console.log(response);
                 this.optionsRoles=response.data
             })
             .catch(function (error) {
